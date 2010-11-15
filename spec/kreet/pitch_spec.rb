@@ -43,6 +43,18 @@ module Kreet
         highest.should == Pitch.new(g,9)                
       end
     end
+    
+    describe '#+' do
+      it 'adds the integer value of the argument and #to_i' do
+        (middle_c + 2).should == Pitch.from_i( 62 )
+      end
+    end
 
+    describe '#-' do
+      it 'subtracts the integer value of the argument from #to_i' do
+        (middle_c - 2).should == Pitch.from_i( 58 )
+      end
+    end
+    
   end
 end

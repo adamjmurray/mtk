@@ -20,10 +20,17 @@ module Kreet
       @int_value ||= @pitch_class.value + 12*(octave+1)
     end 
     
-    def ==( other ) 
-      other.respond_to? :pitch_class and
-       other.respond_to? :octave and
-        other.pitch_class == pitch_class and other.octave == octave
+    def ==( other )
+      other.respond_to? :pitch_class and other.respond_to? :octave and
+      other.pitch_class == pitch_class and other.octave == octave      
+    end
+    
+    def +( other )
+      self.class.from_i( to_i + other.to_i )
+    end
+      
+    def -( other )
+      self.class.from_i( to_i - other.to_i )
     end
         
   end
