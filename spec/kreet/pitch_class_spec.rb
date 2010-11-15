@@ -10,7 +10,7 @@ module Kreet
   
     describe 'Names' do
       it "is the 12 note names in 'western' 12-tone octave" do
-        PitchClass::Names =~ ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']
+        PitchClass::NAMES =~ ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']
       end
     end
   
@@ -23,13 +23,13 @@ module Kreet
       end
     end
   
-    describe 'from_value' do
+    describe 'from_i' do
       it "returns the PitchClass with that value" do
-        subject.from_value(2).should == d
+        subject.from_i(2).should == d
       end
       it "returns the PitchClass with that value mod 12" do
-        subject.from_value(14).should == d
-        subject.from_value(-8).should == e        
+        subject.from_i(14).should == d
+        subject.from_i(-8).should == e        
       end
       
     end
@@ -38,8 +38,8 @@ module Kreet
       it "acts like from_name if the argument is a string" do
         subject['D'].should == subject.from_name('D')        
       end
-      it "acts like from_value if the argument is a number" do
-        subject[3].should == subject.from_value(3)
+      it "acts like from_i if the argument is a number" do
+        subject[3].should == subject.from_i(3)
       end
     end
   
@@ -49,18 +49,11 @@ module Kreet
       end
     end
 
-    describe '#value' do      
-      it "is the value of the pitch class" do
-        c.value.should == 0
-        d.value.should == 2
-        e.value.should == 4
-      end
-    end
- 
-    describe '#==' do
-      it "checks for equality" do
-        c.should == c
-        c.should_not == d
+    describe '#to_i' do      
+      it "is the integer value of the pitch class" do
+        c.to_i.should == 0
+        d.to_i.should == 2
+        e.to_i.should == 4
       end
     end
     
@@ -69,10 +62,11 @@ module Kreet
         c.to_s.should == c.name.to_s
       end
     end
-    
-    describe '#to_i' do
-      it "is value.to_i" do
-        c.to_i.should == c.value.to_i
+        
+    describe '#==' do
+      it "checks for equality" do
+        c.should == c
+        c.should_not == d
       end
     end
     

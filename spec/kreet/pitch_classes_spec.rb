@@ -23,16 +23,16 @@ module Kreet
 
       it "defines constants for the 12 pitch classes in the twelve-tone octave" do
         cases.length.should == 12
-        cases.each do |const, name, value|
+        cases.each do |const, name, int_value|
           const.name.should == name
-          const.value.should == value
+          const.to_i.should == int_value
         end
       end
 
       describe "PITCH_CLASSES" do
         it "contains the 12 pitch class constants" do
           PITCH_CLASSES.length.should == 12
-          PITCH_CLASSES.should == cases.map{|const,n,v| const}
+          PITCH_CLASSES.should == cases.map{|const,_,__| const}
         end
       end
 

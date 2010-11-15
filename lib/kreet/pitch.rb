@@ -11,13 +11,14 @@ module Kreet
     end    
     
     def self.from_i( i )
+      i = i.to_i
       pitch_class = PitchClasses::PITCH_CLASSES[i % 12]
       octave = i/12 - 1
       new( pitch_class, octave )
     end    
     
     def to_i
-      @int_value ||= @pitch_class.value + 12*(octave+1)
+      @int_value ||= @pitch_class.to_i + 12*(octave+1)
     end 
     
     def ==( other )
@@ -25,12 +26,12 @@ module Kreet
       other.pitch_class == pitch_class and other.octave == octave      
     end
     
-    def +( other )
-      self.class.from_i( to_i + other.to_i )
+    def +( interval )
+      self.class.from_i( to_i + interval.to_i )
     end
       
-    def -( other )
-      self.class.from_i( to_i - other.to_i )
+    def -( interval )
+      self.class.from_i( to_i - interval.to_i )
     end
         
   end
