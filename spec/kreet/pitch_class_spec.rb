@@ -8,18 +8,47 @@ module Kreet
     let(:d) { PitchClass['D'] }
     let(:e) { PitchClass['E'] }
   
+    let(:names) { [
+      ['B#',  'C',  'Dbb'],
+      ['B##', 'C#', 'Db' ],
+      ['C##', 'D',  'Ebb'],
+      ['D#',  'Eb', 'Fbb'],
+      ['D##', 'E',  'Fb' ],
+      ['E#',  'F',  'Gbb'],
+      ['E##', 'F#', 'Gb' ],
+      ['F##', 'G',  'Abb'],
+      ['G#',  'Ab'       ],
+      ['G##', 'A',  'Bbb'],
+      ['A#',  'Bb', 'Cbb'],
+      ['A##', 'B',  'Cb' ]
+    ].flatten }
+  
     describe 'Names' do
       it "is the 12 note names in 'western' 12-tone octave" do
         PitchClass::NAMES =~ ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']
       end
     end
   
-    describe 'from_name' do
+    describe 'from_s' do
       it "returns the PitchClass with that name, if the name exists" do
-        subject.from_name('C').should == c
+        subject.from_s('C').should == c
+        for name in names
+          subject.from_s(name).name.should == name
+        end
+      end
+      it "ignores case" do
+        subject.from_s('bbb').should_not be_nil
       end
       it "returns nil, if the name doesn't exist" do
-        subject.from_name('z').should be_nil
+        subject.from_s('z').should be_nil
+      end
+    end
+  
+    describe 'from_name' do
+      it "acts like from_s" do
+        subject.from_name('C').should == subject.from_s('C')
+        subject.from_name('bbb').should == subject.from_s('BBB')
+        subject.from_name('z').should == subject.from_s('z')
       end
     end
   
@@ -30,8 +59,7 @@ module Kreet
       it "returns the PitchClass with that value mod 12" do
         subject.from_i(14).should == d
         subject.from_i(-8).should == e        
-      end
-      
+      end      
     end
     
     describe '[]' do
@@ -58,8 +86,8 @@ module Kreet
     end
     
     describe '#to_s' do
-      it "is the name as a string" do
-        c.to_s.should == c.name.to_s
+      it "returns the name" do
+        c.to_s.should == c.name
       end
     end
         
@@ -67,6 +95,10 @@ module Kreet
       it "checks for equality" do
         c.should == c
         c.should_not == d
+      end
+      it "treats enharmonic names as equal" do
+        c.should == PitchClass['B#']
+        c.should == PitchClass['Dbb']
       end
     end
     
