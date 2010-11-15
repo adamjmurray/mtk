@@ -21,6 +21,10 @@ module Kreet
       @name.to_s
     end
     
+    def to_i
+      @value.to_i
+    end
+    
   end
   
 end

@@ -31,6 +31,12 @@ module Kreet
         subject.to_s.should == subject.name.to_s
       end
     end
+    
+    describe '#to_i' do
+      it "is value.to_i" do
+        subject.to_i.should == subject.value.to_i
+      end
+    end
 
   end  
 end
