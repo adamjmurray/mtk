@@ -10,19 +10,15 @@ module Kreet
       @pitch_class, @octave = pitch_class, octave
     end    
     
-    def self.from_midi( midi_number )
-      pitch_class = PitchClasses::PITCH_CLASSES[midi_number % 12]
-      octave = midi_number/12 - 1
+    def self.from_i( i )
+      pitch_class = PitchClasses::PITCH_CLASSES[i % 12]
+      octave = i/12 - 1
       new( pitch_class, octave )
     end    
     
-    def to_midi
-      @value ||= @pitch_class.value + 12*(octave+1)
-    end
-    
-    def value
-      @value ||= to_midi
-    end
+    def to_i
+      @int_value ||= @pitch_class.value + 12*(octave+1)
+    end 
     
     def ==( other ) 
       other.respond_to? :pitch_class and

@@ -21,16 +21,17 @@ module Kreet
       end
     end
 
-    describe 'from_midi' do
-      it "converts a midi note number to a Pitch" do
-        Pitch.from_midi(60).should == middle_c
-      end
+    describe 'from_i' do
+      it( "converts 60 to middle C" ) { Pitch.from_i(60).should == middle_c }
+      it( "converts 0 to C at octave -1" ) { Pitch.from_i(0).should == lowest }
+      it( "converts 127 to G at octave 9" ) { Pitch.from_i(127).should == highest }
+      
     end
 
-    describe '#to_midi' do
-      it( "is 60 for middle C" ) { middle_c.to_midi.should == 60 }
-      it( "is 0 for the C at octave -1" ) { lowest.to_midi.should == 0 }
-      it( "is 127 for the G at octave 9" ) { highest.to_midi.should == 127 }
+    describe '#to_i' do
+      it( "is 60 for middle C" ) { middle_c.to_i.should == 60 }
+      it( "is 0 for the C at octave -1" ) { lowest.to_i.should == 0 }
+      it( "is 127 for the G at octave 9" ) { highest.to_i.should == 127 }
     end
 
     describe '#==' do
