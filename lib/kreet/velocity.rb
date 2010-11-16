@@ -6,7 +6,9 @@ module Kreet
   
   class Velocity
     
-    def initialize(value)
+    include Comparable    
+    
+    def initialize( value )
       @value = value
     end
     
@@ -15,6 +17,24 @@ module Kreet
     end
 
     attr_reader :value
+
+    # Construct a new Velocity object given an integer value
+    def self.from_i( int_value )
+      new( int_value / 127.0 )
+    end
+    
+    # Return the integer value for this object
+    def to_i
+      @int_value ||= (@value * 127).round
+    end
+    
+    def ==(other)
+      other.respond_to? :value and value == other.value
+    end
+    
+    def <=>(other)
+      value <=> other.value
+    end
     
   end
   
