@@ -7,11 +7,6 @@ module Kreet
     
     NAMES = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']
     
-    attr_reader :name
-
-    #####################    
-    private
-
     VALID_NAMES = [
       ['B#',  'C',  'Dbb'],
       ['B##', 'C#', 'Db' ],
@@ -26,17 +21,19 @@ module Kreet
       ['A#',  'Bb', 'Cbb'],
       ['A##', 'B',  'Cb' ]
     ]
-
-    @flyweight = {}
-
-    attr_reader :int_value
-
-    private_class_method :new
-
+    
+    attr_reader :name
+    
     def initialize( name, int_value )
       @name, @int_value = name, int_value
     end     
-       
+    private_class_method :new
+
+    @flyweight = {}
+    def self.get( name, int_value )
+      @flyweight[name] ||= new( name, int_value )
+    end
+    private_class_method :get
 
     #####################    
     public 
@@ -45,28 +42,25 @@ module Kreet
       s = s.to_s
       s = s[0].upcase + s[1..-1].downcase # normalize the name      
       VALID_NAMES.each_with_index do |names, index|
-        if names.include? s
-          return @flyweight[s] ||= new( s, index )
-        end
+        return get( s, index )  if names.include? s
       end  
       nil    
     end
-
     class << self
-      alias from_name from_s 
+      alias from_name from_s # alias self.from_name to self.from_s
     end
 
     def self.from_i( value )
       value = value.to_i % 12
       name = NAMES[value]
-      @flyweight[name] ||= new( name, value )
+      get( name, value )
     end
     
     def self.[]( name_or_value )
       if name_or_value.kind_of? Numeric 
         from_i( name_or_value )
       else 
-        from_name( name_or_value )
+        from_s( name_or_value )
       end
     end
     

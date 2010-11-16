@@ -3,11 +3,12 @@ module Kreet
 
   describe Pitch do
 
-    let(:c) { PitchClasses::C }
-    let(:g) { PitchClasses::G }
-    let(:middle_c) { Pitch.new(c, 4) }
-    let(:lowest)   { Pitch.new(c,-1) }
-    let(:highest)  { Pitch.new(g, 9) }      
+    let(:c) { PitchClass[:C] }
+    let(:g) { PitchClass[:G] }
+    let(:middle_c) { Pitch[c, 4] }
+    let(:lowest)   { Pitch[c,-1] }
+    let(:highest)  { Pitch[g, 9] }   
+    let(:subjects) { [middle_c, lowest, highest] }   
 
     describe '#pitch_class' do
       it "is the pitch class of the pitch" do
@@ -24,8 +25,13 @@ module Kreet
     describe 'from_i' do
       it( "converts 60 to middle C" ) { Pitch.from_i(60).should == middle_c }
       it( "converts 0 to C at octave -1" ) { Pitch.from_i(0).should == lowest }
-      it( "converts 127 to G at octave 9" ) { Pitch.from_i(127).should == highest }
-      
+      it( "converts 127 to G at octave 9" ) { Pitch.from_i(127).should == highest }      
+    end
+    
+    describe 'from_s' do
+      it( "converts 'C4' to middle c")  { Pitch.from_s('C4' ).should == middle_c }
+      it( "converts 'c4' to middle c")  { Pitch.from_s('c4' ).should == middle_c }
+      it( "converts 'B#4' to middle c") { Pitch.from_s('B#4').should == middle_c }
     end
 
     describe '#to_i' do
@@ -36,11 +42,19 @@ module Kreet
 
     describe '#==' do
       it "compares the pitch_class and octave for equality" do
-        middle_c.should == Pitch.new(c,4)
-        middle_c.should_not == Pitch.new(c,3)
-        middle_c.should_not == Pitch.new(g,4)
-        middle_c.should_not == Pitch.new(g,3)
-        highest.should == Pitch.new(g,9)                
+        middle_c.should == Pitch[c,4]
+        middle_c.should_not == Pitch[c,3]
+        middle_c.should_not == Pitch[g,4]
+        middle_c.should_not == Pitch[g,3]
+        highest.should == Pitch[g,9]               
+      end
+    end
+    
+    describe '#to_s' do
+      it "should be the pitch class name and the octave" do
+        for pitch in subjects
+          pitch.to_s.should == pitch.pitch_class.name + pitch.octave.to_s
+        end
       end
     end
     

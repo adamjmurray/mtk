@@ -6,9 +6,9 @@ module Kreet
   
       it "defines constants for the 128 notes in MIDI" do
         Pitches.constants.length.should == (128 + 1) # there's also the PITCHES constant
-        C_1.should == Pitch.new(PitchClasses::C,-1)
-        D0.should == Pitch.new(PitchClasses::D,0)
-        Eb1.should == Pitch.new(PitchClasses::Eb,1)
+        C_1.should == Pitch['C-1']
+        D0.should == Pitch[:D0]
+        Eb1.should == Pitch['Eb1']
       end
     
       describe "PITCHES" do

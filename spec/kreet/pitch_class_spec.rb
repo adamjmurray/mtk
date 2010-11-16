@@ -23,32 +23,39 @@ module Kreet
       ['A##', 'B',  'Cb' ]
     ].flatten }
   
-    describe 'Names' do
+    describe 'NAMES' do
       it "is the 12 note names in 'western' 12-tone octave" do
         PitchClass::NAMES =~ ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']
       end
     end
   
-    describe 'from_s' do
-      it "returns the PitchClass with that name, if the name exists" do
-        subject.from_s('C').should == c
-        for name in names
-          subject.from_s(name).name.should == name
+    describe 'from_s' do      
+      context "the argument is a valid name" do
+        it "returns a PitchClass" do
+          names.each{|name| subject.from_s( name ).should be_a PitchClass }            
         end
+        it "returns an object with that name" do
+          names.each{|name| subject.from_s( name ).name.should == name }            
+        end
+        it "ignores case" do
+          for name in names
+            subject.from_s( name.upcase ).name.should == name
+            subject.from_s(name.downcase).name.should == name
+          end
+        end        
       end
-      it "ignores case" do
-        subject.from_s('bbb').should_not be_nil
-      end
-      it "returns nil, if the name doesn't exist" do
-        subject.from_s('z').should be_nil
+      context "the argument is not a valid name" do
+        it "returns nil, if the name doesn't exist" do
+          subject.from_s( 'z' ).should be_nil
+        end
       end
     end
   
     describe 'from_name' do
       it "acts like from_s" do
-        subject.from_name('C').should == subject.from_s('C')
-        subject.from_name('bbb').should == subject.from_s('BBB')
-        subject.from_name('z').should == subject.from_s('z')
+        for name in ['C', 'bbb', 'z']
+          subject.from_name( name ).should == subject.from_s( name )
+        end
       end
     end
   
@@ -88,6 +95,9 @@ module Kreet
     describe '#to_s' do
       it "returns the name" do
         c.to_s.should == c.name
+        for name in names
+          subject.from_s(name).to_s.should == name
+        end
       end
     end
         

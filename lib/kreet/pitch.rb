@@ -6,20 +6,59 @@ module Kreet
 
     attr_reader :pitch_class, :octave
 
+    @flyweight = {}
+
     def initialize( pitch_class, octave )
       @pitch_class, @octave = pitch_class, octave
     end    
+    private_class_method :new
+
+    def self.get( pitch_class, octave )
+      @flyweight[[pitch_class,octave]] ||= new( pitch_class, octave )
+    end  
+    private_class_method :get
+    
+    def self.[]( *args )
+      args = args[0] if args.length == 1
+      case args
+      when Array
+        pitch_class, octave = *args
+        if pitch_class.kind_of? PitchClass and octave.kind_of? Numeric
+          get( pitch_class, octave.to_i )
+        end
+      when Numeric
+        from_i( args )
+      else
+        from_s( args )
+      end
+    end
+    
+    def self.from_s( s )
+      s = s.to_s
+      s = s[0].upcase + s[1..-1].downcase # normalize name
+      if s =~ /^([A-G](#|##|b|bb)?)(-?\d+)$/
+        pitch_class = PitchClass.from_s($1)
+        if pitch_class
+          octave = $3.to_i
+          get( pitch_class, octave )
+        end
+      end
+    end
     
     def self.from_i( i )
       i = i.to_i
       pitch_class = PitchClasses::PITCH_CLASSES[i % 12]
       octave = i/12 - 1
-      new( pitch_class, octave )
+      get( pitch_class, octave )
     end    
     
     def to_i
-      @int_value ||= @pitch_class.to_i + 12*(octave+1)
+      @int_value ||= @pitch_class.to_i + 12*(@octave+1)
     end 
+    
+    def to_s
+      "#@pitch_class#@octave"
+    end
     
     def ==( other )
       other.respond_to? :pitch_class and other.respond_to? :octave and
