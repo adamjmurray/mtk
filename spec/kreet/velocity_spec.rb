@@ -3,24 +3,24 @@ module Kreet
 
   describe Velocity do
     
-    let(:min) { Velocity.new(0.0) }
-    let(:mid) { Velocity.new(0.5) }  
-    let(:max) { Velocity.new(1.0) }
-    subject { mid }
-    let(:subjects) { [min, mid, max] }
+    let(:value) { 70.5 }
+    subject { Velocity.new(value) }
+    let(:lo) { Velocity.new(0.0) }
+    let(:hi) { Velocity.new(1.0) }
+    let(:subjects) { [lo, hi] }
     
     it 'should have Comparable methods' do
-      Velocity.should include Comparable
-      min.should      < max
-      max.should_not  > max
-      min.should     <= min
-      min.should     <= max
-      max.should_not <= min
-      min.should     >= min
-      max.should     >= min
-      min.should_not >= max
-      max.should      > min
-      min.should_not  > max
+      Velocity.should include Comparable      
+      lo.should      < hi
+      hi.should_not  > hi
+      lo.should     <= lo
+      lo.should     <= hi
+      hi.should_not <= lo
+      lo.should     >= lo
+      hi.should     >= lo
+      lo.should_not >= hi
+      hi.should      > lo
+      lo.should_not  > hi
     end
     
     describe '#name' do
@@ -31,25 +31,20 @@ module Kreet
     
     describe '#value' do
       it 'is the value the object was constructed with' do
-        min.value.should == 0.0
-        mid.value.should == 0.5
-        max.value.should == 1.0
+        subject.value.should == value
+      end
+    end
+
+    describe '#to_f' do
+      it 'is the value as a float' do
+        val = Rational(3,5)
+        Velocity.new( val ).to_f.should == val.to_f
       end
     end
     
-    describe 'from_i' do
-      it 'Maps integer values 0-127 to Velocity objects with the value 0.0-1.0' do
-        128.times do |int_value|
-          Velocity.from_i( int_value ).should == Velocity.new( int_value/127.0 )
-        end
-      end
-    end
-      
     describe '#to_i' do
-      it 'Maps the Velocities with the value range 0.0-1.0 to integer values 0-127' do
-        min.to_i.should == 0
-        mid.to_i.should == 64
-        max.to_i.should == 127
+      it 'is the value rounded to the nearest int' do
+        subject.to_i.should == value.round
       end
     end
     
@@ -74,6 +69,30 @@ module Kreet
         end
       end
     end 
+  
+    describe '#+' do
+      it 'produces a Velocity with the value of the sum' do
+        ( subject + 3 ).should == Velocity.new( subject.value + 3 )
+      end    
+    end
+
+    describe '#-' do
+      it 'produces a Velocity with the value of the difference' do
+        ( subject + 3 ).should == Velocity.new( subject.value + 3 )
+      end    
+    end
+    
+    describe '#*' do
+      it 'produces a Velocity with the value of the product' do
+        ( subject * 3 ).should == Velocity.new( subject.value * 3 )
+      end      
+    end
+
+    describe '#/' do
+      it 'produces a Velocity with the value of the product' do
+        ( subject * 3 ).should == Velocity.new( subject.value * 3 )
+      end      
+    end
   
   end
 end

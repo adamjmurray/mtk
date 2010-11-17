@@ -11,29 +11,57 @@ module Kreet
     def initialize( value )
       @value = value
     end
-    
+
     def name
       :velocity
     end
 
     attr_reader :value
-
-    # Construct a new Velocity object given an integer value
-    def self.from_i( int_value )
-      new( int_value / 127.0 )
-    end
-    
+        
     # Return the integer value for this object
     def to_i
-      @int_value ||= (@value * 127).round
+      @value.round
+    end  
+    
+    def to_f
+      @value.to_f
+    end  
+
+    def == other
+      value == value_of( other )
     end
     
-    def ==(other)
-      other.respond_to? :value and value == other.value
+    def <=> other
+      value <=> value_of( other )
     end
     
-    def <=>(other)
-      value <=> other.value
+    def + param
+      Velocity.new( value + value_of( param ))
+    end
+
+    def - param
+      Velocity.new( value - value_of( param ))    
+    end
+
+    def * param
+      Velocity.new( value * value_of( param ))
+    end
+
+    def / param
+      Velocity.new( value / value_of( param ))
+    end
+
+    def % param
+      Velocity.new( value % value_of( param ))
+    end
+       
+    private
+    def value_of something
+      if something.is_a? Numeric
+        something
+      else
+        something.value
+      end
     end
     
   end
