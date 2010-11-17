@@ -1,5 +1,5 @@
 require 'spec_helper'
-begin # this block seems to be needed to make things work in textmate without breaking rake
+begin # this block needed to make things work in textmate without breaking rake
   ensure_shared_example_group_name_not_taken "any Value"   
   require 'kreet/value_spec'
 rescue 

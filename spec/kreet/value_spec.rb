@@ -113,7 +113,23 @@ module Kreet
 
     it_behaves_like "any Value"
     
-    describe 'of' do it end
+    describe 'of' do 
+      it 'returns the argument if its Numeric' do
+        for number in [1, 2.5, Rational(3,5), Complex(-1,3.3)]
+          Value.of( number ).should == number
+        end
+      end
+      it 'returns the #value for things with a value method' do
+        obj = mock
+        obj.should_receive(:value).and_return('its_value')
+        Value.of( obj ).should == 'its_value'          
+      end
+      it 'returns nil for everything else' do
+        for obj in [nil, "str", :sym, {}, []]
+          Value.of( obj ).should be_nil
+        end
+      end      
+    end
       
   end
 
