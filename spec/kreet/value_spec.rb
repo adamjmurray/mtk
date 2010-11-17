@@ -1,16 +1,16 @@
 require 'spec_helper'
 module Kreet
-
-  describe Velocity do
-    
+  
+  describe Value do
+  
     let(:value) { 70.5 }
-    subject { Velocity.new(value) }
-    let(:lo) { Velocity.new(0.0) }
-    let(:hi) { Velocity.new(1.0) }
+    subject { Value.new(value) }
+    let(:lo) { Value.new(0.0) }
+    let(:hi) { Value.new(1.0) }
     let(:subjects) { [lo, hi] }
     
     it 'should have Comparable methods' do
-      Velocity.should include Comparable      
+      Value.should include Comparable      
       lo.should      < hi
       hi.should_not  > hi
       lo.should     <= lo
@@ -32,7 +32,7 @@ module Kreet
     describe '#to_f' do
       it 'is the value as a float' do
         val = Rational(3,5)
-        Velocity.new( val ).to_f.should == val.to_f
+        Value.new( val ).to_f.should == val.to_f
       end
     end
     
@@ -45,12 +45,12 @@ module Kreet
     describe '#==' do
       it 'is true if the values are equal' do
         for value in [-10, 0, 5, 100]
-          Velocity.new( value ).should == Velocity.new( value.to_f )
+          Value.new( value ).should == Value.new( value.to_f )
         end
       end
       it 'is false if the values are not equal' do
-        Velocity.new( 0 ).should_not == Velocity.new( 0.001 )
-        Velocity.new( -1 ).should_not == Velocity.new( 1 )        
+        Value.new( 0 ).should_not == Value.new( 0.001 )
+        Value.new( -1 ).should_not == Value.new( 1 )        
       end
     end
     
@@ -65,28 +65,29 @@ module Kreet
     end 
   
     describe '#+' do
-      it 'produces a Velocity with the value of the sum' do
-        ( subject + 3 ).should == Velocity.new( subject.value + 3 )
+      it 'produces a Value with the value of the sum' do
+        ( subject + 3 ).should == Value.new( subject.value + 3 )
       end    
     end
 
     describe '#-' do
-      it 'produces a Velocity with the value of the difference' do
-        ( subject + 3 ).should == Velocity.new( subject.value + 3 )
+      it 'produces a Value with the value of the difference' do
+        ( subject + 3 ).should == Value.new( subject.value + 3 )
       end    
     end
     
     describe '#*' do
-      it 'produces a Velocity with the value of the product' do
-        ( subject * 3 ).should == Velocity.new( subject.value * 3 )
+      it 'produces a Value with the value of the product' do
+        ( subject * 3 ).should == Value.new( subject.value * 3 )
       end      
     end
 
     describe '#/' do
-      it 'produces a Velocity with the value of the product' do
-        ( subject * 3 ).should == Velocity.new( subject.value * 3 )
+      it 'produces a Value with the value of the product' do
+        ( subject * 3 ).should == Value.new( subject.value * 3 )
       end      
     end
   
   end
+  
 end

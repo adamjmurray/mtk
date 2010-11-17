@@ -1,3 +1,4 @@
+require 'kreet/value'
 require 'kreet/pitch_class'
 require 'kreet/pitch_classes'
 require 'kreet/pitch'
