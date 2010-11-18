@@ -4,6 +4,8 @@ module Kreet
   
   class Value 
 
+    include Comparable
+
     attr_reader :value
         
     def initialize( value )
@@ -17,19 +19,11 @@ module Kreet
     def to_f
       @value.to_f
     end  
-
-    def == other
-      value == Value.of( other )
-    rescue
-      false
-    end
     
     def <=> other
       value <=> Value.of( other )
     end
 
-    include Comparable
-    
     def + param
       self.class.new( value + Value.of( param ))
     end
@@ -50,7 +44,7 @@ module Kreet
       self.class.new( value % Value.of( param ))
     end
        
-    def self.of something
+    def self.of( something )
       if something.is_a? Numeric
         something
       elsif something.respond_to? :value        

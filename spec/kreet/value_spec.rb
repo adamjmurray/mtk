@@ -40,9 +40,17 @@ module Kreet
         lo.should == lo
         hi.should == hi
       end
+      it 'is true if the value is equal to a Numeric argument' do
+        lo.should == lo.value
+        hi.should == hi.value
+      end
       it 'is false if the values are not equal' do
         lo.should_not == hi
         hi.should_not == lo
+      end
+      it 'is false if the types are not compatible' do
+        lo.should_not == nil
+        lo.should_not == lo.value.to_s
       end
     end
 
