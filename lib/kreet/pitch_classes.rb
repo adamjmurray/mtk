@@ -1,6 +1,6 @@
 module Kreet
 
-  # Constants for the pitch classes in 'western' twelve-tone octaves.
+  # Constants for the pitch classes in the Western chromatic scale
   
   module PitchClasses
 

@@ -5,19 +5,20 @@ module Kreet
     describe Pitches do
   
       it "defines constants for the 128 notes in MIDI" do
-        Pitches.constants.length.should == (128 + 1) # there's also the PITCHES constant
+        Pitches.constants.length.should > 128 # there's also the MIDI_PITCHES constant
         C_1.should == Pitch['C-1']
-        D0.should == Pitch[:D0]
+        D0.should  == Pitch[:D0]
         Eb1.should == Pitch['Eb1']
+        G9.should  == Pitch['g9']
       end
     
-      describe "PITCHES" do
+      describe "MIDI_PITCHES" do
         it "containts all 128 pitch constants" do
-          PITCHES.length.should == 128
-          PITCHES.should include C_1
-          PITCHES.should include D0
-          PITCHES.should include Eb1
-          PITCHES.should include G9                    
+          MIDI_PITCHES.length.should == 128
+          MIDI_PITCHES.should include C_1
+          MIDI_PITCHES.should include D0
+          MIDI_PITCHES.should include Eb1
+          MIDI_PITCHES.should include G9                    
         end
       end
     
