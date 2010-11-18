@@ -6,22 +6,9 @@ module MTK
 
     attr_reader :pitch_class, :octave
 
-    ##########################################
-    private
-
     def initialize( pitch_class, octave )
       @pitch_class, @octave = pitch_class, octave
     end    
-    private_class_method :new
-
-    @flyweight = {}
-    def self.get( pitch_class, octave )
-      @flyweight[[pitch_class,octave]] ||= new( pitch_class, octave )
-    end  
-    private_class_method :get
-    
-    ##########################################
-    public
     
     def self.[]( *args )
       args = args[0] if args.length == 1
@@ -29,7 +16,7 @@ module MTK
       when Array
         pitch_class, octave = *args
         if pitch_class.kind_of? PitchClass and octave.kind_of? Numeric
-          get( pitch_class, octave.to_i )
+          new( pitch_class, octave.to_i )
         end
       when Numeric
         from_i( args )
@@ -45,7 +32,7 @@ module MTK
         pitch_class = PitchClass.from_s($1)
         if pitch_class
           octave = $3.to_i
-          get( pitch_class, octave )
+          new( pitch_class, octave )
         end
       end
     end
@@ -54,7 +41,7 @@ module MTK
       i = i.to_i
       pitch_class = PitchClasses::PITCH_CLASSES[i % 12]
       octave = i/12 - 1
-      get( pitch_class, octave )
+      new( pitch_class, octave )
     end    
     
     def to_i
