@@ -1,7 +1,7 @@
 require 'spec_helper'
 module Kreet
 
-  shared_examples_for "any Value" do
+  shared_examples_for "any Scalar" do
 
     it 'should have Comparable methods' do
       lo.should      < hi
@@ -111,30 +111,30 @@ module Kreet
 
   end
 
-  describe Value do
+  describe Scalar do
 
     let(:value) { 9.99 }
-    subject { Value.new(value) }
-    let(:lo) { Value.new(0.0) }
-    let(:hi) { Value.new(1.0) }
+    subject  { Scalar.new(value) }
+    let(:lo) { Scalar.new(0.0) }
+    let(:hi) { Scalar.new(1.0) }
     let(:subjects) { [lo, hi] }
 
-    it_behaves_like "any Value"
+    it_behaves_like "any Scalar"
     
     describe 'of' do 
       it 'returns the argument if its Numeric' do
         for number in [1, 2.5, Rational(3,5), Complex(-1,3.3)]
-          Value.of( number ).should == number
+          Scalar.value_of( number ).should == number
         end
       end
       it 'returns the #value for things with a value method' do
         obj = mock
         obj.should_receive(:value).and_return('its_value')
-        Value.of( obj ).should == 'its_value'          
+        Scalar.value_of( obj ).should == 'its_value'          
       end
       it 'returns nil for everything else' do
         for obj in [nil, "str", :sym, {}, []]
-          Value.of( obj ).should be_nil
+          Scalar.value_of( obj ).should be_nil
         end
       end      
     end

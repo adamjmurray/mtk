@@ -1,8 +1,8 @@
 module Kreet
   
-  # A numeric value that supports common numeric comparisons and operations
+  # A single numeric value that supports common numeric comparisons and operations
   
-  class Value 
+  class Scalar 
 
     include Comparable
 
@@ -21,30 +21,30 @@ module Kreet
     end  
     
     def <=> other
-      value <=> Value.of( other )
+      value <=> Scalar.value_of( other )
     end
 
     def + param
-      self.class.new( value + Value.of( param ))
+      self.class.new( value + Scalar.value_of( param ))
     end
 
     def - param
-      self.class.new( value - Value.of( param ))    
+      self.class.new( value - Scalar.value_of( param ))    
     end
 
     def * param
-      self.class.new( value * Value.of( param ))
+      self.class.new( value * Scalar.value_of( param ))
     end
 
     def / param
-      self.class.new( value / Value.of( param ))
+      self.class.new( value / Scalar.value_of( param ))
     end
 
     def % param
-      self.class.new( value % Value.of( param ))
+      self.class.new( value % Scalar.value_of( param ))
     end
        
-    def self.of( something )
+    def self.value_of( something )
       if something.is_a? Numeric
         something
       elsif something.respond_to? :value        

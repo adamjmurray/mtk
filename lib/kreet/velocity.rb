@@ -2,7 +2,7 @@ module Kreet
   
   # The velocity of a note.
   
-  class Velocity < Value 
+  class Velocity < Scalar 
 
   end
   

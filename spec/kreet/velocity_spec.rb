@@ -1,9 +1,5 @@
 require 'spec_helper'
-begin # this block needed to make things work in textmate without breaking rake
-  ensure_shared_example_group_name_not_taken "any Value"   
-  require 'kreet/value_spec'
-rescue 
-end
+load_shared_examples_for :scalar
 
 module Kreet
 
@@ -15,7 +11,7 @@ module Kreet
     let(:hi) { Velocity.new(1.0) }
     let(:subjects) { [lo, hi] }
 
-    it_behaves_like "any Value"
+    it_behaves_like "any Scalar"
   
   end
 end
