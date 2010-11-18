@@ -1,4 +1,5 @@
 require 'kreet'
+include Kreet
 
 # I needed this to make things shared examples work in TextMate without breaking Rake
 # If this code causes something to blow up, the body of this method can be commented out.

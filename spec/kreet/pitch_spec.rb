@@ -1,5 +1,4 @@
 require 'spec_helper'
-module Kreet
 
   describe Kreet::Pitch do
 
@@ -80,4 +79,3 @@ module Kreet
     end
     
   end
-end

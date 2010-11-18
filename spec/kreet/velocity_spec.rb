@@ -1,17 +1,14 @@
 require 'spec_helper'
 load_shared_examples_for :scalar
 
-module Kreet
+describe Kreet::Velocity do
 
-  describe Kreet::Velocity do
-    
-    let(:value) { 70.5 }
-    subject { Velocity.new(value) }
-    let(:lo) { Velocity.new(0.0) }
-    let(:hi) { Velocity.new(1.0) }
-    let(:subjects) { [lo, hi] }
+  let(:value) { 70.5 }
+  subject { Velocity.new(value) }
+  let(:lo) { Velocity.new(0.0) }
+  let(:hi) { Velocity.new(1.0) }
+  let(:subjects) { [lo, hi] }
 
-    it_behaves_like "any Scalar"
-  
-  end
+  it_behaves_like "any Scalar"
+
 end
