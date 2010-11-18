@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Kreet::Pitches do  
+describe MTK::Pitches do  
   include Pitches
 
   it "defines constants for the 128 notes in MIDI" do

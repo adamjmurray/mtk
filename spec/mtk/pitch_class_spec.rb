@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Kreet::PitchClass do
+describe MTK::PitchClass do
 
   subject { PitchClass }
   let(:c) { PitchClass['C'] }

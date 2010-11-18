@@ -1,4 +1,0 @@
-= Kreet
-
-Another sequencing project. Probably going to merge with Cosy one day.
-This time I'm starting with the model and building out from there.

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Kreet::Sequence do
+describe MTK::Sequence do
 
   subject { Sequence.new(1,2,3) }
 

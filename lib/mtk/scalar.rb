@@ -1,4 +1,4 @@
-module Kreet
+module MTK
   
   # A single numeric value that supports common numeric comparisons and operations
   

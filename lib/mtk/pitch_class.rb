@@ -1,4 +1,4 @@
-module Kreet
+module MTK
   
   # A class of pitches under octave equivalence.
   #

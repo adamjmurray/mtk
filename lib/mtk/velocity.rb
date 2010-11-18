@@ -1,4 +1,4 @@
-module Kreet
+module MTK
   
   # The velocity of a note.
   

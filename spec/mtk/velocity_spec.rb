@@ -1,7 +1,7 @@
 require 'spec_helper'
 load_shared_examples_for :scalar
 
-describe Kreet::Velocity do
+describe MTK::Velocity do
 
   let(:value) { 70.5 }
   subject { Velocity.new(value) }

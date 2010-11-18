@@ -111,7 +111,7 @@ shared_examples_for "any Scalar" do
 end
 
 
-describe Kreet::Scalar do
+describe MTK::Scalar do
 
   let(:value) { 9.99 }
   subject  { Scalar.new(value) }

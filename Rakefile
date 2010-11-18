@@ -12,7 +12,7 @@ RSpec::Core::RakeTask.new do |spec|
 end
 
 Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_files.include('README.rdoc', 'lib/**/*.rb')
+  rdoc.rdoc_files.include('README.md', 'lib/**/*.rb')
 end
 
 # yard is the preferred doc generator for this project

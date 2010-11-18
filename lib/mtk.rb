@@ -1,0 +1,7 @@
+require 'mtk/scalar'
+require 'mtk/pitch_class'
+require 'mtk/pitch_classes'
+require 'mtk/pitch'
+require 'mtk/pitches'
+require 'mtk/sequence'
+require 'mtk/velocity'

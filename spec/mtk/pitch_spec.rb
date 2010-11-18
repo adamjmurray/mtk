@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-  describe Kreet::Pitch do
+  describe MTK::Pitch do
 
     let(:c) { PitchClass[:C] }
     let(:g) { PitchClass[:G] }

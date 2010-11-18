@@ -1,4 +1,4 @@
-module Kreet
+module MTK
 
   # A frequency specified by a {PitchClass} and an integer octave.
   

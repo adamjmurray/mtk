@@ -1,4 +1,4 @@
-module Kreet
+module MTK
 
   # Defines a constant for each {PitchClass}in the Western chromatic scale.
   

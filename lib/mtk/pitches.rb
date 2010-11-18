@@ -1,4 +1,4 @@
-module Kreet
+module MTK
   
   # Defines a constants for each {Pitch} in the standard MIDI range using scientific pitch notation.
   #

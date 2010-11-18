@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Kreet::PitchClasses do
+describe MTK::PitchClasses do
   include PitchClasses
 
   let(:cases) {
