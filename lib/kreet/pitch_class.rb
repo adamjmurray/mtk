@@ -1,7 +1,8 @@
 module Kreet
   
   # A class of pitches under octave equivalence.
-  # Pitches one or more octaves away from each other have the same pitch class.
+  #
+  # A {Pitch} has the same PitchClass as the {Pitches} one or more octaves away.
   
   class PitchClass
     
@@ -23,6 +24,9 @@ module Kreet
     ]
     
     attr_reader :name
+
+    ##########################################        
+    private
     
     def initialize( name, int_value )
       @name, @int_value = name, int_value
@@ -35,7 +39,7 @@ module Kreet
     end
     private_class_method :get
 
-    #####################    
+    ##########################################    
     public 
     
     def self.from_s( s )

@@ -111,7 +111,7 @@ module Kreet
 
   end
 
-  describe Scalar do
+  describe Kreet::Scalar do
 
     let(:value) { 9.99 }
     subject  { Scalar.new(value) }
@@ -121,7 +121,7 @@ module Kreet
 
     it_behaves_like "any Scalar"
     
-    describe 'of' do 
+    describe '.value_of' do 
       it 'returns the argument if its Numeric' do
         for number in [1, 2.5, Rational(3,5), Complex(-1,3.3)]
           Scalar.value_of( number ).should == number

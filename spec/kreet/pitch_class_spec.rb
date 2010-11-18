@@ -1,7 +1,7 @@
 require 'spec_helper'
 module Kreet
-  
-  describe PitchClass do
+
+  describe Kreet::PitchClass do
   
     subject { PitchClass }
     let(:c) { PitchClass['C'] }
@@ -24,12 +24,12 @@ module Kreet
     ].flatten }
   
     describe 'NAMES' do
-      it "is the 12 note names in 'western' 12-tone octave" do
+      it "is the 12 note names in western chromatic scale" do
         PitchClass::NAMES =~ ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']
       end
     end
   
-    describe 'from_s' do      
+    describe '.from_s' do      
       context "the argument is a valid name" do
         it "returns a PitchClass" do
           names.each{|name| subject.from_s( name ).should be_a PitchClass }            
@@ -51,7 +51,7 @@ module Kreet
       end
     end
   
-    describe 'from_name' do
+    describe '.from_name' do
       it "acts like from_s" do
         for name in ['C', 'bbb', 'z']
           subject.from_name( name ).should == subject.from_s( name )
@@ -59,7 +59,7 @@ module Kreet
       end
     end
   
-    describe 'from_i' do
+    describe '.from_i' do
       it "returns the PitchClass with that value" do
         subject.from_i(2).should == d
       end
@@ -69,7 +69,7 @@ module Kreet
       end      
     end
     
-    describe '[]' do
+    describe '.[]' do
       it "acts like from_name if the argument is a string" do
         subject['D'].should == subject.from_name('D')        
       end

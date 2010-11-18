@@ -1,22 +1,27 @@
 module Kreet
 
-  # A frequency specified by a PitchClass and an octave
+  # A frequency specified by a {PitchClass} and an integer octave.
   
   class Pitch
 
     attr_reader :pitch_class, :octave
 
-    @flyweight = {}
+    ##########################################
+    private
 
     def initialize( pitch_class, octave )
       @pitch_class, @octave = pitch_class, octave
     end    
     private_class_method :new
 
+    @flyweight = {}
     def self.get( pitch_class, octave )
       @flyweight[[pitch_class,octave]] ||= new( pitch_class, octave )
     end  
     private_class_method :get
+    
+    ##########################################
+    public
     
     def self.[]( *args )
       args = args[0] if args.length == 1

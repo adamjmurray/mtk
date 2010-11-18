@@ -1,7 +1,7 @@
 require 'spec_helper'
 module Kreet
 
-  describe Pitch do
+  describe Kreet::Pitch do
 
     let(:c) { PitchClass[:C] }
     let(:g) { PitchClass[:G] }
@@ -22,16 +22,25 @@ module Kreet
       end
     end
 
-    describe 'from_i' do
+    describe '.from_i' do
       it( "converts 60 to middle C" ) { Pitch.from_i(60).should == middle_c }
       it( "converts 0 to C at octave -1" ) { Pitch.from_i(0).should == lowest }
       it( "converts 127 to G at octave 9" ) { Pitch.from_i(127).should == highest }      
     end
     
-    describe 'from_s' do
+    describe '.from_s' do
       it( "converts 'C4' to middle c")  { Pitch.from_s('C4' ).should == middle_c }
       it( "converts 'c4' to middle c")  { Pitch.from_s('c4' ).should == middle_c }
       it( "converts 'B#4' to middle c") { Pitch.from_s('B#4').should == middle_c }
+    end
+
+    describe '.[]' do
+      it "acts like from_s if the argument is a string" do
+        Pitch['D6'].should == Pitch.from_s('D6')        
+      end
+      it "acts like from_i if the argument is a number" do
+        Pitch[3].should == Pitch.from_i(3)
+      end
     end
 
     describe '#to_i' do

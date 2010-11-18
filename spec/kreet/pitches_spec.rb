@@ -2,7 +2,7 @@ require 'spec_helper'
 module Kreet
   module Pitches
     
-    describe Pitches do
+    describe Kreet::Pitches do
   
       it "defines constants for the 128 notes in MIDI" do
         Pitches.constants.length.should > 128 # there's also the MIDI_PITCHES constant

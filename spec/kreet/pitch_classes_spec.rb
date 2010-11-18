@@ -2,7 +2,7 @@ require 'spec_helper'
 module Kreet
   module PitchClasses
 
-    describe PitchClasses do
+    describe Kreet::PitchClasses do
 
       let(:cases) {
         [

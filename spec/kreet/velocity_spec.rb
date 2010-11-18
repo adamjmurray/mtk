@@ -3,7 +3,7 @@ load_shared_examples_for :scalar
 
 module Kreet
 
-  describe Velocity do
+  describe Kreet::Velocity do
     
     let(:value) { 70.5 }
     subject { Velocity.new(value) }

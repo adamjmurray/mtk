@@ -1,7 +1,7 @@
 require 'spec_helper'
 module Kreet
     
-  describe Sequence do
+  describe Kreet::Sequence do
     
     subject { Sequence.new(1,2,3) }
 

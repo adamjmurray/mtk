@@ -1,9 +1,10 @@
 module Kreet
 
-  # Constants for the pitch classes in the Western chromatic scale
+  # Defines a constant for each {PitchClass}in the Western chromatic scale.
   
   module PitchClasses
 
+    # An array of all pitch class constants defined in this module
     PITCH_CLASSES = []
 
     PitchClass::NAMES.each_with_index do |name,value|
