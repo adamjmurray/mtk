@@ -9,6 +9,7 @@ require 'spec_helper'
     let(:highest)  { Pitch[g, 9] }   
     let(:subjects) { [middle_c, lowest, highest] }   
     let(:middle_c_and_50_cents) { Pitch.new(c,4,0.5) }
+    subject { middle_c_and_50_cents }
 
     describe '#pitch_class' do
       it "is the pitch class of the pitch" do
@@ -33,7 +34,7 @@ require 'spec_helper'
     
     describe '#offset_in_cents' do
       it 'is #offset * 100' do
-        middle_c_and_50_cents.offset_in_cents.should == middle_c_and_50_cents.offset * 100
+        subject.offset_in_cents.should == subject.offset * 100
       end
     end
 
@@ -49,12 +50,6 @@ require 'spec_helper'
         p.pitch_class.should == c
         p.octave.should == 4
         p.offset.should == 0.5
-      end
-    end
-    
-    describe '.from_cents' do
-      it "acts like .from_f with the argument multiplied by 100" do
-        Pitch.from_cents( 6050 ).should == Pitch.from_f( 60.5 )
       end
     end
     
@@ -86,12 +81,6 @@ require 'spec_helper'
       it "rounds to the nearest integer (the nearest semitone value) when there is an offset" do
         Pitch.new( c, 4, 0.4 ).to_i.should == 60
         Pitch.new( c, 4, 0.5 ).to_i.should == 61
-      end
-    end
-    
-    describe '#to_cents' do
-      it "is #to_f * 100" do
-        middle_c_and_50_cents.to_cents.should == middle_c_and_50_cents.to_f * 100
       end
     end
 

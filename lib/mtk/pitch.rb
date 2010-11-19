@@ -1,9 +1,8 @@
 module MTK
 
-  # A logarithmic representation of frequency 
-  # specified by a {PitchClass}, an integer octave, and an offset in fractional semitones.
+  # A frequency represented by a {PitchClass}, an integer octave, and an offset in semitones.
   
-  class Pitch
+  class Pitch < Frequency::Semitones
 
     attr_reader :pitch_class, :octave, :offset
 
@@ -13,14 +12,15 @@ module MTK
     
     def self.[]( *args )
       args = args[0] if args.length == 1
-      case args
-      when Array
+      if args.is_a? Array
         pitch_class, octave = *args
         if pitch_class.kind_of? PitchClass and octave.kind_of? Numeric
           new( pitch_class, octave.to_i )
         end
-      when Numeric
-        from_i( args )
+      elsif args.respond_to? :to_semitones
+        from_f( args.to_semitones )
+      elsif args.is_a? Numeric
+        from_f( args )
       else
         from_s( args )
       end
@@ -39,6 +39,7 @@ module MTK
       end
     end
     
+    # Convert a Numeric semitones value into a Pitch
     def self.from_f( f )
       i, offset = f.floor, f%1  # split into int and fractional part
       pitch_class = PitchClasses::PITCH_CLASSES[i % 12]
@@ -46,31 +47,28 @@ module MTK
       new( pitch_class, octave, offset )      
     end      
     
+    # Convert a Numeric semitones value into a Pitch    
     def self.from_i( i )
       self.from_f( i ) 
     end    
     
-    def self.from_cents( cents )
-      self.from_f( cents/100.0 )
+    def self.from_frequency( f )
+      self.from_f( f.to_semitones )
     end
     
     # The numerical value of this pitch without the offset
     def base_value
-      @base_value ||= @pitch_class.to_i + 12*(@octave+1)
+      @pitch_class.to_i + 12*(@octave+1)
     end
 
     # The numerical value of this pitch
     def to_f
-      @float_value ||= base_value + @offset
+      base_value + @offset
     end 
 
     # The numerical value for the nearest semitone
     def to_i
-      @int_value ||= to_f.round
-    end
-    
-    def to_cents
-      to_f * 100
+      to_f.round
     end
     
     def offset_in_cents
@@ -78,7 +76,7 @@ module MTK
     end
     
     def to_s
-      @s ||= "#@pitch_class#@octave" + if @offset.zero? then '' else "+#{offset_in_cents}cents" end
+      "#@pitch_class#@octave" + if @offset.zero? then '' else "+#{offset_in_cents}cents" end
     end
     
     def ==( other )
