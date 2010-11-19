@@ -12,6 +12,7 @@ module MTK
       @value = value
     end
 
+    # the nearest integer
     def to_i
       @value.round
     end  
@@ -21,30 +22,41 @@ module MTK
     end  
     
     def <=> other
-      value <=> Scalar.value_of( other )
+      value <=> value_of( other )
     end
 
     def + param
-      self.class.new( value + Scalar.value_of( param ))
+      self.class.new( value + value_of(param) )
     end
 
     def - param
-      self.class.new( value - Scalar.value_of( param ))    
+      self.class.new( value - value_of(param) )    
     end
 
     def * param
-      self.class.new( value * Scalar.value_of( param ))
+      self.class.new( value * value_of(param) )
     end
 
     def / param
-      self.class.new( value / Scalar.value_of( param ))
+      self.class.new( value / value_of(param) )
     end
 
     def % param
-      self.class.new( value % Scalar.value_of( param ))
+      self.class.new( value % value_of(param) )
     end
        
-    def self.value_of( something )
+    def coerce(other)
+      if other.is_a? Numeric
+        return [ self.class.new( other ), self ]
+      elsif other.respond_to? :to_f
+        return [ self.class.new( other.to_f ), self ]
+      else
+        raise TypeError, "#{self.class} can't be coerced into #{other.class}"
+      end
+    end       
+    
+    private
+    def value_of( something )
       if something.is_a? Numeric
         something
       elsif something.respond_to? :value        
@@ -54,6 +66,5 @@ module MTK
       end
     end
     
-  end
-  
+  end  
 end

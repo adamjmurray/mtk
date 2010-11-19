@@ -1,5 +1,4 @@
 require 'spec_helper'
-load_shared_examples_for :scalar
 
 describe MTK::Velocity do
 
