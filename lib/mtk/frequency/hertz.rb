@@ -27,6 +27,10 @@ module MTK::Frequency
     def value_in_semitones
       69 + 12 * Math.log(value_in_hertz/440.0, 2)
     end
+    
+    def to_s
+      @value.to_s + ' Hz'
+    end
 
     ###########################################
     private

@@ -33,6 +33,12 @@ module MTK::Frequency
         end
       end
     end
+    
+    describe '#to_s' do
+      it 'should be the "#value Hz" ' do
+        subject.to_s.should == "#{subject.value} Hz"
+      end
+    end
   
   end
 end
