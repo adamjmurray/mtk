@@ -12,35 +12,16 @@ module MTK::Frequency
       self
     end
     
-    def to_semitones
-      # TODO: Semitones.new
-      Scalar.new( value_in_semitones )
-    end
-    
-    def to_cents
-      # TODO: Cents.new
-      Scalar.new( value_in_semitones * 100 )
-    end    
-    
-    def coerce(other)
-      case other
-      when Numeric
-        return [ Hertz.new( other ), self ]
-      end
-    end
-    
     def value_in_hertz
       @value * 1000
     end
     
-    # def value_of( something )
-    #   case something
-    #   when Numeric
-    #     
-    #   when 
-    #     
-    #   end
-    # end
+    ###########################################
+    private
+    
+    def value_of_compatible_type( something )      
+      something.to_khz.value if something.respond_to? :to_khz
+    end
 
   end
   

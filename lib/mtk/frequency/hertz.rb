@@ -7,21 +7,17 @@ module MTK::Frequency
     def to_hz
       self
     end
-    alias to_hertz to_hz
 
     def to_khz
       Kilohertz.new( @value / 1000.0 )
     end
-    alias to_kilohertz to_khz
 
     def to_semitones
-      # TODO: Semitones.new
-      Scalar.new( value_in_semitones )
+      Semitones.new( value_in_semitones )
     end
 
     def to_cents
-      # TODO: Cents.new
-      Scalar.new( value_in_semitones * 100 )
+      Cents.new( value_in_semitones * 100 )
     end    
 
     def value_in_hertz
@@ -30,6 +26,13 @@ module MTK::Frequency
 
     def value_in_semitones
       69 + 12 * Math.log(value_in_hertz/440.0, 2)
+    end
+
+    ###########################################
+    private
+    
+    def value_of_compatible_type( something )      
+      something.to_hz.value if something.respond_to? :to_hz
     end
 
   end

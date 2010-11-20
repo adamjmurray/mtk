@@ -15,6 +15,13 @@ module MTK::Frequency
     def value_in_semitones
       @value / 100.0
     end
+    
+    ###########################################
+    private
+    
+    def value_of_compatible_type( something )      
+      something.to_semitones.value if something.respond_to? :to_semitones
+    end
 
   end
 end

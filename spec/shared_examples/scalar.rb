@@ -1,4 +1,7 @@
 shared_examples_for "any Scalar" do
+  
+  let(:lo) { subject.class.new(0.0) }
+  let(:hi) { subject.class.new(1.0) }
 
   it 'should have Comparable methods' do
     lo.should      < hi
@@ -28,7 +31,7 @@ shared_examples_for "any Scalar" do
 
   describe '#to_i' do
     it 'is the value rounded to the nearest int' do
-      subject.to_i.should == value.round
+      subject.to_i.should == subject.value.round
     end
   end
 
@@ -53,8 +56,8 @@ shared_examples_for "any Scalar" do
 
   describe '#<=>' do
     it "is the receiver's value <=> the argument's value" do
-      for s1 in subjects
-        for s2 in subjects
+      for s1 in [lo,hi]
+        for s2 in [lo,hi]
           ( s1 <=> s2 ).should == ( s1.value <=> s2.value )
         end
       end
@@ -62,46 +65,55 @@ shared_examples_for "any Scalar" do
   end 
 
   describe '#+' do
-    it 'produces a Value with the value of the sum' do
+    it 'produces a Scalar with the value of the sum' do
       ( subject + 3 ).value.should == subject.value + 3
     end    
-    it 'produces a type of Value with the same class as the receiver' do
+    it 'produces a type of Scalar with the same class as the receiver' do
       (subject + 1.5).should be_a subject.class
+    end
+  end
+  
+  context "argument to #+" do
+    it "can be added to numbers" do
+      (44 + subject).should == 44 + subject.value
+    end
+    it "produces a type of Scalar with the same calss as the argument" do
+      (1.5 + subject).should be_a subject.class
     end
   end
 
   describe '#-' do
-    it 'produces a Value with the value of the difference' do
+    it 'produces a Scalar with the value of the difference' do
       ( subject - 3 ).value.should == subject.value - 3
     end    
-    it 'produces a type of Value with the same class as the receiver' do
+    it 'produces a type of Scalar with the same class as the receiver' do
       (subject - 1.5).should be_a subject.class
     end      
   end
 
   describe '#*' do
-    it 'produces a Value with the value of the product' do
+    it 'produces a Scalar with the value of the product' do
       ( subject * 3 ).value.should == subject.value * 3
     end
-    it 'produces a type of Value with the same class as the receiver' do
+    it 'produces a type of Scalar with the same class as the receiver' do
       (subject * 1.5).should be_a subject.class
     end            
   end
 
   describe '#/' do
-    it 'produces a Value with the value of the product' do
+    it 'produces a Scalar with the value of the product' do
       ( subject / 3 ).value.should == subject.value / 3
     end
-    it 'produces a type of Value with the same class as the receiver' do
+    it 'produces a type of Scalar with the same class as the receiver' do
       (subject / 1.5).should be_a subject.class
     end            
   end
 
   describe '%/' do
-    it 'produces a Value with the value of the remainder' do
+    it 'produces a Scalar with the value of the remainder' do
       ( subject % 3 ).value.should == subject.value % 3
     end
-    it 'produces a type of Value with the same class as the receiver' do
+    it 'produces a type of Scalar with the same class as the receiver' do
       (subject % 1.5).should be_a subject.class
     end            
   end

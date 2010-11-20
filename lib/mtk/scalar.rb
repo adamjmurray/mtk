@@ -26,7 +26,7 @@ module MTK
     end
 
     def + param
-      self.class.new( value + value_of(param) )
+     self.class.new( value + value_of(param) )
     end
 
     def - param
@@ -55,15 +55,25 @@ module MTK
       end
     end       
     
+    ###########################################
     private
+    
     def value_of( something )
       if something.is_a? Numeric
-        something
-      elsif something.respond_to? :value        
-        something.value
+        return something
       else
-        nil
+        value = value_of_compatible_type( something )
+        if value
+          return value
+        else
+          raise TypeError, "#{self.class} can't be coerced into #{other.class}"
+        end
       end
+    end
+    
+    # return a compatible value after performing any needed conversions, otherwise nil if not compatible
+    def value_of_compatible_type( something )      
+      something.value if something.respond_to? :value        
     end
     
   end  
