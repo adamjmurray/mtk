@@ -29,7 +29,11 @@ module MTK::Frequency
     end
     
     def to_s
-      @value.to_s + ' Hz'
+      (if @value.to_f == @value.to_i
+        @value.to_i
+      else
+        @value
+      end).to_s + ' Hz'
     end
 
     ###########################################
