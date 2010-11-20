@@ -1,13 +1,15 @@
 module MTK
+ module Frequency
 
   # A frequency represented by a {PitchClass}, an integer octave, and an offset in semitones.
   
-  class Pitch < Frequency::Semitones
+  class Pitch < Semitones
 
     attr_reader :pitch_class, :octave, :offset
 
     def initialize( pitch_class, octave, offset=0 )
       @pitch_class, @octave, @offset = pitch_class, octave, offset
+      @value = @pitch_class.to_i + 12*(@octave+1) + @offset
     end    
     
     def self.[]( *args )
@@ -55,20 +57,15 @@ module MTK
     def self.from_frequency( f )
       self.from_f( f.to_semitones )
     end
-    
-    # The numerical value of this pitch without the offset
-    def base_value
-      @pitch_class.to_i + 12*(@octave+1)
-    end
 
     # The numerical value of this pitch
     def to_f
-      base_value + @offset
+      @value
     end 
 
     # The numerical value for the nearest semitone
     def to_i
-      to_f.round
+      @value.round
     end
     
     def offset_in_cents
@@ -93,5 +90,5 @@ module MTK
     end
               
   end
-  
+ end
 end

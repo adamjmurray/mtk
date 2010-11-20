@@ -1,6 +1,7 @@
 require 'spec_helper'
+module Frequency
 
-  describe MTK::Pitch do
+  describe MTK::Frequency::Pitch do
 
     let(:c) { PitchClass[:C] }
     let(:g) { PitchClass[:G] }
@@ -9,6 +10,7 @@ require 'spec_helper'
     let(:highest)  { Pitch[g, 9] }   
     let(:subjects) { [middle_c, lowest, highest] }   
     let(:middle_c_and_50_cents) { Pitch.new(c,4,0.5) }
+    let(:value) { subject.value }
     subject { middle_c_and_50_cents }
 
     describe '#pitch_class' do
@@ -124,3 +126,4 @@ require 'spec_helper'
     end
     
   end
+end
