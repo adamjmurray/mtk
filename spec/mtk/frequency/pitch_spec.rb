@@ -1,5 +1,5 @@
 require 'spec_helper'
-module Frequency
+module MTK::Frequency
 
   describe MTK::Frequency::Pitch do
 
