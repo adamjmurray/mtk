@@ -1,21 +1,25 @@
 class Numeric
 
-  def semitones
+  def to_semitones
     MTK::Frequency::Semitones.new( self )
   end
+  alias semitones to_semitones
   
-  def cents
+  def to_cents
     MTK::Frequency::Cents.new( self )
   end
+  alias cents to_cents
 
-  def hz
+  def to_hz
     MTK::Frequency::Hertz.new( self )
   end
-  alias Hz hz
+  alias hz to_hz
+  alias Hz to_hz
 
-  def khz
+  def to_khz
     MTK::Frequency::Kilohertz.new( self )
   end
-  alias kHz khz
+  alias khz to_khz
+  alias kHz to_khz
   
 end

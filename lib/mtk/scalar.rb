@@ -8,8 +8,12 @@ module MTK
 
     attr_reader :value
         
-    def initialize( value )
+    def initialize(value)
       @value = value
+    end
+
+    def self.from_value(value)
+      new(value)
     end
 
     # the nearest integer
@@ -22,31 +26,31 @@ module MTK
     end  
     
     def <=> other
-      @value <=> value_of( other )
+      @value <=> value_of(other)
     end
 
     def + param
-     self.class.new( @value + value_of(param) )
+     self.class.from_value( @value + value_of(param) )
     end
 
     def - param
-      self.class.new( @value - value_of(param) )
+      self.class.from_value( @value - value_of(param) )
     end
 
     def * param
-      self.class.new( @value * value_of(param) )
+      self.class.from_value( @value * value_of(param) )
     end
 
     def / param
-      self.class.new( @value / value_of(param) )
+      self.class.from_value( @value / value_of(param) )
     end
 
     def % param
-      self.class.new( @value % value_of(param) )
+      self.class.from_value( @value % value_of(param) )
     end
        
     def coerce(other)
-      return [ self.class.new(value_of other), self ]
+      return [ self.class.from_value(value_of other), self ]
     end       
     
     ###########################################

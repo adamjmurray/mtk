@@ -10,7 +10,7 @@ module MTK
     def initialize( pitch_class, octave, offset=0 )
       @pitch_class, @octave, @offset = pitch_class, octave, offset
       @value = @pitch_class.to_i + 12*(@octave+1) + @offset
-    end    
+    end
     
     def self.[]( *args )
       args = args[0] if args.length == 1
@@ -20,7 +20,7 @@ module MTK
           new( pitch_class, octave.to_i )
         end
       elsif args.respond_to? :to_semitones
-        from_f( args.to_semitones )
+        from_f( args.to_semitones.to_f )
       elsif args.is_a? Numeric
         from_f( args )
       else
@@ -51,11 +51,15 @@ module MTK
     
     # Convert a Numeric semitones value into a Pitch    
     def self.from_i( i )
-      self.from_f( i ) 
+      from_f( i )
     end    
     
     def self.from_frequency( f )
-      self.from_f( f.to_semitones )
+      from_f( f.to_semitones.to_f )
+    end
+
+    def self.from_value(value)
+      from_f(value.to_f)
     end
 
     # The numerical value of this pitch
@@ -78,17 +82,15 @@ module MTK
     
     def ==( other )
       other.respond_to? :pitch_class and other.respond_to? :octave and
-      other.pitch_class == pitch_class and other.octave == octave      
+      other.pitch_class == pitch_class and other.octave == octave
     end
-    
-    def +( interval )
-      self.class.from_f( to_f + interval.to_f )
+
+    def value_of_compatible_type( something )
+      puts "PITCH CONVERTING #{something} to semitones"
+      puts "value is #{something.to_semitones.value}"
+      something.to_semitones if something.respond_to? :to_semitones
     end
-      
-    def -( interval )
-      self.class.from_f( to_f - interval.to_f )
-    end
-              
+
   end
  end
 end
