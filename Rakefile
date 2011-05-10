@@ -1,6 +1,5 @@
 require 'rspec/core/rake_task'
 require 'cucumber/rake/task'
-#require 'rake/rdoctask'
 require 'rake/clean'
 require 'yard'
 
@@ -11,13 +10,6 @@ CLEAN.include('html','doc') # clean and clobber do the same thing for now
 RSpec::Core::RakeTask.new do |spec| 
   spec.rspec_opts = ["--color", "--format", "nested"]
 end
-
-Cucumber::Rake::Task.new
-
-# Rake::RDocTask.new do |rdoc|
-#   rdoc.rdoc_files.include('README.md', 'lib/**/*.rb')
-# end
-# yard is the preferred doc generator for this project
 
 YARD::Rake::YardocTask.new do |yard|
   yard.files   = ['lib/**/*.rb', 'spec/**/*.rb']
