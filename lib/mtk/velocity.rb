@@ -1,4 +1,4 @@
-module MTK::Intensity
+module MTK
   
   # The velocity of a note.
   

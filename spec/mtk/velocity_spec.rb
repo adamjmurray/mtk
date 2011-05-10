@@ -1,7 +1,7 @@
 require 'spec_helper'
-module MTK::Intensity
+module MTK
 
-  describe MTK::Intensity::Velocity do
+  describe MTK::Velocity do
 
     let(:value) { 70.5 }
     subject { Velocity.new(value) }

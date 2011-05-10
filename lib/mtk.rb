@@ -2,10 +2,10 @@ require 'mtk/scalar'
 
 require 'mtk/pitch_class'
 
-require 'mtk/frequency/pitch'
-require 'mtk/frequency/numeric_extensions'
+require 'mtk/pitch'
+require 'mtk/numeric_extensions'
 
-require 'mtk/intensity/velocity'
+require 'mtk/velocity'
 
 require 'mtk/sequence'
 

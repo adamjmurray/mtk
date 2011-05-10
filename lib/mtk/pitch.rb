@@ -1,5 +1,4 @@
 module MTK
- module Frequency
 
   # A frequency represented by a {PitchClass}, an integer octave, and an offset in semitones.
   
@@ -83,5 +82,5 @@ module MTK
     end
 
   end
- end
+
 end

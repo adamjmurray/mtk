@@ -1,7 +1,7 @@
 require 'spec_helper'
-module MTK::Frequency
+module MTK
 
-  describe MTK::Frequency::Pitch do
+  describe MTK::Pitch do
 
     let(:c) { PitchClass[:C] }
     let(:g) { PitchClass[:G] }
