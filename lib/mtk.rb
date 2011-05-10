@@ -1,10 +1,6 @@
-require 'mtk/scalar'
-
 require 'mtk/pitch_class'
 require 'mtk/pitch'
 require 'mtk/numeric_extensions'
-
-require 'mtk/velocity'
 
 require 'mtk/sequence'
 
