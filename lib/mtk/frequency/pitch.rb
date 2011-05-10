@@ -3,7 +3,9 @@ module MTK
 
   # A frequency represented by a {PitchClass}, an integer octave, and an offset in semitones.
   
-  class Pitch < Semitones
+  class Pitch
+
+    include Comparable
 
     attr_reader :pitch_class, :octave, :offset
 
@@ -12,25 +14,8 @@ module MTK
       @value = @pitch_class.to_i + 12*(@octave+1) + @offset
     end
     
-    def self.[]( *args )
-      args = args[0] if args.length == 1
-      if args.is_a? Array
-        pitch_class, octave = *args
-        if pitch_class.kind_of? PitchClass and octave.kind_of? Numeric
-          new( pitch_class, octave.to_i )
-        end
-      elsif args.respond_to? :to_semitones
-        from_f( args.to_semitones.to_f )
-      elsif args.is_a? Numeric
-        from_f( args )
-      else
-        from_s( args )
-      end
-    end
-    
     def self.from_s( s )
       # TODO: update to handle offset
-      s = s.to_s
       s = s[0].upcase + s[1..-1].downcase # normalize name
       if s =~ /^([A-G](#|##|b|bb)?)(-?\d+)$/
         pitch_class = PitchClass.from_s($1)
@@ -52,14 +37,6 @@ module MTK
     # Convert a Numeric semitones value into a Pitch    
     def self.from_i( i )
       from_f( i )
-    end    
-    
-    def self.from_frequency( f )
-      from_f( f.to_semitones.to_f )
-    end
-
-    def self.from_value(value)
-      from_f(value.to_f)
     end
 
     # The numerical value of this pitch
@@ -77,18 +54,32 @@ module MTK
     end
     
     def to_s
-      "#@pitch_class#@octave" + if @offset.zero? then '' else "+#{offset_in_cents}cents" end
+      "#{@pitch_class}#{@octave}" + (@offset.zero? ? '' : "+#{offset_in_cents}cents")
     end
     
     def ==( other )
-      other.respond_to? :pitch_class and other.respond_to? :octave and
-      other.pitch_class == pitch_class and other.octave == octave
+      other.respond_to? :pitch_class and other.respond_to? :octave and other.respond_to? :offset and
+      other.pitch_class == @pitch_class and other.octave == @octave and other.offset == @offset
     end
 
-    def value_of_compatible_type( something )
-      puts "PITCH CONVERTING #{something} to semitones"
-      puts "value is #{something.to_semitones.value}"
-      something.to_semitones if something.respond_to? :to_semitones
+    def <=> other
+      @value <=> other.to_f
+    end
+
+    def + interval_in_semitones
+     self.class.from_f( @value + interval_in_semitones.to_f )
+    end
+
+    def - interval_in_semitones
+      self.class.from_f( @value - interval_in_semitones.to_f )
+    end
+
+    def % interval_in_semitones
+      self.class.from_f( @value + interval_in_semitones.to_f )
+    end
+
+    def coerce(other)
+      return self.class.from_f(other.to_f), self
     end
 
   end

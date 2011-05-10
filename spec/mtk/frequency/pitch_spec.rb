@@ -5,9 +5,9 @@ module MTK::Frequency
 
     let(:c) { PitchClass[:C] }
     let(:g) { PitchClass[:G] }
-    let(:middle_c) { Pitch[c, 4] }
-    let(:lowest)   { Pitch[c,-1] }
-    let(:highest)  { Pitch[g, 9] }   
+    let(:middle_c) { Pitch.new(c, 4) }
+    let(:lowest)   { Pitch.new(c,-1) }
+    let(:highest)  { Pitch.new(g, 9) }
     let(:subjects) { [middle_c, lowest, highest] }   
     let(:middle_c_and_50_cents) { Pitch.new(c,4,0.5) }
     let(:value) { subject.value }
@@ -61,15 +61,6 @@ module MTK::Frequency
       it( "converts 'B#4' to middle c") { Pitch.from_s('B#4').should == middle_c }
     end
 
-    describe '.[]' do
-      it "acts like from_s if the argument is a string" do
-        Pitch['D6'].should == Pitch.from_s('D6')        
-      end
-      it "acts like from_i if the argument is a number" do
-        Pitch[3].should == Pitch.from_i(3)
-      end
-    end
-    
     describe '#to_f' do
       it "is 60.5 for middle C with a 0.5 offset" do
         middle_c_and_50_cents.to_f.should == 60.5
@@ -88,11 +79,11 @@ module MTK::Frequency
 
     describe '#==' do
       it "compares the pitch_class and octave for equality" do
-        middle_c.should == Pitch[c,4]
-        middle_c.should_not == Pitch[c,3]
-        middle_c.should_not == Pitch[g,4]
-        middle_c.should_not == Pitch[g,3]
-        highest.should == Pitch[g,9]               
+        middle_c.should == Pitch.from_s('C4')
+        middle_c.should_not == Pitch.from_s('C3')
+        middle_c.should_not == Pitch.from_s('G4')
+        middle_c.should_not == Pitch.from_s('G3')
+        highest.should == Pitch.from_s('G9')
       end
     end
     
@@ -111,8 +102,9 @@ module MTK::Frequency
       it 'adds the integer value of the argument and #to_i' do
         (middle_c + 2).should == Pitch.from_i( 62 )
       end
+
       it 'handles offsets' do
-        pending
+        (middle_c + Pitch.from_f(0.5)).should == Pitch.from_f(60.5)
       end
     end
 
@@ -120,8 +112,19 @@ module MTK::Frequency
       it 'subtracts the integer value of the argument from #to_i' do
         (middle_c - 2).should == Pitch.from_i( 58 )
       end
+
       it 'handles offsets' do
-        pending
+        (middle_c - Pitch.from_f(0.5)).should == Pitch.from_f(59.5)
+      end
+    end
+
+    describe '#coerce' do
+      it 'allows a Pitch to be added to a Numeric' do
+        (2 + middle_c).should == Pitch.from_i( 62 )
+      end
+
+      it 'allows a Pitch to be subtracted from a Numeric' do
+        (62 - middle_c).should == Pitch.from_i( 2 )
       end
     end
     
