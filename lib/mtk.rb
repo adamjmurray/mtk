@@ -1,8 +1,10 @@
 require 'mtk/pitch_class'
 require 'mtk/pitch'
-require 'mtk/numeric_extensions'
+require 'mtk/scale'
 
 require 'mtk/sequence'
+
+require 'mtk/numeric_extensions'
 
 
 ##############################################
