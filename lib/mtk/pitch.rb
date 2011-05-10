@@ -81,6 +81,18 @@ module MTK
       return self.class.from_f(other.to_f), self
     end
 
+    module Constants
+      # An array of all the pitch constants defined in this module
+      MIDI_PITCHES = []
+
+      128.times do |note_number|
+        pitch = Pitch.from_i( note_number )
+        MIDI_PITCHES << pitch
+        const_name = pitch.to_s.sub(/-/,'_') # '_1' for -1
+        const_set const_name, pitch
+      end
+    end
+
   end
 
 end
