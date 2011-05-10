@@ -7,6 +7,7 @@ require 'mtk/frequency/cents'
 require 'mtk/frequency/hertz'
 require 'mtk/frequency/kilohertz'
 require 'mtk/frequency/pitch'
+require 'mtk/frequency/numeric_extensions'
 
 require 'mtk/intensity/velocity'
 
