@@ -106,6 +106,13 @@ module MTK
       it 'handles offsets' do
         (middle_c + Pitch.from_f(0.5)).should == Pitch.from_f(60.5)
       end
+
+      it 'returns a new pitch (Pitch is immutabile)' do
+        original = Pitch.from_i(60)
+        modified = original + 2
+        original.should_not == modified
+        original.should == Pitch.from_i(60)
+      end
     end
 
     describe '#-' do
@@ -115,6 +122,13 @@ module MTK
 
       it 'handles offsets' do
         (middle_c - Pitch.from_f(0.5)).should == Pitch.from_f(59.5)
+      end
+
+      it 'returns a new pitch (Pitch is immutabile)' do
+        original = Pitch.from_i(60)
+        modified = original - 2
+        original.should_not == modified
+        original.should == Pitch.from_i(60)
       end
     end
 
