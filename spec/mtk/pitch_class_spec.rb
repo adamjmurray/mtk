@@ -7,47 +7,47 @@ describe MTK::PitchClass do
   let(:d) { PitchClass['D'] }
   let(:e) { PitchClass['E'] }
 
-  let(:names) { 
+  let(:names) {
     [
-      ['B#',  'C',  'Dbb'],
-      ['B##', 'C#', 'Db' ],
-      ['C##', 'D',  'Ebb'],
-      ['D#',  'Eb', 'Fbb'],
-      ['D##', 'E',  'Fb' ],
-      ['E#',  'F',  'Gbb'],
-      ['E##', 'F#', 'Gb' ],
-      ['F##', 'G',  'Abb'],
-      ['G#',  'Ab'       ],
-      ['G##', 'A',  'Bbb'],
-      ['A#',  'Bb', 'Cbb'],
-      ['A##', 'B',  'Cb' ]
-    ].flatten 
+        ['B#', 'C', 'Dbb'],
+        ['B##', 'C#', 'Db'],
+        ['C##', 'D', 'Ebb'],
+        ['D#', 'Eb', 'Fbb'],
+        ['D##', 'E', 'Fb'],
+        ['E#', 'F', 'Gbb'],
+        ['E##', 'F#', 'Gb'],
+        ['F##', 'G', 'Abb'],
+        ['G#', 'Ab'],
+        ['G##', 'A', 'Bbb'],
+        ['A#', 'Bb', 'Cbb'],
+        ['A##', 'B', 'Cb']
+    ].flatten
   }
 
   describe 'NAMES' do
     it "is the 12 note names in western chromatic scale" do
-      PitchClass::NAMES =~ ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B']
+      PitchClass::NAMES =~ ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
     end
   end
 
-  describe '.from_s' do      
+  describe '.from_s' do
     context "the argument is a valid name" do
       it "returns a PitchClass" do
-        names.each{|name| subject.from_s( name ).should be_a PitchClass }            
+        names.each { |name| subject.from_s(name).should be_a PitchClass }
       end
       it "returns an object with that name" do
-        names.each{|name| subject.from_s( name ).name.should == name }            
+        names.each { |name| subject.from_s(name).name.should == name }
       end
       it "ignores case" do
         for name in names
-          subject.from_s( name.upcase ).name.should == name
+          subject.from_s(name.upcase).name.should == name
           subject.from_s(name.downcase).name.should == name
         end
-      end        
+      end
     end
     context "the argument is not a valid name" do
       it "returns nil, if the name doesn't exist" do
-        subject.from_s( 'z' ).should be_nil
+        subject.from_s('z').should be_nil
       end
     end
   end
@@ -55,7 +55,7 @@ describe MTK::PitchClass do
   describe '.from_name' do
     it "acts like from_s" do
       for name in ['C', 'bbb', 'z']
-        subject.from_name( name ).should == subject.from_s( name )
+        subject.from_name(name).should == subject.from_s(name)
       end
     end
   end
@@ -66,26 +66,26 @@ describe MTK::PitchClass do
     end
     it "returns the PitchClass with that value mod 12" do
       subject.from_i(14).should == d
-      subject.from_i(-8).should == e        
-    end      
+      subject.from_i(-8).should == e
+    end
   end
 
   describe '.[]' do
     it "acts like from_name if the argument is a string" do
-      subject['D'].should == subject.from_name('D')        
+      subject['D'].should == subject.from_name('D')
     end
     it "acts like from_i if the argument is a number" do
       subject[3].should == subject.from_i(3)
     end
   end
 
-  describe '#name' do      
+  describe '#name' do
     it "is the name of the pitch class" do
       c.name.should == 'C'
     end
   end
 
-  describe '#to_i' do      
+  describe '#to_i' do
     it "is the integer value of the pitch class" do
       c.to_i.should == 0
       d.to_i.should == 2
@@ -119,15 +119,49 @@ describe MTK::PitchClass do
     end
     it "'wraps around' the range 0-11" do
       (d + 10).should == c
-    end      
+    end
   end
 
   describe '#-' do
     it "subtracts the integer value of the argument from #to_i" do
-      (e - 2).should == d        
+      (e - 2).should == d
     end
     it "'wraps around' the range 0-11" do
       (c - 8).should == e
+    end
+  end
+
+  describe PitchClass::Constants do
+    let(:cases) {
+      [
+          [PitchClass::Constants::C, 'C', 0],
+          [PitchClass::Constants::Db, 'Db', 1],
+          [PitchClass::Constants::D, 'D', 2],
+          [PitchClass::Constants::Eb, 'Eb', 3],
+          [PitchClass::Constants::E, 'E', 4],
+          [PitchClass::Constants::F, 'F', 5],
+          [PitchClass::Constants::Gb, 'Gb', 6],
+          [PitchClass::Constants::G, 'G', 7],
+          [PitchClass::Constants::Ab, 'Ab', 8],
+          [PitchClass::Constants::A, 'A', 9],
+          [PitchClass::Constants::Bb, 'Bb', 10],
+          [PitchClass::Constants::B, 'B', 11],
+      ]
+    }
+
+    it "defines constants for the 12 pitch classes in the twelve-tone octave" do
+      cases.length.should == 12
+      cases.each do |const, name, int_value|
+        const.name.should == name
+        const.to_i.should == int_value
+      end
+    end
+
+    describe "PITCH_CLASSES" do
+      it "contains the 12 pitch class constants" do
+        PitchClass::Constants::PITCH_CLASSES.length.should == 12
+        PitchClass::Constants::PITCH_CLASSES.should == cases.map { |const, _, __| const }
+      end
     end
   end
 

@@ -131,20 +131,20 @@ module MTK
     describe 'Constants' do
 
       it "defines constants for the 128 notes in MIDI" do
-        Pitch::Constants.constants.length.should == 129 # there's also the MIDI_PITCHES constant
+        Pitch::Constants.constants.length.should == 129 # there's also the PITCHES constant
         Pitch::Constants::C_1.should == Pitch.from_s('C-1')
         Pitch::Constants::D0.should == Pitch.from_s('D0')
         Pitch::Constants::Eb1.should == Pitch.from_s('Eb1')
         Pitch::Constants::G9.should == Pitch.from_s('g9')
       end
 
-      describe "MIDI_PITCHES" do
+      describe "PITCHES" do
         it "contains all 128 pitch constants" do
-          Pitch::Constants::MIDI_PITCHES.length.should == 128
-          Pitch::Constants::MIDI_PITCHES.should include Pitch::Constants::C_1
-          Pitch::Constants::MIDI_PITCHES.should include Pitch::Constants::D0
-          Pitch::Constants::MIDI_PITCHES.should include Pitch::Constants::Eb1
-          Pitch::Constants::MIDI_PITCHES.should include Pitch::Constants::G9
+          Pitch::Constants::PITCHES.length.should == 128
+          Pitch::Constants::PITCHES.should include Pitch::Constants::C_1
+          Pitch::Constants::PITCHES.should include Pitch::Constants::D0
+          Pitch::Constants::PITCHES.should include Pitch::Constants::Eb1
+          Pitch::Constants::PITCHES.should include Pitch::Constants::G9
         end
       end
     end

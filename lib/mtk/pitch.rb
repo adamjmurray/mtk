@@ -28,7 +28,7 @@ module MTK
     # Convert a Numeric semitones value into a Pitch
     def self.from_f( f )
       i, offset = f.floor, f%1  # split into int and fractional part
-      pitch_class = PitchClasses::PITCH_CLASSES[i % 12]
+      pitch_class = PitchClass.from_i(i)
       octave = i/12 - 1
       new( pitch_class, octave, offset )      
     end      
@@ -81,13 +81,19 @@ module MTK
       return self.class.from_f(other.to_f), self
     end
 
+    # Defines a constants for each {Pitch} in the standard MIDI range using scientific pitch notation.
+    #
+    # See http://en.wikipedia.org/wiki/Scientific_pitch_notation
+    #
+    # Note that because the character '#' cannot be used in the name of a constant,
+    # The "black key" pitches are all named as flats with 'b' (for example, Gb3 or Cb4)
     module Constants
       # An array of all the pitch constants defined in this module
-      MIDI_PITCHES = []
+      PITCHES = []
 
       128.times do |note_number|
         pitch = Pitch.from_i( note_number )
-        MIDI_PITCHES << pitch
+        PITCHES << pitch
         const_name = pitch.to_s.sub(/-/,'_') # '_1' for -1
         const_set const_name, pitch
       end

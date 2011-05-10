@@ -1,8 +1,6 @@
 require 'mtk/scalar'
 
 require 'mtk/pitch_class'
-require 'mtk/pitch_classes'
-
 require 'mtk/pitch'
 require 'mtk/numeric_extensions'
 
@@ -16,17 +14,4 @@ require 'mtk/sequence'
 
 # The top level module for all classes in this library
 module MTK
-  
-  # The module containing all frequency-related classes
-  module Frequency    
-  end
-  
-  # The module containing all time-related classes
-  module Time
-  end
-  
-  # The module containing all intensity-related classes
-  module Intensity
-  end
-  
 end
