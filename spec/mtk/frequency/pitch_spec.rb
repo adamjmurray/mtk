@@ -26,7 +26,7 @@ module MTK::Frequency
     end
 
     describe '#offset' do
-      it 'is the third argument the constructor' do
+      it 'is the third argument of the constructor' do
         Pitch.new( c, 4, 0.6 ).offset.should == 0.6
       end
       it 'defaults to 0' do

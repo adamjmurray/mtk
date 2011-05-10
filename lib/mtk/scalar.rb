@@ -22,37 +22,31 @@ module MTK
     end  
     
     def <=> other
-      value <=> value_of( other )
+      @value <=> value_of( other )
     end
 
     def + param
-     self.class.new( value + value_of(param) )
+     self.class.new( @value + value_of(param) )
     end
 
     def - param
-      self.class.new( value - value_of(param) )    
+      self.class.new( @value - value_of(param) )
     end
 
     def * param
-      self.class.new( value * value_of(param) )
+      self.class.new( @value * value_of(param) )
     end
 
     def / param
-      self.class.new( value / value_of(param) )
+      self.class.new( @value / value_of(param) )
     end
 
     def % param
-      self.class.new( value % value_of(param) )
+      self.class.new( @value % value_of(param) )
     end
        
     def coerce(other)
-      if other.is_a? Numeric
-        return [ self.class.new( other ), self ]
-      elsif other.respond_to? :to_f
-        return [ self.class.new( other.to_f ), self ]
-      else
-        raise TypeError, "#{self.class} can't be coerced into #{other.class}"
-      end
+      return [ self.class.new(value_of other), self ]
     end       
     
     ###########################################
@@ -62,18 +56,13 @@ module MTK
       if something.is_a? Numeric
         return something
       else
-        value = value_of_compatible_type( something )
-        if value
-          return value
-        else
-          raise TypeError, "#{self.class} can't be coerced into #{other.class}"
-        end
+        return value_of_compatible_type( something ) || raise(TypeError, "#{self.class} can't be coerced into #{other.class}")
       end
     end
     
     # return a compatible value after performing any needed conversions, otherwise nil if not compatible
     def value_of_compatible_type( something )      
-      something.value if something.respond_to? :value        
+      something.value if something.respond_to? :value
     end
     
   end  
