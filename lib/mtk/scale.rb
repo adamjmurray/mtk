@@ -9,7 +9,7 @@ module MTK
     end
     
     def pitch_classes
-      @pitches.map{|pitch| pitch.pitch_class }
+      @pitch_classes ||= @pitches.map{|p| p.pitch_class }.uniq
     end
     
   end
