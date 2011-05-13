@@ -40,5 +40,26 @@ module MTK::Scale::Spec
       end
     end
 
+    describe '#+' do
+      it 'transposes upward by the given semitones' do
+        (@subject + 12).should == Scale.new([C5, D5, E5, F5, G5, A5, B5])
+      end
+    end
+
+    describe '#-' do
+      it 'transposes downward by the given semitones' do
+        (@subject - 12).should == Scale.new([C3, D3, E3, F3, G3, A3, B3])
+      end
+    end
+
+    describe '#include?' do
+      it 'returns true if the Pitch is in the Scale' do
+        (@subject.include? C4).should be_true
+      end
+
+      it 'returns false if the Pitch is not in the Scale' do
+        (@subject.include? Db4).should be_false
+      end
+    end
   end
 end
