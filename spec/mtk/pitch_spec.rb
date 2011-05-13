@@ -132,6 +132,20 @@ module MTK
       end
     end
 
+    describe "#invert" do
+      context 'higher center pitch' do
+        it 'inverts the pitch around the given center pitch' do
+          middle_c.invert(Pitch.from_i(66)).should == Pitch.from_i(72)
+        end
+      end
+
+      context 'lower center pitch' do
+        it 'inverts the pitch around the given center pitch' do
+          middle_c.invert(Pitch.from_i(54)).should == Pitch.from_i(48)
+        end
+      end
+    end
+
     describe '#coerce' do
       it 'allows a Pitch to be added to a Numeric' do
         (2 + middle_c).should == Pitch.from_i(62)

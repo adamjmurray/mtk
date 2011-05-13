@@ -15,11 +15,15 @@ module MTK
     end
 
     def + semitones
-      map_with :+, semitones
+      each_pitch_apply :+, semitones
     end
 
     def - semitones
-      map_with :-, semitones
+      each_pitch_apply :-, semitones
+    end
+
+    def invert(center_pitch)
+      each_pitch_apply :invert, center_pitch
     end
 
     def include? pitch
@@ -33,7 +37,7 @@ module MTK
     #######################################
     private
 
-    def map_with(method_name, *args, &block)
+    def each_pitch_apply(method_name, *args, &block)
       self.class.new @pitches.map{|pitch| pitch.send(method_name, *args, &block) }
     end
 

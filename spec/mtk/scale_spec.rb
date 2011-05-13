@@ -52,6 +52,12 @@ module MTK::Scale::Spec
       end
     end
 
+    describe '#invert' do
+      it 'inverts all pitches around the given center pitch' do
+        (@subject.invert Gb4).should == Scale.new([C5, Bb4, Ab4, G4, F4, Eb4, Db4])
+      end
+    end
+
     describe '#include?' do
       it 'returns true if the Pitch is in the Scale' do
         (@subject.include? C4).should be_true

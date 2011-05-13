@@ -73,8 +73,8 @@ module MTK
       self.class.from_f( @value - interval_in_semitones.to_f )
     end
 
-    def % interval_in_semitones
-      self.class.from_f( @value + interval_in_semitones.to_f )
+    def invert(center_pitch)
+      self + 2*(center_pitch.to_f - to_f)
     end
 
     def coerce(other)
