@@ -4,7 +4,7 @@ module MTK
   class Chord < PitchList
 
     def initialize(pitches)
-      @pitches = pitches.clone.sort.uniq.freeze
+      @pitches = pitches.uniq.sort.freeze
     end
 
     def inversion(number)

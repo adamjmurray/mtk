@@ -108,6 +108,13 @@ describe MTK::PitchClass do
     end
   end
 
+  describe "#<=>" do
+    it "compares the underlying int value" do
+      (C <=> D).should < 0
+      (B <=> C).should > 0
+    end
+  end
+
   describe '#+' do
     it "adds the integer value of the argument and #to_i" do
       (C + 4).should == E

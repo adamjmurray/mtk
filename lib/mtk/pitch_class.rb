@@ -72,8 +72,12 @@ module MTK
       end
     end
 
-    def ==(other)
+    def == other
       other.kind_of? PitchClass and other.to_i == @int_value
+    end
+
+    def <=> other
+      @int_value <=> other.to_i
     end
 
     def to_s
