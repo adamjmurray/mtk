@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Scale do
+describe MTK::PitchList do
 
   before do
     @pitches = [C4, D4, E4, F4, G4, A4, B4]
@@ -52,6 +52,10 @@ describe Scale do
   describe '#invert' do
     it 'inverts all pitches around the given center pitch' do
       (@subject.invert Gb4).should == Scale.new([C5, Bb4, Ab4, G4, F4, Eb4, Db4])
+    end
+
+    it 'inverts all pitches around the first pitch, when no center pitch is given' do
+      @subject.invert.should == Scale.new([C4, Bb3, Ab3, G3, F3, Eb3, Db3])
     end
   end
 

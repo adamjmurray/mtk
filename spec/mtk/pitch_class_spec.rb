@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PitchClass do
+describe MTK::PitchClass do
 
   let(:names) {
     [

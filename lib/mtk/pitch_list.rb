@@ -23,7 +23,7 @@ module MTK
       each_pitch_apply :-, semitones
     end
 
-    def invert(center_pitch)
+    def invert(center_pitch=@pitches.first)
       each_pitch_apply :invert, center_pitch
     end
 

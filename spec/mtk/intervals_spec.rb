@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Intervals do
+describe MTK::Intervals do
 
   describe 'P1' do
     it 'is 0 semitones' do
@@ -56,7 +56,6 @@ describe Intervals do
     end
   end
 
-
   describe 'MIN6' do
     it 'is 8 semitones' do
       MIN6.should == 8
@@ -68,7 +67,6 @@ describe Intervals do
       MAJ6.should == 9
     end
   end
-
 
   describe 'MIN7' do
     it 'is 10 semitones' do

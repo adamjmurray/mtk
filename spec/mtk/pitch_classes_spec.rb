@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PitchClasses do
+describe MTK::PitchClasses do
   let(:cases) {
     [
         [PitchClasses::C,  'C',   0],

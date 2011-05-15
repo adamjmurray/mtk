@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Pitch do
+describe MTK::Pitch do
 
   let(:middle_c) { Pitch.new(C, 4) }
   let(:lowest) { Pitch.new(C, -1) }

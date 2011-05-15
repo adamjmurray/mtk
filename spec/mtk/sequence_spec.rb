@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sequence do
+describe MTK::Sequence do
 
   let(:subject) { Sequence.new(1,2,3) }
 
