@@ -7,7 +7,6 @@ module MTK
     alias to_a pitches
 
     def initialize(pitches)
-      puts "IN SUPER"
       @pitches = pitches.clone.freeze
     end
 

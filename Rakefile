@@ -1,5 +1,4 @@
 require 'rspec/core/rake_task'
-require 'cucumber/rake/task'
 require 'rake/clean'
 require 'yard'
 
