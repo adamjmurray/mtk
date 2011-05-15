@@ -2,3 +2,4 @@ html
 doc
 .yardoc
 .idea
+*.iml
