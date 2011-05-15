@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe MTK::PitchClass do
+describe PitchClass do
 
-  subject { PitchClass }
+  let(:subject) { PitchClass }
   let(:c) { PitchClass['C'] }
   let(:d) { PitchClass['D'] }
   let(:e) { PitchClass['E'] }
@@ -128,40 +128,6 @@ describe MTK::PitchClass do
     end
     it "'wraps around' the range 0-11" do
       (c - 8).should == e
-    end
-  end
-
-  describe PitchClass::Constants do
-    let(:cases) {
-      [
-          [PitchClass::Constants::C, 'C', 0],
-          [PitchClass::Constants::Db, 'Db', 1],
-          [PitchClass::Constants::D, 'D', 2],
-          [PitchClass::Constants::Eb, 'Eb', 3],
-          [PitchClass::Constants::E, 'E', 4],
-          [PitchClass::Constants::F, 'F', 5],
-          [PitchClass::Constants::Gb, 'Gb', 6],
-          [PitchClass::Constants::G, 'G', 7],
-          [PitchClass::Constants::Ab, 'Ab', 8],
-          [PitchClass::Constants::A, 'A', 9],
-          [PitchClass::Constants::Bb, 'Bb', 10],
-          [PitchClass::Constants::B, 'B', 11],
-      ]
-    }
-
-    it "defines constants for the 12 pitch classes in the twelve-tone octave" do
-      cases.length.should == 12
-      cases.each do |const, name, int_value|
-        const.name.should == name
-        const.to_i.should == int_value
-      end
-    end
-
-    describe "PITCH_CLASSES" do
-      it "contains the 12 pitch class constants" do
-        PitchClass::Constants::PITCH_CLASSES.length.should == 12
-        PitchClass::Constants::PITCH_CLASSES.should == cases.map { |const, _, __| const }
-      end
     end
   end
 

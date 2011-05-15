@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe MTK::Sequence do
+describe Sequence do
 
-  subject { Sequence.new(1,2,3) }
+  let(:subject) { Sequence.new(1,2,3) }
 
   describe '#to_a' do
     it 'converts the sequence to an array' do

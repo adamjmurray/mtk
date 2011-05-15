@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MTK::Chord do
+describe Chord do
 
   let(:c_major) { Chord.new([C4,E4,G4]) }
 

@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-
-describe MTK::Scale do
+describe Scale do
 
   before do
     @pitches = [C4, D4, E4, F4, G4, A4, B4]
