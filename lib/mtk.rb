@@ -8,6 +8,7 @@ require 'mtk/note'
 require 'mtk/chord'
 require 'mtk/intervals'
 require 'mtk/dynamics'
+require 'mtk/timeline'
 require 'mtk/numeric_extensions'
 
 
