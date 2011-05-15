@@ -10,8 +10,7 @@ module MTK
     let(:highest) { Pitch.new(g, 9) }
     let(:subjects) { [middle_c, lowest, highest] }
     let(:middle_c_and_50_cents) { Pitch.new(c, 4, 0.5) }
-    let(:value) { subject.value }
-    subject { middle_c_and_50_cents }
+    let(:subject) { middle_c_and_50_cents }
 
     describe '#pitch_class' do
       it "is the pitch class of the pitch" do
@@ -84,6 +83,12 @@ module MTK
         middle_c.should_not == Pitch.from_s('G4')
         middle_c.should_not == Pitch.from_s('G3')
         highest.should == Pitch.from_s('G9')
+      end
+    end
+
+    describe "#<=>" do
+      it "orders pitches based on their underlying float value" do
+        ( Pitch.from_f(60) <=> Pitch.from_f(60.5) ).should < 0
       end
     end
 

@@ -1,5 +1,7 @@
 require 'mtk/pitch_class'
 require 'mtk/pitch'
+require 'mtk/pitch_list'
+require 'mtk/chord'
 require 'mtk/scale'
 
 require 'mtk/sequence'
