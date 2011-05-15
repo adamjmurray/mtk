@@ -2,11 +2,6 @@ require 'spec_helper'
 
 describe PitchClass do
 
-  let(:subject) { PitchClass }
-  let(:c) { PitchClass['C'] }
-  let(:d) { PitchClass['D'] }
-  let(:e) { PitchClass['E'] }
-
   let(:names) {
     [
         ['B#', 'C', 'Dbb'],
@@ -33,21 +28,21 @@ describe PitchClass do
   describe '.from_s' do
     context "the argument is a valid name" do
       it "returns a PitchClass" do
-        names.each { |name| subject.from_s(name).should be_a PitchClass }
+        names.each { |name| PitchClass.from_s(name).should be_a PitchClass }
       end
       it "returns an object with that name" do
-        names.each { |name| subject.from_s(name).name.should == name }
+        names.each { |name| PitchClass.from_s(name).name.should == name }
       end
       it "ignores case" do
         for name in names
-          subject.from_s(name.upcase).name.should == name
-          subject.from_s(name.downcase).name.should == name
+          PitchClass.from_s(name.upcase).name.should == name
+          PitchClass.from_s(name.downcase).name.should == name
         end
       end
     end
     context "the argument is not a valid name" do
       it "returns nil, if the name doesn't exist" do
-        subject.from_s('z').should be_nil
+        PitchClass.from_s('z').should be_nil
       end
     end
   end
@@ -55,79 +50,79 @@ describe PitchClass do
   describe '.from_name' do
     it "acts like from_s" do
       for name in ['C', 'bbb', 'z']
-        subject.from_name(name).should == subject.from_s(name)
+        PitchClass.from_name(name).should == PitchClass.from_s(name)
       end
     end
   end
 
   describe '.from_i' do
     it "returns the PitchClass with that value" do
-      subject.from_i(2).should == d
+      PitchClass.from_i(2).should == D
     end
     it "returns the PitchClass with that value mod 12" do
-      subject.from_i(14).should == d
-      subject.from_i(-8).should == e
+      PitchClass.from_i(14).should == D
+      PitchClass.from_i(-8).should == E
     end
   end
 
   describe '.[]' do
     it "acts like from_name if the argument is a string" do
-      subject['D'].should == subject.from_name('D')
+      PitchClass['D'].should == PitchClass.from_name('D')
     end
     it "acts like from_i if the argument is a number" do
-      subject[3].should == subject.from_i(3)
+      PitchClass[3].should == PitchClass.from_i(3)
     end
   end
 
   describe '#name' do
     it "is the name of the pitch class" do
-      c.name.should == 'C'
+      C.name.should == 'C'
     end
   end
 
   describe '#to_i' do
     it "is the integer value of the pitch class" do
-      c.to_i.should == 0
-      d.to_i.should == 2
-      e.to_i.should == 4
+      C.to_i.should == 0
+      D.to_i.should == 2
+      E.to_i.should == 4
     end
   end
 
   describe '#to_s' do
     it "returns the name" do
-      c.to_s.should == c.name
+      C.to_s.should == C.name
       for name in names
-        subject.from_s(name).to_s.should == name
+        PitchClass.from_s(name).to_s.should == name
       end
     end
   end
 
   describe '#==' do
     it "checks for equality" do
-      c.should == c
-      c.should_not == d
+      C.should == C
+      C.should_not == D
     end
     it "treats enharmonic names as equal" do
-      c.should == PitchClass['B#']
-      c.should == PitchClass['Dbb']
+      C.should == PitchClass['B#']
+      C.should == PitchClass['Dbb']
     end
   end
 
   describe '#+' do
     it "adds the integer value of the argument and #to_i" do
-      (c + 4).should == e
+      (C + 4).should == E
     end
     it "'wraps around' the range 0-11" do
-      (d + 10).should == c
+      (D + 10).should == C
     end
   end
 
   describe '#-' do
     it "subtracts the integer value of the argument from #to_i" do
-      (e - 2).should == d
+      (E - 2).should == D
     end
     it "'wraps around' the range 0-11" do
-      (c - 8).should == e
+      (C - 8).should == E
     end
   end
 
