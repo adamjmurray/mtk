@@ -1,4 +1,7 @@
 module MTK
+
+  # A Set of PitchClasses, for 12-tone set-theory pitch analysis and manipulations
+
   class PitchClassSet
 
     def initialize(pitch_classes)

@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe MTK::Intervals do
+  include Intervals
 
   describe 'P1' do
     it 'is 0 semitones' do
