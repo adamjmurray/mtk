@@ -6,7 +6,6 @@ require 'mtk/pitch_list'
 require 'mtk/chord'
 require 'mtk/scale'
 require 'mtk/intervals'
-require 'mtk/sequence'
 require 'mtk/numeric_extensions'
 
 
