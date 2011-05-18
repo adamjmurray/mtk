@@ -36,4 +36,14 @@ describe MTK::Note do
     end
   end
 
+  describe "#velocity" do
+    it "converts intensities in the range 0.0-1.0 to a MIDI velocity in the range 0-127" do
+      Note.new(C4, 0, 0).velocity.should == 0
+      Note.new(C4, 1, 0).velocity.should == 127
+    end
+    it "rounds to the nearest MIDI velocity" do
+      Note.new(C4, 0.5, 0).velocity.should == 64 # not be truncated to 63!
+    end
+  end
+
 end

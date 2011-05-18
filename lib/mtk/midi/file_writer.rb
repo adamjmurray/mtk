@@ -31,8 +31,8 @@ module MTK
 
         @channel = 1
         @time = 0
-        @padding = options.fetch :padding, 480 # padding at end of file
-        event tempo(options.fetch :tempo, 120)
+        #@padding = options.fetch :padding, 480 # padding at end of file
+        event tempo(options.fetch :tempo, 120), @meta_track
         event program(options.fetch :program, 0)
       end
 
@@ -44,15 +44,16 @@ module MTK
           @time = ticks_per_beat*time
           case event
             when Note
-              pitch, velocity, duration = event.pitch, 127*event.intensity, ticks_per_beat*event.duration
+              pitch = event.pitch
+              velocity = event.velocity
+              duration = (ticks_per_beat*event.duration).round
               event note_on(pitch, velocity)
               @time += duration
               event note_off(pitch, velocity)
           end
         end
-
-        @time += @padding
-        note_off(0, 0)
+        #@time += @padding
+        #event note_off(0, 0)
 
         @meta_track.recalc_delta_from_times
         @track.recalc_delta_from_times
@@ -83,11 +84,9 @@ module MTK
 
       # Set tempo in terms of Quarter Notes per Minute (aka BPM)
       def tempo(bpm)
-        # if @parent then this is a child sequence and we should respect
-        # the parent tempo and adjust the qnpm accordingly
         @tempo = bpm
         ms_per_quarter_note = MIDI::Tempo.bpm_to_mpq(bpm)
-        event MIDI::Tempo.new(ms_per_quarter_note), @meta_track
+        MIDI::Tempo.new(ms_per_quarter_note)
       end
 
       def program(program_number)

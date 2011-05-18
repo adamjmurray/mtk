@@ -29,6 +29,10 @@ module MTK
       self.class.new(@pitch, @intensity, @duration*scaling_factor.to_f)
     end
 
+    def velocity
+      (127 * @intensity).round
+    end
+
     def == other
       other.respond_to? :pitch and @pitch == other.pitch and
       other.respond_to? :intensity and @intensity == other.intensity and
