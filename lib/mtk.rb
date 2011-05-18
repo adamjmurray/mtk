@@ -15,6 +15,11 @@ require 'mtk/numeric_extensions'
 ##############################################
 # Description of modules for documentation:
 
-# The top level module for all classes in this library
+# The top level module for this library
 module MTK
+
+  # Classes for MIDI input and output
+  module MIDI
+  end
 end
+
