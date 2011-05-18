@@ -15,7 +15,7 @@ module MTK
     
     def self.from_s( s )
       # TODO: update to handle offset
-      s = s[0].upcase + s[1..-1].downcase # normalize name
+      s = s[0..0].upcase + s[1..-1].downcase # normalize name
       if s =~ /^([A-G](#|##|b|bb)?)(-?\d+)$/
         pitch_class = PitchClass.from_s($1)
         if pitch_class

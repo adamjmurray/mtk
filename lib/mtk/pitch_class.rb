@@ -47,7 +47,7 @@ module MTK
 
     def self.from_s(s)
       s = s.to_s
-      s = s[0].upcase + s[1..-1].downcase # normalize the name      
+      s = s[0..0].upcase + s[1..-1].downcase # normalize the name      
       VALID_NAMES.each_with_index do |names, index|
         return get(s, index) if names.include? s
       end

@@ -24,7 +24,8 @@ module MTK
       # @see open
       def initialize(file, options={})
         @file = file
-
+        @file = @file.path if @file.respond_to? :path
+        
         @sequence = MIDI::Sequence.new
         @meta_track = track 'Sequence Name'
         @track = track 'Track 1'

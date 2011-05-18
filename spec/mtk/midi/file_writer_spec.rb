@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'mtk/midi/file_writer'
+require 'tempfile'
 
 module MTK::MIDI
   describe MTK::MIDI::FileWriter do
@@ -27,9 +28,9 @@ module MTK::MIDI
         writer.write(timeline)
 
         # Now let's parse the file and check some expectations
-        File.open(@tempfile, 'rb') do |file|
+        File.open(@tempfile.path, 'rb') do |file|
           seq = MIDI::Sequence.new
-          seq.read(@tempfile)
+          seq.read(file)
           seq.tracks.size.should == 2 # one meta-track plus the 'notes' track
 
           track = seq.tracks.last
