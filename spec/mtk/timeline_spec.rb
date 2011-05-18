@@ -30,36 +30,23 @@ describe MTK::Timeline do
       timeline[0].should == [note1]
       timeline[1].should == [note1, note2]
     end
-    it "returns an empty array when no events exist at the timepoint" do
-      timeline[3].should == []
-    end
-    it "can be chained with << to easily build up timelines" do
-      timeline[3] << note1
-      timeline[3] << note2
-      timeline[3].should == [note1, note2]
+    it "returns nil when no events exist at the timepoint" do
+      timeline[3].should == nil
     end
   end
 
-  describe "#has_timepoint?" do
-    it "returns true if the timepoint exists with events" do
-      (timeline.has_timepoint? 1).should be_true
+  describe "#has_time?" do
+    it "returns true if the time has been assigned" do
+      (timeline.has_time? 1).should be_true
     end
-    it "returns false if the timepoint doesn't exist" do
-      (timeline.has_timepoint? 3).should be_false
-    end
-    it "returns false if the timepoint doesn't have events" do
-      timeline[3] = []
-      (timeline.has_timepoint? 3).should be_false
+    it "returns false if the time doesn't exist" do
+      (timeline.has_time? 3).should be_false
     end
   end
 
-  describe "#timepoints" do
-    it "is the sorted list of timepoints" do
-      timeline.timepoints.should == [0,1]
-    end
-    it "omits timepoints with no events" do
-      timeline[3] = []
-      timeline.timepoints.should == [0,1]
+  describe "#times" do
+    it "is the sorted list of times" do
+      timeline.times.should == [0,1]
     end
   end
 
@@ -67,6 +54,30 @@ describe MTK::Timeline do
     it "returns the underlying Hash" do
       timeline.to_hash.should == {0 => [note1], 1 => [note1, note2]}
     end
+  end
+
+  describe "#==" do
+    it "is true when the underlying Hashes are equal" do
+      timeline.should == Timeline.new({ 0 => [note1], 1 => [note1, note2] })
+    end
+    it "is false when the underlying Hashes are not equal" do
+      timeline.should_not == Timeline.new({ 0 => [note1], 1 => [note2, note1] })
+    end
+    it "allows for direct comparison to hashes" do
+      timeline.should == { 0 => [note1], 1 => [note1, note2] }
+    end
+  end
+
+  describe "#events" do
+    pending
+  end
+
+  describe "#each" do
+    pending
+  end
+
+  describe "#each_time" do
+    pending
   end
 
 end
