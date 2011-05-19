@@ -1,3 +1,4 @@
+require 'mtk/pseudo_constants'
 require 'mtk/pitch_class'
 require 'mtk/pitch_classes'
 require 'mtk/pitch_class_set'
@@ -21,5 +22,6 @@ module MTK
   # Classes for MIDI input and output
   module MIDI
   end
+
 end
 

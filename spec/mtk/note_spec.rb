@@ -1,12 +1,10 @@
 require 'spec_helper'
 module NoteSpec
-  include Intervals
-  include Dynamics
   
   describe MTK::Note do
     
     let(:pitch) { C4 }
-    let(:intensity) { MF }
+    let(:intensity) { mf }
     let(:duration) { 2.5 }
     let(:note) { Note.new(pitch, intensity, duration) }
   

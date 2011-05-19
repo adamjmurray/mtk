@@ -1,57 +1,81 @@
 require 'spec_helper'
-module DynamicsSpec
-  include Dynamics  
   
-  describe MTK::Dynamics do
+describe MTK::Dynamics do
 
-    describe 'PPP' do
-      it 'is equivalent to MIDI velocity 16' do
-        (PPP * 127).round.should == 16
-      end
+  describe 'ppp' do
+    it 'is equivalent to MIDI velocity 16' do
+      (ppp * 127).round.should == 16
     end
-  
-    describe 'PP' do
-      it 'is equivalent to MIDI velocity 32' do
-        (PP * 127).round.should == 32
-      end
+    it 'is available via a module property and via mixin' do
+      Dynamics::ppp.should == ppp
     end
-  
-    describe 'P' do
-      it 'is equivalent to MIDI velocity 48' do
-        (P * 127).round.should == 48
-      end
-    end
-  
-    describe 'MP' do
-      it 'is equivalent to MIDI velocity 64' do
-        (MP * 127).round.should == 64
-      end
-    end
-  
-    describe 'MF' do
-      it 'is equivalent to MIDI velocity 79' do
-        (MF * 127).round.should == 79
-      end
-    end
-  
-    describe 'F' do
-      it 'is equivalent to MIDI velocity 95' do
-        (F * 127).round.should == 95
-      end
-    end
-  
-    describe 'FF' do
-      it 'is equivalent to MIDI velocity 111' do
-        (FF * 127).round.should == 111
-      end
-    end
-  
-    describe 'FFF' do
-      it 'is equivalent to MIDI velocity 127' do
-        (FFF * 127).round.should == 127
-      end
-    end
-  
   end
+
+  describe 'pp' do
+    it 'is equivalent to MIDI velocity 32' do
+      (pp * 127).round.should == 32
+    end
+    it 'is available via a module property and via mixin' do
+      Dynamics::pp.should == pp
+    end    
+  end
+
+  describe 'p' do
+    it 'is equivalent to MIDI velocity 48' do
+      (p * 127).round.should == 48
+    end
+    it 'is available via a module property and via mixin' do
+      Dynamics::p.should == p
+    end    
+  end
+
+  describe 'mp' do
+    it 'is equivalent to MIDI velocity 64' do
+      (mp * 127).round.should == 64
+    end
+    it 'is available via a module property and via mixin' do
+      Dynamics::mp.should == mp
+    end    
+  end
+
+  describe 'mf' do
+    it 'is equivalent to MIDI velocity 79' do
+      (mf * 127).round.should == 79
+    end
+    it 'is available via a module property and via mixin' do
+      Dynamics::mf.should == mf
+    end    
+  end
+
+  describe 'f' do
+    it 'is equivalent to MIDI velocity 95' do
+      (f * 127).round.should == 95
+    end
+    it 'is available via a module property and via mixin' do
+      Dynamics::f.should == f
+    end
+    it "does not overwrite the PitchClass constant 'F'" do
+      F.should be_a PitchClass
+    end    
+  end
+
+  describe 'ff' do
+    it 'is equivalent to MIDI velocity 111' do
+      (ff * 127).round.should == 111
+    end
+    it 'is available via a module property and via mixin' do
+      Dynamics::ff.should == ff
+    end
+  end
+
+  describe 'fff' do
+    it 'is equivalent to MIDI velocity 127' do
+      (fff * 127).round.should == 127
+    end
+    it 'is available via a module property and via mixin' do
+      Dynamics::fff.should == fff
+    end
+  end
+
+end
   
-end 

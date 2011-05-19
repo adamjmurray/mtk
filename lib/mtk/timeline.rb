@@ -27,7 +27,7 @@ module MTK
       @timeline[time]
     end
 
-    def[]=(time, events)
+    def []=(time, events)
       time = time.to_f unless time.is_a? Numeric
       case events
         when nil?

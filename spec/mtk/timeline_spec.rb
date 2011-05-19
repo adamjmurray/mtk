@@ -1,12 +1,10 @@
 require 'spec_helper'
 module TimelineSpec
-  include Intervals
-  include Dynamics
 
   describe MTK::Timeline do
       
-    let(:note1) { Note.new(C4, P, 1) }
-    let(:note2) { Note.new(G4, F, 2) }
+    let(:note1) { Note.new(C4, p, 1) }
+    let(:note2) { Note.new(G4, f, 2) }
     let(:timeline) { Timeline.new({0 => note1, 1 => [note1, note2]}) }
     
     describe "#[]=" do

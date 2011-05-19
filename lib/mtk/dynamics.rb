@@ -1,33 +1,50 @@
 module MTK
 
-  # Defines constants for dynamics
-  # These values are in the range 0.0 - 1.0, so they can be easily scaled (unlike MIDI velocities).
-
+  # Defines values for standard dynamic symbols.
+  #
+  # These can be thought of like constants, but in order to distinguish 'f' (forte) from the {PitchClass} 'F'
+  # it was necessary to use lower-case names and therefore define them as "pseudo constant" methods.
+  # The methods are available either throught the module (MTK::Dynamics::f) or via mixin (include MTK::Dynamics;  f)
+  #
+  # These values are intensities in the range 0.0 - 1.0, so they can be easily scaled (unlike MIDI velocities).
+  #
+  # @note Including this module shadows Ruby's built-in p() method. 
+  #   If you include this module, you can access the built-in p() method via Kernel.p()
+  #
+  # @see Note
   module Dynamics
+    extend MTK::PseudoConstants
+    
+    # NOTE: the yard doc macros here only fill in [$2] with the actual value when generating docs under Ruby 1.9+
+    
+    # pianississimo 
+    # @macro [attach] dynamics.define_constant
+    #   @attribute [r]
+    #   @return [$2] intensity value for $1   
+    define_constant 'ppp', 0.125
 
-    # pianississimo
-    PPP = 0.125
-
-    # pianissimo
-    PP = 0.25
+    # pianissimo      
+    define_constant 'pp', 0.25
 
     # piano
-    P = 0.375
+    # @note Including this module shadows Ruby's built-in p() method. 
+    #   If you include this module, you can access the built-in p() method via Kernel.p()
+    define_constant 'p', 0.375
 
     # mezzo-piano
-    MP = 0.5
+    define_constant 'mp', 0.5
 
     # mezzo-forte
-    MF = 0.625
+    define_constant 'mf', 0.625
 
     # forte
-    F = 0.75
-
+    define_constant 'f', 0.75
+    
     # fortissimo
-    FF = 0.875
+    define_constant 'ff', 0.875
 
     # fortississimo
-    FFF = 1.0
-
+    define_constant 'fff', 1.0
+    
   end
 end
