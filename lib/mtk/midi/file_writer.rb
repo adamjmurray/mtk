@@ -42,12 +42,12 @@ module MTK
       # @param [Timeline]
       def write(timeline)
         timeline.each do |time, event|
-          @time = ticks_per_beat*time
+          @time = time*pulses_per_beat
           case event
             when Note
               pitch = event.pitch
               velocity = event.velocity
-              duration = (ticks_per_beat*event.duration).round
+              duration = (event.duration*pulses_per_beat).round
               event note_on(pitch, velocity)
               @time += duration
               event note_off(pitch, velocity)
@@ -66,7 +66,7 @@ module MTK
       ########################
       private
 
-      def ticks_per_beat
+      def pulses_per_beat
         @sequence.ppqn
       end
 
@@ -95,11 +95,11 @@ module MTK
       end
 
       def note_on(pitch, velocity)
-        MIDI::NoteOnEvent.new(@channel, pitch.to_i, velocity.to_i)
+        MIDI::NoteOn.new(@channel, pitch.to_i, velocity.to_i)
       end
 
       def note_off(pitch, velocity)
-        MIDI::NoteOffEvent.new(@channel, pitch.to_i, velocity.to_i)
+        MIDI::NoteOff.new(@channel, pitch.to_i, velocity.to_i)
       end
 
       def cc(controller, value)
