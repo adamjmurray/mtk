@@ -15,7 +15,7 @@ module MTK::MIDI
     end
 
     let(:timeline) do
-      Timeline.new({
+      Timeline.from_hash({
         0 => Note.new(C4, 0.7, 1),
         1 => Note.new(G4, 0.8, 1),
         2 => Note.new(C5, 0.9, 1)
@@ -39,14 +39,14 @@ module MTK::MIDI
           note_offs = []
           for event in track.events
             event_counts[event.class] += 1
-            note_ons << event if event.is_a? MIDI::NoteOnEvent
-            note_offs << event if event.is_a? MIDI::NoteOffEvent
+            note_ons << event if event.is_a? MIDI::NoteOn
+            note_offs << event if event.is_a? MIDI::NoteOff
           end
           # expect a meta-event to set the track name, an initial program change, three note-ons, and three note-offs
           event_counts[MIDI::MetaEvent].should == 1
           event_counts[MIDI::ProgramChange].should == 1
-          event_counts[MIDI::NoteOnEvent].should == 3
-          event_counts[MIDI::NoteOffEvent].should == 3
+          event_counts[MIDI::NoteOn].should == 3
+          event_counts[MIDI::NoteOff].should == 3
 
           note_ons[0].note.should == C4.to_i
           note_ons[0].velocity.should be_within(0.5).of(127*0.7)

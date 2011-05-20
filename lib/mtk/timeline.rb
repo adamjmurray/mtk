@@ -4,14 +4,26 @@ module MTK
 
   class Timeline
 
-    def initialize(timeline=nil)
-      @timeline = {}
-      if timeline
-        timeline = timeline.to_hash unless timeline.is_a? Hash
-        for time,events in timeline
+    # @param options [Hash] the options to create a Timeline with.
+    # @option options [boolean] :autocreate when true, the Timeline will automatically create an empty event list for missing time keys (convenient when building Timelines from scratch)
+    # @option options [Hash] :from_hash the initial data for the timeline
+    def initialize(options={})
+      if options[:autocreate]
+        @timeline = Hash.new {|hash,key| hash[key] = [] }
+      else
+        @timeline = {}
+      end
+      hash = options[:from_hash]
+      if hash
+        hash = hash.to_hash unless hash.is_a? Hash
+        for time,events in hash
           self[time] = events # ensures everything is wrapped in an Array
         end
       end
+    end
+
+    def self.from_hash(hash, options={})
+      new options.merge({:from_hash => hash})
     end
 
     def to_hash
@@ -36,6 +48,15 @@ module MTK
           @timeline[time] = events
         else
           @timeline[time] = [events]
+      end
+    end
+
+    def add(time, event)
+      events = @timeline[time]
+      if events
+        events << event
+      else
+         self[time] = event
       end
     end
 
@@ -73,6 +94,10 @@ module MTK
 
     def to_s
       times.map{|t| "#{t} => #{@timeline[t].join ', '}" }.join "\n"
+    end
+
+    def inspect
+      @timeline.inspect
     end
 
   end
