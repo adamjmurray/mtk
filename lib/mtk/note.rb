@@ -33,10 +33,22 @@ module MTK
       (127 * @intensity).round
     end
 
+    def self.from_midi(pitch, velocity, beats)
+      new Pitches::PITCHES[pitch], velocity/127.0, beats
+    end
+
     def == other
       other.respond_to? :pitch and @pitch == other.pitch and
       other.respond_to? :intensity and @intensity == other.intensity and
       other.respond_to? :duration and @duration == other.duration
+    end
+
+    def to_s
+      "Note(#{pitch}, #{sprintf '%.2f',intensity}, #{sprintf '%.2f',duration})"
+    end
+
+    def inspect
+      "Note(#{pitch}, #{intensity}, #{duration})"
     end
 
   end

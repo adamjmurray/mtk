@@ -7,7 +7,11 @@ module NoteSpec
     let(:intensity) { mf }
     let(:duration) { 2.5 }
     let(:note) { Note.new(pitch, intensity, duration) }
-  
+
+    describe 'from_midi' do
+      pending
+    end
+
     describe '#transpose' do
       it 'adds the given interval to the @pitch' do
         (note.transpose 2.semitones).should == Note.new(D4, intensity, duration)
@@ -43,6 +47,14 @@ module NoteSpec
       it "rounds to the nearest MIDI velocity" do
         Note.new(C4, 0.5, 0).velocity.should == 64 # not be truncated to 63!
       end
+    end
+
+    describe "#to_s" do
+      pending
+    end
+
+    describe "#inspect" do
+      pending
     end
   
   end
