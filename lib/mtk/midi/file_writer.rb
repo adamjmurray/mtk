@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'midilib'
+MIDILIB = MIDI unless defined? MIDILIB # helps distinguish MTK::MIDI from midilib's MIDI, and avoids a JRuby-1.5 bug with module name collision
 
 module MTK
   module MIDI
@@ -19,14 +20,14 @@ module MTK
         yield new(file, options)
       end
 
-      # @param file [String] path of the file to be written
+      # @param filepath [String, #path] path of the file to be written
       # @param options [Hash] optional settings (padding, tempo, program)
       # @see open
-      def initialize(file, options={})
-        @file = file
+      def initialize(filepath, options={})
+        @file = filepath
         @file = @file.path if @file.respond_to? :path
         
-        @sequence = MIDI::Sequence.new
+        @sequence = MIDILIB::Sequence.new
         @meta_track = track 'Sequence Name'
         @track = track 'Track 1'
 
@@ -71,7 +72,7 @@ module MTK
       end
 
       def print_midi
-        @midi_sequence.each do |track|
+        @sequence.each do |track|
           puts "\n*** track name \"#{track.name}\""
           #puts "instrument name \"#{track.instrument}\""
           puts "#{track.events.length} events"
@@ -86,32 +87,32 @@ module MTK
       # Set tempo in terms of Quarter Notes per Minute (aka BPM)
       def tempo(bpm)
         @tempo = bpm
-        ms_per_quarter_note = MIDI::Tempo.bpm_to_mpq(bpm)
-        MIDI::Tempo.new(ms_per_quarter_note)
+        ms_per_quarter_note = MIDILIB::Tempo.bpm_to_mpq(bpm)
+        MIDILIB::Tempo.new(ms_per_quarter_note)
       end
 
       def program(program_number)
-        MIDI::ProgramChange.new(@channel, program_number)
+        MIDILIB::ProgramChange.new(@channel, program_number)
       end
 
       def note_on(pitch, velocity)
-        MIDI::NoteOn.new(@channel, pitch.to_i, velocity.to_i)
+        MIDILIB::NoteOn.new(@channel, pitch.to_i, velocity.to_i)
       end
 
       def note_off(pitch, velocity)
-        MIDI::NoteOff.new(@channel, pitch.to_i, velocity.to_i)
+        MIDILIB::NoteOff.new(@channel, pitch.to_i, velocity.to_i)
       end
 
       def cc(controller, value)
-        MIDI::Controller.new(@channel, controller.to_i, value.to_i)
+        MIDILIB::Controller.new(@channel, controller.to_i, value.to_i)
       end
 
       def pitch_bend(value)
-        MIDI::PitchBend.new(@channel, value)
+        MIDILIB::PitchBend.new(@channel, value)
       end
 
       def track name
-        track = MIDI::Track.new(@sequence)
+        track = MIDILIB::Track.new(@sequence)
         track.name = name if name
         @sequence.tracks << track
         track
