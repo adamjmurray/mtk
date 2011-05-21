@@ -7,6 +7,16 @@ describe MTK::Note do
   let(:duration) { 2.5 }
   let(:note) { Note.new(pitch, intensity, duration) }
 
+  describe "#pitch" do
+    it "is the pitch used to create the Note" do
+      note.pitch.should == pitch
+    end
+
+    it "is a read-only attribute" do
+      lambda{ note.pitch = D4 }.should raise_error
+    end
+  end
+
   describe "from_hash" do
     it "constructs a Note using a hash" do
       Note.from_hash({ :pitch => C4, :intensity => intensity, :duration => duration }).should == note

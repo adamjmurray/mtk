@@ -39,6 +39,10 @@ module MTK
       (127 * @intensity).round
     end
 
+    def duration_in_pulses(pulses_per_beat)
+      (@duration * pulses_per_beat).round
+    end
+
     def == other
       other.respond_to? :intensity and @intensity == other.intensity and
       other.respond_to? :duration and @duration == other.duration

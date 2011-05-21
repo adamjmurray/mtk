@@ -26,38 +26,41 @@ module MTK
       def initialize(filepath, options={})
         @file = filepath
         @file = @file.path if @file.respond_to? :path
-        
-        @sequence = MIDILIB::Sequence.new
-        @meta_track = track 'Sequence Name'
-        @track = track 'Track 1'
-
-        @channel = 1
-        @time = 0
-        #@padding = options.fetch :padding, 480 # padding at end of file
-        event tempo(options.fetch :tempo, 120), @meta_track
-        event program(options.fetch :program, 0)
       end
 
       # Write the Timeline as a MIDI file
       #
       # @param [Timeline]
       def write(timeline)
+        @sequence = MIDILIB::Sequence.new
+        @track = track()
+        @channel = 1
+        @time = 0
+
         timeline.each do |time, event|
           @time = time*pulses_per_beat
           case event
             when Note
               pitch = event.pitch
               velocity = event.velocity
-              duration = (event.duration*pulses_per_beat).round
+              duration = event.duration_in_pulses pulses_per_beat
               event note_on(pitch, velocity)
               @time += duration
               event note_off(pitch, velocity)
+
+            when Chord
+              velocity = event.velocity
+              duration = event.duration_in_pulses pulses_per_beat
+              start_time = @time
+              for pitch in event.pitches
+                @time = start_time
+                event note_on(pitch, velocity)
+                @time += duration
+                event note_off(pitch, velocity)
+              end
+
           end
         end
-        #@time += @padding
-        #event note_off(0, 0)
-
-        @meta_track.recalc_delta_from_times
         @track.recalc_delta_from_times
 
         print_midi if $DEBUG
@@ -73,12 +76,9 @@ module MTK
 
       def print_midi
         @sequence.each do |track|
-          puts "\n*** track name \"#{track.name}\""
-          #puts "instrument name \"#{track.instrument}\""
+          puts "\n*** track \"#{track.name}\""
           puts "#{track.events.length} events"
           track.each do |event|
-            event.print_decimal_numbers = true # default = false (print hex)
-            event.print_note_names = true # default = false (print note numbers)
             puts "#{event.to_s} (#{event.time_from_start})"
           end
         end
@@ -111,7 +111,7 @@ module MTK
         MIDILIB::PitchBend.new(@channel, value)
       end
 
-      def track name
+      def track(name=nil)
         track = MIDILIB::Track.new(@sequence)
         track.name = name if name
         @sequence.tracks << track

@@ -7,13 +7,38 @@ describe MTK::Chord do
   let(:duration) { 2.5 }
   let(:chord) { Chord.new(pitch_set, intensity, duration) }
 
+  it "can be constructed with a PitchSet" do
+    pitch_set = PitchSet.new([C4])
+    Chord.new( pitch_set, intensity, duration ).pitch_set.should == pitch_set
+  end
+
+  it "can be constructed with an Array of Pitches" do
+    Chord.new( [C4], intensity, duration ).pitch_set.should == PitchSet.new([C4])
+  end
+
+  describe "#pitch_set" do
+    it "is the pitch_set used to create the Chord" do
+      chord.pitch_set.should == pitch_set
+    end
+
+    it "is a read-only attribute" do
+      lambda{ chord.pitch_set = PitchSet.new }.should raise_error
+    end
+  end
+
+  describe "#pitches" do
+    it "is the list of pitches in the pitch_set" do
+      chord.pitches.should == chord.pitch_set.pitches
+    end
+  end
+
   describe "from_hash" do
     it "constructs a Chord using a hash" do
       Chord.from_hash({ :pitch_set => pitch_set, :intensity => intensity, :duration => duration }).should == chord
     end
   end
 
-  describe "to_hash" do
+  describe "#to_hash" do
     it "is a hash containing all the attributes of the Chord" do
       chord.to_hash.should == { :pitch_set => pitch_set, :intensity => intensity, :duration => duration }
     end

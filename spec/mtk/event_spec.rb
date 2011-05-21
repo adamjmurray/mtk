@@ -84,6 +84,15 @@ describe MTK::Event do
     end
   end
 
+  describe "#duration_in_pulses" do
+    it "converts beats to pulses, given pulses_per_beat" do
+      Event.new(0,1).duration_in_pulses(60).should == 60
+    end
+    it "rounds to the nearest pulse" do
+      Event.new(0,1.5).duration_in_pulses(59).should == 89
+    end
+  end
+
   describe "#==" do
     it "is true when the intensities and durations are equal" do
       event.should == Event.new(intensity, duration)

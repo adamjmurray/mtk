@@ -6,8 +6,12 @@ module MTK
     # the {PitchSet} of the chord
     attr_reader :pitch_set
 
-    def initialize(pitch_set, intensity, duration)
-      @pitch_set = pitch_set
+    def initialize(pitches, intensity, duration)
+      @pitch_set = if pitches.is_a? PitchSet
+        pitches
+      else
+        PitchSet.new(pitches)
+      end
       super(intensity, duration)
     end
 
@@ -17,6 +21,10 @@ module MTK
 
     def to_hash
       super.merge({ :pitch_set => @pitch_set })
+    end
+
+    def pitches
+      @pitch_set.pitches
     end
 
     def transpose(interval)
