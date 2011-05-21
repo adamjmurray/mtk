@@ -2,6 +2,48 @@ require 'spec_helper'
 
 describe MTK::PitchClassSet do
 
+  let(:pitch_classes) { [C,E,G] }
+  let(:pitch_class_set) { PitchClassSet.new(pitch_classes) }
+
+  describe "#pitch_classes" do
+    it "is the list of pitch_classes contained in this set" do
+      pitch_class_set.pitch_classes.should == pitch_classes
+    end
+
+    it "is immutable" do
+      lambda { pitch_class_set.pitch_classes << D }.should raise_error
+    end
+
+    it "does not affect the immutabilty of the pitch class list used to construct it" do
+      pitch_classes << D
+      pitch_classes.length.should == 4
+    end
+
+    it "is not affected by changes to the pitch class list used to construct it" do
+      pitch_class_set # force construction before we modify the pitch_classes array
+      pitch_classes << D
+      pitch_class_set.pitch_classes.length.should == 3
+    end
+
+    it "does not include duplicates" do
+      PitchClassSet.new([C, E, G, C]).pitch_classes.should == [C, E, G]
+    end
+
+    it "sorts the pitch_classes (C to B)" do
+      PitchClassSet.new([B, E, C]).pitch_classes.should == [C, E, B]
+    end
+  end
+
+  describe "#to_a" do
+    it "is equal to #pitch_classes" do
+      pitch_class_set.to_a.should == pitch_class_set.pitch_classes
+    end
+
+    it "is mutable" do
+      (pitch_class_set.to_a << Bb).should == [C, E, G, Bb]
+    end
+  end
+
   describe "#normal_form" do
     it "is invariant across reorderings of the pitch classes" do
       PitchClassSet.new([C,E,G]).normal_form.should == [0,4,7]

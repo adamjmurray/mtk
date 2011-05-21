@@ -1,11 +1,17 @@
 module MTK
 
   # A Set of PitchClasses, for 12-tone set-theory pitch analysis and manipulations
-
+  #
   class PitchClassSet
 
+    attr_reader :pitch_classes
+    
     def initialize(pitch_classes)
       @pitch_classes = pitch_classes.uniq.sort.freeze
+    end
+
+    def to_a
+      Array.new(@pitch_classes)
     end
 
     def size
@@ -37,8 +43,15 @@ module MTK
       norder.map{|pitch_class| (pitch_class.to_i - first_pc_val) % 12 }
     end
 
-    def ==(other)
-      @pitch_classes == other
+    # @param other [#pitch_classes, #to_a, Array]
+    def == other
+      if other.respond_to? :pitch_classes
+        @pitch_classes == other.pitch_classes
+      elsif other.respond_to? :to_a
+        @pitch_classes == other.to_a
+      else
+        @pitch_classes == other
+      end
     end
 
     def to_s
