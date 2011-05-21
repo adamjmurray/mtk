@@ -5,14 +5,9 @@ module MTK
   class Timeline
 
     # @param options [Hash] the options to create a Timeline with.
-    # @option options [boolean] :autocreate when true, the Timeline will automatically create an empty event list for missing time keys (convenient when building Timelines from scratch)
     # @option options [Hash] :from_hash the initial data for the timeline
     def initialize(options={})
-      if options[:autocreate]
-        @timeline = Hash.new {|hash,key| hash[key] = [] }
-      else
-        @timeline = {}
-      end
+      @timeline = {}
       hash = options[:from_hash]
       if hash
         hash = hash.to_hash unless hash.is_a? Hash
@@ -60,12 +55,20 @@ module MTK
       end
     end
 
+    def delete(time)
+      @timeline.delete(time)
+    end
+
     def has_time? time
       @timeline.has_key? time
     end
 
     def times
       @timeline.keys.sort
+    end
+
+    def empty?
+      @timeline.empty?
     end
 
     def events

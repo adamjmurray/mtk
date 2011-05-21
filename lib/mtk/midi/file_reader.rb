@@ -30,7 +30,7 @@ module MTK
           notes = {}
           @sequence.each do |track|
             #puts "TRACK #{track_idx}"
-            timeline = Timeline.new :autocreate => true
+            timeline = Timeline.new
 
             track.each do |event|
               #puts "#{event.class}: #{event} (#{event.time_from_start})"
@@ -44,7 +44,7 @@ module MTK
                     duration = (event.time_from_start - on_event.time_from_start)/pulses_per_beat
                     note = Note.from_midi(event.note, on_event.velocity, duration)
                     start_time = (on_event.time_from_start)/pulses_per_beat
-                    timeline[start_time] << note
+                    timeline.add(start_time, note)
                   end
 
               end

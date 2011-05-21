@@ -13,7 +13,43 @@ describe MTK::Timeline do
   end
 
   describe "from_hash" do
-    pending
+    it "creates an empty timeline when the hash is empty" do
+      Timeline.from_hash({}).should be_empty
+    end
+
+    it "builds a Timeline from a map of times to single events" do
+      t = Timeline.from_hash({ 0 => note1, 1 => note2 })
+      t[0].should == [note1]
+      t[1].should == [note2]
+    end
+
+    it "builds a Timeline from a map of times to event lists" do
+      t = Timeline.from_hash({ 0 => [note1, note2], 1 => [note2] })
+      t[0].should == [note1, note2]
+      t[1].should == [note2]
+    end
+  end
+
+  describe "#to_hash" do
+    it "returns the underlying Hash" do
+      timeline.to_hash.should == timeline_hash
+    end
+  end
+
+  describe "#empty?" do
+    it "is true when the timeilne has no events" do
+      Timeline.new.empty?.should be_true
+    end
+  end
+
+  describe "#[]" do
+    it "returns an array of the event(s) at the timepoint" do
+      timeline[0].should == [note1]
+      timeline[1].should == [note1, note2]
+    end
+    it "returns nil when no events exist at the timepoint" do
+      timeline[3].should == nil
+    end
   end
 
   describe "#[]=" do
@@ -32,13 +68,23 @@ describe MTK::Timeline do
     end
   end
 
-  describe "#[]" do
-    it "returns an array of the event(s) at the timepoint" do
-      timeline[0].should == [note1]
-      timeline[1].should == [note1, note2]
+  describe "#add" do
+    it "creates a new event list at a previously empty timepoint" do
+      timeline.add(5, note1)
+      timeline[5].should == [note1]
     end
-    it "returns nil when no events exist at the timepoint" do
-      timeline[3].should == nil
+
+    it "appends to existing event lists" do
+      timeline.add(5, note1)
+      timeline.add(5, note2)
+      timeline[5].should == [note1, note2]
+    end
+  end
+
+  describe "#delete" do
+    it "removes an event list at the given time" do
+      timeline.delete(1)
+      timeline.should == { 0 => [note1] }
     end
   end
 
@@ -54,12 +100,6 @@ describe MTK::Timeline do
   describe "#times" do
     it "is the sorted list of times" do
       timeline.times.should == [0,1]
-    end
-  end
-
-  describe "#to_hash" do
-    it "returns the underlying Hash" do
-      timeline.to_hash.should == timeline_hash
     end
   end
 
@@ -97,12 +137,13 @@ describe MTK::Timeline do
     end
   end
 
-  describe "#to_s" do
-    pending
-  end
-
-  describe "#inspect" do
-    pending
+  describe "#compact!" do
+    it "removes empty event lists" do
+      timeline[3] = []
+      timeline[4] = []
+      timeline.compact!
+      timeline.should == timeline_hash
+    end
   end
 
 end
