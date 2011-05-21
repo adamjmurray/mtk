@@ -1,6 +1,6 @@
 module MTK
 
-  # Defines a constant for each {PitchClass}in the Western chromatic scale.
+  # Defines a constant for each {PitchClass} in the Western chromatic scale.
 
   module PitchClasses
 
