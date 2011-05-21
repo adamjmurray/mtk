@@ -1,20 +1,18 @@
-require 'mtk/pseudo_constants'
-
 require 'mtk/pitch_class'
-require 'mtk/pitch_classes'
-require 'mtk/pitch_class_set'
-
 require 'mtk/pitch'
-require 'mtk/pitches'
+require 'mtk/pitch_class_set'
 require 'mtk/pitch_set'
-
-require 'mtk/intervals'
-require 'mtk/dynamics'
 
 require 'mtk/event'
 require 'mtk/note'
 require 'mtk/chord'
 require 'mtk/timeline'
+
+require 'mtk/constants/pseudo_constants'
+require 'mtk/constants/pitch_classes'
+require 'mtk/constants/pitches'
+require 'mtk/constants/intervals'
+require 'mtk/constants/dynamics'
 
 require 'mtk/numeric_extensions'
 
