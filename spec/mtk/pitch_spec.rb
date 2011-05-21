@@ -94,7 +94,10 @@ describe MTK::Pitch do
       end
     end
     it "should include the offset_in_cents when the offset is not 0" do
-      middle_c_and_50_cents.to_s.should == "C4+50.0cents"
+      middle_c_and_50_cents.to_s.should == "C4+50cents"
+    end
+    it "rounds to the nearest cent" do
+      Pitch.from_f(60.556).to_s.should == "C4+56cents"
     end
   end
 

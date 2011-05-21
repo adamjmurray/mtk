@@ -53,7 +53,7 @@ module MTK
     end
     
     def to_s
-      "#{@pitch_class}#{@octave}" + (@offset.zero? ? '' : "+#{offset_in_cents}cents")
+      "#{@pitch_class}#{@octave}" + (@offset.zero? ? '' : "+#{offset_in_cents.round}cents")
     end
     
     def ==( other )
