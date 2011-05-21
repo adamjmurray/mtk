@@ -55,6 +55,10 @@ module MTK
     def to_s
       "#{@pitch_class}#{@octave}" + (@offset.zero? ? '' : "+#{offset_in_cents.round}cents")
     end
+
+    def inspect
+      "#{@pitch_class}#{@octave}" + (@offset.zero? ? '' : "+#{offset_in_cents}cents")
+    end
     
     def ==( other )
       other.respond_to? :pitch_class and other.respond_to? :octave and other.respond_to? :offset and

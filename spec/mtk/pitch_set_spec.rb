@@ -129,4 +129,10 @@ describe MTK::PitchSet do
     end
   end
 
+  describe "#to_s" do
+    it "looks like an array of pitches" do
+      c_major.to_s.should == "[C4, E4, G4]"
+    end
+  end
+
 end

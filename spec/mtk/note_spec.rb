@@ -7,8 +7,22 @@ describe MTK::Note do
   let(:duration) { 2.5 }
   let(:note) { Note.new(pitch, intensity, duration) }
 
+  describe "from_hash" do
+    it "constructs a Note using a hash" do
+      Note.from_hash({ :pitch => C4, :intensity => intensity, :duration => duration }).should == note
+    end
+  end
+
   describe 'from_midi' do
-    pending
+    it "constructs a Note using a MIDI pitch and velocity" do
+      Note.from_midi(C4.to_i, mf*127, 2.5).should == note
+    end
+  end
+
+  describe "to_hash" do
+    it "is a hash containing all the attributes of the Note" do
+      note.to_hash.should == { :pitch => pitch, :intensity => intensity, :duration => duration }
+    end
   end
 
   describe '#transpose' do
@@ -20,40 +34,22 @@ describe MTK::Note do
     end
   end
 
-  describe '#scale_intensity' do
-    it 'multiplies @intensity by the argument' do
-      (note.scale_intensity 0.5).should == Note.new(pitch, intensity * 0.5, duration)
+  describe "#==" do
+    it "is true when the pitches, intensities, and durations are equal" do
+      note.should == Note.new(pitch, intensity, duration)
     end
-    it 'does not affect the immutability of the Note' do
-      (note.scale_intensity 0.5).should_not == note
-    end
-  end
 
-  describe '#scale_duration' do
-    it 'multiplies @duration by the argument' do
-      (note.scale_duration 2).should == Note.new(pitch, intensity, duration*2)
+    it "is false when the pitches are not equal" do
+      note.should_not == Note.new(pitch + 1, intensity, duration)
     end
-    it 'does not affect the immutability of the Note' do
-      (note.scale_duration 0.5).should_not == note
-    end
-  end
 
-  describe "#velocity" do
-    it "converts intensities in the range 0.0-1.0 to a MIDI velocity in the range 0-127" do
-      Note.new(C4, 0, 0).velocity.should == 0
-      Note.new(C4, 1, 0).velocity.should == 127
+    it "is false when the intensities are not equal" do
+      note.should_not == Note.new(pitch, intensity * 0.5, duration)
     end
-    it "rounds to the nearest MIDI velocity" do
-      Note.new(C4, 0.5, 0).velocity.should == 64 # not be truncated to 63!
+
+    it "is false when the durations are not equal" do
+      note.should_not == Note.new(pitch, intensity, duration * 2)
     end
-  end
-
-  describe "#to_s" do
-    pending
-  end
-
-  describe "#inspect" do
-    pending
   end
 
 end

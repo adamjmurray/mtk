@@ -66,6 +66,10 @@ module MTK
       end
     end
 
+    def to_s
+      @pitches.inspect
+    end
+
     #######################################
     protected
 
