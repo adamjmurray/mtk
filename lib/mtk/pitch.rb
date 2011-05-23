@@ -12,6 +12,12 @@ module MTK
       @pitch_class, @octave, @offset = pitch_class, octave, offset
       @value = @pitch_class.to_i + 12*(@octave+1) + @offset
     end
+
+    @flyweight = {}
+
+    def self.[](pitch_class, octave)
+      @flyweight[[pitch_class,octave]] ||= new(pitch_class, octave)
+    end
     
     def self.from_s( s )
       # TODO: update to handle offset

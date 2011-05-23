@@ -61,6 +61,16 @@ module MTK
     # pefect octave
     define_constant 'P8', 12
 
+    def self.[](name)
+      send name
+    rescue
+      begin
+        const_get name
+      rescue
+        nil
+      end
+    end
+
   end
   
 end

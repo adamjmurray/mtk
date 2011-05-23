@@ -77,5 +77,18 @@ describe MTK::Dynamics do
     end
   end
 
+  describe ".[]" do
+    it "looks up the constant by name" do
+      Dynamics['ppp'].should == ppp
+      Dynamics['pp'].should == pp
+      Dynamics['p'].should == p
+      Dynamics['mp'].should == mp
+      Dynamics['mf'].should == mf
+      Dynamics['f'].should == f
+      Dynamics['ff'].should == ff
+      Dynamics['fff'].should == fff
+    end
+  end
+
 end
   

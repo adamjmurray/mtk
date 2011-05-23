@@ -1,7 +1,7 @@
 require 'spec_helper'
   
 describe MTK::Intervals do
-  
+
   describe 'P1' do
     it 'is 0 semitones' do
       P1.should == 0
@@ -116,6 +116,24 @@ describe MTK::Intervals do
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
+    end
+  end
+
+  describe ".[]" do
+    it "looks up the constant by name" do
+      Intervals['P1'].should == P1
+      Intervals['m2'].should == m2
+      Intervals['M2'].should == M2
+      Intervals['m3'].should == m3
+      Intervals['M3'].should == M3
+      Intervals['P4'].should == P4
+      Intervals['TT'].should == TT
+      Intervals['P5'].should == P5
+      Intervals['m6'].should == m6
+      Intervals['M6'].should == M6
+      Intervals['m7'].should == m7
+      Intervals['M7'].should == M7
+      Intervals['P8'].should == P8
     end
   end
 

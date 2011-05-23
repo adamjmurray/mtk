@@ -45,6 +45,12 @@ module MTK
 
     # fortississimo
     define_constant 'fff', 1.0
-    
+
+    def self.[](name)
+      send name
+    rescue
+      nil
+    end
+
   end
 end

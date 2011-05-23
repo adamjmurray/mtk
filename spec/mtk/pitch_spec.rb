@@ -7,6 +7,15 @@ describe MTK::Pitch do
   let(:highest) { Pitch.new(G, 9) }
   let(:middle_c_and_50_cents) { Pitch.new(C, 4, 0.5) }
 
+  describe '.[]' do
+    it "constructs and caches a pitch with the given pitch_class and octave" do
+      Pitch[C,4].should be_equal Pitch[C,4]
+    end
+    it "retains the new() method's ability to construct uncached objects" do
+      Pitch.new(C,4).should_not be_equal Pitch[C,4]
+    end
+  end
+
   describe '#pitch_class' do
     it "is the pitch class of the pitch" do
       middle_c.pitch_class.should == C
