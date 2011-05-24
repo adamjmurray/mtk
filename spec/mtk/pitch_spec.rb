@@ -64,6 +64,12 @@ describe MTK::Pitch do
     it("converts 'B#4' to middle c") { Pitch.from_s('B#4').should == middle_c }
   end
 
+  describe ".from_hash" do
+    it "constructs a Pitch from a hash of pitch attributes" do
+      Pitch.from_hash({:pitch_class => C, :octave => 4, :offset => 0.5}).should == middle_c_and_50_cents
+    end
+  end
+
   describe '#to_f' do
     it "is 60.5 for middle C with a 0.5 offset" do
       middle_c_and_50_cents.to_f.should == 60.5
@@ -77,6 +83,12 @@ describe MTK::Pitch do
     it "rounds to the nearest integer (the nearest semitone value) when there is an offset" do
       Pitch.new(C, 4, 0.4).to_i.should == 60
       Pitch.new(C, 4, 0.5).to_i.should == 61
+    end
+  end
+
+  describe "#to_hash" do
+    it "converts to a Hash" do
+      middle_c_and_50_cents.to_hash.should == {:pitch_class => C, :octave => 4, :offset => 0.5}
     end
   end
 
@@ -165,6 +177,33 @@ describe MTK::Pitch do
 
     it 'allows a Pitch to be subtracted from a Numeric' do
       (62 - middle_c).should == Pitch.from_i(2)
+    end
+  end
+
+  describe "#clone_with" do
+    it "clones the Pitch when given an empty hash" do
+      middle_c.clone_with({}).should == middle_c
+    end
+
+    it "create a Pitch with the given :pitch_class, and the current Pitch's octave and offset if not provided" do
+      pitch2 = middle_c_and_50_cents.clone_with({:pitch_class => middle_c_and_50_cents.pitch_class+1})
+      pitch2.pitch_class.should == middle_c_and_50_cents.pitch_class + 1
+      pitch2.octave.should == middle_c_and_50_cents.octave
+      pitch2.offset.should == middle_c_and_50_cents.offset
+    end
+
+    it "create a Pitch with the given :octave, and the current Pitch's pitch_class and offset if not provided" do
+      pitch2 = middle_c_and_50_cents.clone_with({:octave => middle_c_and_50_cents.octave+1})
+      pitch2.pitch_class.should == middle_c_and_50_cents.pitch_class
+      pitch2.octave.should == middle_c_and_50_cents.octave + 1
+      pitch2.offset.should == middle_c_and_50_cents.offset
+    end
+
+    it "create a Pitch with the given :offset, and the current Pitch's pitch_class and octave if not provided" do
+      pitch2 = middle_c_and_50_cents.clone_with({:offset => middle_c_and_50_cents.offset+1})
+      pitch2.pitch_class.should == middle_c_and_50_cents.pitch_class
+      pitch2.octave.should == middle_c_and_50_cents.octave
+      pitch2.offset.should == middle_c_and_50_cents.offset + 1
     end
   end
 

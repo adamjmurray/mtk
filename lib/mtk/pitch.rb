@@ -37,7 +37,11 @@ module MTK
       pitch_class = PitchClass.from_i(i)
       octave = i/12 - 1
       new( pitch_class, octave, offset )      
-    end      
+    end
+
+    def self.from_hash(hash)
+      new hash[:pitch_class], hash[:octave], hash.fetch(:offset,0)
+    end
     
     # Convert a Numeric semitones value into a Pitch    
     def self.from_i( i )
@@ -57,7 +61,11 @@ module MTK
     def offset_in_cents
       @offset * 100
     end
-    
+
+    def to_hash
+      {:pitch_class => @pitch_class, :octave => @octave, :offset => @offset}
+    end
+
     def to_s
       "#{@pitch_class}#{@octave}" + (@offset.zero? ? '' : "+#{offset_in_cents.round}cents")
     end
@@ -65,7 +73,7 @@ module MTK
     def inspect
       "#{@pitch_class}#{@octave}" + (@offset.zero? ? '' : "+#{offset_in_cents}cents")
     end
-    
+
     def ==( other )
       other.respond_to? :pitch_class and other.respond_to? :octave and other.respond_to? :offset and
       other.pitch_class == @pitch_class and other.octave == @octave and other.offset == @offset
@@ -89,6 +97,10 @@ module MTK
 
     def coerce(other)
       return self.class.from_f(other.to_f), self
+    end
+
+    def clone_with(hash)
+      self.class.from_hash(to_hash.merge hash)
     end
 
   end
