@@ -137,6 +137,13 @@ describe MTK::Timeline do
     end
   end
 
+  describe "#map" do
+    it "returns a new Timeline with each event replaced by the value of the yieled |time,event| block" do
+      mapped = timeline.map{|time,event| event.transpose(time+1) }
+      mapped.should == Timeline.from_hash({ 0 => note1.transpose(1), 1=> [note1.transpose(2), note2.transpose(2)] })
+    end
+  end
+
   describe "#compact!" do
     it "removes empty event lists" do
       timeline[3] = []

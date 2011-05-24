@@ -91,6 +91,14 @@ module MTK
       end
     end
 
+    def map
+      mapped_timeline = Timeline.new
+      each_time do |time,events|
+        mapped_timeline[time] = events.map{|event| yield time,event }
+      end
+      mapped_timeline
+    end
+
     def compact!
       @timeline.delete_if {|t,events| events.empty? }
     end
