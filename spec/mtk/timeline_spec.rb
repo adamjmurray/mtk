@@ -142,6 +142,19 @@ describe MTK::Timeline do
       mapped = timeline.map{|time,event| event.transpose(time+1) }
       mapped.should == Timeline.from_hash({ 0 => note1.transpose(1), 1=> [note1.transpose(2), note2.transpose(2)] })
     end
+
+    it "does not modify this Timeline" do
+      original_values = timeline_hash
+      timeline.map{|time,event| event.transpose(time+1) }
+      timeline.should == original_values
+    end
+  end
+
+  describe "#map!" do
+    it "maps the Timeline in place" do
+      timeline.map! {|time,event| event.transpose(time+1) }
+      timeline.should == Timeline.from_hash({ 0 => note1.transpose(1), 1=> [note1.transpose(2), note2.transpose(2)] })
+    end
   end
 
   describe "#compact!" do
@@ -153,5 +166,14 @@ describe MTK::Timeline do
     end
   end
 
+  describe "#clone" do
+    it "creates an equal Timeline" do
+      timeline.clone.should == timeline
+    end
+
+    it "returns a new instance" do
+      timeline.clone.should_not equal(timeline)
+    end
+  end
 end
 

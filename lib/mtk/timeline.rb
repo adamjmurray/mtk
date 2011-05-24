@@ -99,6 +99,16 @@ module MTK
       mapped_timeline
     end
 
+    def map!
+      each_time do |time,events|
+        self[time] = events.map{|event| yield time,event }
+      end
+    end
+
+    def clone
+      self.class.from_hash(to_hash)
+    end
+
     def compact!
       @timeline.delete_if {|t,events| events.empty? }
     end
