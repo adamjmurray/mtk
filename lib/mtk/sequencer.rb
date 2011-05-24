@@ -3,10 +3,10 @@ module MTK
   # An endless enumerator of {Note}s
   class Sequencer
 
+    attr_reader :pitches, :intensities, :durations
+    
     def initialize(pitches, intensities=nil, durations=nil)
-      @pitches = pitches.clone
-      @intensities = intensities.clone if intensities
-      @durations = durations.clone if durations
+      @pitches, @intensities, @durations = pitches, intensities, durations
       reset
     end
 
