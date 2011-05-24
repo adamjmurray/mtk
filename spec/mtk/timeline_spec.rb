@@ -165,6 +165,23 @@ describe MTK::Timeline do
       timeline.should == timeline_hash
     end
   end
+  
+  describe "#flatten" do
+    it "flattens nested timelines so that all nested subtimes are converted to absolute times in a single timeline" do
+      timeline[10] = Timeline.from_hash({ 0 => note2, 1 => note1 })
+      timeline.flatten.should == timeline_hash.merge({ 10 => [note2], 11 => [note1] })
+    end
+    
+    it "handles nested timelines which have nested timelines inside of them" do
+      nested = Timeline.from_hash({ 0 => note1 })
+      timeline[10] = Timeline.from_hash({ 100 => nested })
+      timeline.flatten.should == timeline_hash.merge({ 110 => [note1] })
+    end
+    
+    it "returns a new Timeline" do
+      timeline.flatten.should_not equal(timeline)
+    end
+  end
 
   describe "#clone" do
     it "creates an equal Timeline" do

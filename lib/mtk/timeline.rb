@@ -112,6 +112,20 @@ module MTK
     def compact!
       @timeline.delete_if {|t,events| events.empty? }
     end
+    
+    def flatten
+      flattened = Timeline.new
+      for time,event in self
+        if event.is_a? Timeline
+          for subtime, subevent in event.flatten
+            flattened.add(time+subtime, subevent)
+          end
+        else
+          flattened.add(time,event)
+        end
+      end
+      flattened
+    end
 
     def to_s
       times.map{|t| "#{t} => #{@timeline[t].join ', '}" }.join "\n"
