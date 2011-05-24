@@ -25,7 +25,6 @@ module MTK
         when PitchSet then Chord.new(pitch, intensity, duration)
         else Note.new(pitch, intensity, duration)
       end
-
     end
 
     ##################################
@@ -36,10 +35,16 @@ module MTK
         @p_idx = (@p_idx + 1) % @pitches.length
         value = @pitches[@p_idx]
         @pitch = case value
-          when Pitch,PitchSet then value
-          when PitchClass then @pitch + @pitch.pitch_class.distance_to(value)
-          when Numeric then @pitch + value
-          else @pitch
+          when Pitch,PitchSet
+            value
+          when Numeric
+            @pitch + value
+          when PitchClass
+            pitch = @pitch
+            pitch = pitch.pitches.first if @pitch.is_a? PitchSet # calculate relative to lowest note of PitchSets
+            @pitch + pitch.pitch_class.distance_to(value)
+          else
+            @pitch
         end
       end
       @pitch
