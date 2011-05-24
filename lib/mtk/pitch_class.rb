@@ -73,7 +73,7 @@ module MTK
     end
 
     def == other
-      other.kind_of? PitchClass and other.to_i == @int_value
+      other.is_a? PitchClass and other.to_i == @int_value
     end
 
     def <=> other
@@ -94,6 +94,18 @@ module MTK
 
     def -(interval)
       self.class.from_i(to_i - interval.to_i)
+    end
+
+    # the smallest interval in semitones that needs to be added to this PitchClass to reach the given PitchClass
+    def distance_to(pitch_class)
+      delta = (pitch_class.to_i - to_i) % 12
+      if delta > 6
+        delta -= 12
+      elsif delta == 6 and to_i >= 6
+        # this is a special edge case to prevent endlessly ascending pitch sequences when alternating between two pitch classes a tritone apart
+        delta = -6
+      end
+      delta
     end
 
   end

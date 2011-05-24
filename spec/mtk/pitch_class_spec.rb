@@ -119,6 +119,7 @@ describe MTK::PitchClass do
     it "adds the integer value of the argument and #to_i" do
       (C + 4).should == E
     end
+
     it "'wraps around' the range 0-11" do
       (D + 10).should == C
     end
@@ -128,8 +129,36 @@ describe MTK::PitchClass do
     it "subtracts the integer value of the argument from #to_i" do
       (E - 2).should == D
     end
+
     it "'wraps around' the range 0-11" do
       (C - 8).should == E
+    end
+  end
+
+  describe "#distance_to" do
+    it "is the distance in semitones between 2 PitchClass objects" do
+      C.distance_to(D).should == 2
+    end
+
+    it "is the shortest distance (accounts from octave 'wrap around')" do
+      B.distance_to(C).should == 1
+    end
+
+    it "is a negative distance in semitones when the cloest given PitchClass is at a higher Pitch" do
+      D.distance_to(C).should == -2
+      C.distance_to(B).should == -1
+    end
+
+    it "is (positive) 6 for tritone distances, when this PitchClass is C-F" do
+      for pc in [C,Db,D,Eb,E,F]
+        pc.distance_to(pc+TT).should == 6
+      end
+    end
+
+    it "is -6 for tritone distances, when this PitchClass is Gb-B" do
+      for pc in [Gb,G,Ab,A,Bb,B]
+        pc.distance_to(pc+TT).should == -6
+      end
     end
   end
 
