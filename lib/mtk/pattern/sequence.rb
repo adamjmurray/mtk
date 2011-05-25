@@ -10,16 +10,20 @@ module MTK
 
       # @param elements [Array] the list of {#elements}
       # @param default [Object] the default value returned by {#next} in place of nil
-      def initialize(elements, default=nil)
-        @elements, @default = elements, default
+      def initialize(elements)
+        if elements.respond_to? :elements
+          @elements = elements.elements
+        else
+          @elements = elements.to_a
+        end
         reset
       end
 
       # reset the Sequence to its initial state
       def reset
         @index = -1
-        @last_element = nil
-        @last_value = nil
+        @element = nil
+        @value = nil
       end
 
       # The value of the next element in the Sequence.
@@ -34,22 +38,27 @@ module MTK
         if @elements and not @elements.empty?
           @index = (@index + 1) % @elements.length
           element = @elements[@index]
-
-          value = case element
-            when Proc
-              case element.arity
-                when 0 then element.call
-                when 1 then element.call(@last_value)
-                else element.call(@last_value, @last_element)
-              end
-            when nil then @last_value
-            else element
-          end
-
-          @last_element, @last_value = element, value
+          value = value_of(element)
+          @element, @value = element, value
         end
-        @last_value ||= @default
+        @value
       end
+
+      ####################
+      protected
+
+      def value_of element
+        case element
+          when Proc
+            case element.arity
+              when 0 then element.call
+              when 1 then element.call(@value)
+              else element.call(@value, @element)
+            end
+          else element
+        end
+      end
+
     end
 
   end
