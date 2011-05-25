@@ -16,6 +16,7 @@ require 'mtk/constants/intervals'
 require 'mtk/constants/dynamics'
 
 require 'mtk/pattern/sequence'
+require 'mtk/pattern/choice'
 
 require 'mtk/numeric_extensions'
 
