@@ -15,6 +15,8 @@ require 'mtk/constants/pitches'
 require 'mtk/constants/intervals'
 require 'mtk/constants/dynamics'
 
+require 'mtk/pattern/sequence'
+
 require 'mtk/numeric_extensions'
 
 
@@ -26,6 +28,10 @@ module MTK
 
   # Classes for MIDI input and output
   module MIDI
+  end
+
+  # Classes that enumerate elements
+  module Pattern
   end
 
 end
