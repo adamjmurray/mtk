@@ -55,6 +55,10 @@ module MTK
       @pitches.include? pitch
     end
 
+    def nearest(pitch_class)
+      self + @pitches.first.pitch_class.distance_to(pitch_class)
+    end
+
     # @param other [#pitches, #to_a, Array]
     def == other
       if other.respond_to? :pitches

@@ -159,14 +159,21 @@ describe MTK::Pitch do
   describe "#invert" do
     context 'higher center pitch' do
       it 'inverts the pitch around the given center pitch' do
-        middle_c.invert(Pitch.from_i(66)).should == Pitch.from_i(72)
+        middle_c.invert(Pitch.from_i 66).should == Pitch.from_i(72)
       end
     end
 
     context 'lower center pitch' do
       it 'inverts the pitch around the given center pitch' do
-        middle_c.invert(Pitch.from_i(54)).should == Pitch.from_i(48)
+        middle_c.invert(Pitch.from_i 54).should == Pitch.from_i(48)
       end
+    end
+  end
+
+  describe "#nearest" do
+    it "is the Pitch with the nearest given PitchClass" do
+      middle_c.nearest(F).should == F4
+      middle_c.nearest(G).should == G3
     end
   end
 

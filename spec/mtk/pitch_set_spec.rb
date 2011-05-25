@@ -129,6 +129,13 @@ describe MTK::PitchSet do
     end
   end
 
+  describe "#nearest" do
+    it "returns the nearest PitchSet where the first Pitch has the given PitchClass" do
+      c_major.nearest(F).should == c_major + 5
+      c_major.nearest(G).should == c_major - 5
+    end
+  end
+
   describe "#to_s" do
     it "looks like an array of pitches" do
       c_major.to_s.should == "[C4, E4, G4]"

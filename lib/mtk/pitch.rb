@@ -95,6 +95,10 @@ module MTK
       self + 2*(center_pitch.to_f - to_f)
     end
 
+    def nearest(pitch_class)
+      self + self.pitch_class.distance_to(pitch_class)
+    end
+
     def coerce(other)
       return self.class.from_f(other.to_f), self
     end
