@@ -5,6 +5,10 @@ describe MTK::PitchClassSet do
   let(:pitch_classes) { [C,E,G] }
   let(:pitch_class_set) { PitchClassSet.new(pitch_classes) }
 
+  it "is Enumerable" do
+    pitch_class_set.should be_a Enumerable
+  end
+
   describe "#pitch_classes" do
     it "is the list of pitch_classes contained in this set" do
       pitch_class_set.pitch_classes.should == pitch_classes
@@ -41,6 +45,20 @@ describe MTK::PitchClassSet do
 
     it "is mutable" do
       (pitch_class_set.to_a << Bb).should == [C, E, G, Bb]
+    end
+  end
+
+  describe "#each" do
+    it "yields each pitch_class" do
+      pcs = []
+      pitch_class_set.each{|pc| pcs << pc }
+      pcs.should == pitch_classes
+    end
+  end
+
+  describe "#map" do
+    it "returns a PitchClassSet with each PitchClass replaced with the results of the block" do
+      pitch_class_set.map{|pc| pc + 2}.should == [D, Gb, A]
     end
   end
 

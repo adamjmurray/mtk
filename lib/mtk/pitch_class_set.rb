@@ -4,14 +4,24 @@ module MTK
   #
   class PitchClassSet
 
+    include Mappable
+
     attr_reader :pitch_classes
     
     def initialize(pitch_classes)
-      @pitch_classes = pitch_classes.uniq.sort.freeze
+      @pitch_classes = pitch_classes.to_a.uniq.sort.freeze
+    end
+
+    def self.from_a enumerable
+      new enumerable
     end
 
     def to_a
       Array.new(@pitch_classes)
+    end
+
+    def each &block
+      @pitch_classes.each &block
     end
 
     def size

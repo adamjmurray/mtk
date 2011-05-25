@@ -8,6 +8,10 @@ describe MTK::Timeline do
   let(:timeline_hash) { { 0 => [note1], 1 => [note1, note2] } }
   let(:timeline) { Timeline.from_hash(timeline_raw_data) }
 
+  it "is Enumerable" do
+    Timeline.new.should be_a Enumerable
+  end
+
   it "wraps lone values in arrays" do
     Timeline.from_hash(timeline_raw_data).should == Timeline.from_hash(timeline_hash)
   end
@@ -30,10 +34,24 @@ describe MTK::Timeline do
     end
   end
 
+  describe "from_a" do
+    it "creates a timeline from an Enumerable"
+  end
+
   describe "#to_hash" do
     it "returns the underlying Hash" do
       timeline.to_hash.should == timeline_hash
     end
+  end
+
+  describe "#clear" do
+    it "clears the timeline" do
+      timeline.clear.should be_empty
+    end
+  end
+
+  describe "#merge" do
+    it "merges all the time,event pairs in the given Enumerable into this Timeline"
   end
 
   describe "#empty?" do
@@ -79,6 +97,8 @@ describe MTK::Timeline do
       timeline.add(5, note2)
       timeline[5].should == [note1, note2]
     end
+
+    it "accepts either a single event or a list of events as its second argument"
   end
 
   describe "#delete" do
@@ -138,22 +158,40 @@ describe MTK::Timeline do
   end
 
   describe "#map" do
-    it "returns a new Timeline with each event replaced by the value of the yieled |time,event| block" do
-      mapped = timeline.map{|time,event| event.transpose(time+1) }
-      mapped.should == Timeline.from_hash({ 0 => note1.transpose(1), 1=> [note1.transpose(2), note2.transpose(2)] })
+    it "returns a new Timeline where each [time,event] pair is replaced by the result of block" do
+      mapped = timeline.map{|time,event| [time+1, event.transpose(time+2)] }
+      mapped.should == { 1 => [note1.transpose(2)], 2 => [note1.transpose(3), note2.transpose(3)] }
     end
 
     it "does not modify this Timeline" do
-      original_values = timeline_hash
-      timeline.map{|time,event| event.transpose(time+1) }
-      timeline.should == original_values
+      timeline.map{|t,e| [0,nil] }
+      timeline.should == timeline_hash
     end
   end
 
   describe "#map!" do
     it "maps the Timeline in place" do
-      timeline.map! {|time,event| event.transpose(time+1) }
-      timeline.should == Timeline.from_hash({ 0 => note1.transpose(1), 1=> [note1.transpose(2), note2.transpose(2)] })
+      timeline.map! {|time,event| [time+1, event.transpose(time+2)] }
+      timeline.should == { 1 => [note1.transpose(2)], 2 => [note1.transpose(3), note2.transpose(3)] }
+    end
+  end
+
+  describe "#map_events" do
+    it "maps the Timeline in place" do
+      mapped = timeline.map_events {|event| event.transpose(1) }
+      mapped.should == { 0 => [note1.transpose(1)], 1=> [note1.transpose(1), note2.transpose(1)] }
+    end
+
+    it "does not modify this Timeline" do
+      timeline.map_events {|event| event.transpose(1) }
+      timeline.should == timeline_hash
+    end
+  end
+
+  describe "#map_events!" do
+    it "maps the Timeline in place" do
+      timeline.map_events! {|event| event.transpose(1) }
+      timeline.should == { 0 => [note1.transpose(1)], 1=> [note1.transpose(1), note2.transpose(1)] }
     end
   end
 

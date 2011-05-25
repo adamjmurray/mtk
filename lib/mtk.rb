@@ -1,3 +1,4 @@
+require 'mtk/util/mappable'
 require 'mtk/pitch_class'
 require 'mtk/pitch_class_set'
 require 'mtk/pitch'

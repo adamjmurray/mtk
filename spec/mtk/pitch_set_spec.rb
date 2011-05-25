@@ -5,7 +5,11 @@ describe MTK::PitchSet do
   let(:pitches) { [C4, D4, E4, F4, G4, A4, B4] }
   let(:pitch_set) { PitchSet.new(pitches) }
   let(:c_major) { PitchSet.new([C4,E4,G4]) }
-    
+
+  it "is Enumerable" do
+    pitch_set.should be_a Enumerable
+  end
+
   describe '#pitches' do
     it 'is the list of pitches used to construct the scale' do
       pitch_set.pitches.should == pitches
@@ -42,6 +46,20 @@ describe MTK::PitchSet do
 
     it "is mutable" do
       (c_major.to_a << Bb4).should == [C4, E4, G4, Bb4]
+    end
+  end
+
+  describe "#each" do
+    it "yields each pitch" do
+      ps = []
+      pitch_set.each{|p| ps << p }
+      ps.should == pitches
+    end
+  end
+
+  describe "#map" do
+    it "returns a PitchSet with each Pitch replaced with the results of the block" do
+      c_major.map{|p| p + 2}.should == [D4, Gb4, A4]
     end
   end
 

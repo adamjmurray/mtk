@@ -1,24 +1,34 @@
 module MTK
 
   # Maps sorted times to lists of events.
-
+  #
+  # Enumerable as |time,event| pairs.
+  #
   class Timeline
 
-    # @param options [Hash] the options to create a Timeline with.
-    # @option options [Hash] :from_hash the initial data for the timeline
-    def initialize(options={})
+    include Mappable
+
+    def initialize()
       @timeline = {}
-      hash = options[:from_hash]
-      if hash
-        hash = hash.to_hash unless hash.is_a? Hash
-        for time,events in hash
-          self[time] = events # ensures everything is wrapped in an Array
-        end
-      end
     end
 
-    def self.from_hash(hash, options={})
-      new options.merge({:from_hash => hash})
+    class << self
+      def from_a(enumerable)
+        new.merge enumerable
+      end
+      alias from_hash from_a
+    end
+
+    def merge enumerable
+      for time,events in enumerable
+        add(time,events)
+      end
+      self
+    end
+
+    def clear
+      @timeline.clear
+      self
     end
 
     def to_hash
@@ -49,7 +59,11 @@ module MTK
     def add(time, event)
       events = @timeline[time]
       if events
-        events << event
+        if event.is_a? Array
+          events.concat event
+        else
+          events << event
+        end
       else
          self[time] = event
       end
@@ -91,17 +105,23 @@ module MTK
       end
     end
 
-    def map
+    def map! &block
+      mapped = enumerable_map &block
+      clear
+      merge mapped
+    end
+
+    def map_events
       mapped_timeline = Timeline.new
       each_time do |time,events|
-        mapped_timeline[time] = events.map{|event| yield time,event }
+        mapped_timeline[time] = events.map{|event| yield event }
       end
       mapped_timeline
     end
 
-    def map!
+    def map_events!
       each_time do |time,events|
-        self[time] = events.map{|event| yield time,event }
+        self[time] = events.map{|event| yield event }
       end
     end
 
