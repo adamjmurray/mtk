@@ -62,7 +62,23 @@ describe MTK::PitchClassSet do
     end
   end
 
+  describe "#normal_order" do
+    it "permutes the set so that the first and last pitch classes are as close together as possible" do
+      PitchClassSet.new([E,A,C]).normal_order.should == [A,C,E]
+    end
+
+    it "breaks ties by minimizing the distance between the first and second-to-last pitch class" do
+      # 0,4,8,9,11
+      PitchClassSet.new([C,E,Ab,A,B]).normal_order.should == [Ab,A,B,C,E]
+    end
+
+  end
+
   describe "#normal_form" do
+    it "is transposes the #normal_order so that the first pitch class set is 0 (C)" do
+      PitchClassSet.new([E,A,C]).normal_form.should == [0,3,7]
+    end
+
     it "is invariant across reorderings of the pitch classes" do
       PitchClassSet.new([C,E,G]).normal_form.should == [0,4,7]
       PitchClassSet.new([E,C,G]).normal_form.should == [0,4,7]
@@ -74,6 +90,14 @@ describe MTK::PitchClassSet do
       PitchClassSet.new([Db,E,Ab]).normal_form.should == [0,3,7]
       PitchClassSet.new([Bb,F,Db]).normal_form.should == [0,3,7]
     end
+  end
+
+  describe ".span_for" do
+    pending
+  end
+
+  describe ".span_between" do
+    pending
   end
 
 end
