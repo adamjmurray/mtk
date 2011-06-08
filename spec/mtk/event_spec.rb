@@ -24,6 +24,20 @@ describe MTK::Event do
     it "is a read-only attribute" do
       lambda{ event.duration = 0 }.should raise_error
     end
+
+    it "is always positive (absolute value of the duration used to construct the Event)" do
+      Event.new(intensity, -duration).duration.should == duration
+    end
+  end
+
+  describe "#rest?" do
+    it "is true when the duration used to create the Event was negative" do
+      Event.new(intensity, -duration).rest?.should be_true
+    end
+
+    it "is false when the duration used to create the Event was positive" do
+      event.rest?.should be_false
+    end
   end
 
   describe "from_hash" do
@@ -88,8 +102,13 @@ describe MTK::Event do
     it "converts beats to pulses, given pulses_per_beat" do
       Event.new(0,1).duration_in_pulses(60).should == 60
     end
+
     it "rounds to the nearest pulse" do
       Event.new(0,1.5).duration_in_pulses(59).should == 89
+    end
+
+    it "is always positive (uses absolute value of the duration used to construct the Event)" do
+      Event.new(intensity, -1).duration_in_pulses(60).should == 60
     end
   end
 

@@ -1,6 +1,6 @@
 module MTK
 
-  # A musical #{Event} defined by a {Pitch}, intensity, and duration
+  # A musical {Event} defined by a {Pitch}, intensity, and duration
   class Note < Event
 
     # frequency of the note as a Pitch

@@ -51,7 +51,9 @@ describe MTK::Timeline do
   end
 
   describe "#merge" do
-    it "merges all the time,event pairs in the given Enumerable into this Timeline"
+    it "merges all the time,event pairs in the given Enumerable into this Timeline" do
+      pending
+    end
   end
 
   describe "#empty?" do
@@ -98,7 +100,9 @@ describe MTK::Timeline do
       timeline[5].should == [note1, note2]
     end
 
-    it "accepts either a single event or a list of events as its second argument"
+    it "accepts either a single event or a list of events as its second argument" do
+      pending
+    end
   end
 
   describe "#delete" do

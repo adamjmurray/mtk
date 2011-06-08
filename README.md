@@ -47,13 +47,17 @@ Ruby 1.8 or 1.9
 
 ## Documentation
 
-### From the gem
+### Latest:
+
+http://rubydoc.info/github/adamjmurray/mtk/master/frames
+
+### For the gem:
 
     yard server --gems
 
 then browse to http://localhost:8808
 
-### From source
+### For github source:
 
     rake yard
 

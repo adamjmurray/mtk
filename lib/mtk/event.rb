@@ -7,9 +7,6 @@ module MTK
     # intensity of the note as a value in the range 0.0 - 1.0
     attr_reader :intensity
 
-    # duration of the note in beats (e.g. 1.0 is a quarter note in 4/4 time signatures)
-    attr_reader :duration
-
     def initialize(intensity, duration)
       @intensity, @duration = intensity, duration
     end
@@ -36,11 +33,23 @@ module MTK
 
     # intensity scaled to the MIDI range 0-127
     def velocity
-      (127 * @intensity).round
+      @velocity ||= (127 * @intensity).round
+    end
+
+    # Duration of the Event in beats (e.g. 1.0 is a quarter note in 4/4 time signatures)
+    # This is the absolute value of the duration attribute used to construct the object.
+    # @see rest?
+    def duration
+      @abs_duration ||= @duration.abs
+    end
+
+    # By convention, any events with negative durations are considered a rest
+    def rest?
+      @duration < 0
     end
 
     def duration_in_pulses(pulses_per_beat)
-      (@duration * pulses_per_beat).round
+      @duration_in_pulses ||= (duration * pulses_per_beat).round
     end
 
     def == other
