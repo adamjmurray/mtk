@@ -35,7 +35,9 @@ describe MTK::Timeline do
   end
 
   describe "from_a" do
-    it "creates a timeline from an Enumerable"
+    it "creates a timeline from an Enumerable" do
+      Timeline.from_a(timeline_hash.to_a).should == timeline
+    end
   end
 
   describe "#to_hash" do
@@ -52,7 +54,7 @@ describe MTK::Timeline do
 
   describe "#merge" do
     it "merges all the time,event pairs in the given Enumerable into this Timeline" do
-      pending
+      timeline.merge({ 3 => note2 }).should == Timeline.from_hash( timeline_raw_data.merge({ 3 => note2 }) )
     end
   end
 
@@ -100,8 +102,9 @@ describe MTK::Timeline do
       timeline[5].should == [note1, note2]
     end
 
-    it "accepts either a single event or a list of events as its second argument" do
-      pending
+    it "accepts a list of events as its second argument" do
+      timeline.add 5, [note1, note2]
+      timeline[5].should == [note1, note2]
     end
   end
 
