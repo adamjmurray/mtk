@@ -8,7 +8,7 @@ module MTK
 
     NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
 
-    VALID_NAMES = [
+    VALID_NAMES_BY_VALUE = [
         ['B#', 'C', 'Dbb'],
         ['B##', 'C#', 'Db'],
         ['C##', 'D', 'Ebb'],
@@ -23,33 +23,28 @@ module MTK
         ['A##', 'B', 'Cb']
     ]
 
-    attr_reader :name
+    VALID_NAMES = VALID_NAMES_BY_VALUE.flatten
 
-    ##########################################        
-    private
+    attr_reader :name
 
     def initialize(name, int_value)
       @name, @int_value = name, int_value
     end
-
     private_class_method :new
 
     @flyweight = {}
 
-    def self.get(name, int_value)
-      @flyweight[name] ||= new(name, int_value)
+    # Return a new object, only constructing a new instance when not already in the flyweight cache
+    def self.[](name, value)
+      @flyweight[name] ||= new(name, value) if VALID_NAMES.include? name
     end
-
-    private_class_method :get
-
-    ##########################################    
-    public
+    private_class_method :[]
 
     def self.from_s(s)
       s = s.to_s
       s = s[0..0].upcase + s[1..-1].downcase # normalize the name      
-      VALID_NAMES.each_with_index do |names, index|
-        return get(s, index) if names.include? s
+      VALID_NAMES_BY_VALUE.each_with_index do |names, value|
+        return self[s, value] if names.include? s
       end
       nil
     end
@@ -61,15 +56,7 @@ module MTK
     def self.from_i(value)
       value = value.to_i % 12
       name = NAMES[value]
-      get(name, value)
-    end
-
-    def self.[](name_or_value)
-      if name_or_value.kind_of? Numeric
-        from_i(name_or_value)
-      else
-        from_s(name_or_value)
-      end
+      self[name, value]
     end
 
     def == other
@@ -108,6 +95,16 @@ module MTK
       delta
     end
 
+  end
+
+  # Construct a {PitchClass} from any supported type
+  def PitchClass(anything)
+    case anything
+      when Numeric then PitchClass.from_i(anything)
+      when String, Symbol then PitchClass.from_s(anything)
+      when PitchClass then anything
+      else raise "PitchClass doesn't understand #{anything.class}"
+    end
   end
 
 end

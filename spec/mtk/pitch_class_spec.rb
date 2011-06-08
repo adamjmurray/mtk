@@ -25,6 +25,18 @@ describe MTK::PitchClass do
     end
   end
 
+  describe 'VALID_NAMES' do
+    it "is all enharmonic spellings of NAMES including sharps, flats, double-sharps, and double-flats" do
+      PitchClass::VALID_NAMES =~ names
+    end
+  end
+
+  describe '.new' do
+    it "is private" do
+      lambda{ PitchClass.new('C',0) }.should raise_error
+    end
+  end
+
   describe '.from_s' do
     context "the argument is a valid name" do
       it "returns a PitchClass" do
@@ -59,18 +71,10 @@ describe MTK::PitchClass do
     it "returns the PitchClass with that value" do
       PitchClass.from_i(2).should == D
     end
+
     it "returns the PitchClass with that value mod 12" do
       PitchClass.from_i(14).should == D
       PitchClass.from_i(-8).should == E
-    end
-  end
-
-  describe '.[]' do
-    it "acts like from_name if the argument is a string" do
-      PitchClass['D'].should == PitchClass.from_name('D')
-    end
-    it "acts like from_i if the argument is a number" do
-      PitchClass[3].should == PitchClass.from_i(3)
     end
   end
 
@@ -103,8 +107,8 @@ describe MTK::PitchClass do
       C.should_not == D
     end
     it "treats enharmonic names as equal" do
-      C.should == PitchClass['B#']
-      C.should == PitchClass['Dbb']
+      C.should == PitchClass('B#')
+      C.should == PitchClass('Dbb')
     end
   end
 
@@ -163,3 +167,29 @@ describe MTK::PitchClass do
   end
 
 end  
+
+describe MTK do
+
+  describe '#PitchClass' do
+    it "acts like from_s if the argument is a String" do
+      PitchClass('D').should == PitchClass.from_s('D')
+    end
+
+    it "acts like from_s if the argument is a Symbol" do
+      PitchClass(:D).should == PitchClass.from_s('D')
+    end
+
+    it "acts like from_i if the argument is a Numberic" do
+      PitchClass(3).should == PitchClass.from_i(3)
+    end
+
+    it "returns the argument if it's already a PitchClass" do
+      PitchClass(C).should == C
+    end
+
+    it "raises an error for types it doesn't understand" do
+      lambda{ PitchClass({:not => :compatible}) }.should raise_error
+    end
+  end
+
+end
