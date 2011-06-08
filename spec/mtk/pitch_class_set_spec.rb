@@ -92,12 +92,20 @@ describe MTK::PitchClassSet do
     end
   end
 
-  describe ".span_for" do
-    pending
+  describe ".span_between" do
+    it "is the distance in semitones between 2 pitch classes" do
+      PitchClassSet.span_between(F, Bb).should == 5
+    end
+
+    it "assumes an ascending interval between the arguments (order of arguments matters)" do
+      PitchClassSet.span_between(Bb, F).should == 7
+    end
   end
 
-  describe ".span_between" do
-    pending
+  describe ".span_for" do
+    it "measure the distance between the first and last pitch classes" do
+      PitchClassSet.span_for([C,D,E,F,G]).should == 7
+    end
   end
 
 end

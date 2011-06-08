@@ -11,9 +11,18 @@ describe MTK::Pattern::NoteSequence do
   end
 
   describe "#new" do
-    it "allows default pitch to be specified"
-    it "allows default intensity to be specified"
-    it "allows default duration to be specified"
+    it "allows default pitch to be specified" do
+      sequence = Pattern::NoteSequence.new [], [p], [1], :pitch => Gb4
+      sequence.next.should == Note.new(Gb4, p, 1)
+    end
+    it "allows default intensity to be specified" do
+      sequence = Pattern::NoteSequence.new [C4], [], [1], :intensity => ppp
+      sequence.next.should == Note.new(C4, ppp, 1)
+    end
+    it "allows default duration to be specified" do
+      sequence = Pattern::NoteSequence.new [C4], [mf], [], :duration => 12
+      sequence.next.should == Note.new(C4, mf, 12)
+    end
   end
 
   describe "#next" do
