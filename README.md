@@ -4,6 +4,16 @@
 Classes for modeling music with a focus on simplicity. Support for reading/writing MIDI files (and soon, realtime MIDI).
 
 
+# Getting Started
+
+    gem install mtk
+
+or download the source from here and add mtk/lib to your $LOAD_PATH. Then...
+
+    require 'mtk'
+
+For now, see the specs for examples. Real examples are coming...
+
 
 ## Goals
 
@@ -23,6 +33,7 @@ Pre-alpha, API subject to change. Feedback welcome!
 
 Ruby 1.8 or 1.9
 
+
 ### Gem Dependencies
 
 * rake (tests & docs)
@@ -36,6 +47,14 @@ Ruby 1.8 or 1.9
 
 ## Documentation
 
+### From the gem
+
+    yard server --gems
+
+then browse to http://localhost:8808
+
+### From source
+
     rake yard
 
 then open doc/frames.html
@@ -46,7 +65,7 @@ then open doc/frames.html
 
     rake spec
 
-I test with MRI 1.8.7, MRI 1.9.2, JRuby 1.5.6, and JRuby 1.6.1 on OS X via rvm:
+I test with MRI 1.8.7, MRI 1.9.2, JRuby 1.5.6, and JRuby 1.6.2 on OS X via rvm:
 
-    rvm 1.8.7,1.9.2,jruby-1.5.6,jruby-1.6.1 rake spec:fast
+    rvm 1.8.7,1.9.2,jruby-1.5.6,jruby-1.6.2 rake spec:fast
 
