@@ -131,6 +131,40 @@ describe MTK::MIDI::File do
         note_offs[4].time_from_start.should == 1920
       end
     end
+
+    it 'ignores rests (events with negative duration)' do
+      MIDI_File(tempfile).write_timeline(
+        Timeline.from_hash({
+          0 => Note.new(C4, 0.7, 1),
+          1 => Note.new(G4, 0.8, -1), # this is a rest because it has a negative duration
+          2 => Note.new(C5, 0.9, 1)
+        })
+      )
+
+      # Now let's parse the file and check some expectations
+      File.open(tempfile.path, 'rb') do |file|
+        seq = MIDI::Sequence.new
+        seq.read(file)
+        seq.tracks.size.should == 1
+
+        track = seq.tracks[0]
+        note_ons, note_offs = note_ons_and_offs(track)
+        note_ons.length.should == 2
+        note_offs.length.should == 2
+
+        note_ons[0].note.should == C4.to_i
+        note_ons[0].velocity.should be_within(0.5).of(127*0.7)
+        note_offs[0].note.should == C4.to_i
+        note_ons[0].time_from_start.should == 0
+        note_offs[0].time_from_start.should == 480
+
+        note_ons[1].note.should == C5.to_i
+        note_ons[1].velocity.should be_within(0.5).of(127*0.9)
+        note_offs[1].note.should == C5.to_i
+        note_ons[1].time_from_start.should == 960
+        note_offs[1].time_from_start.should == 1440
+      end
+    end
   end
 
   describe "#write_timelines" do

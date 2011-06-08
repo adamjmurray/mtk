@@ -83,7 +83,10 @@ module MTK
         channel = 1
 
         for time, event in timeline
+          next if event.rest?
+
           time *= clock_rate
+
           case event
             when Note
               pitch, velocity = event.pitch, event.velocity
