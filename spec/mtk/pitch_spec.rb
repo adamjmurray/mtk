@@ -11,8 +11,13 @@ describe MTK::Pitch do
     it "constructs and caches a pitch with the given pitch_class and octave" do
       Pitch[C,4].should be_equal Pitch[C,4]
     end
+
     it "retains the new() method's ability to construct uncached objects" do
       Pitch.new(C,4).should_not be_equal Pitch[C,4]
+    end
+
+    it "can handle any type for the first argument that's supported by MTK::PitchClass()" do
+      Pitch['C',4].should == Pitch[0, 4]
     end
   end
 
@@ -62,6 +67,7 @@ describe MTK::Pitch do
     it("converts 'C4' to middle c") { Pitch.from_s('C4').should == middle_c }
     it("converts 'c4' to middle c") { Pitch.from_s('c4').should == middle_c }
     it("converts 'B#4' to middle c") { Pitch.from_s('B#4').should == middle_c }
+    it("converts 'C4+50.0cents' to middle C and 50 cents") { Pitch.from_s('C4+50.0cents').should == middle_c_and_50_cents }
   end
 
   describe ".from_hash" do
@@ -211,6 +217,40 @@ describe MTK::Pitch do
       pitch2.pitch_class.should == middle_c_and_50_cents.pitch_class
       pitch2.octave.should == middle_c_and_50_cents.octave
       pitch2.offset.should == middle_c_and_50_cents.offset + 1
+    end
+  end
+
+end
+
+describe MTK do
+
+  describe '#Pitch' do
+    it "acts like from_s if the argument is a String" do
+      Pitch('D4').should == Pitch.from_s('D4')
+    end
+
+    it "acts like from_s if the argument is a Symbol" do
+      Pitch(:D4).should == Pitch.from_s(:D4)
+    end
+
+    it "acts like from_f if the argument is a Numberic" do
+      Pitch(3).should == Pitch.from_f(3)
+    end
+
+    it "returns the argument if it's already a PitchClass" do
+      Pitch(C4).should == C4
+    end
+
+    it "acts like Pitch[] for a 2-element Array" do
+      Pitch(C,4).should == Pitch[C,4]
+    end
+
+    it "acts like Pitch.new() for a 3-element Array" do
+      Pitch(C, 4, 0.5).should == Pitch.new(C, 4, 0.5)
+    end
+
+    it "raises an error for types it doesn't understand" do
+      lambda{ Pitch({:not => :compatible}) }.should raise_error
     end
   end
 

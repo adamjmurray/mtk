@@ -1,7 +1,6 @@
 module MTK
 
   # A frequency represented by a {PitchClass}, an integer octave, and an offset in semitones.
-  
   class Pitch
 
     include Comparable
@@ -15,18 +14,25 @@ module MTK
 
     @flyweight = {}
 
+    # Return a pitch with no offset, only constructing a new instance when not already in the flyweight cache
     def self.[](pitch_class, octave)
+      pitch_class = MTK.PitchClass(pitch_class)
       @flyweight[[pitch_class,octave]] ||= new(pitch_class, octave)
     end
     
     def self.from_s( s )
-      # TODO: update to handle offset
+      s = s.to_s
       s = s[0..0].upcase + s[1..-1].downcase # normalize name
-      if s =~ /^([A-G](#|##|b|bb)?)(-?\d+)$/
+      if s =~ /^([A-G](#|##|b|bb)?)(-?\d+)(\+(\d+(\.\d+)?)cents)?$/
         pitch_class = PitchClass.from_s($1)
         if pitch_class
           octave = $3.to_i
-          new( pitch_class, octave )
+          offset_in_cents = $5.to_f
+          if offset_in_cents.nil? or offset_in_cents.zero?
+            self[pitch_class, octave]
+          else
+            new( pitch_class, octave, offset_in_cents/100.0 )
+          end
         end
       end
     end
@@ -36,7 +42,11 @@ module MTK
       i, offset = f.floor, f%1  # split into int and fractional part
       pitch_class = PitchClass.from_i(i)
       octave = i/12 - 1
-      new( pitch_class, octave, offset )      
+      if offset == 0
+        self[pitch_class, octave]
+      else
+        new( pitch_class, octave, offset )
+      end
     end
 
     def self.from_hash(hash)
@@ -108,5 +118,23 @@ module MTK
     end
 
   end
+
+  # Construct a {Pitch} from any supported type
+  def Pitch(*anything)
+    anything = anything.first if anything.length == 1
+    case anything
+      when Numeric then Pitch.from_f(anything)
+      when String, Symbol then Pitch.from_s(anything)
+      when Pitch then anything
+      when Array
+        if anything.length == 2
+          Pitch[*anything]
+        else
+          Pitch.new(*anything)
+        end
+      else raise "Pitch doesn't understand #{anything.class}"
+    end
+  end
+  module_function :Pitch
 
 end

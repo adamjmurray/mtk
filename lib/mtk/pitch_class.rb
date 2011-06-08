@@ -106,5 +106,6 @@ module MTK
       else raise "PitchClass doesn't understand #{anything.class}"
     end
   end
+  module_function :PitchClass
 
 end
