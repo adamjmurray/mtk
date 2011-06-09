@@ -52,7 +52,7 @@ Ruby 1.8 or 1.9
 
 ### Latest:
 
-http://rubydoc.info/github/adamjmurray/mtk/master/frames
+http://rubydoc.info/github/adamjmurray/mtk/master/frames (may not be fully up-to-date with my latest commits)
 
 ### For the gem:
 

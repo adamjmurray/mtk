@@ -9,6 +9,17 @@ describe MTK::PitchClassSet do
     pitch_class_set.should be_a Enumerable
   end
 
+  describe ".random_row" do
+    it "generates a 12-tone row" do
+      PitchClassSet.random_row.should =~ PitchClasses::PITCH_CLASSES
+    end
+
+    it "generates a random 12-tone row (very slight expected chance of test failure, if this fails run it again!)" do
+      # there's a 1/479_001_600 chance this will fail... whaddyagonnado??
+      PitchClassSet.random_row.should_not == PitchClassSet.random_row
+    end
+  end
+
   describe "#pitch_classes" do
     it "is the list of pitch_classes contained in this set" do
       pitch_class_set.pitch_classes.should == pitch_classes
@@ -32,10 +43,6 @@ describe MTK::PitchClassSet do
     it "does not include duplicates" do
       PitchClassSet.new([C, E, G, C]).pitch_classes.should == [C, E, G]
     end
-
-    it "sorts the pitch_classes (C to B)" do
-      PitchClassSet.new([B, E, C]).pitch_classes.should == [C, E, B]
-    end
   end
 
   describe "#to_a" do
@@ -45,6 +52,42 @@ describe MTK::PitchClassSet do
 
     it "is mutable" do
       (pitch_class_set.to_a << Bb).should == [C, E, G, Bb]
+    end
+  end
+
+  describe "#size" do
+    it "returns the number of pitch classes in the set" do
+      pitch_class_set.size.should == 3
+    end
+  end
+
+  describe "#length" do
+    it "behaves like #size" do
+      pitch_class_set.length.should == pitch_class_set.size
+    end
+  end
+
+  describe "#[]" do
+    it "accesses the individual pitch classes (like an Array)" do
+      pitch_class_set[0].should == C
+      pitch_class_set[1].should == E
+      pitch_class_set[2].should == G
+    end
+
+    it "returns nil for invalid indexes" do
+      pitch_class_set[pitch_class_set.size].should == nil
+    end
+  end
+
+  describe "#first" do
+    it "is #[0]" do
+      pitch_class_set.first.should == pitch_class_set[0]
+    end
+  end
+
+  describe "#last" do
+    it "is #[-1]" do
+      pitch_class_set.last.should == pitch_class_set[-1]
     end
   end
 
@@ -105,6 +148,42 @@ describe MTK::PitchClassSet do
       PitchClassSet.new([C,Eb,G]).normal_form.should == [0,3,7]
       PitchClassSet.new([Db,E,Ab]).normal_form.should == [0,3,7]
       PitchClassSet.new([Bb,F,Db]).normal_form.should == [0,3,7]
+    end
+  end
+
+  describe "#==" do
+    it "is true if two pitch class sets contain the same set in the same order" do
+      pitch_class_set.should == PitchClassSet(C,E,G)
+    end
+
+    it "is false if two pitch class sets are not in the same order" do
+      pitch_class_set.should_not == PitchClassSet(C,G,E)
+    end
+
+    it "is false if two pitch class sets do not contain the same pitch classes" do
+      pitch_class_set.should_not == PitchClassSet(C,E)
+    end
+
+    it "allows for direct comparison with Arrays" do
+       pitch_class_set.should == [C,E,G]
+    end
+  end
+
+  describe "#=~" do
+    it "is true if two pitch class sets contain the same set in the same order" do
+      pitch_class_set.should =~ PitchClassSet(C,E,G)
+    end
+
+    it "is true if two pitch class sets are not in the same order" do
+      pitch_class_set.should =~ PitchClassSet(C,G,E)
+    end
+
+    it "is false if two pitch class sets do not contain the same pitch classes" do
+      pitch_class_set.should_not =~ PitchClassSet(C,E)
+    end
+
+    it "allows for direct comparison with Arrays" do
+       pitch_class_set.should =~ [C,G,E]
     end
   end
 

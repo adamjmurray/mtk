@@ -1,6 +1,6 @@
 module MTK
 
-  # A Set of PitchClasses, for 12-tone set-theory pitch analysis and manipulations
+  # An ordered Set of PitchClasses, for 12-tone set-theory pitch analysis and manipulations
   #
   class PitchClassSet
 
@@ -10,9 +10,13 @@ module MTK
     include Transform::Invertible
 
     attr_reader :pitch_classes
-    
+
+    def self.random_row
+      new PitchClasses::PITCH_CLASSES.shuffle
+    end
+
     def initialize(pitch_classes)
-      @pitch_classes = pitch_classes.to_a.uniq.sort.freeze
+      @pitch_classes = pitch_classes.to_a.uniq.freeze
     end
 
     def elements
@@ -24,7 +28,7 @@ module MTK
     end
 
     def normal_order
-      ordering = Array.new(@pitch_classes)
+      ordering = Array.new(@pitch_classes.sort)
       min_span, start_index_for_normal_order = nil, nil
 
       # check every rotation for the minimal span:
@@ -78,6 +82,20 @@ module MTK
         @pitch_classes == other.to_a
       else
         @pitch_classes == other
+      end
+    end
+
+    # Compare for equality, ignoring order
+    # @param other [#pitch_classes, #to_a, #sort, Array]
+    def =~ other
+      if other.respond_to? :pitch_classes
+        @pitch_classes.sort == other.pitch_classes.sort
+      elsif other.respond_to? :to_a
+        @pitch_classes.sort == other.to_a.sort
+      elsif other.respond_to? :sort
+        @pitch_classes.sort == other.sort
+      else
+        @pitch_classes.sort == other
       end
     end
 
