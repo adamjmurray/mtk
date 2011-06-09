@@ -1,6 +1,6 @@
 module MTK::Transform
 
-  # {Mappable} classes whose elements can handle the :transpose message
+  # {Mappable} class whose elements can handle the :transpose message
   # @note Classes including this module should include either MTK::Collection or provide a #first method
   module Invertible
 

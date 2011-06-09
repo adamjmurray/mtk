@@ -1,6 +1,6 @@
 module MTK::Transform
 
-  # {Mappable} classes whose elements can handle the :transpose message
+  # {Mappable} class whose elements can handle the :transpose message
   module Transposable
 
     # Transpose all elements upward by the given interval

@@ -8,6 +8,7 @@ module MTK
     include Transform::Mappable
     include Transform::Transposable
     include Transform::Invertible
+    include Transform::Reversible
 
     attr_reader :pitch_classes
 

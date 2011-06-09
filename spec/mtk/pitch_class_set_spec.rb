@@ -121,6 +121,18 @@ describe MTK::PitchClassSet do
     end
   end
 
+  describe "#reverse" do
+    it "produces a PitchClassSet with pitch classes in reverse order" do
+      pitch_class_set.reverse.should == PitchClassSet(G,E,C)
+    end
+  end
+
+  describe "#retrograde" do
+    it "acts like reverse" do
+      pitch_class_set.retrograde.should == pitch_class_set.reverse
+    end
+  end
+
   describe "#normal_order" do
     it "permutes the set so that the first and last pitch classes are as close together as possible" do
       PitchClassSet.new([E,A,C]).normal_order.should == [A,C,E]
