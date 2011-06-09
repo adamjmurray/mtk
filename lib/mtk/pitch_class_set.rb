@@ -8,13 +8,16 @@ module MTK
     include Transform::Mappable
     include Transform::Transposable
     include Transform::Invertible
-    include Transform::Reversible
     include Transform::SetTheoryOperations
 
     attr_reader :pitch_classes
 
     def self.random_row
-      new PitchClasses::PITCH_CLASSES.shuffle
+      new(PitchClasses::PITCH_CLASSES.shuffle)
+    end
+
+    def self.all
+      @all ||= new(PitchClasses::PITCH_CLASSES)
     end
 
     def initialize(pitch_classes)

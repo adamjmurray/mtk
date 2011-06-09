@@ -14,9 +14,15 @@ describe MTK::PitchClassSet do
       PitchClassSet.random_row.should =~ PitchClasses::PITCH_CLASSES
     end
 
-    it "generates a random 12-tone row (very slight expected chance of test failure, if this fails run it again!)" do
+    it "generates a random 12-tone row (NOTE: very slight expected chance of test failure, if this fails run it again!)" do
       # there's a 1/479_001_600 chance this will fail... whaddyagonnado??
       PitchClassSet.random_row.should_not == PitchClassSet.random_row
+    end
+  end
+
+  describe ".all" do
+    it "is the set of all 12 pitch classes" do
+      PitchClassSet.all.should == PitchClassSet(PitchClasses::PITCH_CLASSES)
     end
   end
 
@@ -154,6 +160,53 @@ describe MTK::PitchClassSet do
   describe "#symmetric_difference" do
     it "produces a PitchClassSet containing the pitch classes only in self or only in the argument" do
       pitch_class_set.symmetric_difference(PitchClassSet(E,G,B)).should == PitchClassSet(C,B)
+    end
+  end
+
+  describe "#complement" do
+    it "produces the set of all PitchClasses not in the current set" do
+      pitch_class_set.complement.should =~ PitchClassSet(Db,D,Eb,F,Gb,Ab,A,Bb,B)
+    end
+  end
+
+  describe "#repeat" do
+    it "does nothing to PitchClassSets, since duplicates are removed from Sets" do
+      pitch_class_set.repeat.should == pitch_class_set
+    end
+  end
+
+  describe "#rotate" do
+    it "produces a PitchClassSet that is rotated by the given offset" do
+      pitch_class_set.rotate(2).should == PitchClassSet(G,C,E)
+      pitch_class_set.rotate(-2).should == PitchClassSet(E,G,C)
+    end
+
+    it "rotates by 1 if no argument is given" do
+      pitch_class_set.rotate.should == pitch_class_set.rotate(1)
+    end
+  end
+
+  describe "#permute" do
+    it "randomly rearranges the PitchClassSet order (NOTE: very slight expected chance of test failure, if this fails run it again!)" do
+      all_pcs = PitchClassSet(PitchClasses::PITCH_CLASSES)
+      permuted = all_pcs.permute
+      permuted.should =~ all_pcs
+      permuted.should_not == all_pcs # there's a 1/479_001_600 chance this will fail...
+    end
+  end
+
+  describe "#shuffle" do
+    it "behaves like permute (NOTE: very slight expected chance of test failure, if this fails run it again!)" do
+      all_pcs = PitchClassSet(PitchClasses::PITCH_CLASSES)
+      shuffled = all_pcs.shuffle
+      shuffled.should =~ all_pcs
+      shuffled.should_not == all_pcs # there's a 1/479_001_600 chance this will fail...
+    end
+  end
+
+  describe "#concat" do
+    it "appends the non-duplicate pitch classes from the other set" do
+      pitch_class_set.concat(PitchClassSet(D,E,F)).should == PitchClassSet(C,E,G,D,F)
     end
   end
 
