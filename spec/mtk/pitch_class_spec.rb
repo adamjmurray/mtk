@@ -184,7 +184,7 @@ describe MTK do
     end
 
     it "returns the argument if it's already a PitchClass" do
-      PitchClass(C).should == C
+      PitchClass(C).should be_equal C
     end
 
     it "raises an error for types it doesn't understand" do

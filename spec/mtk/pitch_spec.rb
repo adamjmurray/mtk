@@ -238,7 +238,7 @@ describe MTK do
     end
 
     it "returns the argument if it's already a PitchClass" do
-      Pitch(C4).should == C4
+      Pitch(C4).should be_equal C4
     end
 
     it "acts like Pitch[] for a 2-element Array" do

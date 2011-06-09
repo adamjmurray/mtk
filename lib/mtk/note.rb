@@ -41,4 +41,15 @@ module MTK
 
   end
 
+  # Construct a {Note} from any supported type
+  def Note(*anything)
+    anything = anything.first if anything.size == 1
+    case anything
+      when Array then Note.new(*anything)
+      when Note then anything
+      else raise "Note doesn't understand #{anything.class}"
+    end
+  end
+  module_function :Note
+
 end

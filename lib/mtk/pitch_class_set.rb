@@ -103,4 +103,16 @@ module MTK
     end
 
   end
+
+  # Construct a {PitchClassSet} from any supported type
+  def PitchClassSet(*anything)
+    anything = anything.first if anything.size == 1
+    case anything
+      when Array then PitchClassSet.new(anything.map{|elem| PitchClass(elem) })
+      when PitchClassSet then anything
+      else PitchClassSet.new([PitchClass(anything)])
+    end
+  end
+  module_function :PitchClassSet
+
 end

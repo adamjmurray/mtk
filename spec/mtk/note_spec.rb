@@ -63,3 +63,29 @@ describe MTK::Note do
   end
 
 end
+
+describe MTK do
+
+  describe '#Note' do
+
+    it "acts like new for multiple arguments" do
+      Note(C4,mf,1).should == Note.new(C4,mf,1)
+    end
+
+    it "acts like new for an Array of arguments by unpacking (splatting) them" do
+      Note([C4,mf,1]).should == Note.new(C4,mf,1)
+    end
+
+    it "returns the argument if it's already a Note" do
+      note = Note.new(C4,mf,1)
+      Note(note).should be_equal note
+    end
+
+    it "raises an error for types it doesn't understand" do
+      lambda{ Note({:not => :compatible}) }.should raise_error
+    end
+
+  end
+
+end
+
