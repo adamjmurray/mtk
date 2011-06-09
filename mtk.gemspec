@@ -7,7 +7,7 @@ Gem::Specification.new do |gem|
   gem.email       = 'adam@compusition.com'
   gem.homepage    = 'http://github.com/adamjmurray/mtk'
 
-  gem.files = Dir['Rakefile', 'README.md',
+  gem.files = Dir['Rakefile', 'README.md', 'LICENSE.txt',
                   'lib/**/*.rb', 'lib/**/*.citrus',
                   'spec/**/*.rb', 'spec/**/*.mid',
                   'examples/**/*.rb']
