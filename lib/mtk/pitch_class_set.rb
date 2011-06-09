@@ -88,7 +88,9 @@ module MTK
     # Compare for equality, ignoring order
     # @param other [#pitch_classes, #to_a, #sort, Array]
     def =~ other
-      if other.respond_to? :pitch_classes
+      if other.is_a? Array and other.frozen?
+        @pitch_classes.sort == other
+      elsif other.respond_to? :pitch_classes
         @pitch_classes.sort == other.pitch_classes.sort
       elsif other.respond_to? :to_a
         @pitch_classes.sort == other.to_a.sort

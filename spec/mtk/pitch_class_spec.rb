@@ -23,11 +23,19 @@ describe MTK::PitchClass do
     it "is the 12 note names in western chromatic scale" do
       PitchClass::NAMES =~ ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
     end
+
+    it "is immutable" do
+      lambda{ PitchClass::NAMES << 'H' }.should raise_error
+    end
   end
 
   describe 'VALID_NAMES' do
     it "is all enharmonic spellings of NAMES including sharps, flats, double-sharps, and double-flats" do
       PitchClass::VALID_NAMES =~ names
+    end
+
+    it "is immutable" do
+      lambda{ PitchClass::VALID_NAMES << 'H' }.should raise_error
     end
   end
 

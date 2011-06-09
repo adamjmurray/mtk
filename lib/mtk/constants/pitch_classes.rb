@@ -13,6 +13,8 @@ module MTK
       const_set name, pc
     end
 
+    PITCH_CLASSES.freeze
+
   end
 
 end

@@ -18,6 +18,10 @@ describe MTK::Pitches do
       Pitches::PITCHES.should include Pitches::Eb1
       Pitches::PITCHES.should include Pitches::G9
     end
+
+    it "is immutable" do
+      lambda{ Pitches::PITCHES << :something }.should raise_error
+    end
   end
 
 end

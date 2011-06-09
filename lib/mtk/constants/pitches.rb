@@ -19,6 +19,8 @@ module MTK
       const_set "#{pitch.pitch_class}#{octave_str}", pitch
     end
 
+    PITCHES.freeze
+
   end
 
 end

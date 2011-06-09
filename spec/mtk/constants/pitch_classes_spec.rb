@@ -31,5 +31,9 @@ describe MTK::PitchClasses do
       PitchClasses::PITCH_CLASSES.length.should == 12
       PitchClasses::PITCH_CLASSES.should == cases.map{ |const,_,__| const }
     end
+
+    it "is immutable" do
+      lambda{ PitchClasses::PITCH_CLASSES << :something }.should raise_error
+    end
   end
 end

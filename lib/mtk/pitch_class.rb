@@ -6,7 +6,7 @@ module MTK
 
   class PitchClass
 
-    NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
+    NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'].freeze
 
     VALID_NAMES_BY_VALUE = [
         ['B#', 'C', 'Dbb'],
@@ -21,9 +21,9 @@ module MTK
         ['G##', 'A', 'Bbb'],
         ['A#', 'Bb', 'Cbb'],
         ['A##', 'B', 'Cb']
-    ]
+    ].freeze
 
-    VALID_NAMES = VALID_NAMES_BY_VALUE.flatten
+    VALID_NAMES = VALID_NAMES_BY_VALUE.flatten.freeze
 
     attr_reader :name
 
