@@ -140,8 +140,20 @@ describe MTK::PitchClassSet do
   end
 
   describe "#union" do
-    it "produces a PitchClassSet containing the common pitch classes from self and the argument" do
+    it "produces a PitchClassSet containing the all pitch classes from either self or the argument" do
       pitch_class_set.union(PitchClassSet(E,G,B)).should == PitchClassSet(C,E,G,B)
+    end
+  end
+
+  describe "#difference" do
+    it "produces a PitchClassSet with the pitch classes from the argument removed" do
+      pitch_class_set.difference(PitchClassSet(E)).should == PitchClassSet(C,G)
+    end
+  end
+
+  describe "#symmetric_difference" do
+    it "produces a PitchClassSet containing the pitch classes only in self or only in the argument" do
+      pitch_class_set.symmetric_difference(PitchClassSet(E,G,B)).should == PitchClassSet(C,B)
     end
   end
 
