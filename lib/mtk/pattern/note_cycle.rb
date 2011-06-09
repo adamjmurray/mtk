@@ -1,17 +1,17 @@
 module MTK
   module Pattern
 
-    # A {Sequence} of {Note}s
-    class NoteSequence
+    # A {Cycle} of {Note}s
+    class NoteCycle
 
       attr_reader :pitch_sequence, :intensity_sequence, :duration_sequence
 
       attr_accessor :pitch, :intensity, :duration
 
       def initialize(pitches, intensities=nil, durations=nil, defaults={})
-        @pitch_sequence     = PitchSequence.new(pitches)
-        @intensity_sequence = Sequence.new(intensities)
-        @duration_sequence  = Sequence.new(durations)
+        @pitch_sequence     = PitchCycle.new(pitches)
+        @intensity_sequence = Cycle.new(intensities)
+        @duration_sequence  = Cycle.new(durations)
         @default = {:pitch => Pitches::C4, :intensity => Dynamics::mf, :duration => 1}.merge defaults
         reset
       end
@@ -28,7 +28,7 @@ module MTK
         @duration_sequence.elements
       end
 
-      # reset the Sequence to the beginning
+      # reset the Cycle to the beginning
       def reset
         @pitch_sequence.reset
         @intensity_sequence.reset

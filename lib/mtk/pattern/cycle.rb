@@ -3,7 +3,7 @@ module MTK
 
     # An endless enumerator that outputs an element one at a time from a list of elements,
     # looping back to the beginning when elements run out.
-    class Sequence
+    class Cycle
 
       # The list of elements enumerated by this Sequence
       attr_reader :elements

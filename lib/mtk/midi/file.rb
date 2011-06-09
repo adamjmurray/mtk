@@ -170,9 +170,10 @@ module MTK
       end
 
     end
-
   end
 
+  # Shortcut for MTK::MIDI::File.new
+  # @note Only available if you require 'mtk/midi/file'
   def MIDI_File(f)
     MIDI::File.new(f)
   end

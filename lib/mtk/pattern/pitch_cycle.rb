@@ -1,8 +1,8 @@
 module MTK
   module Pattern
 
-    # A {Sequence} of pitch-related elements, which may be {Pitch}es, {PitchClass}es, {PitchSet}s, or {Intervals} (Numeric)
-    class PitchSequence < Sequence
+    # A {Cycle} of pitch-related elements, which may be {Pitch}es, {PitchClass}es, {PitchSet}s, or {Intervals} (Numeric)
+    class PitchCycle < Cycle
 
       protected
 
