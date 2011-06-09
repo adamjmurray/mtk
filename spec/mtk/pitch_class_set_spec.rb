@@ -133,6 +133,18 @@ describe MTK::PitchClassSet do
     end
   end
 
+  describe "#intersection" do
+    it "produces a PitchClassSet containing the common pitch classes from self and the argument" do
+      pitch_class_set.intersection(PitchClassSet(E,G,B)).should == PitchClassSet(E,G)
+    end
+  end
+
+  describe "#union" do
+    it "produces a PitchClassSet containing the common pitch classes from self and the argument" do
+      pitch_class_set.union(PitchClassSet(E,G,B)).should == PitchClassSet(C,E,G,B)
+    end
+  end
+
   describe "#normal_order" do
     it "permutes the set so that the first and last pitch classes are as close together as possible" do
       PitchClassSet.new([E,A,C]).normal_order.should == [A,C,E]
