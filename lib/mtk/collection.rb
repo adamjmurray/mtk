@@ -37,8 +37,10 @@ module MTK
     end
 
     def repeat(times=2)
-      # TODO: handle fractional times (take a subset of the last repetition)
-      self.class.from_a(elements * times.to_i)
+      full_repetitions, fractional_repetitions = times.floor, times%1  # split into int and fractional part
+      base = elements * full_repetitions
+      base += elements[0...elements.size*fractional_repetitions]
+      self.class.from_a(base)
     end
 
     def permute
@@ -58,6 +60,14 @@ module MTK
       self.class.from_a(to_a.reverse)
     end
     alias retrograde reverse
+
+    def ==(other)
+      if other.respond_to? :elements
+        elements == other.elements
+      else
+        elements == other
+      end
+    end
 
   end
 
