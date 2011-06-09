@@ -145,6 +145,12 @@ describe MTK::Pitch do
     end
   end
 
+  describe "#transpose" do
+    it "behaves like #+" do
+      middle_c.transpose(2.semitones).should == middle_c + 2
+    end
+  end
+
   describe '#-' do
     it 'subtracts the integer value of the argument from #to_i' do
       (middle_c - 2).should == Pitch.from_i(58)

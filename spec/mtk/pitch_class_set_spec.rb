@@ -62,6 +62,12 @@ describe MTK::PitchClassSet do
     end
   end
 
+  describe '#transpose' do
+    it 'transposes by the given semitones' do
+      (pitch_class_set.transpose 4.semitones).should == PitchClassSet(E, Ab, B)
+    end
+  end
+
   describe "#normal_order" do
     it "permutes the set so that the first and last pitch classes are as close together as possible" do
       PitchClassSet.new([E,A,C]).normal_order.should == [A,C,E]

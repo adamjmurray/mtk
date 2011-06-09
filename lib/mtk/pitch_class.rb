@@ -75,11 +75,12 @@ module MTK
       @int_value
     end
 
-    def +(interval)
+    def + interval
       self.class.from_i(to_i + interval.to_i)
     end
+    alias transpose +
 
-    def -(interval)
+    def - interval
       self.class.from_i(to_i - interval.to_i)
     end
 

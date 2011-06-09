@@ -6,7 +6,7 @@ module MTK
   #
   class Timeline
 
-    include Mappable
+    include Transform::Mappable
 
     def initialize()
       @timeline = {}

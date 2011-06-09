@@ -46,7 +46,7 @@ describe MTK::Chord do
 
   describe '#transpose' do
     it 'adds the given interval to the @pitch_set' do
-      (chord.transpose 2.semitones).should == Chord.new(pitch_set+2, intensity, duration)
+      (chord.transpose 2.semitones).should == Chord.new(pitch_set.transpose(2), intensity, duration)
     end
     it 'does not affect the immutability of the Chord' do
       (chord.transpose 2.semitones).should_not == chord
@@ -59,7 +59,7 @@ describe MTK::Chord do
     end
 
     it "is false when the pitch_sets are not equal" do
-      chord.should_not == Chord.new(pitch_set + 1, intensity, duration)
+      chord.should_not == Chord.new(pitch_set.transpose(1), intensity, duration)
     end
 
     it "is false when the intensities are not equal" do

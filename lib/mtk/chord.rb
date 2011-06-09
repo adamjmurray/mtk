@@ -28,7 +28,7 @@ module MTK
     end
 
     def transpose(interval)
-      self.class.new(@pitch_set + interval, @intensity, @duration)
+      self.class.new( @pitch_set.transpose(interval), @intensity, @duration )
     end
 
     def == other

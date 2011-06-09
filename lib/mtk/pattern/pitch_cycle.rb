@@ -10,7 +10,7 @@ module MTK
       def value_of element
         element = super # eval Procs
         case element
-          when Numeric then @value + element if @value # add interval
+          when Numeric then @value.transpose(element) if @value # add interval
           when PitchClass then @value.nearest(element) if @value
           else element
         end

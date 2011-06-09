@@ -4,7 +4,8 @@ module MTK
   #
   class PitchClassSet
 
-    include Mappable
+    include Transform::Mappable
+    include Transform::Transposable
 
     attr_reader :pitch_classes
     

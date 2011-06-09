@@ -96,6 +96,7 @@ module MTK
     def + interval_in_semitones
      self.class.from_f( @value + interval_in_semitones.to_f )
     end
+    alias transpose +
 
     def - interval_in_semitones
       self.class.from_f( @value - interval_in_semitones.to_f )

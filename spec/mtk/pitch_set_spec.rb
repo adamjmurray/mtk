@@ -83,15 +83,9 @@ describe MTK::PitchSet do
     end
   end
 
-  describe '#+' do
+  describe '#transpose' do
     it 'transposes upward by the given semitones' do
-      (pitch_set + 12).should == PitchSet.new([C5, D5, E5, F5, G5, A5, B5])
-    end
-  end
-
-  describe '#-' do
-    it 'transposes downward by the given semitones' do
-      (pitch_set - 12).should == PitchSet.new([C3, D3, E3, F3, G3, A3, B3])
+      pitch_set.transpose(12).should == PitchSet.new([C5, D5, E5, F5, G5, A5, B5])
     end
   end
 
@@ -149,8 +143,8 @@ describe MTK::PitchSet do
 
   describe "#nearest" do
     it "returns the nearest PitchSet where the first Pitch has the given PitchClass" do
-      c_major.nearest(F).should == c_major + 5
-      c_major.nearest(G).should == c_major - 5
+      c_major.nearest(F).should == c_major.transpose(5.semitones)
+      c_major.nearest(G).should == c_major.transpose(-5.semitones)
     end
   end
 

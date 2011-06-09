@@ -4,7 +4,8 @@ module MTK
   #
   class PitchSet
 
-    include Mappable
+    include Transform::Mappable
+    include Transform::Transposable
 
     attr_reader :pitches
 
@@ -32,18 +33,11 @@ module MTK
       @pitch_classes ||= @pitches.map{|p| p.pitch_class }.uniq
     end
 
-    def + semitones
-      each_pitch_apply :+, semitones
-    end
-
-    def - semitones
-      each_pitch_apply :-, semitones
-    end
-
     def invert(center_pitch=@pitches.first)
-      each_pitch_apply :invert, center_pitch
+      map{|pitch| pitch.invert(center_pitch) }
     end
 
+    # generate a chord inversion (positive numbers move the lowest notes up an octave, negative moves the highest notes down)
     def inversion(number)
       number = number.to_i
       pitch_set = Array.new(@pitches)
@@ -66,7 +60,7 @@ module MTK
     end
 
     def nearest(pitch_class)
-      self + @pitches.first.pitch_class.distance_to(pitch_class)
+      self.transpose @pitches.first.pitch_class.distance_to(pitch_class)
     end
 
     # @param other [#pitches, #to_a, Array]
@@ -82,13 +76,6 @@ module MTK
 
     def to_s
       @pitches.inspect
-    end
-
-    #######################################
-    protected
-
-    def each_pitch_apply(method_name, *args, &block)
-      self.class.new @pitches.map{|pitch| pitch.send(method_name, *args, &block) }
     end
 
   end
