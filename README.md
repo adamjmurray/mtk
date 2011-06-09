@@ -34,7 +34,7 @@ My project roadmap is @ https://www.pivotaltracker.com/projects/295419
 ## Requirements
 ### Ruby Version
 
-Ruby 1.8 or 1.9
+Ruby 1.8+ or JRuby 1.5+
 
 
 ### Gem Dependencies
