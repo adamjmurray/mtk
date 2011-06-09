@@ -84,6 +84,10 @@ module MTK
       self.class.from_i(to_i - interval.to_i)
     end
 
+    def invert(center_pitch_class)
+      self + 2*(center_pitch_class.to_i - to_i)
+    end
+
     # the smallest interval in semitones that needs to be added to this PitchClass to reach the given PitchClass
     def distance_to(pitch_class)
       delta = (pitch_class.to_i - to_i) % 12

@@ -129,6 +129,12 @@ describe MTK::PitchClass do
     end
   end
 
+  describe "#transpose" do
+    it "behaves like #+" do
+      C.transpose(2.semitones).should == C + 2
+    end
+  end
+
   describe '#-' do
     it "subtracts the integer value of the argument from #to_i" do
       (E - 2).should == D
@@ -136,6 +142,20 @@ describe MTK::PitchClass do
 
     it "'wraps around' the range 0-11" do
       (C - 8).should == E
+    end
+  end
+
+  describe "#invert" do
+    it 'inverts the pitch class around the given center pitch class' do
+      E.invert(D).should == C
+    end
+
+    it 'wraps around octaves as needed (always returns a valid pitch class)' do
+      E.invert(B).should == Gb
+    end
+
+    it "returns the pitch class when the argument is the same pitch class" do
+      E.invert(E).should == E
     end
   end
 

@@ -4,8 +4,10 @@ module MTK
   #
   class PitchSet
 
+    include Collection
     include Transform::Mappable
     include Transform::Transposable
+    include Transform::Invertible
 
     attr_reader :pitches
 
@@ -13,16 +15,12 @@ module MTK
       @pitches = pitches.to_a.uniq.sort.freeze
     end
 
+    def elements
+      @pitches
+    end
+
     def self.from_a enumerable
       new enumerable
-    end
-
-    def to_a
-      Array.new(@pitches)
-    end
-
-    def each &block
-      @pitches.each &block
     end
 
     def to_pitch_class_set
@@ -31,10 +29,6 @@ module MTK
 
     def pitch_classes
       @pitch_classes ||= @pitches.map{|p| p.pitch_class }.uniq
-    end
-
-    def invert(center_pitch=@pitches.first)
-      map{|pitch| pitch.invert(center_pitch) }
     end
 
     # generate a chord inversion (positive numbers move the lowest notes up an octave, negative moves the highest notes down)
@@ -53,10 +47,6 @@ module MTK
         end
       end
       self.class.new pitch_set
-    end
-
-    def include? pitch
-      @pitches.include? pitch
     end
 
     def nearest(pitch_class)

@@ -14,8 +14,10 @@ module MTK
 
 end
 
+require 'mtk/collection'
 require 'mtk/transform/mappable'
 require 'mtk/transform/transposable'
+require 'mtk/transform/invertible'
 
 require 'mtk/pitch_class'
 require 'mtk/pitch_class_set'

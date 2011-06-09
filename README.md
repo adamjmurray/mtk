@@ -26,6 +26,9 @@ For now, see the specs for examples. Real examples are coming...
 
 Pre-alpha, API subject to change. Feedback welcome!
 
+My project roadmap is @ https://www.pivotaltracker.com/projects/295419
+(it's a bit "fast and loose" right now, but I expect this to get more structured as the project evolves)
+
 
 
 ## Requirements

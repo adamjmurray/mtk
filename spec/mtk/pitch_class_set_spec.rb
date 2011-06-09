@@ -68,6 +68,16 @@ describe MTK::PitchClassSet do
     end
   end
 
+  describe "#invert" do
+    it 'inverts all pitch_classes around the given center pitch' do
+      pitch_class_set.invert(G).should == PitchClassSet(D,Bb,G)
+    end
+
+    it 'inverts all pitches around the first pitch, when no center pitch is given' do
+      pitch_class_set.invert.should == PitchClassSet(C,Ab,F)
+    end
+  end
+
   describe "#normal_order" do
     it "permutes the set so that the first and last pitch classes are as close together as possible" do
       PitchClassSet.new([E,A,C]).normal_order.should == [A,C,E]

@@ -180,6 +180,12 @@ describe MTK::Pitch do
         middle_c.invert(Pitch.from_i 54).should == Pitch.from_i(48)
       end
     end
+
+    context "same pitch" do
+      it "returns the same pitch" do
+        middle_c.invert(middle_c).should == middle_c
+      end
+    end
   end
 
   describe "#nearest" do

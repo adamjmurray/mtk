@@ -4,8 +4,10 @@ module MTK
   #
   class PitchClassSet
 
+    include Collection
     include Transform::Mappable
     include Transform::Transposable
+    include Transform::Invertible
 
     attr_reader :pitch_classes
     
@@ -13,20 +15,12 @@ module MTK
       @pitch_classes = pitch_classes.to_a.uniq.sort.freeze
     end
 
+    def elements
+      @pitch_classes
+    end
+
     def self.from_a enumerable
       new enumerable
-    end
-
-    def to_a
-      Array.new(@pitch_classes)
-    end
-
-    def each &block
-      @pitch_classes.each &block
-    end
-
-    def size
-      @pitch_classes.size
     end
 
     def normal_order
