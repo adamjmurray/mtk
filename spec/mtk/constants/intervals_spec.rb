@@ -137,4 +137,14 @@ describe MTK::Intervals do
     end
   end
 
+  describe "INTERVALS" do
+    it "contains all intervals constants/pseudo-constants" do
+      Intervals::INTERVALS.should =~ [P1, m2, M2, m3, M3, P4, TT, P5, m6, M6, m7, M7, P8]
+    end
+
+    it "is immutable" do
+      lambda{ Intervals::INTERVALS << :something }.should raise_error
+    end
+  end
+
 end

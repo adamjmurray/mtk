@@ -52,5 +52,7 @@ module MTK
       nil
     end
 
+    DYNAMICS = [ppp, pp, p, mp, mf, f, ff, fff].freeze
+
   end
 end

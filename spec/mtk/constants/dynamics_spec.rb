@@ -90,5 +90,15 @@ describe MTK::Dynamics do
     end
   end
 
+  describe "DYNAMICS" do
+    it "contains all dynamics pseudo-constants" do
+      Dynamics::DYNAMICS.should =~ [ppp, pp, p, mp, mf, f, ff, fff]
+    end
+
+    it "is immutable" do
+      lambda{ Dynamics::DYNAMICS << :something }.should raise_error
+    end
+  end
+
 end
   
