@@ -17,7 +17,7 @@ describe MTK::Pattern::Sequence do
     end
 
     it "repeats the sequence twice if no argument is given" do
-      sequence.repeat(2).should == [1,2,3,1,2,3]
+      sequence.repeat.should == [1,2,3,1,2,3]
     end
 
     it "handles fractional repetitions" do

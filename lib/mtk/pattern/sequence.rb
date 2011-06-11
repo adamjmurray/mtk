@@ -19,6 +19,7 @@ module MTK
     def Sequence(*anything)
       Sequence.new(anything)
     end
+    module_function :Sequence
 
   end
 end
