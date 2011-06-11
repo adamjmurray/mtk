@@ -181,10 +181,8 @@ describe MTK::Pitch do
       end
     end
 
-    context "same pitch" do
-      it "returns the same pitch" do
-        middle_c.invert(middle_c).should == middle_c
-      end
+    it "returns an equal pitch when given itself as an argument" do
+      middle_c.invert(middle_c).should == middle_c
     end
   end
 

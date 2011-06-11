@@ -27,6 +27,10 @@ module MTK
       self.class.new(@pitch+interval, @intensity, @duration)
     end
 
+    def invert(around_pitch)
+      self.class.new(@pitch.invert(around_pitch), @intensity, @duration)
+    end
+
     def == other
       super and other.respond_to? :pitch and @pitch == other.pitch
     end

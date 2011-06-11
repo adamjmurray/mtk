@@ -1,7 +1,7 @@
 module MTK
   module Pattern
 
-    # A {Sequence} of pitches
+    # A {Sequence} of {Pitch}es
     class PitchSequence < Sequence
       include Transform::Invertible
       include Transform::Transposable

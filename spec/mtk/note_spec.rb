@@ -44,6 +44,24 @@ describe MTK::Note do
     end
   end
 
+  describe "#invert" do
+    context 'higher center pitch' do
+      it 'inverts the pitch around the given center pitch' do
+        note.invert(Pitch 66).should == Note.new(Pitch(72), intensity, duration)
+      end
+    end
+
+    context 'lower center pitch' do
+      it 'inverts the pitch around the given center pitch' do
+        note.invert(Pitch 54).should == Note.new(Pitch(48), intensity, duration)
+      end
+    end
+
+    it "returns the an equal note when given it's pitch as an argument" do
+      note.invert(note.pitch).should == note
+    end
+  end
+
   describe "#==" do
     it "is true when the pitches, intensities, and durations are equal" do
       note.should == Note.new(pitch, intensity, duration)
