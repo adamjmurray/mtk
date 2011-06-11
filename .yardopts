@@ -1,0 +1,4 @@
+--readme README.md
+--title 'MTK (Music ToolKit for Ruby)'
+--charset utf-8
+'lib/**/*.rb'
