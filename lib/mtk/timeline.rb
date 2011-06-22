@@ -1,5 +1,7 @@
 module MTK
 
+  # A collection of timed events.
+  #
   # Maps sorted times to lists of events.
   #
   # Enumerable as |time,event| pairs.
@@ -147,12 +149,41 @@ module MTK
       flattened
     end
 
+    # @return a new Timeline where all times have been quantized to multiples of the given interval
+    # @example timeline.quantize(0.5)  # quantize to eight notes (assuming the beat is a quarter note)
+    # @see quantize!
+    def quantize interval
+      quantized = Timeline.new
+      each_time do |time,events|
+        qtime = self.class.quantize_time(time,interval)
+        quantized[qtime] = events
+      end
+      quantized
+    end
+
+    def quantize! interval
+      each_time do |time,events|
+        qtime = self.class.quantize_time(time,interval)
+        if time != qtime
+          delete time
+          add qtime,events  # need to add, since we may quantize forward to a time that already has events
+        end
+      end
+      self
+    end
+
     def to_s
       times.map{|t| "#{t} => #{@timeline[t].join ', '}" }.join "\n"
     end
 
     def inspect
       @timeline.inspect
+    end
+
+    def self.quantize_time time, interval
+      upper = interval * (time.to_f/interval).ceil
+      lower = upper - interval
+      (time - lower) < (upper - time) ? lower : upper
     end
 
   end

@@ -8,6 +8,12 @@ describe MTK::Timeline do
   let(:timeline_hash) { { 0 => [note1], 1 => [note1, note2] } }
   let(:timeline) { Timeline.from_hash(timeline_raw_data) }
 
+  let(:unquantized_data) { { 0.0 => [note1], 0.7 => [note1], 1.24 => [note1], 1.25 => [note1] } }
+  let(:unquantized_timeline) { Timeline.from_hash(unquantized_data) }
+  let(:quantization_interval) { 0.5 }
+  let(:quantized_data) { { 0.0 => [note1], 0.5 => [note1], 1.0 => [note1], 1.5 => [note1] } }
+
+
   it "is Enumerable" do
     Timeline.new.should be_a Enumerable
   end
@@ -210,7 +216,28 @@ describe MTK::Timeline do
       timeline.should == timeline_hash
     end
   end
-  
+
+  describe "#quantize" do
+    it "maps all times to the nearest multiple of the given interval" do
+      unquantized_timeline.quantize(quantization_interval).should == quantized_data
+    end
+    it "returns a new Timeline and does not modify the original" do
+      unquantized_timeline.quantize(quantization_interval)
+      unquantized_timeline.should == unquantized_data
+    end
+  end
+
+  describe "#quantize!" do
+    it "maps all times to the nearest multiple of the given interval" do
+      unquantized_timeline.quantize!(quantization_interval).should == quantized_data
+    end
+
+    it "modifies the Timeline in place" do
+      unquantized_timeline.quantize!(quantization_interval)
+      unquantized_timeline.should == quantized_data
+    end
+  end
+
   describe "#flatten" do
     it "flattens nested timelines so that all nested subtimes are converted to absolute times in a single timeline" do
       timeline[10] = Timeline.from_hash({ 0 => note2, 1 => note1 })
@@ -235,6 +262,22 @@ describe MTK::Timeline do
 
     it "returns a new instance" do
       timeline.clone.should_not equal(timeline)
+    end
+  end
+
+  describe ".quantize_time" do
+    it "takes a time and an interval, and returns the nearest multiple of the interval to the time" do
+      Timeline.quantize_time(23,10).should == 20
+      Timeline.quantize_time(27,10).should == 30
+      Timeline.quantize_time(30,10).should == 30
+    end
+
+    it "rounds up when exactly between 2 intervals" do
+      Timeline.quantize_time(25,10).should == 30
+    end
+
+    it "handles fractional intervals" do
+      Timeline.quantize_time(13,2.5).should == 12.5
     end
   end
 end
