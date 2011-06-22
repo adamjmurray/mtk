@@ -1,10 +1,15 @@
-# MTK
-## Music ToolKit for Ruby
+MTK
+===
+
+Music ToolKit for Ruby
+----------------------
 
 Classes for modeling music with a focus on simplicity. Support for reading/writing MIDI files (and soon, realtime MIDI).
 
 
-# Getting Started
+
+Getting Started
+---------------
 
     gem install mtk
 
@@ -15,64 +20,93 @@ or download the source from here and add mtk/lib to your $LOAD_PATH. Then...
 For now, see the specs for examples. Real examples are coming...
 
 
-## Goals
+
+Goals
+-----
 
 * Build musical generators to assist with composing music
 * Re-implement Cosy (http://compusition.com/web/software/cosy) using these models as the "backend"
 
 
 
-## Status
+Status
+------
 
-Pre-alpha, API subject to change. Feedback welcome!
-
-My project roadmap is @ https://www.pivotaltracker.com/projects/295419
-(it's a bit "fast and loose" right now, but I expect this to get more structured as the project evolves)
+Alpha phase, API subject to change. Feedback welcome!
 
 
 
-## Requirements
+Requirements
+------------
+
 ### Ruby Version
 
 Ruby 1.8+ or JRuby 1.5+
 
 
-### Gem Dependencies
+### Dependencies
 
-* rake (tests & docs)
+MTK's core features should not depend on anything outside of the Ruby standard library.
+
+MTK's optional features typically require gems. Currently the following gems are required:
+
+* midilib: required by MTK::MIDI::File for file I/O
+
+Development requires all the gems for optional features, plus the following development tools:
+
+* rake
 * rspec (tests)
 * yard (docs)
 * yard-rspec (docs)
 * rdiscount (docs)
-* midilib (MIDI file I/O -- not strictly required by core lib, but currently needed for tests)
+
+[rvm](https://rvm.beginrescueend.com/) is recommended for cross version testing (see Development Notes below)
 
 
 
-## Documentation
+Documentation
+-------------
 
-### Latest:
+Gem: http://rdoc.info/gems/mtk/0.0.1/frames
 
-http://rubydoc.info/github/adamjmurray/mtk/master/frames (may not be fully up-to-date with my latest commits)
-
-### For the gem:
-
-    yard server --gems
-
-then browse to http://localhost:8808
-
-### For github source:
-
-    rake yard
-
-then open doc/frames.html
+Latest for source: http://rubydoc.info/github/adamjmurray/mtk/master/frames
 
 
 
-## Tests
+Development Notes
+-----------------
 
-    rake spec
+### Run Tests ###
 
-I test with MRI 1.8.7, MRI 1.9.2, JRuby 1.5.6, and JRuby 1.6.2 on OS X via rvm:
+Test with current version of Ruby:
 
-    rvm 1.8.7,1.9.2,jruby-1.5.6,jruby-1.6.2 rake spec:fast
+     rake spec
 
+Test with all supported versions of Ruby (requires [rvm](https://rvm.beginrescueend.com/), MRI 1.8.7, MRI 1.9.2, JRuby 1.5.6, and JRuby 1.6.2):
+
+     rake spec:xversion
+
+The spec:xversion test must pass for a pull request to be accepted or for a release of the mtk gem.
+
+
+### Generate Docs ###
+
+     yard
+     open doc/frames.html
+
+or, to automatically refresh the documentation as you work:
+
+      yard server -r
+      open http://localhost:8808
+
+
+### Project Roadmap ###
+
+https://www.pivotaltracker.com/projects/295419
+
+
+
+Changelog
+---------
+
+Notes will start appearing here with the next gem release.

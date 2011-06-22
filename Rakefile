@@ -12,11 +12,19 @@ RSpec::Core::RakeTask.new do |spec|
 end
 
 namespace :spec do
+
   desc "Run RSpecs tests with summary output and fast failure"
   RSpec::Core::RakeTask.new(:fast) do |spec|
     spec.rspec_opts = ["--color", "--fail-fast"]
   end
+
+  desc "Run RSpecs tests on mutiple versions of Ruby: 1.8.7, 1.9.2, JRuby 1.5.6, and JRuby 1.6.2"
+  task :xversion do
+    fail unless system("rvm 1.8.7,1.9.2,jruby-1.5.6,jruby-1.6.2 rake -f #{__FILE__} spec:fast")
+  end
+
 end
+
 
 YARD::Rake::YardocTask.new do |yard|
   yard.files   = ['lib/**/*.rb', 'spec/**/*.rb']
