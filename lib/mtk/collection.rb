@@ -22,13 +22,13 @@ module MTK
     end
 
     # The first element
-    def first
-      elements.first
+    def first(n=nil)
+      n ? elements.first(n) : elements.first
     end
 
     # The last element
-    def last
-      elements.last
+    def last(n=nil)
+      n ? elements.last(n) : elements.last
     end
 
     # The element with the given index
@@ -52,8 +52,9 @@ module MTK
       self.class.from_a(elements.rotate offset)
     end
 
-    def concat(other_collection)
-      self.class.from_a(elements + other_collection.elements)
+    def concat(other)
+      other_elements = (other.respond_to? :elements) ? other.elements : other
+      self.class.from_a(elements + other_elements)
     end
 
     def reverse
