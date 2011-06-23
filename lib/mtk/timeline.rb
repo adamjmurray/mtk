@@ -99,11 +99,14 @@ module MTK
     end
 
     def map! &block
+      # we use the enumerable_map that aliased by the Mappable module,
+      # because Mappable#map will create an extra timeline instance, which is unnecessary in this case
       mapped = enumerable_map &block
       clear
       merge mapped
     end
 
+    # Map every individual event, without regard for the time at which is occurs
     def map_events
       mapped_timeline = Timeline.new
       for time,events in self
@@ -112,6 +115,7 @@ module MTK
       mapped_timeline
     end
 
+    # Map every individual event in place, without regard for the time at which is occurs
     def map_events!
       for time,events in self
         self[time] = events.map{|event| yield event }
@@ -146,21 +150,46 @@ module MTK
     # @example timeline.quantize(0.5)  # quantize to eight notes (assuming the beat is a quarter note)
     # @see quantize!
     def quantize interval
-      quantized = Timeline.new
-      each do |time,events|
-        qtime = self.class.quantize_time(time,interval)
-        quantized[qtime] = events
-      end
-      quantized
+      map{|time,events| [self.class.quantize_time(time,interval), events] }
     end
 
     def quantize! interval
-      each do |time,events|
-        qtime = self.class.quantize_time(time,interval)
-        if time != qtime
-          delete time
-          add qtime,events  # need to add, since we may quantize forward to a time that already has events
-        end
+      map!{|time,events| [self.class.quantize_time(time,interval), events] }
+    end
+
+    # shifts all times by the given amount
+    # @see #shift!
+    # @see #shift_to
+    def shift time_delta
+      map{|time,events| [time+time_delta, events] }
+    end
+
+    # shifts all times in place by the given amount
+    # @see #shift
+    # @see #shift_to!
+    def shift! time_delta
+      map!{|time,events| [time+time_delta, events] }
+    end
+
+    # shifts the times so that the start of the timeline is at the given time
+    # @see #shift_to!
+    # @see #shift
+    def shift_to absolute_time
+      start = times.first
+      if start
+        shift absolute_time - start
+      else
+        clone
+      end
+    end
+
+    # shifts the times in place so that the start of the timeline is at the given time
+    # @see #shift_to
+    # @see #shift!
+    def shift_to! absolute_time
+      start = times.first
+      if start
+        shift! absolute_time - start
       end
       self
     end

@@ -13,6 +13,9 @@ describe MTK::Timeline do
   let(:quantization_interval) { 0.5 }
   let(:quantized_data) { { 0.0 => [note1], 0.5 => [note1], 1.0 => [note1], 1.5 => [note1] } }
 
+  let(:shifted_data) { { 5 => [note1], 6 => [note1, note2] } }
+  let(:reverse_shifted_data) { { -5 => [note1], -4 => [note1, note2] } }
+  let(:shift_amount) { 5 }
 
   it "is Enumerable" do
     Timeline.new.should be_a Enumerable
@@ -227,6 +230,64 @@ describe MTK::Timeline do
     it "modifies the Timeline in place" do
       unquantized_timeline.quantize!(quantization_interval)
       unquantized_timeline.should == quantized_data
+    end
+  end
+
+  describe "#shift" do
+    it "shifts all times by the given amount" do
+      timeline.shift(shift_amount).should == shifted_data
+    end
+
+    it "goes back in time for negative arguments" do
+      timeline.shift(-shift_amount).should == reverse_shifted_data
+    end
+
+    it "returns an instance of the same type" do
+      timeline.shift(shift_amount).should be_a timeline.class
+    end
+
+    it "returns a new Timeline and does not modify the original" do
+      timeline.shift(shift_amount).should_not equal timeline
+    end
+  end
+
+  describe "#shift!" do
+    it "shifts all times by the given amount" do
+      timeline.shift!(shift_amount).should == shifted_data
+    end
+
+    it "goes back in time for negative arguments" do
+      timeline.shift!(-shift_amount).should == reverse_shifted_data
+    end
+
+    it "modifies the timeline in place" do
+      timeline.shift!(shift_amount).should equal timeline
+    end
+  end
+
+  describe "#shift_to" do
+    it "shifts so the start is at the given time" do
+      Timeline.from_hash(shifted_data).shift_to(0).should == timeline
+      Timeline.from_hash(reverse_shifted_data).shift_to(0).should == timeline
+    end
+
+    it "returns an instance of the same type" do
+      timeline.shift_to(shift_amount).should be_a timeline.class
+    end
+
+    it "returns a new Timeline and does not modify the original" do
+      timeline.shift_to(shift_amount).should_not equal timeline
+    end
+  end
+
+  describe "#shift_to!" do
+    it "shifts so the start is at the given time" do
+      Timeline.from_hash(shifted_data).shift_to!(0).should == timeline
+      Timeline.from_hash(reverse_shifted_data).shift_to!(0).should == timeline
+    end
+
+    it "modifies the timeline in place" do
+      timeline.shift_to!(shift_amount).should equal timeline
     end
   end
 
