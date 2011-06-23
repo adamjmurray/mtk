@@ -92,18 +92,9 @@ module MTK
     end
 
     def each
-      times.each do |time|
-        events = @timeline[time]
-        events.each do |event|
-          yield time,event
-        end
-      end
-    end
-
-    def each_time
-      times.each do |time|
-        events = @timeline[time]
-        yield time,events
+      # this is similar to @timeline.each, but by iterating over #times, we yield the events in chronological order
+      for time in times
+        yield time,@timeline[time]
       end
     end
 
@@ -115,14 +106,14 @@ module MTK
 
     def map_events
       mapped_timeline = Timeline.new
-      each_time do |time,events|
+      for time,events in self
         mapped_timeline[time] = events.map{|event| yield event }
       end
       mapped_timeline
     end
 
     def map_events!
-      each_time do |time,events|
+      for time,events in self
         self[time] = events.map{|event| yield event }
       end
     end
@@ -137,13 +128,15 @@ module MTK
     
     def flatten
       flattened = Timeline.new
-      for time,event in self
-        if event.is_a? Timeline
-          for subtime, subevent in event.flatten
-            flattened.add(time+subtime, subevent)
+      for time,events in self
+        for event in events
+          if event.is_a? Timeline
+            for subtime,subevent in event.flatten
+              flattened.add(time+subtime, subevent)
+            end
+          else
+            flattened.add(time,event)
           end
-        else
-          flattened.add(time,event)
         end
       end
       flattened
@@ -154,7 +147,7 @@ module MTK
     # @see quantize!
     def quantize interval
       quantized = Timeline.new
-      each_time do |time,events|
+      each do |time,events|
         qtime = self.class.quantize_time(time,interval)
         quantized[qtime] = events
       end
@@ -162,7 +155,7 @@ module MTK
     end
 
     def quantize! interval
-      each_time do |time,events|
+      each do |time,events|
         qtime = self.class.quantize_time(time,interval)
         if time != qtime
           delete time

@@ -82,27 +82,29 @@ module MTK
         track = add_track sequence
         channel = 1
 
-        for time, event in timeline
-          next if event.rest?
+        for time,events in timeline
+          for event in events
+            next if event.rest?
 
-          time *= clock_rate
+            time *= clock_rate
 
-          case event
-            when Note
-              pitch, velocity = event.pitch, event.velocity
-              add_event track, time => note_on(channel, pitch, velocity)
-              duration = event.duration_in_pulses(clock_rate)
-              add_event track, time+duration => note_off(channel, pitch, velocity)
-
-            when Chord
-              velocity = event.velocity
-              duration = event.duration_in_pulses(clock_rate)
-              for pitch in event.pitches
-                pitch = pitch.to_i
+            case event
+              when Note
+                pitch, velocity = event.pitch, event.velocity
                 add_event track, time => note_on(channel, pitch, velocity)
+                duration = event.duration_in_pulses(clock_rate)
                 add_event track, time+duration => note_off(channel, pitch, velocity)
-              end
 
+              when Chord
+                velocity = event.velocity
+                duration = event.duration_in_pulses(clock_rate)
+                for pitch in event.pitches
+                  pitch = pitch.to_i
+                  add_event track, time => note_on(channel, pitch, velocity)
+                  add_event track, time+duration => note_off(channel, pitch, velocity)
+                end
+
+            end
           end
         end
         track.recalc_delta_from_times

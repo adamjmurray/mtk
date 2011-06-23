@@ -155,24 +155,16 @@ describe MTK::Timeline do
   end
 
   describe "#each" do
-    it "yields each |time,single_event| pair" do
-      yielded = []
-      timeline.each{|t,e| yielded << [t,e] }
-      yielded.should == [ [0,note1], [1,note1], [1,note2] ]
-    end
-  end
-
-  describe "#each_time" do
     it "yields each |time,event_list| pair" do
       yielded = []
-      timeline.each_time{|t,es| yielded << [t,es] }
+      timeline.each{|time,events| yielded << [time,events] }
       yielded.should == [ [0,[note1]], [1,[note1,note2]] ]
     end
   end
 
   describe "#map" do
     it "returns a new Timeline where each [time,event] pair is replaced by the result of block" do
-      mapped = timeline.map{|time,event| [time+1, event.transpose(time+2)] }
+      mapped = timeline.map{|time,events| [time+1, events.map{|e| e.transpose(time+2) }] }
       mapped.should == { 1 => [note1.transpose(2)], 2 => [note1.transpose(3), note2.transpose(3)] }
     end
 
@@ -184,7 +176,7 @@ describe MTK::Timeline do
 
   describe "#map!" do
     it "maps the Timeline in place" do
-      timeline.map! {|time,event| [time+1, event.transpose(time+2)] }
+      timeline.map! {|time,events| [time+1, events.map{|e| e.transpose(time+2) }] }
       timeline.should == { 1 => [note1.transpose(2)], 2 => [note1.transpose(3), note2.transpose(3)] }
     end
   end
