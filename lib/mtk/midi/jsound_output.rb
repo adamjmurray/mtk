@@ -40,7 +40,6 @@ module MTK
             case event
               when Note
                 pitch, velocity, duration = event.to_midi
-                puts "Scheduling #{pitch}, #{velocity} @ #{time}"
                 at time, note_on(pitch,velocity)
                 time += duration
                 at time, note_off(pitch,velocity)
@@ -60,7 +59,7 @@ module MTK
 
       # It's necessary to generate the events through methods and lambdas like this to create closures.
       # Otherwise when the @generator methods are called, they might not be passed the values you expected.
-      # I have suspect this may not a problem in MRI ruby, but I'm having trouble in JRuby
+      # I suspect this may not a problem in MRI ruby, but I'm having trouble in JRuby
       # (pitch and velocity were always the last scheduled values)
 
       def note_on(pitch, velocity)
