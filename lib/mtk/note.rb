@@ -15,12 +15,16 @@ module MTK
       new hash[:pitch], hash[:intensity], hash[:duration]
     end
 
+    def to_hash
+      super.merge({ :pitch => @pitch })
+    end
+
     def self.from_midi(pitch, velocity, beats)
       new Pitches::PITCHES[pitch], velocity/127.0, beats
     end
 
-    def to_hash
-      super.merge({ :pitch => @pitch })
+    def to_midi
+      [pitch.to_i, velocity, duration]
     end
 
     def transpose(interval)

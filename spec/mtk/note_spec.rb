@@ -17,19 +17,25 @@ describe MTK::Note do
     end
   end
 
-  describe "from_hash" do
+  describe ".from_hash" do
     it "constructs a Note using a hash" do
       Note.from_hash({ :pitch => C4, :intensity => intensity, :duration => duration }).should == note
     end
   end
 
-  describe 'from_midi' do
+  describe '.from_midi' do
     it "constructs a Note using a MIDI pitch and velocity" do
       Note.from_midi(C4.to_i, mf*127, 2.5).should == note
     end
   end
 
-  describe "to_hash" do
+  describe "#to_midi" do
+    it "converts the Note to an Array of MIDI values: [pitch, velocity, duration]" do
+      note.to_midi.should == [60, (mf*127).round, duration]
+    end
+  end
+
+  describe "#to_hash" do
     it "is a hash containing all the attributes of the Note" do
       note.to_hash.should == { :pitch => pitch, :intensity => intensity, :duration => duration }
     end
