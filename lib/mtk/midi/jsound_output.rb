@@ -63,7 +63,7 @@ module MTK
       # (pitch and velocity were always the last scheduled values)
 
       def note_on(pitch, velocity)
-        lambda { puts "Running #{pitch}, #{velocity}"; @generator.note_on(pitch, velocity) }
+        lambda { @generator.note_on(pitch, velocity) }
       end
 
       def note_off(pitch, velocity)
