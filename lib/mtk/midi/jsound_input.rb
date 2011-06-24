@@ -9,10 +9,10 @@ class JSound::Midi::Devices::Recorder
 end
 
 
-# Provides MIDI input and output for JRuby via the jsound gem
 module MTK
   module MIDI
 
+    # Provides MIDI input for JRuby via the jsound gem
     class JSoundInput
 
       def initialize(input_device)
@@ -37,7 +37,7 @@ module MTK
       end
 
       def to_timeline(options={})
-        bpm = options.fetch :bmp, 60
+        bpm = options.fetch :bmp, 120
         beats_per_second = bpm.to_f/60
         timeline = Timeline.new
         note_ons = {}
