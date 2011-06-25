@@ -83,27 +83,16 @@ module MTK
         channel = 1
 
         for time,events in timeline
+          time *= clock_rate
+
           for event in events
             next if event.rest?
 
-            time *= clock_rate
-
-            case event
-              when Note
-                pitch, velocity = event.pitch, event.velocity
-                add_event track, time => note_on(channel, pitch, velocity)
-                duration = event.duration_in_pulses(clock_rate)
-                add_event track, time+duration => note_off(channel, pitch, velocity)
-
-              when Chord
-                velocity = event.velocity
-                duration = event.duration_in_pulses(clock_rate)
-                for pitch in event.pitches
-                  pitch = pitch.to_i
-                  add_event track, time => note_on(channel, pitch, velocity)
-                  add_event track, time+duration => note_off(channel, pitch, velocity)
-                end
-
+            if event.is_a? Note
+              pitch, velocity = event.pitch, event.velocity
+              add_event track, time => note_on(channel, pitch, velocity)
+              duration = event.duration_in_pulses(clock_rate)
+              add_event track, time+duration => note_off(channel, pitch, velocity)
             end
           end
         end

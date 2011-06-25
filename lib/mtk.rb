@@ -24,7 +24,6 @@ require 'mtk/pitch_set'
 
 require 'mtk/event'
 require 'mtk/note'
-require 'mtk/chord'
 require 'mtk/timeline'
 
 require 'mtk/constants/pseudo_constants'

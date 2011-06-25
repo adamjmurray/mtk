@@ -6,10 +6,6 @@ describe MTK::Pattern::NoteCycle do
     Note(pitch, intensity, duration)
   end
 
-  def chord(pitches, intensity=mf, duration=1)
-    Chord.new pitches,intensity,duration
-  end
-
   describe "#new" do
     it "allows default pitch to be specified" do
       cycle = Pattern::NoteCycle.new [], [p], [1], :pitch => Gb4
@@ -94,25 +90,25 @@ describe MTK::Pattern::NoteCycle do
       cycle.next.should == note(C4)
     end
 
-    it "cycles Chords for pitch list items that are PitchSets" do
+    it "cycles Note Arrays for pitch list items that are PitchSets" do
       cycle = Pattern::NoteCycle.new [PitchSet.new([C4, E4, G4]), C4, PitchSet.new([D4, F4, A4])]
-      cycle.next.should == chord([C4, E4, G4])
+      cycle.next.should == [note(C4), note(E4), note(G4)]
       cycle.next.should == note(C4)
-      cycle.next.should == chord([D4, F4, A4])
+      cycle.next.should == [note(D4), note(F4), note(A4)]
     end
 
     it "adds numeric intervals to PitchSets" do
       cycle = Pattern::NoteCycle.new [PitchSet.new([C4, E4, G4]), 2]
-      cycle.next.should == chord([C4, E4, G4])
-      cycle.next.should == chord([D4, Gb4, A4])
+      cycle.next.should == [note(C4), note(E4), note(G4)]
+      cycle.next.should == [note(D4), note(Gb4), note(A4)]
     end
 
     it "goes to the nearest Pitch relative to the lowest note in the PitchSet for any PitchClasses in the pitch list" do
       cycle = Pattern::NoteCycle.new [PitchSet.new([C4, E4, G4]), F, D, Bb]
-      cycle.next.should == chord([C4, E4, G4])
-      cycle.next.should == chord([F4, A4, C5])
-      cycle.next.should == chord([D4, Gb4, A4])
-      cycle.next.should == chord([Bb3, D4, F4])
+      cycle.next.should == [note(C4), note(E4), note(G4)]
+      cycle.next.should == [note(F4), note(A4), note(C5)]
+      cycle.next.should == [note(D4), note(Gb4), note(A4)]
+      cycle.next.should == [note(Bb3), note(D4), note(F4)]
     end
   end
 

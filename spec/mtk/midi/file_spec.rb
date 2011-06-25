@@ -41,7 +41,7 @@ describe MTK::MIDI::File do
   end
 
   describe "#write_timeline" do
-    it 'writes Notes in a Timeline to a MIDI file' do
+    it 'writes monophonic Notes in a Timeline to a MIDI file' do
       MIDI_File(tempfile).write_timeline(
         Timeline.from_hash({
           0 => Note.new(C4, 0.7, 1),
@@ -81,11 +81,11 @@ describe MTK::MIDI::File do
       end
     end
 
-    it 'writes Chords in a Timeline to a MIDI file' do
+    it 'writes polyphonic (simultaneous) Notes in a Timeline to a MIDI file' do
       MIDI_File(tempfile).write_timeline(
         Timeline.from_hash({
-          0 => Chord.new([C4, E4], 0.5, 1),
-          2 => Chord.new([G4, B4, D5], 1, 2)
+          0 => [Note(C4,0.5,1), Note(E4,0.5,1)],
+          2 => [Note(G4,1,2), Note(B4,1,2), Note(D5,1,2)]
         })
       )
 

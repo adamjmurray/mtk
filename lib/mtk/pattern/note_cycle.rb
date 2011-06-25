@@ -47,7 +47,7 @@ module MTK
 
 
         case @pitch
-          when PitchSet,Array then Chord.new(@pitch, @intensity, @duration)
+          when PitchSet then @pitch.to_a.map{|p| Note.new(p, @intensity, @duration) }
           else Note.new(@pitch, @intensity, @duration)
         end
       end
