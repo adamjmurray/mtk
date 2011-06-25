@@ -34,6 +34,20 @@ describe MTK::Collection do
     end
   end
 
+  describe "#empty?" do
+    it "is true when elements is nil" do
+      MockCollection.new(nil).empty?.should be_true
+    end
+
+    it "is true when elements is empty" do
+      MockCollection.new([]).empty?.should be_true
+    end
+
+    it "is false when elements is not empty" do
+      MockCollection.new([1]).empty?.should be_false
+    end
+  end
+
   describe "#each" do
     it "yields each element" do
       yielded = []
@@ -207,6 +221,16 @@ describe MTK::Collection do
 
     it "is false when the elements do not equal the argument" do
       collection.should_not == (elements + [1,2])
+    end
+  end
+
+  describe "#clone" do
+    it "creates an equal collection" do
+      collection.clone.should == collection
+    end
+
+    it "creates a new collection" do
+      collection.clone.should_not equal collection
     end
   end
 

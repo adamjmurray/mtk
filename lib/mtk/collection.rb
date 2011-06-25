@@ -16,6 +16,10 @@ module MTK
     end
     alias length size
 
+    def empty?
+      elements.nil? or elements.size == 0
+    end
+
     # The each iterator for providing Enumerable functionality
     def each &block
       elements.each &block
@@ -68,6 +72,12 @@ module MTK
       else
         elements == other
       end
+    end
+
+    # Create a copy of the collection.
+    # In order to use this method, the including class must implement .from_a()
+    def clone
+      self.class.from_a(to_a)
     end
 
   end
