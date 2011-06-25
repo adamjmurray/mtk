@@ -26,11 +26,11 @@ require 'mtk/event'
 require 'mtk/note'
 require 'mtk/timeline'
 
-require 'mtk/constants/pseudo_constants'
-require 'mtk/constants/pitch_classes'
-require 'mtk/constants/pitches'
-require 'mtk/constants/intervals'
-require 'mtk/constants/dynamics'
+require 'mtk/_constants/pseudo_constants'
+require 'mtk/_constants/pitch_classes'
+require 'mtk/_constants/pitches'
+require 'mtk/_constants/intervals'
+require 'mtk/_constants/dynamics'
 
 require 'mtk/numeric_extensions'
 
