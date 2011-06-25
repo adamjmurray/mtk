@@ -8,7 +8,8 @@ module MTK
   module MIDI
   end
 
-  # Classes that enumerate elements
+  # Classes that enumerate elements.
+  # The core interface for Pattern classes is #next and #rewind
   module Pattern
   end
 

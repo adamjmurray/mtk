@@ -2,8 +2,21 @@ require 'spec_helper'
 
 describe MTK::Pattern::Sequence do
 
+  SEQUENCE = MTK::Pattern::Sequence
+
   let(:elements) { [1,2,3] }
-  let(:sequence) { Pattern::Sequence.new(elements) }
+  let(:sequence) { SEQUENCE.new(elements) }
+
+  it "is a MTK::Collection" do
+    sequence.should be_a MTK::Collection
+    # and now we won't test any other collection features here... see collection_spec
+  end
+
+  describe ".from_a" do
+    it "acts like .new" do
+      SEQUENCE.from_a(elements).should == sequence
+    end
+  end
 
   describe "#elements" do
     it "is the array the sequence was constructed with" do
@@ -11,17 +24,42 @@ describe MTK::Pattern::Sequence do
     end
   end
 
-  describe "#repeat" do
-    it "repeats the sequence the number of times given by the argument" do
-      sequence.repeat(3).should == [1,2,3,1,2,3,1,2,3]
+  describe "#next" do
+    it "enumerates the elements" do
+      nexts = []
+      elements.length.times do
+        nexts << sequence.next
+      end
+      nexts.should == elements
     end
 
-    it "repeats the sequence twice if no argument is given" do
-      sequence.repeat.should == [1,2,3,1,2,3]
+    it "raises StopIteration when the end of the Sequence is reached" do
+      elements.length.times{ sequence.next }
+      lambda{ sequence.next }.should raise_error(StopIteration)
     end
 
-    it "handles fractional repetitions" do
-      sequence.repeat(2.67).should == [1,2,3,1,2,3,1,2]
+    it "should automatically break out of Kernel#loop" do
+      nexts = []
+      loop do # loop rescues StopIteration and exits the loop
+        nexts << sequence.next
+      end
+      nexts.should == elements
+    end
+  end
+
+end
+
+
+describe MTK::Pattern do
+
+  describe "#Sequence" do
+    it "handles varargs" do
+      MTK::Pattern.Sequence(1,2,3).should == MTK::Pattern::Sequence.new([1,2,3])
+    end
+
+    include MTK::Pattern
+    it "is includeable" do
+      Sequence(1,2,3).should == MTK::Pattern::Sequence.new([1,2,3])
     end
   end
 
