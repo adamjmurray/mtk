@@ -1,3 +1,4 @@
+require 'mtk/pattern/enumerator'
 require 'mtk/pattern/choice'
 require 'mtk/pattern/cycle'
 require 'mtk/pattern/pitch_cycle'

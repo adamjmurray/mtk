@@ -45,6 +45,38 @@ describe MTK::Pattern::Sequence do
       end
       nexts.should == elements
     end
+
+    it "enumerates the elements in sub-sequences" do
+      sub_sequence = SEQUENCE.new [2,3]
+      sequence = SEQUENCE.new [1,sub_sequence,4]
+      nexts = []
+      loop { nexts << sequence.next }
+      nexts.should == [1,2,3,4]
+    end
+
+  end
+
+  describe "#rewind" do
+    it "restarts at the beginning of the sequence" do
+      loop { sequence.next }
+      sequence.rewind
+      sequence.next.should == elements.first
+    end
+
+    it "returns self, so it can be chained to #next" do
+      first = sequence.next
+      sequence.rewind.next.should == first
+    end
+
+    it "causes sub-sequences to start from the beginning when encountered again after #rewind" do
+      sub_sequence = SEQUENCE.new [2,3]
+      sequence = SEQUENCE.new [1,sub_sequence,4]
+      loop { sequence.next }
+      sequence.rewind
+      nexts = []
+      loop { nexts << sequence.next }
+      nexts.should == [1,2,3,4]
+    end
   end
 
 end

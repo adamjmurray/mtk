@@ -4,6 +4,7 @@ module MTK
     # A finite list of elements, which can be enumerated one at a time.
     class Sequence
       include Collection
+      include Enumerator
 
       attr_reader :elements
       
@@ -18,14 +19,33 @@ module MTK
 
       # Return the next value in the sequence
       def next
+        if @current.is_a? Enumerator
+          begin
+            return @current.next
+          rescue StopIteration
+            # fall through and proceed with normal behavior
+          end
+        end
         @index += 1
-        raise StopIteration if @elements.nil? or @index >= @elements.length
-        @elements[@index]
+        if @elements.nil? or @index >= @elements.length
+          @current = nil
+          raise StopIteration
+        else
+          @current = @elements[@index]
+          if @current.is_a? Enumerator
+            @current.rewind # start over, in case we already enumerated this element and then did a rewind
+            self.next
+          else
+            @current
+          end
+        end
       end
 
       # Reset the sequence to the beginning
       def rewind
         @index = -1
+        @current = nil
+        self
       end
     end
 
