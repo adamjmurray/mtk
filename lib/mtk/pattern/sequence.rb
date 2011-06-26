@@ -26,19 +26,21 @@ module MTK
             # fall through and proceed with normal behavior
           end
         end
-        @index += 1
-        if @elements.nil? or @index >= @elements.length
+
+        begin
+          advance_index!
+        rescue StopIteration
           @current = nil
-          raise StopIteration
-        else
-          @current = @elements[@index]
-          if @current.is_a? Enumerator
-            @current.rewind # start over, in case we already enumerated this element and then did a rewind
-            self.next
-          else
-            @current
-          end
+          raise
         end
+
+        @current = current
+        if @current.is_a? Enumerator
+          @current.rewind # start over, in case we already enumerated this element and then did a rewind
+          return self.next
+        end
+
+        @current
       end
 
       # Reset the sequence to the beginning
@@ -46,6 +48,17 @@ module MTK
         @index = -1
         @current = nil
         self
+      end
+
+
+      protected
+      def advance_index!
+        @index += 1
+        raise StopIteration if @elements.nil? or @index >= @elements.length
+      end
+
+      def current
+        @elements[@index]
       end
     end
 

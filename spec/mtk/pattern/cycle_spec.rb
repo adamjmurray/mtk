@@ -2,8 +2,10 @@ require 'spec_helper'
 
 describe MTK::Pattern::Cycle do
 
+  CYCLE = MTK::Pattern::Cycle
+
   let(:elements) { [1, 2, 3] }
-  let(:cycle) { Pattern::Cycle.new elements }
+  let(:cycle) { CYCLE.new elements }
 
   describe "#next" do
     it "iterates through the list of elements and emits them one at a time" do
@@ -19,34 +21,20 @@ describe MTK::Pattern::Cycle do
       cycle.next.should == elements.first
     end
 
-    it "evaluates any lambdas in the elements list, passing in the previous return value" do
-      cycle = Pattern::Cycle.new [1, lambda { |prev_val| prev_val*10 }]
-      cycle.next
-      cycle.next.should == 10
-    end
-
-    it "does not require the lambda to have any parameters" do
-      cycle = Pattern::Cycle.new [lambda { 42 }]
-      cycle.next.should == 42
-    end
-
-    it "passed the previous item (which is not necessarily == the previous return value) as the second arg to lambdas that take 2 parameters" do
-      arg1, arg2 = nil, nil
-      return_5 = lambda { 5 }
-      cycle = Pattern::Cycle.new [return_5, lambda { |a1, a2| arg1, arg2=a1, a2 }]
-      cycle.next
-      cycle.next
-      arg1.should == 5
-      arg2.should == return_5
+    it "enumerates nested sequences" do
+      cycle = CYCLE.new [1, MTK::Pattern.Sequence(2,3), 4]
+      nexts = []
+      6.times { nexts << cycle.next }
+      nexts.should == [1,2,3,4,1,2]
     end
   end
 
-  describe "#reset" do
+  describe "#rewind" do
     it "restarts the cycle" do
       (elements.length - 1).times do
         cycle.next
       end
-      cycle.reset
+      cycle.rewind
       cycle.next.should == elements.first
     end
   end

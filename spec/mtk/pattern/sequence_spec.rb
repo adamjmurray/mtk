@@ -54,6 +54,14 @@ describe MTK::Pattern::Sequence do
       nexts.should == [1,2,3,4]
     end
 
+    it "skips over empty sub-sequences" do
+      sub_sequence = SEQUENCE.new []
+      sequence = SEQUENCE.new [1,sub_sequence,4]
+      nexts = []
+      loop { nexts << sequence.next }
+      nexts.should == [1,4]
+    end
+
   end
 
   describe "#rewind" do

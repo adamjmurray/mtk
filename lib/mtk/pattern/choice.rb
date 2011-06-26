@@ -2,17 +2,17 @@ module MTK
   module Pattern
 
     # An element enumerator that randomly choices from a list of elements
-    class Choice
+    class Choice < Sequence
 
-      # The element choices
-      attr_reader :elements
+      #####################
+      protected
 
-      def initialize(elements)
-        @elements = elements
+      def advance_index!
+        raise StopIteration if @elements.nil? or @elements.empty?
       end
 
-      def next
-        @elements[rand(@elements.length)] if @elements and not @elements.empty?
+      def current
+        @elements[ rand @elements.length ]
       end
 
     end
