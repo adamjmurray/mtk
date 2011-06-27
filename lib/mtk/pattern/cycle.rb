@@ -8,7 +8,7 @@ module MTK
       ##############
       protected
 
-      def advance_index!
+      def advance!
         raise StopIteration if @elements.nil? or @elements.empty? # prevent infinite loops
         begin
           super
