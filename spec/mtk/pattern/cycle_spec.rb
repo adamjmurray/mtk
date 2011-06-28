@@ -29,6 +29,32 @@ describe MTK::Pattern::Cycle do
     end
   end
 
+  describe "#max_cycles" do
+    it "is the :max_cycles option the pattern was constructed with" do
+      CYCLE.new([], :max_cycles => 1).max_cycles.should == 1
+    end
+
+    it "is nil by default" do
+      cycle.max_cycles.should be_nil
+    end
+
+    it "causes a StopIteration exception after the number of cycles has completed" do
+      cycle = CYCLE.new(elements, :max_cycles => 2)
+      2.times do
+        elements.length.times { cycle.next } # one full cycle
+      end
+      lambda { cycle.next }.should raise_error
+    end
+  end
+
+  describe "#max_elements" do
+    it "causes a StopIteration exception after the number of elements have been emitted" do
+      cycle = CYCLE.new(elements, :max_elements => 5)
+      5.times { cycle.next }
+      lambda { cycle.next }.should raise_error
+    end
+  end
+
   describe "#rewind" do
     it "restarts the cycle" do
       (elements.length - 1).times do

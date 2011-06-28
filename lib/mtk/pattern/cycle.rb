@@ -3,19 +3,43 @@ module MTK
 
     # An endless enumerator that outputs an element one at a time from a list of elements,
     # looping back to the beginning when elements run out.
-    class Cycle < Sequence
+    class Cycle < AbstractPattern
+      include Collection
 
-      ##############
+      attr_reader :cycle_count
+      
+      attr_reader :max_cycles
+
+      def initialize(elements, options={})
+        super
+        @max_cycles = options[:max_cycles]
+      end
+
+      # Reset the sequence to the beginning
+      def rewind
+        @index = -1
+        @cycle_count = 0
+        super
+      end
+
+      ###################
       protected
 
       def advance!
-        raise StopIteration if @elements.nil? or @elements.empty? # prevent infinite loops
-        begin
-          super
-        rescue StopIteration
-          rewind
-          super
+        super # base advance!() implementation prevents infinite loops with empty patterns
+        @index += 1
+        if @index >= @elements.length
+          @cycle_count += 1
+          if @max_cycles and @cycle_count >= @max_cycles
+            raise StopIteration
+          end
+          @index = -1
+          advance!
         end
+      end
+
+      def current
+        @elements[@index]
       end
 
     end
