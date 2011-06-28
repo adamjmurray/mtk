@@ -7,9 +7,14 @@ module MTK
 
       attr_reader :elements
 
+      # The type of elements in the pattern, such as :pitch, :intensity, or :duration
+      # This is often needed by {Sequencer} classes to interpret the pattern elements.
+      attr_reader :type
+      
       def initialize(elements, options={})
         @elements = elements
         @options = options
+        @type = options[:type]
         rewind
       end
 
@@ -51,6 +56,7 @@ module MTK
 
       ##################
       protected
+
       def advance!
         raise StopIteration if @elements.nil? or @elements.empty?
       end
@@ -59,11 +65,6 @@ module MTK
         @elements
       end
     end
-
-    def Sequence(*anything)
-      Sequence.new(anything)
-    end
-    module_function :Sequence
 
   end
 end

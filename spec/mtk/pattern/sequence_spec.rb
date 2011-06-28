@@ -103,4 +103,22 @@ describe MTK::Pattern do
     end
   end
 
+  describe "#PitchSequence" do
+    it "sets #type to :pitch" do
+      MTK::Pattern.PitchSequence([]).type.should == :pitch
+    end
+  end
+
+  describe "#IntensitySequence" do
+    it "sets #type to :pitch" do
+      MTK::Pattern.IntensitySequence([]).type.should == :intensity
+    end
+  end
+
+  describe "#DurationSequence" do
+    it "sets #type to :pitch" do
+      MTK::Pattern.DurationSequence([]).type.should == :duration
+    end
+  end
+
 end

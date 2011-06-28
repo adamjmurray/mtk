@@ -29,5 +29,21 @@ module MTK
     end
     module_function :Sequence
 
+    def PitchSequence(*anything)
+      Sequence.new(anything, :type => :pitch)
+    end
+    module_function :PitchSequence
+
+    def IntensitySequence(*anything)
+      Sequence.new(anything, :type => :intensity)
+    end
+    module_function :IntensitySequence
+
+    def DurationSequence(*anything)
+      Sequence.new(anything, :type => :duration)
+    end
+    module_function :DurationSequence
+
+
   end
 end
