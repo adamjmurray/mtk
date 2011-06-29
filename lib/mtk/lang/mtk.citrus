@@ -1,0 +1,31 @@
+grammar MTK_Grammar
+
+  rule pitch
+    ( pitch_class int ) {
+      MTK::Pitch[pitch_class.value, int.value]
+    }
+  end
+
+  rule pitch_class
+    ( [A-Ga-g] [#b]*2 ) {
+      MTK::PitchClass.from_s to_s
+    }
+  end
+
+  rule float do
+    ( '-'? [0-9]+ '.' [0-9]+ ) {
+      to_f
+    }
+  end
+
+  rule int
+    ( '-'? [0-9]+ ) {
+      to_i
+    }
+  end
+
+  rule space
+    [\s]+
+  end
+
+end

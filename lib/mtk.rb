@@ -14,6 +14,10 @@ module MTK
   module Sequencer
   end
 
+  # Optional classes for the "MTK language", which let's you compose music via MTK without writing any Ruby code
+  module Lang
+  end
+
   # Optional classes for MIDI input and output.
   module MIDI
   end
