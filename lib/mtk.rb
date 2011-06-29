@@ -39,6 +39,7 @@ require 'mtk/pattern/cycle'
 require 'mtk/pattern/choice'
 require 'mtk/pattern/palindrome'
 
+require 'mtk/sequencer/event_builder'
 require 'mtk/sequencer/step_sequencer'
 
 require 'mtk/_constants/pseudo_constants'
