@@ -103,7 +103,6 @@ module MTK
       def emit element
         @element_count += 1
         raise StopIteration if @max_elements and @element_count > @max_elements
-        element.mtk_type = @type if element.respond_to? :mtk_type and element.mtk_type.nil?
         element
       end
     end
