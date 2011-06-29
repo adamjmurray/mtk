@@ -54,16 +54,14 @@ module MTK
       # @raise StopIteration when the pattern has emitted all values, or has hit the {#max_elements} limit.
       def next
         if @current.is_a? Enumerator
-          subpattern_has_next = true
           begin
             subpattern_next = @current.next
+            subpattern_has_next = true
           rescue StopIteration
             subpattern_has_next = false
           end
-          if subpattern_has_next
-            increment_element_count!
-            return subpattern_next
-          end
+
+          return emit subpattern_next if subpattern_has_next
           # else fall through and continue with normal behavior
         end
 
@@ -80,8 +78,7 @@ module MTK
           return self.next
         end
 
-        increment_element_count!
-        @current
+        emit @current
       end
 
 
@@ -93,16 +90,18 @@ module MTK
       end
 
       def current
-        @elements
+        @elements[0]
       end
 
 
       ##################
       private
 
-      def increment_element_count!
+      def emit element
         @element_count += 1
         raise StopIteration if @max_elements and @element_count > @max_elements
+        element.mtk_type = @type if element.respond_to? :mtk_type and element.mtk_type.nil?
+        element
       end
     end
 
