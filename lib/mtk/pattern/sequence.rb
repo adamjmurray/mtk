@@ -14,11 +14,13 @@ module MTK
       ###################
       protected
 
+      # (see AbstractPattern#advance!)
       def advance!
         @index += 1
         raise StopIteration if @elements.nil? or @index >= @elements.length
       end
 
+      # (see AbstractPattern#current)
       def current
         @elements[@index]
       end

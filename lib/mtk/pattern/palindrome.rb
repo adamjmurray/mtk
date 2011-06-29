@@ -17,6 +17,7 @@ module MTK
         @repeat_ends ||= @options.fetch :repeat_ends, false
       end
 
+      # (see AbstractPattern#advance!)
       def advance!
         raise StopIteration if @elements.nil? or @elements.empty? # prevent infinite loops
 

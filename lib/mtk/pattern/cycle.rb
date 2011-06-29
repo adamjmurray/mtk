@@ -6,8 +6,10 @@ module MTK
     class Cycle < AbstractPattern
       include Collection
 
+      # The number of cycles emitted (1 cycle == all elements emitted) since the last {#rewind}
       attr_reader :cycle_count
       
+      # The maximum number of cycles this Pattern will emit before a StopIteration exception
       attr_reader :max_cycles
 
       def initialize(elements, options={})
@@ -25,6 +27,7 @@ module MTK
       ###################
       protected
 
+      # (see AbstractPattern#advance!)
       def advance!
         super # base advance!() implementation prevents infinite loops with empty patterns
         @index += 1
@@ -38,6 +41,7 @@ module MTK
         end
       end
 
+      # (see AbstractPattern#current)
       def current
         @elements[@index]
       end

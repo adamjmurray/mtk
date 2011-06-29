@@ -85,10 +85,13 @@ module MTK
       ##################
       protected
 
+      # update internal state (index, etc) so that {#current} will refer to the next element
+      # @raise StopIteration if there are no more elements
       def advance!
         raise StopIteration if @elements.nil? or @elements.empty?
       end
 
+      # the current element in the pattern, which will be returned by {#next} (after a call to {#advance!})
       def current
         @elements[0]
       end

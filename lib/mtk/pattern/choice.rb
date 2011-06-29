@@ -1,12 +1,13 @@
 module MTK
   module Pattern
 
-    # An element enumerator that randomly choices from a list of elements
+    # Randomly choose from a list of elements
     class Choice < AbstractPattern
 
       #####################
       protected
 
+      # (see AbstractPattern#current)
       def current
         @elements[ rand @elements.length ]
       end
