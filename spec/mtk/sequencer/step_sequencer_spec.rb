@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe MTK::Sequencer::StepSequencer do
 
-  SEQUENCE = MTK::Pattern::Sequence
   STEP_SEQUENCER = MTK::Sequencer::StepSequencer
 
   let(:pitches)     { MTK::Pattern.PitchSequence(C4, D4, E4) }

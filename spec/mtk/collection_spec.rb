@@ -6,11 +6,26 @@ describe MTK::Collection do
     include MTK::Collection
     attr_reader :elements
     def initialize(elements); @elements = elements end
-    def self.from_a(enumerable); new(enumerable) end
+    def self.from_a(elements); new(elements) end
+  end
+
+  class MockCollectionWithOptions
+    include MTK::Collection
+    attr_reader :elements, :options
+    def initialize(elements, options={})
+      @elements = elements
+      @options = options
+    end
+    def self.from_a(elements, options={})
+      new(elements, options)
+    end
   end
 
   let(:elements) { [1,2,3,4,5] }
   let(:collection) { MockCollection.new elements }
+
+  let(:options) { {:opt1 => :val1, :opt2 => :val2} }
+  let(:collection_with_options) { MockCollectionWithOptions.new(elements, options) }
 
   it "is Enumerable" do
     collection.should be_a Enumerable
@@ -120,6 +135,10 @@ describe MTK::Collection do
     it "does not modify the original collection" do
       collection.repeat.should_not equal collection
     end
+
+    it "maintains the options from the original collection" do
+      collection_with_options.repeat.options.should == options
+    end
   end
 
   describe "#permute" do
@@ -137,6 +156,10 @@ describe MTK::Collection do
     it "does not modify the original collection" do
       collection.permute.should_not equal collection
     end
+
+    it "maintains the options from the original collection" do
+      collection_with_options.permute.options.should == options
+    end
   end
 
   describe "#shuffle" do
@@ -153,6 +176,10 @@ describe MTK::Collection do
 
     it "does not modify the original collection" do
       collection.shuffle.should_not equal collection
+    end
+
+    it "maintains the options from the original collection" do
+      collection_with_options.shuffle.options.should == options
     end
   end
 
@@ -176,6 +203,10 @@ describe MTK::Collection do
     it "does not modify the original collection" do
       collection.rotate.should_not equal collection
     end
+
+    it "maintains the options from the original collection" do
+      collection_with_options.rotate.options.should == options
+    end
   end
 
   describe "#concat" do
@@ -190,6 +221,17 @@ describe MTK::Collection do
     it "does not modify the original collection" do
       collection.concat([6,7]).should_not equal collection
     end
+
+    it "maintains the options from the original (receiver) collection" do
+      collection_with_options.concat([6,7]).options.should == options
+    end
+
+    it "ignored any options from the argument collection" do
+      # I considered merging the options, but it seems potentially too confusing, so
+      # we'll go with this simpler behavior until a use-case appears where this is inappropriate.
+      arg = MockCollectionWithOptions.new(elements, :opt1 => :another_val, :opt3 => :val3)
+      collection_with_options.concat(arg).options.should == options
+    end
   end
 
   describe "#reverse" do
@@ -203,6 +245,10 @@ describe MTK::Collection do
 
     it "does not modify the original collection" do
       collection.reverse.should_not equal collection
+    end
+
+    it "maintains the options from the original collection" do
+      collection_with_options.reverse.options.should == options
     end
   end
 
@@ -222,6 +268,10 @@ describe MTK::Collection do
     it "is false when the elements do not equal the argument" do
       collection.should_not == (elements + [1,2])
     end
+
+    it "is false when the options are not equal" do
+      collection.should_not == collection_with_options
+    end
   end
 
   describe "#clone" do
@@ -231,6 +281,10 @@ describe MTK::Collection do
 
     it "creates a new collection" do
       collection.clone.should_not equal collection
+    end
+
+    it "maintains the options from the original collection" do
+      collection_with_options.clone.options.should == options
     end
   end
 

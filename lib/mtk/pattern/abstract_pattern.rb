@@ -22,11 +22,12 @@ module MTK
       # The maximum number of elements this Pattern will emit before a StopIteration exception
       attr_reader :max_elements
 
-      # @param elements [Array] the list of elements in the pattern
+      # @param elements [Enumerable, #to_a] the list of elements in the pattern
       # @param options [Hash] the pattern options
       # @option options [String] :type the pattern {#type}
       # @option options [Fixnum] :max_elements the {#max_elements}
       def initialize(elements, options={})
+        elements = elements.to_a if elements.respond_to? :to_a
         @elements = elements
         @options = options
         @type = options[:type]
@@ -35,10 +36,11 @@ module MTK
       end
 
       # Construct a pattern from an Array.
-      # @param elements [Array] the list of elements in the pattern
+      # @param (see #initialize)
+      # @option (see #initialize)
       # @see #initialize
-      def self.from_a(elements)
-        new(elements.to_a)
+      def self.from_a(elements, options={})
+        new(elements, options)
       end
 
       # Reset the pattern to the beginning

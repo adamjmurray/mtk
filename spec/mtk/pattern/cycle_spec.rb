@@ -45,6 +45,10 @@ describe MTK::Pattern::Cycle do
       end
       lambda { cycle.next }.should raise_error
     end
+
+    it "is maintained when applying Collection operations" do
+      CYCLE.new(elements, :max_cycles => 2).reverse.max_cycles.should == 2
+    end
   end
 
   describe "#max_elements" do

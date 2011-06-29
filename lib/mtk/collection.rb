@@ -42,33 +42,37 @@ module MTK
 
     def repeat(times=2)
       full_repetitions, fractional_repetitions = times.floor, times%1  # split into int and fractional part
-      base = elements * full_repetitions
-      base += elements[0...elements.size*fractional_repetitions]
-      self.class.from_a(base)
+      repeated = elements * full_repetitions
+      repeated += elements[0...elements.size*fractional_repetitions]
+      clone_with repeated
     end
 
     def permute
-      self.class.from_a(elements.shuffle)
+      clone_with elements.shuffle
     end
     alias shuffle permute
 
     def rotate(offset=1)
-      self.class.from_a(elements.rotate offset)
+      clone_with elements.rotate(offset)
     end
 
     def concat(other)
       other_elements = (other.respond_to? :elements) ? other.elements : other
-      self.class.from_a(elements + other_elements)
+      clone_with(elements + other_elements)
     end
 
     def reverse
-      self.class.from_a(to_a.reverse)
+      clone_with elements.reverse
     end
     alias retrograde reverse
 
     def ==(other)
       if other.respond_to? :elements
-        elements == other.elements
+        if other.respond_to? :options
+          elements == other.elements and @options == other.options
+        else
+          elements == other.elements
+        end
       else
         elements == other
       end
@@ -77,7 +81,21 @@ module MTK
     # Create a copy of the collection.
     # In order to use this method, the including class must implement .from_a()
     def clone
-      self.class.from_a(to_a)
+      clone_with to_a
+    end
+
+    #################################
+    private
+
+    # "clones" the object with the given elements, attempting to maintain any @options
+    # This is designed to work with 2 argument constructors: def initialize(elements, options={})
+    def clone_with elements
+      from_a = self.class.method(:from_a)
+      if from_a.arity == -2
+        from_a[elements, (@options || {})]
+      else
+        from_a[elements]
+      end
     end
 
   end
