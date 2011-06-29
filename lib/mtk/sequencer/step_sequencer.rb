@@ -21,9 +21,8 @@ module MTK
         loop do
           break if @max_steps and step_count >= @max_steps
 
-          elements = @patterns.map{|pattern| pattern.next }
-          notes = EventBuilder.events_for elements
-          timeline[beat] = notes if notes
+          events = EventBuilder.next_events @patterns
+          timeline[beat] = events if events
 
           beat += @step_size
           step_count += 1

@@ -2,27 +2,23 @@ module MTK
   module Sequencer
 
     # A helper class for {Sequencer}s.
-    # NoteBuilder takes a list of elements (typically coming from {Pattern}s)
-    # and constructs a list of {Note}s from the elements.
-    #
+    # Takes a list of patterns and constructs a list of {Events}s from the next elements in each pattern.
     class EventBuilder
 
-      def self.events_for(elements)
+      def self.next_events(patterns)
         pitches = []
         intensity = Dynamics::mf
         duration = 1
 
-        for element in elements
+        for pattern in patterns
+          element = pattern.next
           case element
             when Pitch then pitches << element
             when PitchSet then pitches += element.pitches
-            else
-              if element.respond_to? :mtk_type
-                case element.mtk_type
-                  when :intensity then intensity = element
-                  when :duration then duration = element
-                end
-              end
+            else case pattern.type
+              when :intensity then intensity = element
+              when :duration then duration = element
+            end
           end
         end
 

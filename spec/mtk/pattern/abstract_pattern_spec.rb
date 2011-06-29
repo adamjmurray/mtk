@@ -4,13 +4,6 @@ describe MTK::Pattern::AbstractPattern do
 
   PATTERN = MTK::Pattern::AbstractPattern
 
-  describe "#next" do
-    it "sets mtk_type to the pattern's type, for elements with a nil mtk_type field" do
-      # Numeric has been enhanced with an mtk_type field, so we can distinguish intensity from duration
-      PATTERN.new([5], :type => :intensity).next.mtk_type.should == :intensity
-    end
-  end
-
   describe "#type" do
     it "is the :type value from the constuctor's options hash" do
       PATTERN.new([], :type => :my_type).type.should == :my_type

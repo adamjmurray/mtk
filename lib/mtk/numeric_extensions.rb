@@ -1,8 +1,5 @@
 class Numeric
 
-  # The type of data, such as :intensity, :duration, or :interval
-  attr_accessor :mtk_type
-
   def semitones
     self
   end
