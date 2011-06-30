@@ -21,7 +21,11 @@ module MTK
 end
 
 require 'mtk/collection'
-require 'mtk/transforms'
+
+require 'mtk/transform/mappable'
+require 'mtk/transform/transposable'
+require 'mtk/transform/invertible'
+require 'mtk/transform/set_theory_operations'
 
 require 'mtk/pitch_class'
 require 'mtk/pitch_class_set'
@@ -50,6 +54,6 @@ require 'mtk/_constants/pitches'
 require 'mtk/_constants/intervals'
 require 'mtk/_constants/dynamics'
 
-require 'mtk/numeric_extensions'
+require 'mtk/_numeric_extensions'
 
 

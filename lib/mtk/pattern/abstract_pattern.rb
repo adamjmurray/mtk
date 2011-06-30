@@ -1,7 +1,9 @@
 module MTK
   module Pattern
 
-    # A pattern of elements that can be emitted one element at a time.
+    # A pattern of elements that can be emitted one element at a time via calls to {#next}.
+    #
+    # Patterns can be reset to the beginning via {#rewind}.
     #
     # @abstract subclass and override {#advance!} and {#current} to implement a Pattern
     #
@@ -88,13 +90,15 @@ module MTK
       ##################
       protected
 
-      # update internal state (index, etc) so that {#current} will refer to the next element
+      # Update internal state (index, etc) so that {#current} will refer to the next element.
+      # @note Override this method in a subclass to define a custom Pattern.
       # @raise StopIteration if there are no more elements
       def advance!
         raise StopIteration if @elements.nil? or @elements.empty?
       end
 
-      # the current element in the pattern, which will be returned by {#next} (after a call to {#advance!})
+      # The current element in the pattern, which will be returned by {#next} (after a call to {#advance!}).
+      # @note Override this method in a subclass to define a custom Pattern.
       def current
         @elements[0]
       end
