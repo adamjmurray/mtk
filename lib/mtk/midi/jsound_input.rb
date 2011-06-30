@@ -1,14 +1,6 @@
 require 'rubygems'
 require 'jsound'
 
-# TODO: fix jsound instead of monkey patching
-class JSound::Midi::Devices::Recorder
-  def message(message)
-    @messages_with_timestamps << [message, Time.now.to_f] if recording?
-  end
-end
-
-
 module MTK
   module MIDI
 
