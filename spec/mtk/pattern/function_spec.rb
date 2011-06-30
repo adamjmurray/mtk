@@ -27,13 +27,31 @@ describe MTK::Pattern::Function do
       nexts.should == [1,2]
     end
 
-    it "calls a 2-arg lambda with the previous value and element count (starting from 0)" do
+    it "calls a 2-arg lambda with the previous value and function call count (starting from 0)" do
       function = FUNCTION.new lambda{|prev,index| [prev,index] }
       function.next.should == [nil, 0]
       function.next.should == [[nil,0], 1]
       function.next.should == [[[nil,0],1], 2]
     end
 
+    it "calls a 3-arg lambda with the previous value, function call count (starting from 0), and element count (starting from 0)" do
+      function = FUNCTION.new lambda{|prev,call_index,elem_index| prev.nil? ? MTK::Pattern.Sequence(1,2,3,4) : [call_index,elem_index] }
+      function.next.should == 1
+      function.next.should == 2
+      function.next.should == 3
+      function.next.should == 4
+      function.next.should == [1,4]
+    end
+
+    it "can generate other Patterns, which will be iterated over before re-calling the function" do
+      function = FUNCTION.new lambda{|prev,index| MTK::Pattern.Sequence(index,2,3) }
+      function.next.should == 0
+      function.next.should == 2
+      function.next.should == 3
+      function.next.should == 1 # end of sequence, now a new one is generated, this time starting with 1
+      function.next.should == 2
+      function.next.should == 3
+    end
   end
 
   describe "#rewind" do
