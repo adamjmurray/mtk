@@ -6,10 +6,13 @@ module MTK
     # @abstract subclass and override {#advance!} and {#current} to implement a Pattern
     #
     class AbstractPattern
+      include Collection
       include Enumerator
 
       # The elements in the pattern
       attr_reader :elements
+
+      attr_reader :options
 
       # The type of elements in the pattern, such as :pitch, :intensity, or :duration
       #
@@ -106,6 +109,20 @@ module MTK
         element
       end
     end
+
+    # Build any "TypedPattern" (like PitchCycle or DurationPalindrome) or even just Pattern
+    def method_missing(method, *args, &block)
+      # Assuming we get something like PitchCycle, split into 'Pitch' and 'Cycle'
+      camel_case_words = method.to_s.gsub(/([a-z])([A-Z])/,'\1 \2').split(' ')
+      pattern = MTK::Pattern.const_get camel_case_words.last
+      if camel_case_words.length > 1
+        type = camel_case_words.first.downcase.to_sym
+        pattern.new(args, :type => type)
+      else
+        pattern.new(args)
+      end
+    end
+    module_function :method_missing
 
   end
 end

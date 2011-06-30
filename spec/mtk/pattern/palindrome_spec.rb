@@ -5,7 +5,6 @@ describe MTK::Pattern::Palindrome do
   PALINDROME = MTK::Pattern::Palindrome
 
   describe "#next" do
-
     it "reverses direction when the ends of the list are reached" do
       palindrome = PALINDROME.new [1,2,3,4]
       nexts = []
@@ -42,6 +41,83 @@ describe MTK::Pattern::Palindrome do
       palindrome.rewind
       palindrome.next.should == 1
       palindrome.next.should == 2
+    end
+  end
+
+  describe "#repeat_ends?" do
+    it "is true if the :repeat_ends option is true" do
+      PALINDROME.new([], :repeat_ends => true).repeat_ends?.should be_true
+    end
+
+    it "is false if the :repeat_ends option is true" do
+      PALINDROME.new([], :repeat_ends => false).repeat_ends?.should be_false
+    end
+  end
+
+  describe "#==" do
+    it "is false if the :repeat_ends options are different" do
+      PALINDROME.new([1,2,3], :repeat_ends => true).should_not == PALINDROME.new([1,2,3], :repeat_ends => false)
+    end
+  end
+
+end
+
+
+describe MTK::Pattern do
+
+  describe "#Palindrome" do
+    it "creates a Palindrome" do
+      MTK::Pattern.Palindrome(1,2,3).should be_a MTK::Pattern::Palindrome
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.Palindrome(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "does not set a type" do
+      MTK::Pattern.Palindrome(1,2,3).type.should be_nil
+    end
+  end
+
+  describe "#PitchPalindrome" do
+    it "creates a Palindrome" do
+      MTK::Pattern.PitchPalindrome(1,2,3).should be_a MTK::Pattern::Palindrome
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.PitchPalindrome(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "sets #type to :pitch" do
+      MTK::Pattern.PitchPalindrome([]).type.should == :pitch
+    end
+  end
+
+  describe "#IntensityPalindrome" do
+    it "creates a Palindrome" do
+      MTK::Pattern.IntensityPalindrome(1,2,3).should be_a MTK::Pattern::Palindrome
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.IntensityPalindrome(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "sets #type to :pitch" do
+      MTK::Pattern.IntensityPalindrome([]).type.should == :intensity
+    end
+  end
+
+  describe "#DurationPalindrome" do
+    it "creates a Palindrome" do
+      MTK::Pattern.DurationPalindrome(1,2,3).should be_a MTK::Pattern::Palindrome
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.DurationPalindrome(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "sets #type to :pitch" do
+      MTK::Pattern.DurationPalindrome([]).type.should == :duration
     end
   end
 

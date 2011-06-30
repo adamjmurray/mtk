@@ -31,3 +31,64 @@ describe MTK::Pattern::Choice do
   end
 
 end
+
+
+describe MTK::Pattern do
+
+  describe "#Choice" do
+    it "creates a Choice" do
+      MTK::Pattern.Choice(1,2,3).should be_a MTK::Pattern::Choice
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.Choice(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "does not set a type" do
+      MTK::Pattern.Choice(1,2,3).type.should be_nil
+    end
+  end
+
+  describe "#PitchChoice" do
+    it "creates a Choice" do
+      MTK::Pattern.PitchChoice(1,2,3).should be_a MTK::Pattern::Choice
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.PitchChoice(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "sets #type to :pitch" do
+      MTK::Pattern.PitchChoice([]).type.should == :pitch
+    end
+  end
+
+  describe "#IntensityChoice" do
+    it "creates a Choice" do
+      MTK::Pattern.IntensityChoice(1,2,3).should be_a MTK::Pattern::Choice
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.IntensityChoice(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "sets #type to :pitch" do
+      MTK::Pattern.IntensityChoice([]).type.should == :intensity
+    end
+  end
+
+  describe "#DurationChoice" do
+    it "creates a Choice" do
+      MTK::Pattern.DurationChoice(1,2,3).should be_a MTK::Pattern::Choice
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.DurationChoice(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "sets #type to :pitch" do
+      MTK::Pattern.DurationChoice([]).type.should == :duration
+    end
+  end
+
+end

@@ -93,29 +93,56 @@ end
 describe MTK::Pattern do
 
   describe "#Sequence" do
-    it "handles varargs" do
-      MTK::Pattern.Sequence(1,2,3).should == MTK::Pattern::Sequence.new([1,2,3])
+    it "creates a Sequence" do
+      MTK::Pattern.Sequence(1,2,3).should be_a MTK::Pattern::Sequence
     end
 
-    include MTK::Pattern
-    it "is includeable" do
-      Sequence(1,2,3).should == MTK::Pattern::Sequence.new([1,2,3])
+    it "sets #elements from the varargs" do
+      MTK::Pattern.Sequence(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "does not set a type" do
+      MTK::Pattern.Sequence(1,2,3).type.should be_nil
     end
   end
 
   describe "#PitchSequence" do
+    it "creates a Sequence" do
+      MTK::Pattern.PitchSequence(1,2,3).should be_a MTK::Pattern::Sequence
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.PitchSequence(1,2,3).elements.should == [1,2,3]
+    end
+
     it "sets #type to :pitch" do
       MTK::Pattern.PitchSequence([]).type.should == :pitch
     end
   end
 
   describe "#IntensitySequence" do
+    it "creates a Sequence" do
+      MTK::Pattern.IntensitySequence(1,2,3).should be_a MTK::Pattern::Sequence
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.IntensitySequence(1,2,3).elements.should == [1,2,3]
+    end
+
     it "sets #type to :pitch" do
       MTK::Pattern.IntensitySequence([]).type.should == :intensity
     end
   end
 
   describe "#DurationSequence" do
+    it "creates a Sequence" do
+      MTK::Pattern.DurationSequence(1,2,3).should be_a MTK::Pattern::Sequence
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.DurationSequence(1,2,3).elements.should == [1,2,3]
+    end
+
     it "sets #type to :pitch" do
       MTK::Pattern.DurationSequence([]).type.should == :duration
     end
