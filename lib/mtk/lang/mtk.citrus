@@ -1,14 +1,21 @@
 grammar MTK_Grammar
+  include MTK
+
+  rule pitch_sequence
+    ( pitch (space pitch)* ) {
+        Pattern.PitchSequence *captures[:pitch].map{|p| p.value }
+    }
+  end
 
   rule pitch
     ( pitch_class int ) {
-      MTK::Pitch[pitch_class.value, int.value]
+      Pitch[pitch_class.value, int.value]
     }
   end
 
   rule pitch_class
     ( [A-Ga-g] [#b]*2 ) {
-      MTK::PitchClass.from_s to_s
+      PitchClass.from_s to_s
     }
   end
 
