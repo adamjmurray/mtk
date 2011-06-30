@@ -37,6 +37,7 @@ require 'mtk/pattern/abstract_pattern'
 require 'mtk/pattern/sequence'
 require 'mtk/pattern/cycle'
 require 'mtk/pattern/choice'
+require 'mtk/pattern/lines'
 require 'mtk/pattern/palindrome'
 
 require 'mtk/sequencer/event_builder'
