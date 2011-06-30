@@ -9,8 +9,8 @@ module MTK
       
       def initialize(elements, options={})
         super
-        # unpack from the varargs array that may be passed in from the "convenience constructor methods" defined in MTK::Pattern                        
-        @function = @elements 
+        @function = @elements
+        # unpack from the varargs Array that may be passed in from the "convenience constructor methods" defined in MTK::Pattern                        \
         @function = @function.first if @function.is_a? Enumerable
       end
       

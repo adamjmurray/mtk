@@ -14,9 +14,22 @@ describe MTK::Pattern::Choice do
       100.times do
         element = choice.next
         choosen << element
-        elements.should include(element)
       end
-      choosen.to_a.sort.should == elements
+      choosen.to_a.should =~ elements
+    end
+
+    it "does a weighted random selection when a weights list is passed in via constructor options[:weights]" do
+      choice = CHOICE.new elements, :weights => [1,3,0] # only choose first 2 elements, and choose the second three times as often
+      choosen = Set.new
+      first_count, second_count = 0,0
+      100.times do
+        element = choice.next
+        choosen << element
+        first_count += 1 if element == elements[0]
+        second_count += 1 if element == elements[1]
+      end
+      choosen.to_a.should =~ elements[0..1]
+      (first_count + 10).should < second_count # this may occasional fail, but it seems unlikely
     end
 
     it "enumerates a choosen sub-sequence" do
