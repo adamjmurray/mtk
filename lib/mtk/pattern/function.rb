@@ -5,12 +5,15 @@ module MTK
     #
     class Function < AbstractPattern
 
+      attr_reader :function
+      
       def initialize(elements, options={})
-        # unpack from the varargs array that may be passed in from the "convenience constructor methods" defined in MTK::Pattern
-        elements = elements.first if elements.is_a? Enumerable
         super
+        # unpack from the varargs array that may be passed in from the "convenience constructor methods" defined in MTK::Pattern                        
+        @function = @elements 
+        @function = @function.first if @function.is_a? Enumerable
       end
-
+      
       # Reset the sequence to the beginning
       def rewind
         @prev = nil
@@ -29,11 +32,11 @@ module MTK
       # (see AbstractPattern#current)
       def current
         @function_call_count += 1
-        @prev = case elements.arity
-          when 0 then elements.call
-          when 1 then elements.call(@prev)
-          when 2 then elements.call(@prev, @function_call_count)
-          else elements.call(@prev, @function_call_count, @element_count)
+        @prev = case @function.arity
+          when 0 then @function.call
+          when 1 then @function.call(@prev)
+          when 2 then @function.call(@prev, @function_call_count)
+          else @function.call(@prev, @function_call_count, @element_count)
         end
       end
 

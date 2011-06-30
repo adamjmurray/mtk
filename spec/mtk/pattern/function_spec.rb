@@ -75,7 +75,7 @@ describe MTK::Pattern do
     end
 
     it "sets #elements from the varargs" do
-      MTK::Pattern.Function(:mock_lambda).elements.should == :mock_lambda
+      MTK::Pattern.Function(:mock_lambda).function.should == :mock_lambda
     end
 
     it "does not set a type" do
@@ -94,7 +94,7 @@ describe MTK::Pattern do
     end
 
     it "sets #elements from the varargs" do
-      MTK::Pattern.PitchFunction(:mock_lambda).elements.should == :mock_lambda
+      MTK::Pattern.PitchFunction(:mock_lambda).function.should == :mock_lambda
     end
 
     it "sets #type to :pitch" do
@@ -108,7 +108,7 @@ describe MTK::Pattern do
     end
 
     it "sets #elements from the varargs" do
-      MTK::Pattern.IntensityFunction(:mock_lambda).elements.should == :mock_lambda
+      MTK::Pattern.IntensityFunction(:mock_lambda).function.should == :mock_lambda
     end
 
     it "sets #type to :pitch" do
@@ -122,7 +122,7 @@ describe MTK::Pattern do
     end
 
     it "sets #elements from the varargs" do
-      MTK::Pattern.DurationFunction(:mock_lambda).elements.should == :mock_lambda
+      MTK::Pattern.DurationFunction(:mock_lambda).function.should == :mock_lambda
     end
 
     it "sets #type to :pitch" do
