@@ -1,10 +1,10 @@
 module MTK
 
-  # A collection of timed events.
+  # A collection of timed events. The core data structure used to interface with input and output.
   #
   # Maps sorted times to lists of events.
   #
-  # Enumerable as |time,event| pairs.
+  # Enumerable as [time,event_list] pairs.
   #
   class Timeline
 

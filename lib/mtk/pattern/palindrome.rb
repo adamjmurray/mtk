@@ -10,12 +10,13 @@ module MTK
         super
       end
 
-      ##############
-      protected
-
+      # true if the first/last element are repeated when the ends are reached, else false
       def repeat_ends?
         @repeat_ends ||= @options.fetch :repeat_ends, false
       end
+
+      ##############
+      protected
 
       # (see AbstractPattern#advance!)
       def advance!

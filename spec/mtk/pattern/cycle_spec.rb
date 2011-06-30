@@ -70,3 +70,64 @@ describe MTK::Pattern::Cycle do
   end
 
 end
+
+
+describe MTK::Pattern do
+
+  describe "#Cycle" do
+    it "creates a Cycle" do
+      MTK::Pattern.Cycle(1,2,3).should be_a MTK::Pattern::Cycle
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.Cycle(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "does not set a type" do
+      MTK::Pattern.Cycle(1,2,3).type.should be_nil
+    end
+  end
+
+  describe "#PitchCycle" do
+    it "creates a Cycle" do
+      MTK::Pattern.PitchCycle(1,2,3).should be_a MTK::Pattern::Cycle
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.PitchCycle(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "sets #type to :pitch" do
+      MTK::Pattern.PitchCycle([]).type.should == :pitch
+    end
+  end
+
+  describe "#IntensityCycle" do
+    it "creates a Cycle" do
+      MTK::Pattern.IntensityCycle(1,2,3).should be_a MTK::Pattern::Cycle
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.IntensityCycle(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "sets #type to :pitch" do
+      MTK::Pattern.IntensityCycle([]).type.should == :intensity
+    end
+  end
+
+  describe "#DurationCycle" do
+    it "creates a Cycle" do
+      MTK::Pattern.DurationCycle(1,2,3).should be_a MTK::Pattern::Cycle
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Pattern.DurationCycle(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "sets #type to :pitch" do
+      MTK::Pattern.DurationCycle([]).type.should == :duration
+    end
+  end
+
+end

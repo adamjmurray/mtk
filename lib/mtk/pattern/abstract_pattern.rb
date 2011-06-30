@@ -1,15 +1,20 @@
 module MTK
   module Pattern
 
-    # A pattern of elements that can be emitted one element at a time.
+    # A pattern of elements that can be emitted one element at a time via calls to {#next}.
+    #
+    # Patterns can be reset to the beginning via {#rewind}.
     #
     # @abstract subclass and override {#advance!} and {#current} to implement a Pattern
     #
     class AbstractPattern
+      include Collection
       include Enumerator
 
       # The elements in the pattern
       attr_reader :elements
+
+      attr_reader :options
 
       # The type of elements in the pattern, such as :pitch, :intensity, or :duration
       #
@@ -27,7 +32,7 @@ module MTK
       # @option options [String] :type the pattern {#type}
       # @option options [Fixnum] :max_elements the {#max_elements}
       def initialize(elements, options={})
-        elements = elements.to_a if elements.respond_to? :to_a
+        elements = elements.to_a if elements.respond_to? :to_a and not elements.is_a? Proc # Proc check prevents warnings in Ruby 1.8
         @elements = elements
         @options = options
         @type = options[:type]
@@ -85,13 +90,15 @@ module MTK
       ##################
       protected
 
-      # update internal state (index, etc) so that {#current} will refer to the next element
+      # Update internal state (index, etc) so that {#current} will refer to the next element.
+      # @note Override this method in a subclass to define a custom Pattern.
       # @raise StopIteration if there are no more elements
       def advance!
         raise StopIteration if @elements.nil? or @elements.empty?
       end
 
-      # the current element in the pattern, which will be returned by {#next} (after a call to {#advance!})
+      # The current element in the pattern, which will be returned by {#next} (after a call to {#advance!}).
+      # @note Override this method in a subclass to define a custom Pattern.
       def current
         @elements[0]
       end
@@ -106,6 +113,20 @@ module MTK
         element
       end
     end
+
+    # Build any "TypedPattern" (like PitchCycle or DurationPalindrome) or even just Pattern
+    def method_missing(method, *args, &block)
+      # Assuming we get something like PitchCycle, split into 'Pitch' and 'Cycle'
+      camel_case_words = method.to_s.gsub(/([a-z])([A-Z])/,'\1 \2').split(' ')
+      pattern = MTK::Pattern.const_get camel_case_words.last
+      if camel_case_words.length > 1
+        type = camel_case_words.first.downcase.to_sym
+        pattern.new(args, :type => type)
+      else
+        pattern.new(args)
+      end
+    end
+    module_function :method_missing
 
   end
 end

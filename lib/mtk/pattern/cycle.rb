@@ -4,7 +4,6 @@ module MTK
     # An endless enumerator that outputs an element one at a time from a list of elements,
     # looping back to the beginning when elements run out.
     class Cycle < AbstractPattern
-      include Collection
 
       # The number of cycles emitted (1 cycle == all elements emitted) since the last {#rewind}
       attr_reader :cycle_count

@@ -3,7 +3,6 @@ module MTK
 
     # A finite list of elements, which can be enumerated one at a time.
     class Sequence < AbstractPattern
-      include Collection
 
       # Reset the sequence to the beginning
       def rewind
@@ -16,8 +15,9 @@ module MTK
 
       # (see AbstractPattern#advance!)
       def advance!
+        super
         @index += 1
-        raise StopIteration if @elements.nil? or @index >= @elements.length
+        raise StopIteration if @index >= @elements.length
       end
 
       # (see AbstractPattern#current)
@@ -25,27 +25,6 @@ module MTK
         @elements[@index]
       end
     end
-
-    def Sequence(*anything)
-      Sequence.new(anything)
-    end
-    module_function :Sequence
-
-    def PitchSequence(*anything)
-      Sequence.new(anything, :type => :pitch)
-    end
-    module_function :PitchSequence
-
-    def IntensitySequence(*anything)
-      Sequence.new(anything, :type => :intensity)
-    end
-    module_function :IntensitySequence
-
-    def DurationSequence(*anything)
-      Sequence.new(anything, :type => :duration)
-    end
-    module_function :DurationSequence
-
 
   end
 end

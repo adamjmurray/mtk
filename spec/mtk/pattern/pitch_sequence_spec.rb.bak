@@ -5,17 +5,6 @@ describe MTK::Pattern::PitchSequence do
   let(:pitches) { [C4,D4,E4] }
   let(:pitch_sequence) { Pattern::PitchSequence.new(pitches) }
 
-  describe "#elements" do
-    it "is the array the sequence was constructed with" do
-      pitch_sequence.elements.should == pitches
-    end
-  end
-
-  describe "#pitches" do
-    it "behaves like #elements" do
-      pitch_sequence.pitches.should == pitch_sequence.elements
-    end
-  end
 
   describe ".from_pitch_classes" do
     it "creates a pitch sequence from a list of pitch classes and starting point, selecting the nearest pitch to each pitch class" do
@@ -35,28 +24,10 @@ describe MTK::Pattern::PitchSequence do
     end
   end
 
-  describe "#repeat" do
-    it "repeats the sequence the number of times given by the argument" do
-      pitch_sequence.repeat(3).should == [C4,D4,E4, C4,D4,E4, C4,D4,E4]
-    end
-
-    it "repeats the sequence twice if no argument is given" do
-      pitch_sequence.repeat.should == [C4,D4,E4, C4,D4,E4]
-    end
-
-    it "handles fractional repetitions" do
-      pitch_sequence.repeat(2.67).should == [C4,D4,E4, C4,D4,E4, C4,D4]
-    end
-  end
 
 end
 
 describe MTK::Pattern do
-
-  describe "#PitchSequence" do
-    it "takes multiple arguments instead of a single Array argument" do
-      Pattern.PitchSequence(C4,D4,E4).elements.should == [C4,D4,E4]
-    end
 
     it "converts the arguments to Pitches when possible" do
       Pattern.PitchSequence(:C4,:D4,:E4).elements.should == [C4,D4,E4]

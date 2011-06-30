@@ -4,7 +4,7 @@
 # The top level module for this library
 module MTK
 
-  # Classes that emit elements one at a time.
+  # Classes that emit elements one at a time. Used by {Sequencer}s to construct {Timeline}s.
   #
   # The core interface for Pattern classes is {Pattern::Enumerator#next} and {Pattern::Enumerator#rewind}.
   module Pattern
@@ -25,7 +25,11 @@ module MTK
 end
 
 require 'mtk/collection'
-require 'mtk/transforms'
+
+require 'mtk/transform/mappable'
+require 'mtk/transform/transposable'
+require 'mtk/transform/invertible'
+require 'mtk/transform/set_theory_operations'
 
 require 'mtk/pitch_class'
 require 'mtk/pitch_class_set'
@@ -41,6 +45,8 @@ require 'mtk/pattern/abstract_pattern'
 require 'mtk/pattern/sequence'
 require 'mtk/pattern/cycle'
 require 'mtk/pattern/choice'
+require 'mtk/pattern/function'
+require 'mtk/pattern/lines'
 require 'mtk/pattern/palindrome'
 
 require 'mtk/sequencer/event_builder'
@@ -52,6 +58,6 @@ require 'mtk/_constants/pitches'
 require 'mtk/_constants/intervals'
 require 'mtk/_constants/dynamics'
 
-require 'mtk/numeric_extensions'
+require 'mtk/_numeric_extensions'
 
 
