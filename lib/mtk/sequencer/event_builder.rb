@@ -5,10 +5,16 @@ module MTK
     # Takes a list of patterns and constructs a list of {Events}s from the next elements in each pattern.
     class EventBuilder
 
-      def self.next_events(patterns)
+      def initialize(options={})
+        @default_pitch = options.fetch :default_pitch, Pitches::C4
+        @default_intensity = options.fetch :default_intensity, Dynamics::mf
+        @default_duration = options.fetch :default_duration, 1
+      end
+
+      def next_events(patterns)
         pitches = []
-        intensity = Dynamics::mf
-        duration = 1
+        intensity = @default_intensity
+        duration = @default_duration
 
         for pattern in patterns
           element = pattern.next

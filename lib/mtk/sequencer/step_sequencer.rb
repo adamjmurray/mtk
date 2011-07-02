@@ -11,6 +11,7 @@ module MTK
         @patterns = patterns
         @step_size = options.fetch :step_size, 1
         @max_steps = options[:max_steps]
+        @event_builder = EventBuilder.new(options)
       end
 
       def to_timeline
@@ -21,7 +22,7 @@ module MTK
         loop do
           break if @max_steps and step_count >= @max_steps
 
-          events = EventBuilder.next_events @patterns
+          events = @event_builder.next_events @patterns
           timeline[beat] = events if events
 
           beat += @step_size
