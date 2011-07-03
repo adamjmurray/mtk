@@ -5,10 +5,15 @@ module MTK
     # Takes a list of patterns and constructs a list of {Events}s from the next elements in each pattern.
     class EventBuilder
 
+      DEFAULT_PITCH = MTK::Pitches::C4
+      DEFAULT_INTENSITY = MTK::Dynamics::f
+      DEFAULT_DURATION = 1
+
       def initialize(options={})
-        @default_pitch = options.fetch :default_pitch, Pitches::C4
-        @default_intensity = options.fetch :default_intensity, Dynamics::mf
-        @default_duration = options.fetch :default_duration, 1
+        @default_pitch = options.fetch :default_pitch, DEFAULT_PITCH
+        @default_intensity = options.fetch :default_intensity, DEFAULT_INTENSITY
+        @default_duration = options.fetch :default_duration, DEFAULT_DURATION
+        @max_interval = options.fetch :max_interval, 12
       end
 
       def next_events(patterns)
@@ -21,6 +26,13 @@ module MTK
           case element
             when Pitch then pitches << element
             when PitchSet then pitches += element.pitches
+            when PitchClass then
+              pitch = (@previous_pitch || @default_pitch)
+              pitch = pitch.nearest(element)
+              pitch -= 12 if pitch > @default_pitch+@max_interval # keep within max_distance of start (default is one octave)
+              pitch += 12 if pitch < @default_pitch-@max_interval
+              pitches << pitch
+            # TODO: handle PitchClassSet (just loop over logic for PitchClass?)
             else case pattern.type
               when :intensity then intensity = element
               when :duration then duration = element
@@ -28,7 +40,12 @@ module MTK
           end
         end
 
-        pitches.map{|pitch| Note(pitch,intensity,duration) } if not pitches.empty?
+        if not pitches.empty?
+          @previous_pitch = pitches.last
+          pitches.map{|pitch| Note(pitch,intensity,duration) }
+        else
+          nil
+        end
       end
 
     end
