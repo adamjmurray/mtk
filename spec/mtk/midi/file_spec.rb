@@ -1,3 +1,4 @@
+require 'spec_helper'
 require 'mtk/midi/file'
 require 'tempfile'
 
@@ -45,7 +46,7 @@ describe MTK::MIDI::File do
       MIDI_File(tempfile).write_timeline(
         Timeline.from_hash({
           0 => Note.new(C4, 0.7, 1),
-          1 => Note.new(G4, 0.8, 1),
+          1.0 => Note.new(G4, 0.8, 1),
           2 => Note.new(C5, 0.9, 1)
         })
       )
@@ -85,7 +86,7 @@ describe MTK::MIDI::File do
       MIDI_File(tempfile).write_timeline(
         Timeline.from_hash({
           0 => [Note(C4,0.5,1), Note(E4,0.5,1)],
-          2 => [Note(G4,1,2), Note(B4,1,2), Note(D5,1,2)]
+          2.0 => [Note(G4,1,2), Note(B4,1,2), Note(D5,1,2)]
         })
       )
 
@@ -172,7 +173,7 @@ describe MTK::MIDI::File do
       MIDI_File(tempfile).write_timelines([
         Timeline.from_hash({
           0 => Note.new(C4, 0.7, 1),
-          1 => Note.new(G4, 0.8, 1),
+          1.0 => Note.new(G4, 0.8, 1),
         }),
         Timeline.from_hash({
           1 => Note.new(C5, 0.9, 2),
