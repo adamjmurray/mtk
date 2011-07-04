@@ -53,6 +53,7 @@ require 'mtk/pattern/palindrome'
 
 require 'mtk/sequencer/event_builder'
 require 'mtk/sequencer/step_sequencer'
+require 'mtk/sequencer/rhythmic_sequencer'
 
 require 'mtk/_numeric_extensions'
 
