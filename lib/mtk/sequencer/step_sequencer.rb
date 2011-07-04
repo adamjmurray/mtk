@@ -5,7 +5,7 @@ module MTK
 
       attr_accessor :step_size
 
-      attr_reader :max_steps
+      attr_accessor :max_steps
 
       def initialize(patterns, options={})
         @patterns = patterns
