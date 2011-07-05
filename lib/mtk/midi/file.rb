@@ -154,7 +154,7 @@ module MTK
 
       def add_event track, event_hash
         for time, event in event_hash
-          event.time_from_start = time
+          event.time_from_start = time.round # MIDI file event times must be in whole number pulses (typically 480 or 960 per quarter note)
           track.events << event
           event
         end

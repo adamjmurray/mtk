@@ -52,6 +52,8 @@ MTK's optional features typically require gems. Currently the following gems are
 
 * midilib: required by MTK::MIDI::File for file I/O
 
+* jsound and gamelan: required by MTK::MIDI::JSoundInput/Output (also requires JRuby)
+
 Development requires all the gems for optional features, plus the following development tools:
 
 * rake

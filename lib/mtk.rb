@@ -40,6 +40,12 @@ require 'mtk/event'
 require 'mtk/note'
 require 'mtk/timeline'
 
+require 'mtk/_constants/pseudo_constants'
+require 'mtk/_constants/pitch_classes'
+require 'mtk/_constants/pitches'
+require 'mtk/_constants/intervals'
+require 'mtk/_constants/dynamics'
+
 require 'mtk/pattern/enumerator'
 require 'mtk/pattern/abstract_pattern'
 require 'mtk/pattern/sequence'
@@ -50,13 +56,9 @@ require 'mtk/pattern/lines'
 require 'mtk/pattern/palindrome'
 
 require 'mtk/sequencer/event_builder'
+require 'mtk/sequencer/abstract_sequencer'
 require 'mtk/sequencer/step_sequencer'
-
-require 'mtk/_constants/pseudo_constants'
-require 'mtk/_constants/pitch_classes'
-require 'mtk/_constants/pitches'
-require 'mtk/_constants/intervals'
-require 'mtk/_constants/dynamics'
+require 'mtk/sequencer/rhythmic_sequencer'
 
 require 'mtk/_numeric_extensions'
 

@@ -1,18 +1,18 @@
 # Generate a MIDI file of a random 12-tone row
+#
+# NOTE: this blindly overwrites any existing MTK-random_tone_row.mid file, unless an argument is provided
 
 require 'mtk'
-require 'mtk/patterns'
 require 'mtk/midi/file'
 include MTK
 
+file = ARGV[0] || 'MTK-random_tone_row.mid'
+
 row = PitchClassSet.random_row
-seq = Pattern::PitchSequence.from_pitch_classes row
+sequence = Pattern::PitchSequence *row.to_a
 
-timeline = Timeline.new
+sequencer = Sequencer::StepSequencer.new [sequence]
+timeline = sequencer.to_timeline
 
-seq.each_with_index do |pitch, beat_index|
-  timeline[beat_index] = Note.new(pitch, Dynamics.mf, 1)
-end
-
-MIDI_File('12_tone_row.mid').write timeline
+MIDI_File(file).write timeline
 

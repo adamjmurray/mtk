@@ -7,8 +7,12 @@ task :default => :spec
 CLEAN.include('html','doc') # clean and clobber do the same thing for now
 
 desc "Run RSpec tests with full output"
-RSpec::Core::RakeTask.new do |spec| 
+RSpec::Core::RakeTask.new do |spec|
   spec.rspec_opts = ["--color", "--format", "nested"]
+  if ARGV[1]
+    # only run specs with filenames starting with the command line argument
+    spec.pattern = "spec/**/#{ARGV[1]}*"
+  end
 end
 
 namespace :spec do
