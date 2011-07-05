@@ -5,7 +5,7 @@ module MTK
     #
     # Patterns can be reset to the beginning via {#rewind}.
     #
-    # @abstract subclass and override {#advance!} and {#current} to implement a Pattern
+    # @abstract Subclass and override {#advance!} and {#current} to implement a Pattern
     #
     class AbstractPattern
       include Collection

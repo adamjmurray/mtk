@@ -52,6 +52,7 @@ require 'mtk/pattern/lines'
 require 'mtk/pattern/palindrome'
 
 require 'mtk/sequencer/event_builder'
+require 'mtk/sequencer/abstract_sequencer'
 require 'mtk/sequencer/step_sequencer'
 require 'mtk/sequencer/rhythmic_sequencer'
 
