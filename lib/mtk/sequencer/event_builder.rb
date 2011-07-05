@@ -9,19 +9,20 @@ module MTK
       DEFAULT_INTENSITY = MTK::Dynamics::f
       DEFAULT_DURATION = 1
 
-      def initialize(options={})
+      def initialize(patterns, options={})
+        @patterns = patterns
         @default_pitch = options.fetch :default_pitch, DEFAULT_PITCH
         @default_intensity = options.fetch :default_intensity, DEFAULT_INTENSITY
         @default_duration = options.fetch :default_duration, DEFAULT_DURATION
         @max_interval = options.fetch :max_interval, 12
       end
 
-      def next_events(patterns)
+      def next_events
         pitches = []
         intensity = @default_intensity
         duration = @default_duration
 
-        for pattern in patterns
+        for pattern in @patterns
           element = pattern.next
           case element
             when Pitch         then pitches << element

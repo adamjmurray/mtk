@@ -25,7 +25,7 @@ module MTK
         @max_time = options[:max_time]
 
         event_builder_class = options.fetch :event_builder_class, EventBuilder
-        @event_builder = event_builder_class.new(options)
+        @event_builder = event_builder_class.new(patterns, options)
       end
 
 
@@ -39,7 +39,7 @@ module MTK
           step += 1
           break if @max_steps and step >= @max_steps
 
-          events = @event_builder.next_events @patterns
+          events = @event_builder.next_events
           timeline[time] = events if events
 
           time = advance time
