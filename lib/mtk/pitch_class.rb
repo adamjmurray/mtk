@@ -34,29 +34,27 @@ module MTK
 
     @flyweight = {}
 
-    # Return a new object, only constructing a new instance when not already in the flyweight cache
-    def self.[](name, value)
-      @flyweight[name] ||= new(name, value) if VALID_NAMES.include? name
-    end
-    private_class_method :[]
-
-    def self.from_s(s)
-      s = s.to_s
-      s = s[0..0].upcase + s[1..-1].downcase # normalize the name      
+    # Lookup a PitchClass by name.
+    # @param name [String, #to_s] one of the values in {VALID_NAMES}
+    def self.[](name)
+      name = name.to_s
+      name = name[0..0].upcase + name[1..-1].downcase # normalize the name
       VALID_NAMES_BY_VALUE.each_with_index do |names, value|
-        return self[s, value] if names.include? s
+        if names.include? name
+          return @flyweight[name] ||= new(name, value)
+        end
       end
       nil
     end
 
     class << self
-      alias from_name from_s # alias self.from_name to self.from_s
+      alias :from_s :[]
+      alias :from_name :[]
     end
 
     def self.from_i(value)
-      value = value.to_i % 12
-      name = NAMES[value]
-      self[name, value]
+      name = NAMES[value.to_i % 12]
+      self[name]
     end
 
     def == other

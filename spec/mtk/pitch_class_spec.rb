@@ -48,29 +48,37 @@ describe MTK::PitchClass do
   describe '.from_s' do
     context "the argument is a valid name" do
       it "returns a PitchClass" do
-        names.each { |name| PitchClass.from_s(name).should be_a PitchClass }
+        names.each { |name| PitchClass[name].should be_a PitchClass }
       end
       it "returns an object with that name" do
-        names.each { |name| PitchClass.from_s(name).name.should == name }
+        names.each { |name| PitchClass[name].name.should == name }
       end
       it "ignores case" do
         for name in names
-          PitchClass.from_s(name.upcase).name.should == name
-          PitchClass.from_s(name.downcase).name.should == name
+          PitchClass[name.upcase].name.should == name
+          PitchClass[name.downcase].name.should == name
         end
       end
     end
     context "the argument is not a valid name" do
       it "returns nil, if the name doesn't exist" do
-        PitchClass.from_s('z').should be_nil
+        PitchClass['z'].should be_nil
+      end
+    end
+  end
+
+  describe '.from_s' do
+    it "acts like .[]" do
+      for name in ['C', 'bbb', 'z']
+        PitchClass.from_s(name).should == PitchClass[name]
       end
     end
   end
 
   describe '.from_name' do
-    it "acts like from_s" do
+    it "acts like .[]" do
       for name in ['C', 'bbb', 'z']
-        PitchClass.from_name(name).should == PitchClass.from_s(name)
+        PitchClass.from_name(name).should == PitchClass[name]
       end
     end
   end
