@@ -15,7 +15,7 @@ grammar MTK_Grammar
 
   rule pitch_class
     ( [A-Ga-g] [#b]*2 ) {
-      PitchClass.from_s to_s
+      PitchClass[to_s]
     }
   end
 

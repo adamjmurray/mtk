@@ -14,7 +14,9 @@ describe MTK::Lang::Grammar do
     end
 
     it "should parse pitch classes" do
-      parse("Db", :pitch_class).should == Db
+      for pitch_class_name in PitchClass::VALID_NAMES
+        parse(pitch_class_name, :pitch_class).should == PitchClass[pitch_class_name]
+      end
     end
 
     it "should parse ints as numbers" do
