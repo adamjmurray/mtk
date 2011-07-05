@@ -19,6 +19,12 @@ grammar MTK_Grammar
     }
   end
 
+  rule interval
+    ( 'P' [1458] | [Mm] [2367] | 'TT' ) {
+      Intervals[to_s]
+    }
+  end
+
   rule intensity
     ( 'p'1*3 | 'mp' | 'mf' | 'f'1*3 ) {
       Dynamics[to_s]
