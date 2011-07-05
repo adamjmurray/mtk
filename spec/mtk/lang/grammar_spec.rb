@@ -13,10 +13,28 @@ describe MTK::Lang::Grammar do
       parse("C4 D4 E4", :pitch_sequence).should == Pattern.PitchSequence(C4, D4, E4)
     end
 
+    it "should parse pitches" do
+      for pitch_class_name in PitchClass::VALID_NAMES
+        for octave in -1..9
+          parse("#{pitch_class_name}#{octave}", :pitch).should == Pitch[PitchClass[pitch_class_name],octave]
+        end
+      end
+    end
+
     it "should parse pitch classes" do
       for pitch_class_name in PitchClass::VALID_NAMES
         parse(pitch_class_name, :pitch_class).should == PitchClass[pitch_class_name]
       end
+    end
+
+    it "should parse intensities" do
+      for intensity_name in ['ppp', 'pp', 'p', 'mp', 'mf', 'f', 'ff', 'fff']
+        parse(intensity_name, :intensity).should == Dynamics[intensity_name]
+      end
+    end
+
+    it "should parse intensities with + and - modifiers" do
+      pending # TODO: use + and - to provide finer granularity
     end
 
     it "should parse ints as numbers" do
