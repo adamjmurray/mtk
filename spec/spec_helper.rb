@@ -4,3 +4,4 @@ include Pitches
 include PitchClasses
 include Dynamics
 include Intervals
+include Rhythms
