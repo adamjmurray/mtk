@@ -45,6 +45,7 @@ require 'mtk/_constants/pitch_classes'
 require 'mtk/_constants/pitches'
 require 'mtk/_constants/intervals'
 require 'mtk/_constants/dynamics'
+require 'mtk/_constants/rhythms'
 
 require 'mtk/pattern/enumerator'
 require 'mtk/pattern/abstract_pattern'
