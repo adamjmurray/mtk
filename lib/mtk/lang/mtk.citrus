@@ -31,6 +31,12 @@ grammar MTK_Grammar
     }
   end
 
+  rule duration
+    ( [whqesrx] ) {
+      Rhythms[to_s]
+    }
+  end
+
   rule number
     float | int
   end

@@ -41,6 +41,12 @@ describe MTK::Lang::Grammar do
       end
     end
 
+    it "should parse durations" do
+      for duration in %w[ w h q e s r x ]
+        parse(duration, :duration).should == Rhythms[duration]
+      end
+    end
+
     it "should parse intensities with + and - modifiers" do
       pending # TODO: use + and - to provide finer granularity
     end
