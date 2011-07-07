@@ -37,13 +37,13 @@ describe MTK::Lang::Grammar do
     it "should parse intensities" do
       # TODO: provide these strings in a constant array in the Dynamics module
       for intensity_name in ['ppp', 'pp', 'p', 'mp', 'mf', 'f', 'ff', 'fff']
-        parse(intensity_name, :intensity).should == Dynamics[intensity_name]
+        parse(intensity_name, :intensity).should == Intensities[intensity_name]
       end
     end
 
     it "should parse durations" do
       for duration in %w[ w h q e s r x ]
-        parse(duration, :duration).should == Rhythms[duration]
+        parse(duration, :duration).should == Durations[duration]
       end
     end
 
