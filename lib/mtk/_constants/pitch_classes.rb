@@ -4,16 +4,31 @@ module MTK
 
   module PitchClasses
 
-    # An array of all pitch class constants defined in this module
+    # The values of all "psuedo constants" defined in this module
     PITCH_CLASSES = []
 
-    for name in PitchClass::NAMES
-      pc = PitchClass.from_name name
+    # The names of all "psuedo constants" defined in this module
+    PITCH_CLASS_NAMES = PitchClass::NAMES
+
+    for name in PITCH_CLASS_NAMES
+      pc = PitchClass[name]
       PITCH_CLASSES << pc
       const_set name, pc
     end
 
     PITCH_CLASSES.freeze
+
+    # Lookup the value of an pitch class constant by name.
+    # @example lookup value of 'C'
+    #         MTK::PitchClasses['C']
+    # @see PitchClass.[]
+    def self.[](name)
+      begin
+        const_get name
+      rescue
+        nil
+      end
+    end
 
   end
 

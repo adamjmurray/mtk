@@ -67,7 +67,16 @@ describe MTK::Pitch do
     it("converts 'C4' to middle c") { Pitch.from_s('C4').should == middle_c }
     it("converts 'c4' to middle c") { Pitch.from_s('c4').should == middle_c }
     it("converts 'B#4' to middle c") { Pitch.from_s('B#4').should == middle_c }
+    it("converts 'C-1' to a low c, 5 octaves below middle C") { Pitch.from_s('C-1').should == middle_c - 60 }
     it("converts 'C4+50.0cents' to middle C and 50 cents") { Pitch.from_s('C4+50.0cents').should == middle_c_and_50_cents }
+  end
+
+  describe '.from_name' do
+    it "acts like .from_s" do
+      for name in ['C4', 'c4', 'B#4', 'C-1', 'C4+50.0cents']
+        Pitch.from_name(name).should == Pitch.from_s(name)
+      end
+    end
   end
 
   describe ".from_hash" do
