@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe MTK::Rhythms do
+describe MTK::Durations do
 
   describe 'w' do
     it 'is 4 beats' do
       w.should == 4
     end
     it 'is available via a module property and via mixin' do
-      Rhythms::w.should == w
+      Durations::w.should == w
     end
   end
 
@@ -16,7 +16,7 @@ describe MTK::Rhythms do
       h.should == 2
     end
     it 'is available via a module property and via mixin' do
-      Rhythms::h.should == h
+      Durations::h.should == h
     end
   end
 
@@ -25,7 +25,7 @@ describe MTK::Rhythms do
       q.round.should == 1
     end
     it 'is available via a module property and via mixin' do
-      Rhythms::q.should == q
+      Durations::q.should == q
     end
   end
 
@@ -34,7 +34,7 @@ describe MTK::Rhythms do
       e.should == 1.0/2
     end
     it 'is available via a module property and via mixin' do
-      Rhythms::e.should == e
+      Durations::e.should == e
     end
   end
 
@@ -43,7 +43,7 @@ describe MTK::Rhythms do
       s.should == 1.0/4
     end
     it 'is available via a module property and via mixin' do
-      Rhythms::s.should == s
+      Durations::s.should == s
     end
   end
 
@@ -52,7 +52,7 @@ describe MTK::Rhythms do
       r.should == 1.0/8
     end
     it 'is available via a module property and via mixin' do
-      Rhythms::r.should == r
+      Durations::r.should == r
     end
   end
 
@@ -61,29 +61,35 @@ describe MTK::Rhythms do
       x.should == 1.0/16
     end
     it 'is available via a module property and via mixin' do
-      Rhythms::x.should == x
+      Durations::x.should == x
+    end
+  end
+
+  describe "DURATIONS" do
+    it "contains all Durations pseudo-constants" do
+      Durations::DURATIONS.should =~ [w, h, q, e, s, r, x]
+    end
+
+    it "is immutable" do
+      lambda{ Durations::DURATIONS << :something }.should raise_error
+    end
+  end
+
+  describe "DURATION_NAMES" do
+    it "contains all Durations pseudo-constants names as strings" do
+      Durations::DURATION_NAMES.should =~ ['w', 'h', 'q', 'e', 's', 'r', 'x']
+    end
+
+    it "is immutable" do
+      lambda{ Durations::DURATION_NAMES << :something }.should raise_error
     end
   end
 
   describe ".[]" do
     it "looks up the constant by name" do
-      Rhythms['w'].should == w
-      Rhythms['h'].should == h
-      Rhythms['q'].should == q
-      Rhythms['e'].should == e
-      Rhythms['s'].should == s
-      Rhythms['r'].should == r
-      Rhythms['x'].should == x
-    end
-  end
-
-  describe "RHYTHMS" do
-    it "contains all Rhythms pseudo-constants" do
-      Rhythms::RHYTHMS.should =~ [w, h, q, e, s, r, x]
-    end
-
-    it "is immutable" do
-      lambda{ Rhythms::RHYTHMS << :something }.should raise_error
+      for duration_name in Durations::DURATION_NAMES
+        Durations[duration_name].should == Durations.send(duration_name)
+      end
     end
   end
 

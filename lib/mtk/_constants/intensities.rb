@@ -1,6 +1,6 @@
 module MTK
 
-  # Defines intensity constants defined using standard dynamic symbols.
+  # Defines intensity constants using standard dynamic symbols.
   #
   # These can be thought of like constants, but in order to distinguish 'f' (forte) from the {PitchClass} 'F'
   # it was necessary to use lower-case names and therefore define them as "pseudo constant" methods.
