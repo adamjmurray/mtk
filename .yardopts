@@ -3,3 +3,5 @@
 --charset utf-8
 --protected
 lib/**/*.rb
+- lib/**/*.citrus
+
