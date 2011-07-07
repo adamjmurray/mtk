@@ -58,6 +58,22 @@ describe MTK::Sequencer::AbstractSequencer do
         7 => [Note(C5,1.0,2)]
       }
     end
+
+    it "produces consistent results by reseting the patterns each time" do
+      pitches = Pattern.PitchSequence(C4, D4, E4)
+      intensities = Pattern.IntensityCycle(1)
+      durations = Pattern.DurationCycle(1, 2)
+      sequencer = ABSTRACT_SEQUENCER.new [pitches, intensities, durations]
+      sequencer.to_timeline.should == sequencer.to_timeline
+    end
+  end
+
+  describe "#next" do
+    pending
+  end
+
+  describe "#rewind" do
+    pending
   end
 
   describe "#max_steps" do

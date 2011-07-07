@@ -15,7 +15,7 @@ describe MTK::Sequencer::StepSequencer do
     end
 
     it "sets @step_size from the options hash" do
-      step_sequencer = STEP_SEQUENCER.new nil, :step_size => 0.25
+      step_sequencer = STEP_SEQUENCER.new [], :step_size => 0.25
       step_sequencer.step_size.should == 0.25
     end
 
@@ -24,7 +24,7 @@ describe MTK::Sequencer::StepSequencer do
     end
 
     it "sets @max_steps from the options hash" do
-      step_sequencer = STEP_SEQUENCER.new nil, :max_steps => 4
+      step_sequencer = STEP_SEQUENCER.new [], :max_steps => 4
       step_sequencer.max_steps.should == 4
     end
   end

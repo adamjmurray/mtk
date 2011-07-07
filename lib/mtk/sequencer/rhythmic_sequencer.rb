@@ -18,9 +18,9 @@ module MTK
      ########################
       protected
 
-      # (see AbstractSequencer#advance)
-      def advance time
-        time + @rhythm.next
+      # (see AbstractSequencer#advance!)
+      def advance!
+        @time += @rhythm.next
       end
 
     end

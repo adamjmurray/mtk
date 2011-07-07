@@ -15,9 +15,9 @@ module MTK
      ########################
       protected
 
-      # (see AbstractSequencer#advance)
-      def advance time
-        time + @step_size
+      # (see AbstractSequencer#advance!)
+      def advance!
+        @time += @step_size
       end
 
     end
