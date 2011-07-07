@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe MTK::Sequencer::EventBuilder do
+describe MTK::Helper::EventBuilder do
 
-  EVENT_BUILDER = MTK::Sequencer::EventBuilder
+  EVENT_BUILDER = MTK::Helper::EventBuilder
 
   def notes(*pitches)
     pitches.map{|pitch| Note(pitch, EVENT_BUILDER::DEFAULT_INTENSITY, EVENT_BUILDER::DEFAULT_DURATION) }

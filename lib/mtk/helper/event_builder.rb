@@ -1,5 +1,5 @@
 module MTK
-  module Sequencer
+  module Helper
 
     # A helper class for {Sequencer}s.
     # Takes a list of patterns and constructs a list of {Event}s from the next elements in each pattern.

@@ -24,7 +24,7 @@ module MTK
         @max_steps = options[:max_steps]
         @max_time = options[:max_time]
 
-        event_builder_class = options.fetch :event_builder_class, EventBuilder
+        event_builder_class = options.fetch :event_builder_class, Helper::EventBuilder
         @event_builder = event_builder_class.new(patterns, options)
       end
 
