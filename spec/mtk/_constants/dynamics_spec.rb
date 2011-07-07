@@ -77,19 +77,6 @@ describe MTK::Dynamics do
     end
   end
 
-  describe ".[]" do
-    it "looks up the constant by name" do
-      Dynamics['ppp'].should == ppp
-      Dynamics['pp'].should == pp
-      Dynamics['p'].should == p
-      Dynamics['mp'].should == mp
-      Dynamics['mf'].should == mf
-      Dynamics['f'].should == f
-      Dynamics['ff'].should == ff
-      Dynamics['fff'].should == fff
-    end
-  end
-
   describe "DYNAMICS" do
     it "contains all dynamics pseudo-constants" do
       Dynamics::DYNAMICS.should =~ [ppp, pp, p, mp, mf, f, ff, fff]
@@ -97,6 +84,40 @@ describe MTK::Dynamics do
 
     it "is immutable" do
       lambda{ Dynamics::DYNAMICS << :something }.should raise_error
+    end
+  end
+
+  describe "DYNAMIC_NAMES" do
+    it "contains all dynamic pseudo-constants names as strings" do
+      Dynamics::DYNAMIC_NAMES.should =~ ['ppp', 'pp', 'p', 'mp', 'mf', 'f', 'ff', 'fff']
+    end
+
+    it "is immutable" do
+      lambda{ Dynamics::DYNAMIC_NAMES << :something }.should raise_error
+    end
+  end
+
+  describe ".[]" do
+    it "looks up the constant by name" do
+      for name in DYNAMIC_NAMES
+        Dynamics[name].should == Dynamics.send(name)
+      end
+    end
+
+    it "adds 1.0/24 when the name ends with '+', except for 'fff+' which is 1.0 like 'fff'" do
+      for name in DYNAMIC_NAMES
+        if name == 'fff'
+          Dynamics["#{name}+"].should == 1.0
+        else
+          Dynamics["#{name}+"].should == Dynamics.send(name)+1.0/24
+        end
+      end
+    end
+
+    it "subtracts 1.0/24 when the name ends with '-'" do
+      for name in DYNAMIC_NAMES
+        Dynamics["#{name}-"].should == Dynamics.send(name)-1.0/24
+      end
     end
   end
 
