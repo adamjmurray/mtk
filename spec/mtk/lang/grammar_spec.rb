@@ -28,27 +28,41 @@ describe MTK::Lang::Grammar do
     end
 
     it "should parse intervals" do
-      # TODO: provide these strings in a constant array in the Intervals module
-      for interval_name in ['P1', 'm2', 'M2', 'm3', 'M3', 'P4', 'TT', 'P5', 'm6', 'M6', 'm7', 'M7', 'P8']
+      for interval_name in Intervals::INTERVAL_NAMES
         parse(interval_name, :interval).should == Intervals[interval_name]
       end
     end
 
     it "should parse intensities" do
-      # TODO: provide these strings in a constant array in the Dynamics module
-      for intensity_name in ['ppp', 'pp', 'p', 'mp', 'mf', 'f', 'ff', 'fff']
+      for intensity_name in Intensities::INTENSITY_NAMES
         parse(intensity_name, :intensity).should == Intensities[intensity_name]
       end
     end
 
+    it "should parse intensities with + and - modifiers" do
+      for intensity_name in Intensities::INTENSITY_NAMES
+        name = "#{intensity_name}+"
+        parse(name, :intensity).should == Intensities[name]
+        name = "#{intensity_name}-"
+        parse(name, :intensity).should == Intensities[name]
+      end
+    end
+
     it "should parse durations" do
-      for duration in %w[ w h q e s r x ]
+      for duration in Durations::DURATION_NAMES
         parse(duration, :duration).should == Durations[duration]
       end
     end
 
-    it "should parse intensities with + and - modifiers" do
-      pending # TODO: use + and - to provide finer granularity
+    it "should parse durations with . and t modifiers" do
+      for duration in Durations::DURATION_NAMES
+        name = "#{duration}."
+        parse(name, :duration).should == Durations[name]
+        name = "#{duration}t"
+        parse(name, :duration).should == Durations[name]
+        name = "#{duration}..t.t"
+        parse(name, :duration).should == Durations[name]
+      end
     end
 
     it "should parse ints as numbers" do

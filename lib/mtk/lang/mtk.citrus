@@ -26,13 +26,13 @@ grammar MTK_Grammar
   end
 
   rule intensity
-    ( 'p'1*3 | 'mp' | 'mf' | 'f'1*3 ) {
+    ( ('p'1*3 | 'mp' | 'mf' | 'f'1*3) ('+'|'-')? ) {
       Intensities[to_s]
     }
   end
 
   rule duration
-    ( [whqesrx] ) {
+    ( [whqesrx] ('.'|'t')* ) {
       Durations[to_s]
     }
   end
