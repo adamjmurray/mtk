@@ -87,8 +87,29 @@ describe MTK::Durations do
 
   describe ".[]" do
     it "looks up the constant by name" do
-      for duration_name in Durations::DURATION_NAMES
-        Durations[duration_name].should == Durations.send(duration_name)
+      for duration in Durations::DURATION_NAMES
+        Durations[duration].should == Durations.send(duration)
+      end
+    end
+
+    it "supports a '.' suffix, which multiples the value by 1.5" do
+      for duration in Durations::DURATION_NAMES
+        Durations["#{duration}."].should == Durations.send(duration) * 1.5
+      end
+    end
+
+    it "supports a 't' suffix, which multiples the value by 2/3" do
+      for duration in Durations::DURATION_NAMES
+        Durations["#{duration}t"].should == Durations.send(duration) * 2/3.0
+      end
+    end
+
+    it "supports '.' and 't' suffixes in any combination" do
+      for duration in Durations::DURATION_NAMES
+        Durations["#{duration}.t"].should == Durations.send(duration) * 1.5 * 2/3.0
+        Durations["#{duration}t."].should == Durations.send(duration) * 1.5 * 2/3.0
+        Durations["#{duration}.."].should == Durations.send(duration) * 1.5 * 1.5
+        Durations["#{duration}..t.t."].should == Durations.send(duration) * 1.5**4 * (2/3.0)**2
       end
     end
   end

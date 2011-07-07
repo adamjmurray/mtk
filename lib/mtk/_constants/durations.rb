@@ -1,3 +1,5 @@
+require 'rational'
+
 module MTK
 
   # Defines duration constants using abbreviations for standard rhythm values ('w' for whole note, 'h' for half note, etc).
@@ -30,16 +32,16 @@ module MTK
     define_constant 'q', 1
 
     # eight note
-    define_constant 'e', 0.5
+    define_constant 'e', Rational(1,2)
 
     # sixteenth note
-    define_constant 's', 0.25
+    define_constant 's', Rational(1,4)
 
     # thirty-second note
-    define_constant 'r', 0.125
+    define_constant 'r', Rational(1,8)
 
     # sixty-fourth note
-    define_constant 'x', 0.0625
+    define_constant 'x', Rational(1,16)
 
     # The values of all "psuedo constants" defined in this module
     DURATIONS = [w, h, q, e, s, r, x].freeze
@@ -48,13 +50,27 @@ module MTK
     DURATION_NAMES = %w[w h q e s r x].freeze
 
     # Lookup the value of an duration constant by name.
-    # @example lookup value of 'e' (eight note), which is 0.5
-    #         MTK::Durations['e']
+    # This method supports appending any combination of '.' and 't' for more fine-grained values.
+    # each '.' multiplies by 3/2, and each 't' multiplies by 2/3.
+    # @example lookup value of 'e.' (eight note), which is 0.75 (0.5 * 1.5)
+    #         MTK::Durations['e.']
     def self.[](name)
-      send name
-    rescue
       begin
-        const_get name
+        modifier = nil
+        if name =~ /(\w)((.|t)*)/
+          name = $1
+          modifier = $2
+        end
+
+        value = send name
+        modifier.each_char do |mod|
+          case mod
+            when '.' then value *= Rational(3,2)
+            when 't' then value *= Rational(2,3)
+          end
+        end
+        value
+
       rescue
         nil
       end
