@@ -3,18 +3,18 @@ require 'spec_helper'
 describe MTK::PitchClasses do
   let(:cases) {
     [
-        [PitchClasses::C,  'C',   0],
-        [PitchClasses::Db, 'Db',  1],
-        [PitchClasses::D,  'D',   2],
-        [PitchClasses::Eb, 'Eb',  3],
-        [PitchClasses::E,  'E',   4],
-        [PitchClasses::F,  'F',   5],
-        [PitchClasses::Gb, 'Gb',  6],
-        [PitchClasses::G,  'G',   7],
-        [PitchClasses::Ab, 'Ab',  8],
-        [PitchClasses::A,  'A',   9],
-        [PitchClasses::Bb, 'Bb', 10],
-        [PitchClasses::B,  'B',  11],
+        [PitchClass['C'],  'C',   0],
+        [PitchClass['Db'], 'Db',  1],
+        [PitchClass['D'],  'D',   2],
+        [PitchClass['Eb'], 'Eb',  3],
+        [PitchClass['E'],  'E',   4],
+        [PitchClass['F'],  'F',   5],
+        [PitchClass['Gb'], 'Gb',  6],
+        [PitchClass['G'],  'G',   7],
+        [PitchClass['Ab'], 'Ab',  8],
+        [PitchClass['A'],  'A',   9],
+        [PitchClass['Bb'], 'Bb', 10],
+        [PitchClass['B'],  'B',  11],
     ]
   }
 
@@ -34,6 +34,25 @@ describe MTK::PitchClasses do
 
     it "is immutable" do
       lambda{ PitchClasses::PITCH_CLASSES << :something }.should raise_error
+    end
+  end
+
+  describe "PITCH_CLASS_NAMES" do
+    it "contains the names of the 12 pitch class constants" do
+      PitchClasses::PITCH_CLASS_NAMES.length.should == 12
+      PitchClasses::PITCH_CLASS_NAMES.should == cases.map{ |_,name,__| name }
+    end
+
+    it "is immutable" do
+      lambda{ PitchClasses::PITCH_CLASS_NAMES << :something }.should raise_error
+    end
+  end
+
+  describe ".[]" do
+    it "acts like PitchClas.[]" do
+      for name in PitchClasses::PITCH_CLASS_NAMES
+        PitchClasses[name].should == PitchClass[name]
+      end
     end
   end
 end

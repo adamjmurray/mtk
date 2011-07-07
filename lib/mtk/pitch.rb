@@ -19,7 +19,13 @@ module MTK
       pitch_class = MTK.PitchClass(pitch_class)
       @flyweight[[pitch_class,octave]] ||= new(pitch_class, octave)
     end
-    
+
+    # Lookup a pitch by name, which consists of any {PitchClass::VALID_NAMES} and an octave number.
+    # The name may also be optionally suffixed by +/-###cents (where ### is any number).
+    # @example get the Pitch for middle C :
+    #         Pitch.from_s('C4')
+    # @example get the Pitch for middle C + 50 cents:
+    #         Pitch.from_s('C4+50cents')
     def self.from_s( s )
       s = s.to_s
       s = s[0..0].upcase + s[1..-1].downcase # normalize name
@@ -35,6 +41,10 @@ module MTK
           end
         end
       end
+    end
+
+    class << self
+      alias :from_name :from_s
     end
     
     # Convert a Numeric semitones value into a Pitch

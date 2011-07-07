@@ -119,6 +119,27 @@ describe MTK::Intervals do
     end
   end
 
+
+  describe "INTERVALS" do
+    it "contains all intervals constants/pseudo-constants" do
+      Intervals::INTERVALS.should =~ [P1, m2, M2, m3, M3, P4, TT, P5, m6, M6, m7, M7, P8]
+    end
+
+    it "is immutable" do
+      lambda{ Intervals::INTERVALS << :something }.should raise_error
+    end
+  end
+
+  describe "INTERVAL_NAMES" do
+    it "contains all intervals constants/pseudo-constant names" do
+      Intervals::INTERVAL_NAMES.should =~ ['P1', 'm2', 'M2', 'm3', 'M3', 'P4', 'TT', 'P5', 'm6', 'M6', 'm7', 'M7', 'P8']
+    end
+
+    it "is immutable" do
+      lambda{ Intervals::INTERVAL_NAMES << :something }.should raise_error
+    end
+  end
+
   describe ".[]" do
     it "looks up the constant by name" do
       Intervals['P1'].should == P1
@@ -134,16 +155,6 @@ describe MTK::Intervals do
       Intervals['m7'].should == m7
       Intervals['M7'].should == M7
       Intervals['P8'].should == P8
-    end
-  end
-
-  describe "INTERVALS" do
-    it "contains all intervals constants/pseudo-constants" do
-      Intervals::INTERVALS.should =~ [P1, m2, M2, m3, M3, P4, TT, P5, m6, M6, m7, M7, P8]
-    end
-
-    it "is immutable" do
-      lambda{ Intervals::INTERVALS << :something }.should raise_error
     end
   end
 

@@ -1,13 +1,13 @@
 require 'spec_helper'
   
-describe MTK::Dynamics do
+describe MTK::Intensities do
 
   describe 'ppp' do
     it 'is equivalent to MIDI velocity 16' do
       (ppp * 127).round.should == 16
     end
     it 'is available via a module property and via mixin' do
-      Dynamics::ppp.should == ppp
+      Intensities::ppp.should == ppp
     end
   end
 
@@ -16,7 +16,7 @@ describe MTK::Dynamics do
       (pp * 127).round.should == 32
     end
     it 'is available via a module property and via mixin' do
-      Dynamics::pp.should == pp
+      Intensities::pp.should == pp
     end    
   end
 
@@ -25,7 +25,7 @@ describe MTK::Dynamics do
       (p * 127).round.should == 48
     end
     it 'is available via a module property and via mixin' do
-      Dynamics::p.should == p
+      Intensities::p.should == p
     end    
   end
 
@@ -34,7 +34,7 @@ describe MTK::Dynamics do
       (mp * 127).round.should == 64
     end
     it 'is available via a module property and via mixin' do
-      Dynamics::mp.should == mp
+      Intensities::mp.should == mp
     end    
   end
 
@@ -43,7 +43,7 @@ describe MTK::Dynamics do
       (mf * 127).round.should == 79
     end
     it 'is available via a module property and via mixin' do
-      Dynamics::mf.should == mf
+      Intensities::mf.should == mf
     end    
   end
 
@@ -52,7 +52,7 @@ describe MTK::Dynamics do
       (f * 127).round.should == 95
     end
     it 'is available via a module property and via mixin' do
-      Dynamics::f.should == f
+      Intensities::f.should == f
     end
     it "does not overwrite the PitchClass constant 'F'" do
       F.should be_a PitchClass
@@ -64,7 +64,7 @@ describe MTK::Dynamics do
       (ff * 127).round.should == 111
     end
     it 'is available via a module property and via mixin' do
-      Dynamics::ff.should == ff
+      Intensities::ff.should == ff
     end
   end
 
@@ -73,30 +73,51 @@ describe MTK::Dynamics do
       (fff * 127).round.should == 127
     end
     it 'is available via a module property and via mixin' do
-      Dynamics::fff.should == fff
+      Intensities::fff.should == fff
+    end
+  end
+
+  describe "INTENSITIES" do
+    it "contains all Intensities pseudo-constants" do
+      Intensities::INTENSITIES.should =~ [ppp, pp, p, mp, mf, f, ff, fff]
+    end
+
+    it "is immutable" do
+      lambda{ Intensities::INTENSITIES << :something }.should raise_error
+    end
+  end
+
+  describe "INTENSITY_NAMES" do
+    it "contains all Intensities pseudo-constants names as strings" do
+      Intensities::INTENSITY_NAMES.should =~ ['ppp', 'pp', 'p', 'mp', 'mf', 'f', 'ff', 'fff']
+    end
+
+    it "is immutable" do
+      lambda{ Intensities::INTENSITY_NAMES << :something }.should raise_error
     end
   end
 
   describe ".[]" do
     it "looks up the constant by name" do
-      Dynamics['ppp'].should == ppp
-      Dynamics['pp'].should == pp
-      Dynamics['p'].should == p
-      Dynamics['mp'].should == mp
-      Dynamics['mf'].should == mf
-      Dynamics['f'].should == f
-      Dynamics['ff'].should == ff
-      Dynamics['fff'].should == fff
-    end
-  end
-
-  describe "DYNAMICS" do
-    it "contains all dynamics pseudo-constants" do
-      Dynamics::DYNAMICS.should =~ [ppp, pp, p, mp, mf, f, ff, fff]
+      for name in INTENSITY_NAMES
+        Intensities[name].should == Intensities.send(name)
+      end
     end
 
-    it "is immutable" do
-      lambda{ Dynamics::DYNAMICS << :something }.should raise_error
+    it "adds 1.0/24 when the name ends with '+', except for 'fff+' which is 1.0 like 'fff'" do
+      for name in INTENSITY_NAMES
+        if name == 'fff'
+          Intensities["#{name}+"].should == 1.0
+        else
+          Intensities["#{name}+"].should == Intensities.send(name)+1.0/24
+        end
+      end
+    end
+
+    it "subtracts 1.0/24 when the name ends with '-'" do
+      for name in INTENSITY_NAMES
+        Intensities["#{name}-"].should == Intensities.send(name)-1.0/24
+      end
     end
   end
 

@@ -1,7 +1,8 @@
 require 'mtk'
 include MTK
-include Pitches
 include PitchClasses
-include Dynamics
+include Pitches
+include Intensities
+include Durations
 include Intervals
-include Rhythms
+
