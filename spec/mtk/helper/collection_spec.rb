@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-describe MTK::Collection do
+describe MTK::Helper::Collection do
 
   class MockCollection
-    include MTK::Collection
+    include MTK::Helper::Collection
     attr_reader :elements
     def initialize(elements); @elements = elements end
     def self.from_a(elements); new(elements) end
   end
 
   class MockCollectionWithOptions
-    include MTK::Collection
+    include MTK::Helper::Collection
     attr_reader :elements, :options
     def initialize(elements, options={})
       @elements = elements

@@ -4,6 +4,10 @@
 # The top level module for this library
 module MTK
 
+  # Internal helper classes used to avoid duplicating code in this library.
+  module Helper
+  end
+
   # Classes that emit elements one at a time. Used by {Sequencer}s to construct {Timeline}s.
   #
   # The core interface for Pattern classes is {Pattern::Enumerator#next} and {Pattern::Enumerator#rewind}.
@@ -24,7 +28,8 @@ module MTK
 
 end
 
-require 'mtk/collection'
+require 'mtk/helper/collection'
+require 'mtk/helper/pseudo_constants'
 
 require 'mtk/transform/mappable'
 require 'mtk/transform/transposable'
@@ -40,7 +45,6 @@ require 'mtk/event'
 require 'mtk/note'
 require 'mtk/timeline'
 
-require 'mtk/_constants/pseudo_constants'
 require 'mtk/_constants/pitch_classes'
 require 'mtk/_constants/pitches'
 require 'mtk/_constants/intervals'

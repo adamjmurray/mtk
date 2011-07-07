@@ -8,7 +8,7 @@ describe MTK::Pattern::Sequence do
   let(:sequence) { SEQUENCE.new(elements) }
 
   it "is a MTK::Collection" do
-    sequence.should be_a MTK::Collection
+    sequence.should be_a MTK::Helper::Collection
     # and now we won't test any other collection features here... see collection_spec
   end
 

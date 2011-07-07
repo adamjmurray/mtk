@@ -12,7 +12,7 @@ module MTK
   # it was necessary to use lower-case names for some of the values and therefore define them as "pseudo constant" methods.
   # The methods are available either through the module (MTK::Intervals::m2) or via mixin (include MTK::Intervals; m2) 
   module Intervals
-    extend PseudoConstants
+    extend Helper::PseudoConstants
 
     # NOTE: the yard doc macros here only fill in [$2] with the actual value when generating docs under Ruby 1.9+
 

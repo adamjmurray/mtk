@@ -1,8 +1,9 @@
-module MTK
-  
+module MTK::Helper
+
+
   # Extension for modules that want to define pseudo-constants (constant-like values with lower-case names)
   module PseudoConstants
-  
+
     # Define a module method and module function (available both through the module namespace and as a mixin method),
     # to provide a constant with a lower-case name.
     #
@@ -21,5 +22,5 @@ module MTK
     end
 
   end
-  
+
 end

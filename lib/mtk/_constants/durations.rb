@@ -15,7 +15,7 @@ module MTK
   #
   # @see Note
   module Durations
-    extend MTK::PseudoConstants
+    extend Helper::PseudoConstants
 
     # NOTE: the yard doc macros here only fill in [$2] with the actual value when generating docs under Ruby 1.9+
 

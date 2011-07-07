@@ -2,7 +2,7 @@ module MTK
   module Sequencer
 
     # A helper class for {Sequencer}s.
-    # Takes a list of patterns and constructs a list of {Events}s from the next elements in each pattern.
+    # Takes a list of patterns and constructs a list of {Event}s from the next elements in each pattern.
     class EventBuilder
 
       DEFAULT_PITCH = MTK::Pitches::C4

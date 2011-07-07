@@ -1,6 +1,6 @@
 module MTK::Transform
 
-  # {Collection} that supports set theory operations
+  # {Helper::Collection} that supports set theory operations
   module SetTheoryOperations
 
     # the collection of elements present in both sets

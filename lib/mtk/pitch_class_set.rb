@@ -4,7 +4,7 @@ module MTK
   #
   class PitchClassSet
 
-    include Collection
+    include Helper::Collection
     include Transform::Mappable
     include Transform::Transposable
     include Transform::Invertible

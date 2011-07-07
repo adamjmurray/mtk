@@ -1,4 +1,4 @@
-module MTK
+module MTK::Helper
 
   # Given a method #elements, which returns an Array of elements in the collection,
   # including this module will make the class Enumerable and provide various methods you'd expect from an Array.
