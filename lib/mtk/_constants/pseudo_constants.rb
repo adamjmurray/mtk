@@ -3,8 +3,8 @@ module MTK
   # Extension for modules that want to define pseudo-constants (constant-like values with lower-case names)
   module PseudoConstants
   
-    # Define a "constant" as a module method and module function (available both through the module namespace and as a mixin method),
-    # in order to facility defining constant-like values with lower-case names.
+    # Define a module method and module function (available both through the module namespace and as a mixin method),
+    # to provide a constant with a lower-case name.
     #
     # @param name [Symbol] the name of the pseudo-constant
     # @param value [Object] the value of the pseudo-constant

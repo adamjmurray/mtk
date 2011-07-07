@@ -1,10 +1,10 @@
 module MTK
 
-  # Defines values for standard dynamic symbols.
+  # Defines intensity constants defined using standard dynamic symbols.
   #
   # These can be thought of like constants, but in order to distinguish 'f' (forte) from the {PitchClass} 'F'
   # it was necessary to use lower-case names and therefore define them as "pseudo constant" methods.
-  # The methods are available either throught the module (MTK::Dynamics::f) or via mixin (include MTK::Dynamics;  f)
+  # The methods are available either through the module (MTK::Intensities::f) or via mixin (include MTK::Intensities;  f)
   #
   # These values are intensities in the range 0.125 - 1.0 (in increments of 1/8), so they can be easily scaled (unlike MIDI velocities).
   #
@@ -15,13 +15,13 @@ module MTK
   #   If you include this module, you can access the built-in p() method via Kernel.p()
   #
   # @see Note
-  module Dynamics
+  module Intensities
     extend MTK::PseudoConstants
     
     # NOTE: the yard doc macros here only fill in [$2] with the actual value when generating docs under Ruby 1.9+
     
     # pianississimo 
-    # @macro [attach] dynamics.define_constant
+    # @macro [attach] intensities.define_constant
     #   @attribute [r]
     #   @return [$2] intensity value for $1   
     define_constant 'ppp', 0.125
@@ -50,10 +50,10 @@ module MTK
     define_constant 'fff', 1.0
 
     # The values of all "psuedo constants" defined in this module
-    DYNAMICS = [ppp, pp, p, mp, mf, f, ff, fff].freeze
+    INTENSITIES = [ppp, pp, p, mp, mf, f, ff, fff].freeze
 
     # The names of all "psuedo constants" defined in this module
-    DYNAMIC_NAMES = %w[ppp pp p mp mf f ff fff].freeze
+    INTENSITY_NAMES = %w[ppp pp p mp mf f ff fff].freeze
 
     # Lookup the value of an intensity constant by name.
     # This method supports appending '+' or '-' for more fine-grained values.

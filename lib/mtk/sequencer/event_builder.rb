@@ -6,7 +6,7 @@ module MTK
     class EventBuilder
 
       DEFAULT_PITCH = MTK::Pitches::C4
-      DEFAULT_INTENSITY = MTK::Dynamics::f
+      DEFAULT_INTENSITY = MTK::Intensities::f
       DEFAULT_DURATION = 1
 
       def initialize(patterns, options={})
