@@ -4,8 +4,14 @@ describe MTK::Sequencer::AbstractSequencer do
 
   ABSTRACT_SEQUENCER = Sequencer::AbstractSequencer
 
-  let(:patterns)   { [Pattern.PitchCycle(C4)] }
+  class MockEventBuilder < Helper::EventBuilder
+    attr_accessor :mock_attribute
+  end
+
+  let(:patterns)  { [Pattern.PitchCycle(C4,D4)] }
   let(:sequencer) { ABSTRACT_SEQUENCER.new patterns }
+  let(:intensity) { Helper::EventBuilder::DEFAULT_INTENSITY }
+  let(:duration)  { Helper::EventBuilder::DEFAULT_DURATION }
 
   describe "#new" do
     it "defaults @max_steps to nil" do
@@ -24,6 +30,23 @@ describe MTK::Sequencer::AbstractSequencer do
     it "sets @max_time from the options hash" do
       sequencer = RHYTHMIC_SEQUENCER.new patterns, :max_time => 4
       sequencer.max_time.should == 4
+    end
+
+    it "defaults @event_builder to MTK::Helper::EventBuilder" do
+      sequencer.event_builder.should be_a MTK::Helper::EventBuilder
+    end
+
+    it "sets @event_buidler from the options hash" do
+      sequencer = RHYTHMIC_SEQUENCER.new patterns, :event_builder => MockEventBuilder
+      sequencer.event_builder.should be_a MockEventBuilder
+    end
+  end
+
+  describe "#event_builder" do
+    it "provides access to the internal EventBuilder" do
+      sequencer = RHYTHMIC_SEQUENCER.new patterns, :event_builder => MockEventBuilder
+      sequencer.event_builder.mock_attribute = :value
+      sequencer.event_builder.mock_attribute.should == :value
     end
   end
 
@@ -68,12 +91,46 @@ describe MTK::Sequencer::AbstractSequencer do
     end
   end
 
+  describe "#time" do
+    it "is the current timeline time that the sequencer is generating events for" do
+      # AbstractSequencer just advances by 1 each step
+      sequencer.next # time doesn't advance until the second #next call
+      sequencer.time.should == 0
+      sequencer.next
+      sequencer.time.should == 1
+      sequencer.next
+      sequencer.time.should == 2
+    end
+  end
+
+  describe "#step" do
+    it "is the index for how many of times #next has been called (i.e. count starting from 0)" do
+      sequencer.step.should == -1 # -1 indicates #next has not yet been called
+      sequencer.next
+      sequencer.step.should == 0
+      sequencer.next
+      sequencer.step.should == 1
+      sequencer.next
+      sequencer.step.should == 2
+    end
+  end
+
   describe "#next" do
-    pending
+    it "returns a list of notes formed from the patterns in the sequencer"  do
+      sequencer.next.should == [Note(C4,intensity,duration)]
+      sequencer.next.should == [Note(D4,intensity,duration)]
+      sequencer.next.should == [Note(C4,intensity,duration)]
+    end
   end
 
   describe "#rewind" do
-    pending
+    it "resets the sequencer and its patterns" do
+      sequencer.next
+      sequencer.rewind
+      sequencer.step.should == -1
+      sequencer.time.should == 0
+      sequencer.next.should == [Note(C4,intensity,duration)]
+    end
   end
 
   describe "#max_steps" do
