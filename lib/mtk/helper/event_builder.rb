@@ -30,7 +30,15 @@ module MTK
             when PitchClass    then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
             when PitchClassSet then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
             else case pattern.type
-              # TODO: handle intervals, but should be smarter about handling for sets... (i.e. add interval too everything in set)
+              when :pitch
+                if element.is_a? Numeric
+                  # pitch interval case
+                  if @previous_pitches
+                    pitches += @previous_pitches.map{|pitch| pitch + element }
+                  else
+                    pitches << ((@previous_pitch || @default_pitch) + element)
+                  end
+                end
               when :intensity then intensity = element
               when :duration then duration = element
             end
@@ -39,6 +47,7 @@ module MTK
 
         if not pitches.empty?
           @previous_pitch = pitches.last
+          @previous_pitches = pitches.length > 1 ? pitches : nil
           pitches.map{|pitch| Note(pitch,intensity,duration) }
         else
           nil

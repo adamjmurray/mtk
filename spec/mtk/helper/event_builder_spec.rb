@@ -46,6 +46,31 @@ describe MTK::Helper::EventBuilder do
       event_builder.next_events.should == notes(D3,C3)
     end
 
+    it "builds notes from by adding Numeric intervals in :pitch type Patterns to the previous Pitch" do
+      event_builder = EVENT_BUILDER.new [ Pattern.PitchSequence( C4, M3, m3, -P5) ]
+      nexts = []
+      loop { nexts << event_builder.next_events }
+      nexts.flatten
+      nexts.should == [notes(C4), notes(E4), notes(G4), notes(C4)]
+    end
+
+    it "builds notes from by adding Numeric intervals in :pitch type Patterns to all pitches in the previous PitchSet" do
+      event_builder = EVENT_BUILDER.new [ Pattern.PitchSequence( PitchSet(C4,Eb4), M3, m3, -P5) ]
+      nexts = []
+      loop { nexts << event_builder.next_events }
+      nexts.flatten
+      nexts.should == [notes(C4,Eb4), notes(E4,G4), notes(G4,Bb4), notes(C4,Eb4)]
+    end
+
+    it "builds notes from intensities" do
+      pending
+    end
+
+    it "builds notes from durations" do
+      pending
+    end
+
+
   end
 
 end
