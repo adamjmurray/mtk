@@ -1,28 +1,21 @@
 require 'rubygems'
-require 'jsound'
+require 'unimidi'
 require 'gamelan'
 
 module MTK
   module MIDI
 
-    # Provides MIDI output for JRuby via the jsound and gamelan gems
-    class JSoundOutput
+    # Provides MIDI output via the unimidi and gamelan gems
+    class UniMIDIOutput
 
       attr_reader :device
 
       def initialize(output, options={})
-        if output.is_a? ::JSound::Midi::Device
+        if output.is_a? ::UniMIDI::CongruousApiOutput
           @device = output
         else
-          @device = ::JSound::Midi::OUTPUTS.send output
-        end
-
-        @generator = ::JSound::Midi::Devices::Generator.new
-        if options[:monitor]
-          @monitor = ::JSound::Midi::Devices::Monitor.new
-          @generator >> [@monitor, @device]
-        else
-          @generator >> @device
+          output = /#{output.to_s.sub '_','.*'}/i unless output.is_a? Regexp
+          @device = ::UniMIDI::Output.all.find {|o| o.name =~ output }
         end
         @device.open
       end
@@ -58,16 +51,15 @@ module MTK
       private
 
       # It's necessary to generate the events through methods and lambdas like this to create closures.
-      # Otherwise when the @generator methods are called, they might not be passed the values you expected.
-      # I suspect this may not a problem in MRI ruby, but I'm having trouble in JRuby
-      # (pitch and velocity were always the last scheduled values)
 
       def note_on(pitch, velocity)
-        lambda { @generator.note_on(pitch, velocity) }
+        # TODO: support channel via 0x90 | channel
+        lambda { @device.puts(0x90, pitch, velocity) }
       end
 
       def note_off(pitch, velocity)
-        lambda { @generator.note_off(pitch, velocity) }
+        # TODO: support channel via 0x80 | channel
+        lambda { @device.puts(0x80, pitch, velocity) }
       end
 
       def at time, block
