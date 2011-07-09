@@ -52,14 +52,16 @@ MTK's core features should not depend on anything outside of the Ruby standard l
 
 MTK's optional features typically require gems. Currently the following gems are required:
 
-* midilib: required by MTK::MIDI::File for file I/O
+* MIDI file I/O requires the __midilib__ gem
 
-* jsound and gamelan: required by MTK::MIDI::JSoundInput/Output (also requires JRuby)
+* realtime MIDI I/O with (MRI/YARV) Ruby requires the __unimidi__ and __gamelan__ gems
 
-* citrus: for the MTK::Lang::Grammar for parsing the custom MTK syntax (work in progress)
+* realtime MIDI I/O with JRuby require the __jsound__ and __gamelan__ gems
+
+* The custom MTK syntax (work in progress) requires the __citrus__ gem
 
 
-Development requires all the gems for optional features, plus the following development tools:
+Development requires the gems for optional features, plus the following:
 
 * rake
 * rspec (tests)
@@ -113,6 +115,9 @@ https://www.pivotaltracker.com/projects/295419
 
 Changelog
 ---------
+
+* Upcoming...
+    - Added realtime MIDI output for (MRI/YARV) Ruby
 
 * July 8, 2011: version 0.0.2
     - Added a Sequencer module to build Timelines out of Patterns

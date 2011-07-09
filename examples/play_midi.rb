@@ -1,19 +1,29 @@
 # Play a given MIDI file with the given MIDI output
 #
-# NOTE: this example only runs under JRuby with the jsound and gamelan gems installed
+# REQUIREMENTS:
+#   Ruby 1.8+ with the unimidi and gamelan gems installed
+# ~or~
+#   JRuby 1.5+ with the jsound and gamelan gems installed
 
-file, output = ARGV[0], ARGV[1]
-unless file and output
+
+file, output_name = ARGV[0], ARGV[1]
+unless file and output_name
   puts "Usage: ruby #$0 midi_file output_device"
   exit 1
 end
 
 require 'mtk'
 require 'mtk/midi/file'
-require 'mtk/midi/jsound_output'
 include MTK
 
-timeline = MIDI_File(file).to_timelines.first # for now this example just plays the first track (JSoundOutput needs to be enhanced to support multiple timelines)
-player = MTK::MIDI::JSoundOutput.new output
+if RUBY_PLATFORM == 'java'
+  require 'mtk/midi/jsound_output'
+  output = MTK::MIDI::JSoundOutput.new output_name
+else
+  require 'mtk/midi/unimidi_output'
+  output = MTK::MIDI::UniMIDIOutput.new output_name
+end
 
-player.play timeline
+timeline = MIDI_File(file).to_timelines.first # for now this example just plays the first track (MTK's outputs need to be enhanced to support multiple timelines)
+
+output.play timeline
