@@ -2,6 +2,8 @@ require 'rspec/core/rake_task'
 require 'rake/clean'
 require 'yard'
 
+SUPPORTED_RUBIES = %w[ 1.8.7  1.9.2  jruby-1.5.6  jruby-1.6.3 ]
+
 task :default => :spec
 
 CLEAN.include('html','doc') # clean and clobber do the same thing for now
@@ -15,18 +17,26 @@ RSpec::Core::RakeTask.new do |spec|
   end
 end
 
-namespace :spec do
 
+namespace :gem do
+  desc "Install gems for supported versions of Ruby: #{SUPPORTED_RUBIES.join ', '}"
+  task :install do
+    fail unless system("rvm #{SUPPORTED_RUBIES.join ','} gem install --no-rdoc --no-ri rake rspec yard midilib citrus")
+  end
+end
+
+
+
+namespace :spec do
   desc "Run RSpecs tests with summary output and fast failure"
   RSpec::Core::RakeTask.new(:fast) do |spec|
     spec.rspec_opts = ["--color", "--fail-fast"]
   end
 
-  desc "Run RSpecs tests on mutiple versions of Ruby: 1.8.7, 1.9.2, JRuby 1.5.6, and JRuby 1.6.2"
-  task :xversion do
-    fail unless system("rvm 1.8.7,1.9.2,jruby-1.5.6,jruby-1.6.2 rake -f #{__FILE__} spec:fast")
+  desc "Run RSpecs tests on all supported versions of Ruby: #{SUPPORTED_RUBIES.join ', '}"
+  task :all do
+    fail unless system("rvm #{SUPPORTED_RUBIES.join ','} rake -f #{__FILE__} spec:fast")
   end
-
 end
 
 

@@ -49,19 +49,21 @@ Ruby 1.8+ or JRuby 1.5+
 
 MTK's core features should not depend on anything outside of the Ruby standard library.
 
+
 MTK's optional features typically require gems. Currently the following gems are required:
 
 * midilib: required by MTK::MIDI::File for file I/O
 
 * jsound and gamelan: required by MTK::MIDI::JSoundInput/Output (also requires JRuby)
 
+* citrus: for the MTK::Lang::Grammar for parsing the custom MTK syntax (work in progress)
+
+
 Development requires all the gems for optional features, plus the following development tools:
 
 * rake
 * rspec (tests)
 * yard (docs)
-* yard-rspec (docs)
-* rdiscount (docs)
 
 [rvm](https://rvm.beginrescueend.com/) is recommended for cross version testing (see Development Notes below)
 
@@ -85,11 +87,11 @@ Test with current version of Ruby:
 
      rake spec
 
-Test with all supported versions of Ruby (requires [rvm](https://rvm.beginrescueend.com/), MRI 1.8.7, YARV 1.9.2, JRuby 1.5.6, and JRuby 1.6.2):
+Test with all supported versions of Ruby (requires [rvm](https://rvm.beginrescueend.com/), MRI 1.8.7, YARV 1.9.2, JRuby 1.5.6, and JRuby 1.6.3):
 
-     rake spec:xversion
+     rake spec:all
 
-The spec:xversion test must pass for a pull request to be accepted or for a release of the mtk gem.
+The spec:all test must pass for a pull request to be accepted or for a release of the mtk gem.
 
 
 ### Generate Docs ###
