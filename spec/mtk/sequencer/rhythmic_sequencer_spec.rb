@@ -8,7 +8,7 @@ describe MTK::Sequencer::RhythmicSequencer do
   let(:intensities) { Pattern.IntensitySequence(0.3, 0.6, 0.9, 1.0) }
   let(:durations)   { Pattern.DurationSequence(1, 1, 2, 1) }
   let(:rhythm)      { Pattern.RhythmSequence(0.5, 1.5, 4) }
-  let(:rhythmic_sequencer) { RHYTHMIC_SEQUENCER.new [pitches, durations, intensities, rhythm] }
+  let(:rhythmic_sequencer) { RHYTHMIC_SEQUENCER.new [pitches, intensities, durations, rhythm] }
 
   describe "#new" do
     it "defaults @max_steps to nil" do
@@ -26,7 +26,7 @@ describe MTK::Sequencer::RhythmicSequencer do
       rhythmic_sequencer.to_timeline.should be_a Timeline
     end
 
-    it "contains notes assembled from the given patterns" do
+    it "contains notes assembled from the given patterns, with Timeline time deltas from the :rhythm type pattern" do
       rhythmic_sequencer.to_timeline.should == Timeline.from_hash({
         0 => Note(C4,0.3,1),
         0.5 => Note(D4,0.6,1),
