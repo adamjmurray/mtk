@@ -3,5 +3,7 @@
 --charset utf-8
 --protected
 lib/**/*.rb
+- *.md
+- examples/*
 - lib/**/*.citrus
 
