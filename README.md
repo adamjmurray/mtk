@@ -4,7 +4,7 @@ MTK
 Music ToolKit for Ruby
 ----------------------
 
-Classes for modeling music with a focus on simplicity. Support for reading/writing MIDI files (and soon, realtime MIDI).
+Classes for modeling music with a focus on simplicity. Support for reading/writing MIDI files and realtime MIDI.
 
 
 
@@ -17,7 +17,8 @@ or download the source from here and add mtk/lib to your $LOAD_PATH. Then...
 
     require 'mtk'
 
-For now, see the specs for examples. Real examples are coming...
+Some examples are available in the examples folder (more coming soon).
+The specs provide a lot of details of usage...
 
 
 
@@ -69,7 +70,7 @@ Development requires all the gems for optional features, plus the following deve
 Documentation
 -------------
 
-Gem: http://rdoc.info/gems/mtk/0.0.1/frames
+Gem: http://rdoc.info/gems/mtk/0.0.2/frames
 
 Latest for source: http://rubydoc.info/github/adamjmurray/mtk/master/frames
 
@@ -84,7 +85,7 @@ Test with current version of Ruby:
 
      rake spec
 
-Test with all supported versions of Ruby (requires [rvm](https://rvm.beginrescueend.com/), MRI 1.8.7, MRI 1.9.2, JRuby 1.5.6, and JRuby 1.6.2):
+Test with all supported versions of Ruby (requires [rvm](https://rvm.beginrescueend.com/), MRI 1.8.7, YARV 1.9.2, JRuby 1.5.6, and JRuby 1.6.2):
 
      rake spec:xversion
 
@@ -111,4 +112,16 @@ https://www.pivotaltracker.com/projects/295419
 Changelog
 ---------
 
-Notes will start appearing here with the next gem release.
+* July 8, 2011: version 0.0.2
+    - Added a Sequencer module to build Timelines out of Patterns
+    - Overhauled Pattern module: removed type-specific patterns, and added the Palindrome, Lines, and Function patterns
+    - Patterns can now be nested (they can contain other Patterns)
+    - Patterns can now be typed, to distinguish Numeric Patterns as :pitch (i.e. intervals), :intensity, :duration, or :rhythm patterns
+    - Removed auto-sorting behavior from PitchClassSet to support 12-tone rows and atonal composition techniques
+    - Added #quantize and #shift features to Timeline
+    - Got rid of Chord class, model Chords with PitchSets or Arrays of Notes instead
+    - Added support for realtime MIDI I/O with JSound (JRuby only)
+    - various cleanup and reorganization
+
+* June 8, 2011: version 0.0.1
+    - First gem release.
