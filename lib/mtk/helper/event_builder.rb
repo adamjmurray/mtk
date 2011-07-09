@@ -11,13 +11,14 @@ module MTK
 
       def initialize(patterns, options={})
         @patterns = patterns
-        @default_pitch = options.fetch :default_pitch, DEFAULT_PITCH
-        @default_intensity = options.fetch :default_intensity, DEFAULT_INTENSITY
-        @default_duration = options.fetch :default_duration, DEFAULT_DURATION
+        @options = options
         @max_interval = options.fetch :max_interval, 12
+        rewind
       end
 
-      def next_events
+      # Build a list of events from the next element in each {Pattern}
+      # @return [Array] an array of events
+      def next
         pitches = []
         intensity = @default_intensity
         duration = @default_duration
@@ -52,6 +53,16 @@ module MTK
         else
           nil
         end
+      end
+
+      # Reset the EventBuilder to its initial state
+      def rewind
+        @default_pitch = @options.fetch :default_pitch, DEFAULT_PITCH
+        @default_intensity = @options.fetch :default_intensity, DEFAULT_INTENSITY
+        @default_duration = @options.fetch :default_duration, DEFAULT_DURATION
+        @previous_pitch = nil
+        @previous_pitches = nil
+        @patterns.each{|pattern| pattern.rewind }
       end
 
       ########################

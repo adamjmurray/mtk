@@ -57,7 +57,7 @@ module MTK
         end
         @step += 1
         raise StopIteration if @max_steps and @step >= @max_steps
-        @event_builder.next_events
+        @event_builder.next
       end
 
 
@@ -67,7 +67,7 @@ module MTK
       def rewind
         @time = 0
         @step = -1
-        @patterns.each{|pattern| pattern.rewind }
+        event_builder.rewind
       end
 
 

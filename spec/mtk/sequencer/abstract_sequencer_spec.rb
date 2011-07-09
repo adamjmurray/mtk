@@ -131,6 +131,15 @@ describe MTK::Sequencer::AbstractSequencer do
       sequencer.time.should == 0
       sequencer.next.should == [Note(C4,intensity,duration)]
     end
+
+    it "resets pitches properly for patterns that rely on previous pitches" do
+      relative_pitch_pattern = Pattern.PitchSequence(C,P8)
+      sequencer = ABSTRACT_SEQUENCER.new [relative_pitch_pattern]
+      sequencer.next.should == [Note(C4,intensity,duration)]
+      sequencer.next.should == [Note(C5,intensity,duration)]
+      sequencer.rewind
+      sequencer.next.should == [Note(C4,intensity,duration)] # if the internal EventBuilder is not properly reset, the Note would be C5
+    end
   end
 
   describe "#max_steps" do
