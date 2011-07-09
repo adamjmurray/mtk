@@ -121,6 +121,12 @@ describe MTK::Sequencer::AbstractSequencer do
       sequencer.next.should == [Note(D4,intensity,duration)]
       sequencer.next.should == [Note(C4,intensity,duration)]
     end
+
+    it "returns a filtered list of notes if the sequencer was constructed with a options[:filter] lambda" do
+      sequencer = ABSTRACT_SEQUENCER.new patterns, :filter => lambda{|events| events.map{|event| event.transpose(P8) } }
+      sequencer.next.should == [Note(C5,intensity,duration)]
+      sequencer.next.should == [Note(D5,intensity,duration)]
+    end
   end
 
   describe "#rewind" do
