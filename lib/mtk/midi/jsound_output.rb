@@ -4,7 +4,9 @@ require 'jsound'
 module MTK
   module MIDI
 
-    # Provides MIDI output for JRuby via the jsound and gamelan gems
+    # Provides realtime MIDI output for JRuby via the jsound and gamelan gems.
+    # @note This class is optional and only available if you require 'mtk/midi/jsound_output'.
+    #       It depends on the 'jsound' and 'gamelan' gems.
     class JSoundOutput < AbstractOutput
 
       attr_reader :device

@@ -4,7 +4,9 @@ require 'unimidi'
 module MTK
   module MIDI
 
-    # Provides MIDI output via the unimidi and gamelan gems
+    # Provides realtime MIDI output for MRI/YARV Ruby via the unimidi and gamelan gems.
+    # @note This class is optional and only available if you require 'mtk/midi/unimidi_output'.
+    #       It depends on the 'unimidi' and 'gamelan' gems.
     class UniMIDIOutput < AbstractOutput
 
       attr_reader :device
