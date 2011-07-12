@@ -3,7 +3,7 @@ module MTK
 
     # A Sequencer produces {Timeline}s from a collection of {Pattern}s.
     #
-    # @abstract Subclass and override {#advance} to implement a Sequencer.
+    # @abstract Subclass and override {#advance!} to implement a Sequencer.
     #
     class AbstractSequencer
 

@@ -65,7 +65,7 @@ module MTK
     end
   end
 
-  # Construct a {Note} from any supported type
+  # Construct a {Event::Note} from any supported type
   def Note(*anything)
     anything = anything.first if anything.size == 1
     case anything
