@@ -69,8 +69,8 @@ module MTK
   def Note(*anything)
     anything = anything.first if anything.size == 1
     case anything
-      when Array then Event::Note.new(*anything)
-      when Event::Note then anything
+      when Array then MTK::Event::Note.new(*anything)
+      when MTK::Event::Note then anything
       else raise "Note doesn't understand #{anything.class}"
     end
   end

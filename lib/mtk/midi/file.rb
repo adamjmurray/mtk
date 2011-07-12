@@ -38,17 +38,26 @@ module MTK
 
             for event in track
               #puts "#{event.class}: #{event}   @#{event.time_from_start}"
+              time = (event.time_from_start)/pulses_per_beat
+
               case event
                 when ::MIDI::NoteOn
-                  note_ons[event.note] = event
+                  note_ons[event.note] = [time,event]
 
                 when ::MIDI::NoteOff
-                  if on_event = note_ons.delete(event.note)
-                    time = (on_event.time_from_start)/pulses_per_beat
-                    duration = (event.time_from_start - on_event.time_from_start)/pulses_per_beat
-                    note = MTK::Event::Note.from_midi event.note, on_event.velocity, duration
-                    timeline.add time, note
+                  on_time,on_event = note_ons.delete(event.note)
+                  if on_event
+                    duration = time - on_time
+                    note = MTK::Event::Note.from_midi(event.note, on_event.velocity, duration)
+                    timeline.add on_time, note
                   end
+
+                when ::MIDI::Controller, ::MIDI::PolyPressure, ::MIDI::ChannelPressure, ::MIDI::PitchBend, ::MIDI::ProgramChange
+                  timeline.add time, MTK::Event::Parameter.from_midi(*event.data_as_bytes)
+
+                when ::MIDI::Tempo
+                  # Not sure if event.tempo needs to be converted? TODO: test!
+                  timeline.add time, MTK::Event::Parameter.new(:tempo, :value => event.tempo)
               end
             end
             timelines << timeline
@@ -83,7 +92,6 @@ module MTK
         sequence = parent_sequence || ::MIDI::Sequence.new
         clock_rate = sequence.ppqn
         track = add_track sequence
-        channel = 1
 
         for time,events in timeline
           time *= clock_rate
@@ -91,11 +99,33 @@ module MTK
           for event in events
             next if event.rest?
 
-            if event.is_a? MTK::Event::Note
-              pitch, velocity = event.pitch, event.velocity
-              add_event track, time => note_on(channel, pitch, velocity)
-              duration = event.duration_in_pulses(clock_rate)
-              add_event track, time+duration => note_off(channel, pitch, velocity)
+            channel = event.channel || 0
+
+            case event.type
+              when :note
+                pitch, velocity = event.pitch, event.velocity
+                add_event track, time => note_on(channel, pitch, velocity)
+                duration = event.duration_in_pulses(clock_rate)
+                add_event track, time+duration => note_off(channel, pitch, velocity)
+
+              when :control
+                add_event track, time => cc(channel, event.number, event.midi_value)
+
+              when :pressure
+                if event.number
+                  add_event track, time => poly_pressure(channel, event.number, event.midi_value)
+                else
+                  add_event track, time => channel_pressure(channel, event.midi_value)
+                end
+
+              when :bend
+                add_event track, time => pitch_bend(channel, event.midi_value)
+
+              when :program
+                add_event track, time => program(channel, event.midi_value)
+
+              when :tempo
+                add_event track, time => tempo(event.value)
             end
           end
         end
@@ -128,7 +158,7 @@ module MTK
         ::MIDI::Tempo.new(ms_per_quarter_note)
       end
 
-      def program(program_number)
+      def program(channel, program_number)
         ::MIDI::ProgramChange.new(channel, program_number)
       end
 
@@ -141,7 +171,15 @@ module MTK
       end
 
       def cc(channel, controller, value)
-        ::MIDI::Controller.new(channel, controller.to_i, value.to_i)
+        ::MIDI::Controller.new(channel, controller, value)
+      end
+
+      def poly_pressure(channel, pitch, value)
+        ::Midi::PolyPressure(channel, pitch.to_i, value)
+      end
+
+      def channel_pressure(channel, value)
+        ::MIDI::ChannelPressure(channel, value)
       end
 
       def pitch_bend(channel, value)
