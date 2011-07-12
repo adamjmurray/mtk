@@ -1,4 +1,3 @@
-##############################################
 # Description of modules for documentation:
 
 # The top level module for this library
@@ -6,6 +5,10 @@ module MTK
 
   # Internal helper classes used to avoid duplicating code in this library.
   module Helper
+  end
+
+  # Musical events, such as {Event::Note}s and {Event::Parameter} changes, that are arranged in time via a {Timeline}.
+  module Event
   end
 
   # Classes that emit elements one at a time. Used by {Sequencer}s to construct {Timeline}s.
@@ -43,6 +46,7 @@ require 'mtk/pitch_set'
 
 require 'mtk/event/abstract_event'
 require 'mtk/event/note'
+require 'mtk/event/parameter'
 
 require 'mtk/timeline'
 

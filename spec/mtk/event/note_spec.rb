@@ -19,9 +19,29 @@ describe MTK::Event::Note do
     end
   end
 
+  describe "#intensity" do
+    it "is the intensity used to create the Event" do
+      note.intensity.should == intensity
+    end
+
+    it "is a read-only attribute" do
+      lambda{ note.intensity = 0 }.should raise_error
+    end
+  end
+
+  describe "#velocity" do
+    it "converts intensities in the range 0.0-1.0 to a MIDI velocity in the range 0-127" do
+      NOTE.new(pitch, 0, 0).velocity.should == 0
+      NOTE.new(pitch, 1, 0).velocity.should == 127
+    end
+    it "rounds to the nearest MIDI velocity" do
+      NOTE.new(pitch, 0.5, 0).velocity.should == 64 # not be truncated to 63!
+    end
+  end
+
   describe ".from_hash" do
     it "constructs a Note using a hash" do
-      NOTE.from_hash({ :pitch => C4, :intensity => intensity, :duration => duration }).should == note
+      NOTE.from_hash({ :pitch => pitch, :intensity => intensity, :duration => duration }).should == note
     end
   end
 
@@ -39,7 +59,12 @@ describe MTK::Event::Note do
 
   describe "#to_hash" do
     it "is a hash containing all the attributes of the Note" do
-      note.to_hash.should == { :pitch => pitch, :intensity => intensity, :duration => duration }
+      hash = note.to_hash
+      # hash includes some extra "baggage" for compatibility with AbstractEvent,
+      # so we'll just check the fields we care about:
+      hash[:pitch].should == pitch
+      hash[:intensity].should == intensity
+      hash[:duration].should == duration
     end
   end
 

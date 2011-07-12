@@ -5,28 +5,38 @@ module MTK
     # A musical {Event} defined by a {Pitch}, intensity, and duration
     class Note < AbstractEvent
 
-      # frequency of the note as a Pitch
+      # Frequency of the note as a {Pitch}.
+      # This is an alias for #{AbstractEvent#number}
       attr_reader :pitch
 
+      # Intensity of the note as a value in the range 0.0 - 1.0.
+      # This is an alias for #{AbstractEvent#value}
+      attr_reader :intensity
+
       def initialize(pitch, intensity, duration)
-        @pitch = pitch
-        super(intensity, duration)
+        @pitch, @intensity = pitch, intensity
+        super(:note, intensity, duration, pitch)
       end
 
       def self.from_hash(hash)
-        new hash[:pitch], hash[:intensity], hash[:duration]
+        new (hash[:pitch] || hash[:number]), (hash[:intensity] || hash[:value]), hash[:duration]
       end
 
       def to_hash
-        super.merge({ :pitch => @pitch })
+        super.merge({ :pitch => pitch, :intensity => intensity })
       end
 
-      def self.from_midi(pitch, velocity, beats)
-        new Pitches::PITCHES[pitch], velocity/127.0, beats
+      def self.from_midi(pitch, velocity, duration_in_beats)
+        new Pitches::PITCHES[pitch], velocity/127.0, duration_in_beats
       end
 
       def to_midi
         [pitch.to_i, velocity, duration]
+      end
+
+      # intensity scaled to the MIDI range 0-127
+      def velocity
+        @velocity ||= (127 * @intensity).round
       end
 
       def transpose(interval)
@@ -37,16 +47,19 @@ module MTK
         self.class.new(@pitch.invert(around_pitch), @intensity, @duration)
       end
 
-      def == other
-        super and other.respond_to? :pitch and @pitch == other.pitch
+      def ==(other)
+        ( other.respond_to? :pitch and @pitch == other.pitch and
+          other.respond_to? :intensity and @intensity == other.intensity and
+          other.respond_to? :duration and @duration == other.duration
+        ) or super
       end
 
       def to_s
-        "Note(#{pitch}, #{super})"
+        "Note(#@pitch,#{sprintf '%.2f',@value},#{sprintf '%.2f',@duration})"
       end
 
       def inspect
-        "Note(#{pitch}, #{super})"
+        "Note(#{@pitch},#{@value},#{@duration})"
       end
 
     end

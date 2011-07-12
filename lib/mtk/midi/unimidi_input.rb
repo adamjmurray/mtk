@@ -51,6 +51,8 @@ module MTK
       end
 
       def to_timeline(options={})
+        return nil if not @recording
+
         bpm = options.fetch :bmp, 120
         beats_per_second = bpm.to_f/60
         timeline = Timeline.new
@@ -62,7 +64,10 @@ module MTK
           time -= start
           time /= beats_per_second
 
-          case message.type
+          if message.is_a? MTK::Event::AbstractEvent
+            timeline.add time,message
+
+          else case message.type
             when :note_on
               pitch = message.pitch
               note_ons[pitch] = [message,time]
@@ -72,13 +77,10 @@ module MTK
               if note_ons.has_key? pitch
                 note_on, start_time = note_ons[pitch]
                 duration = time - start_time
-                note = Note.from_midi pitch, note_on.velocity, duration
+                note = MTK::Event::Note.from_midi pitch, note_on.velocity, duration
                 timeline.add time,note
               end
-
-            when :unknown # ignore
-
-            else timeline.add time,message
+            end
           end
         end
 
@@ -94,18 +96,25 @@ module MTK
 
       def record_raw_data raw
         status, data1, data2 = *raw[:data] # the 3 bytes of raw message data
-        message = OpenStruct.new({:channel => status & 0x0F}.merge(
+#        message = OpenStruct.new({:channel => status & 0x0F}.merge(
+#          case status & 0xF0
+#            when 0x80 then {:type => :note_off, :pitch => data1, :velocity => data2}
+#            when 0x90 then {:type => :note_on,  :pitch => data1, :velocity => data2}
+#            when 0xA0 then {:type => :poly_pressure, :pitch => data1, :pressure => data2}
+#            when 0xB0 then {:type => :control_change,  :number => data1, :value => data2}
+#            when 0xC0 then {:type => :program_change,  :number => data1}
+#            when 0xD0 then {:type => :channel_pressure, :pressure => data1 } # no pitch means all notes on channel
+#            when 0xE0 then {:type => :pitch_bend, :value => (data1 + (data2 << 7)) }
+#            else {:type => :unknown, :raw => raw[:data]}
+#          end
+#        ))
+        message = (
           case status & 0xF0
-            when 0x80 then {:type => :note_off, :pitch => data1, :velocity => data2}
-            when 0x90 then {:type => :note_on,  :pitch => data1, :velocity => data2}
-            when 0xA0 then {:type => :poly_pressure, :pitch => data1, :pressure => data2}
-            when 0xB0 then {:type => :control_change,  :number => data1, :value => data2}
-            when 0xC0 then {:type => :program_change,  :number => data1}
-            when 0xD0 then {:type => :channel_pressure, :pressure => data1 } # no pitch means all notes on channel
-            when 0xE0 then {:type => :pitch_bend, :value => (data1 + (data2 << 7)) }
-            else {:type => :unknown, :raw => raw[:data]}
+            when 0x80 then OpenStruct.new({:type => :note_off, :pitch => data1, :velocity => data2})
+            when 0x90 then OpenStruct.new({:type => :note_on,  :pitch => data1, :velocity => data2})
+            else MTK::Event::Parameter.from_midi(status,data1,data2)
           end
-        ))
+        )
         time = raw[:timestamp]/1000 - (@start_time - @open_time)
         @recording << [message, time]
       end
