@@ -33,10 +33,10 @@ describe MTK::MIDI::File do
 
     it "converts note on/off messages to Note events" do
       MIDI_File(test_mid).to_timelines.first.should == {
-        0.0 => [Note.new(C4, 126/127.0, 0.25)],
-        1.0 => [Note.new(Db4, 99/127.0, 0.5)],
-        2.0 => [Note.new(D4, 72/127.0, 0.75)],
-        3.0 => [Note.new(Eb4, 46/127.0, 1.0), Note.new(E4, 46/127.0, 1.0)]
+        0.0 => [Note(C4, 126/127.0, 0.25)],
+        1.0 => [Note(Db4, 99/127.0, 0.5)],
+        2.0 => [Note(D4, 72/127.0, 0.75)],
+        3.0 => [Note(Eb4, 46/127.0, 1.0), Note(E4, 46/127.0, 1.0)]
       }
     end
   end
@@ -45,9 +45,9 @@ describe MTK::MIDI::File do
     it 'writes monophonic Notes in a Timeline to a MIDI file' do
       MIDI_File(tempfile).write_timeline(
         Timeline.from_hash({
-          0 => Note.new(C4, 0.7, 1),
-          1.0 => Note.new(G4, 0.8, 1),
-          2 => Note.new(C5, 0.9, 1)
+          0 => Note(C4, 0.7, 1),
+          1.0 => Note(G4, 0.8, 1),
+          2 => Note(C5, 0.9, 1)
         })
       )
 
@@ -136,9 +136,9 @@ describe MTK::MIDI::File do
     it 'ignores rests (events with negative duration)' do
       MIDI_File(tempfile).write_timeline(
         Timeline.from_hash({
-          0 => Note.new(C4, 0.7, 1),
-          1 => Note.new(G4, 0.8, -1), # this is a rest because it has a negative duration
-          2 => Note.new(C5, 0.9, 1)
+          0 => Note(C4, 0.7, 1),
+          1 => Note(G4, 0.8, -1), # this is a rest because it has a negative duration
+          2 => Note(C5, 0.9, 1)
         })
       )
 
@@ -172,12 +172,12 @@ describe MTK::MIDI::File do
     it "writes a multitrack MIDI file" do
       MIDI_File(tempfile).write_timelines([
         Timeline.from_hash({
-          0 => Note.new(C4, 0.7, 1),
-          1.0 => Note.new(G4, 0.8, 1),
+          0 => Note(C4, 0.7, 1),
+          1.0 => Note(G4, 0.8, 1),
         }),
         Timeline.from_hash({
-          1 => Note.new(C5, 0.9, 2),
-          2 => Note.new(D5, 1, 2),
+          1 => Note(C5, 0.9, 2),
+          2 => Note(D5, 1, 2),
         }),
       ])
 

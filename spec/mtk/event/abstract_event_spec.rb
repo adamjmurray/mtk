@@ -1,10 +1,12 @@
 require 'spec_helper'
 
-describe MTK::Event do
+describe MTK::Event::AbstractEvent do
 
+  EVENT = Event::AbstractEvent
+  
   let(:intensity) { mf }
   let(:duration) { 2.5 }
-  let(:event) { Event.new(intensity, duration) }
+  let(:event) { EVENT.new(intensity, duration) }
 
   describe "#intensity" do
     it "is the intensity used to create the Event" do
@@ -26,13 +28,13 @@ describe MTK::Event do
     end
 
     it "is always positive (absolute value of the duration used to construct the Event)" do
-      Event.new(intensity, -duration).duration.should == duration
+      EVENT.new(intensity, -duration).duration.should == duration
     end
   end
 
   describe "#rest?" do
     it "is true when the duration used to create the Event was negative" do
-      Event.new(intensity, -duration).rest?.should be_true
+      EVENT.new(intensity, -duration).rest?.should be_true
     end
 
     it "is false when the duration used to create the Event was positive" do
@@ -42,7 +44,7 @@ describe MTK::Event do
 
   describe "from_hash" do
     it "constructs an Event using a hash" do
-      Event.from_hash({ :intensity => intensity, :duration => duration }).should == event
+      EVENT.from_hash({ :intensity => intensity, :duration => duration }).should == event
     end
   end
 
@@ -57,13 +59,13 @@ describe MTK::Event do
       event.clone_with({}).should == event
     end
 
-    it "creates an Event with the given :intensity, and the current Event's duration if not provided" do
+    it "creates an Event with the given :intensity, and the current EVENT's duration if not provided" do
       event2 = event.clone_with :intensity => (intensity * 0.5)
       event2.intensity.should == (intensity * 0.5)
       event2.duration.should == duration
     end
 
-    it "creates an Event with the given :duration, and the current Event's intensity if not provided" do
+    it "creates an Event with the given :duration, and the current EVENT's intensity if not provided" do
       event2 = event.clone_with :duration => (duration * 2)
       event2.intensity.should == intensity
       event2.duration.should == (duration * 2)
@@ -72,67 +74,67 @@ describe MTK::Event do
 
   describe '#scale_intensity' do
     it 'multiplies @intensity by the argument' do
-      (event.scale_intensity 0.5).should == Event.new(intensity * 0.5, duration)
+      (event.scale_intensity 0.5).should == EVENT.new(intensity * 0.5, duration)
     end
-    it 'does not affect the immutability of the Evebt' do
+    it 'does not affect the immutability of the Event' do
       (event.scale_intensity 0.5).should_not == event
     end
   end
 
   describe '#scale_duration' do
     it 'multiplies @duration by the argument' do
-      (event.scale_duration 2).should == Event.new(intensity, duration*2)
+      (event.scale_duration 2).should == EVENT.new(intensity, duration*2)
     end
-    it 'does not affect the immutability of the Event' do
+    it 'does not affect the immutability of the EVENT' do
       (event.scale_duration 0.5).should_not == event
     end
   end
 
   describe "#velocity" do
     it "converts intensities in the range 0.0-1.0 to a MIDI velocity in the range 0-127" do
-      Event.new(0, 0).velocity.should == 0
-      Event.new(1, 0).velocity.should == 127
+      EVENT.new(0, 0).velocity.should == 0
+      EVENT.new(1, 0).velocity.should == 127
     end
     it "rounds to the nearest MIDI velocity" do
-      Event.new(0.5, 0).velocity.should == 64 # not be truncated to 63!
+      EVENT.new(0.5, 0).velocity.should == 64 # not be truncated to 63!
     end
   end
 
   describe "#duration_in_pulses" do
     it "converts beats to pulses, given pulses_per_beat" do
-      Event.new(0,1).duration_in_pulses(60).should == 60
+      EVENT.new(0,1).duration_in_pulses(60).should == 60
     end
 
     it "rounds to the nearest pulse" do
-      Event.new(0,1.5).duration_in_pulses(59).should == 89
+      EVENT.new(0,1.5).duration_in_pulses(59).should == 89
     end
 
     it "is always positive (uses absolute value of the duration used to construct the Event)" do
-      Event.new(intensity, -1).duration_in_pulses(60).should == 60
+      EVENT.new(intensity, -1).duration_in_pulses(60).should == 60
     end
   end
 
   describe "#==" do
     it "is true when the intensities and durations are equal" do
-      event.should == Event.new(intensity, duration)
+      event.should == EVENT.new(intensity, duration)
     end
     it "is false when the intensities are not equal" do
-      event.should_not == Event.new(intensity * 0.5, duration)
+      event.should_not == EVENT.new(intensity * 0.5, duration)
     end
     it "is false when the durations are not equal" do
-      event.should_not == Event.new(intensity, duration * 2)
+      event.should_not == EVENT.new(intensity, duration * 2)
     end
   end
 
   describe "#to_s" do
     it "is the intensity and duration to 2-decimal places" do
-      Event.new(0.454545, 0.789789).to_s.should == "0.45, 0.79"
+      EVENT.new(0.454545, 0.789789).to_s.should == "0.45, 0.79"
     end
   end
 
   describe "#inspect" do
     it "is the string values of intensity and duration" do
-      Event.new(0.454545, 0.789789).inspect.should == "0.454545, 0.789789"
+      EVENT.new(0.454545, 0.789789).inspect.should == "0.454545, 0.789789"
     end
   end
 

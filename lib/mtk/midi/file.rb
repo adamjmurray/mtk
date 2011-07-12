@@ -46,7 +46,7 @@ module MTK
                   if on_event = note_ons.delete(event.note)
                     time = (on_event.time_from_start)/pulses_per_beat
                     duration = (event.time_from_start - on_event.time_from_start)/pulses_per_beat
-                    note = Note.from_midi event.note, on_event.velocity, duration
+                    note = MTK::Event::Note.from_midi event.note, on_event.velocity, duration
                     timeline.add time, note
                   end
               end
@@ -91,7 +91,7 @@ module MTK
           for event in events
             next if event.rest?
 
-            if event.is_a? Note
+            if event.is_a? MTK::Event::Note
               pitch, velocity = event.pitch, event.velocity
               add_event track, time => note_on(channel, pitch, velocity)
               duration = event.duration_in_pulses(clock_rate)

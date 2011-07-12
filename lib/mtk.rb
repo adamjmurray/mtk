@@ -41,8 +41,9 @@ require 'mtk/pitch_class_set'
 require 'mtk/pitch'
 require 'mtk/pitch_set'
 
-require 'mtk/event'
-require 'mtk/note'
+require 'mtk/event/abstract_event'
+require 'mtk/event/note'
+
 require 'mtk/timeline'
 
 require 'mtk/_constants/pitch_classes'
