@@ -42,6 +42,31 @@ module MTK
         lambda { @generator.note_off(pitch, velocity, channel) }
       end
 
+      # (see AbstractOutput#control)
+      def control(number, midi_value, channel)
+        lambda { @generator.control_change(number, midi_value, channel) }
+      end
+
+      # (see AbstractOutput#channel_pressure)
+      def channel_pressure(midi_value, channel)
+        lambda { @generator.channel_pressure(midi_value, channel) }
+      end
+
+      # (see AbstractOutput#poly_pressure)
+      def poly_pressure(pitch, midi_value, channel)
+        lambda { @generator.poly_pressure(pitch, midi_value, channel) }
+      end
+
+      # (see AbstractOutput#bend)
+      def bend(midi_value, channel)
+        lambda { @generator.pitch_bend(midi_value, channel) }
+      end
+
+      # (see AbstractOutput#program)
+      def program(number, channel)
+        lambda { @generator.program_change(number, channel) }
+      end
+
     end
   end
 end

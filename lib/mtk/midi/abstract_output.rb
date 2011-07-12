@@ -5,7 +5,7 @@ module MTK
   module MIDI
 
     # Provides a scheduler and common behavior for realtime MIDI output, using the gamelan gem for scheduling.
-    # @abstract Subclass and override {#note_on} and {#note_off}
+    # @abstract Subclass and override {#note_on}, {#note_off}, {#control}, {#channel_pressure}, {#poly_pressure}, {#bend}, and {#program}
     class AbstractOutput
 
       def play(timeline, options={})
@@ -18,12 +18,30 @@ module MTK
 
         for time,events in timeline
           for event in events
-            case event
-              when Note
+            channel = event.channel || 0
+
+            case event.type
+              when :note
                 pitch, velocity, duration = event.to_midi
-                at time, note_on(pitch,velocity)
+                at time, note_on(pitch,velocity,channel)
                 time += duration
-                at time, note_off(pitch,velocity)
+                at time, note_off(pitch,velocity,channel)
+
+              when :control
+                at time, control(event.number, event.midi_value, channel)
+
+              when :pressure
+                if event.number
+                  at time, poly_pressure(event.number, event.midi_value, channel)
+                else
+                  at time, channel_pressure(event.midi_value, channel)
+                end
+
+              when :bend
+                at time, bend(event.midi_value, channel)
+
+              when :program
+                at time, program(event.number, channel)
             end
           end
         end
@@ -39,12 +57,32 @@ module MTK
       ########################
       protected
 
-      # Create a Proc that will send a note_on event to the MIDI output
+      # Create a Proc that will send a note on event to the MIDI output
       def note_on(pitch, velocity, channel=0)
       end
 
-      # Create a Proc that will send a note_off event to the MIDI output
+      # Create a Proc that will send a note off event to the MIDI output
       def note_off(pitch, velocity, channel=0)
+      end
+
+      # Create a Proc that will send a control change event to the MIDI output
+      def control(number, midi_value, channel)
+      end
+
+      # Create a Proc that will send a channel pressure event to the MIDI output.
+      def channel_pressure(pitch, midi_value, channel)
+      end
+
+      # Create a Proc that will send a poly pressure event to the MIDI output.
+      def poly_pressure(midi_value, channel)
+      end
+
+      # Create a Proc that will send a pitch vend event to the MIDI output.
+      def bend(midi_value, channel)
+      end
+
+      # Create a Proc that will send a program change event to the MIDI output.
+      def program(number, channel)
       end
 
       ######################

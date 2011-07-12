@@ -35,6 +35,31 @@ module MTK
         lambda { @device.puts(0x80|channel, pitch, velocity) }
       end
 
+      # (see AbstractOutput#control)
+      def control(number, midi_value, channel)
+        lambda { @device.puts(0xB0|channel, number, midi_value) }
+      end
+
+      # (see AbstractOutput#channel_pressure)
+      def channel_pressure(midi_value, channel)
+        lambda { @device.puts(0xD0|channel, midi_value, 0) }
+      end
+
+      # (see AbstractOutput#poly_pressure)
+      def poly_pressure(pitch, midi_value, channel)
+        lambda { @device.puts(0xA0|channel, pitch, midi_value) }
+      end
+
+      # (see AbstractOutput#bend)
+      def bend(midi_value, channel)
+        lambda { @device.puts(0xE0|channel, midi_value & 127, (midi_value >> 7) & 127) }
+      end
+
+      # (see AbstractOutput#program)
+      def program(number, channel)
+        lambda { @device.puts(0xC0|channel, number, 0) }
+      end
+
     end
   end
 end
