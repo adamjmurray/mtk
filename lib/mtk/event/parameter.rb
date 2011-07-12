@@ -5,14 +5,18 @@ module MTK
     class Parameter < AbstractEvent
 
       def self.from_midi(status, data1, data2)
-        channel = status & 0x0F # TODO: store channel in events
+        if status.is_a? Array
+          type,channel = *status
+        else
+          type,channel = status & 0xF0, status & 0x0F
+        end
         type, number, value = *(
-          case status & 0xF0
-            when 0xA0 then [:pressure, data1, data2]
-            when 0xB0 then [:control, data1, data2]
-            when 0xC0 then [:program, data1]
-            when 0xD0 then [:pressure, nil, data1] # no number means all notes on channel
-            when 0xE0 then [:bend, nil, (data1 + (data2 << 7))]
+          case type
+            when 0xA0,:poly_pressure    then [:pressure, data1, data2]
+            when 0xB0,:control_change   then [:control, data1, data2]
+            when 0xC0,:program_change   then [:program, data1]
+            when 0xD0,:channel_pressure then [:pressure, nil, data1] # no number means all notes on channel
+            when 0xE0,:pitch_bend       then [:bend, nil, (data1 + (data2 << 7))]
             else [:unknown, data1, data2]
           end
         )
@@ -22,7 +26,7 @@ module MTK
           else
             value = (value / 8192.0) - 1.0
           end
-        else
+        elsif value.is_a? Numeric
           value /= 127.0
         end
         new type, :number => number, :value => value, :channel => channel

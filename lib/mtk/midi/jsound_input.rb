@@ -9,25 +9,26 @@ module MTK
     #       It depends on the 'jsound' gem.
     class JSoundInput
 
+      attr_reader :device
+
       def initialize(input_device)
         if input_device.is_a? ::JSound::Midi::Device
-          @input = input_device
+          @device = input_device
         else
-          @input = ::JSound::Midi::INPUTS.send input_device
+          @device = ::JSound::Midi::INPUTS.send input_device
         end
         @recorder = ::JSound::Midi::Devices::Recorder.new(false)
-        @input >> @recorder
+        @device >> @recorder
+        @device.open
       end
 
       def record
-        @input.open
         @recorder.clear
         @recorder.start
       end
 
       def stop
         @recorder.stop
-        @input.close
       end
 
       def to_timeline(options={})
@@ -48,13 +49,13 @@ module MTK
 
             when :note_off
               if note_ons.has_key? message.pitch
-                note_on, start_time = note_ons[message.pitch]
+                note_on, start_time = *note_ons[message.pitch]
                 duration = time - start_time
-                note = Note.from_midi note_on.pitch, note_on.velocity, duration
+                note = MTK::Event::Note.from_midi(note_on.pitch, note_on.velocity, duration, message.channel)
                 timeline.add time,note
               end
 
-            else timeline.add time,message
+            else timeline.add time, MTK::Event::Parameter.from_midi([message.type, message.channel], message.data1, message.data2)
           end
         end
 

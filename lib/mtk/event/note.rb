@@ -29,8 +29,8 @@ module MTK
         super.merge({ :pitch => pitch, :intensity => intensity })
       end
 
-      def self.from_midi(pitch, velocity, duration_in_beats)
-        new Pitches::PITCHES[pitch], velocity/127.0, duration_in_beats
+      def self.from_midi(pitch, velocity, duration_in_beats, channel=0)
+        new MTK::Pitches::PITCHES[pitch.to_i], velocity/127.0, duration_in_beats, channel
       end
 
       def to_midi
@@ -48,18 +48,18 @@ module MTK
       end
 
       def ==(other)
-        ( other.respond_to? :pitch and @pitch == other.pitch and
-          other.respond_to? :intensity and @intensity == other.intensity and
-          other.respond_to? :duration and @duration == other.duration
+        ( other.respond_to? :pitch and pitch == other.pitch and
+          other.respond_to? :intensity and intensity == other.intensity and
+          other.respond_to? :duration and duration == other.duration
         ) or super
       end
 
       def to_s
-        "Note(#@pitch, #{sprintf '%.2f',@value}, #{sprintf '%.2f',@duration})"
+        "Note(#@number, #{sprintf '%.2f',@value}, #{sprintf '%.2f',@duration})"
       end
 
       def inspect
-        "Note(#{@pitch}, #{@value}, #{@duration})"
+        "Note(#{@number}, #{@value}, #{@duration})"
       end
 
     end
