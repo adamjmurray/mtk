@@ -20,17 +20,35 @@ describe MTK::Event::AbstractEvent do
     end
   end
 
+  describe "#value" do
+    pending
+  end
+
+  describe "#value=" do
+    pending
+  end
+
   describe "#duration" do
     it "is the duration used to create the Event" do
       event.duration.should == duration
     end
+  end
 
-    it "is a read-only attribute" do
-      lambda{ event.duration = 0 }.should raise_error
-    end
+  describe "#duration=" do
+    pending
+  end
 
+  describe "#number" do
+    pending
+  end
+
+  describe "#number=" do
+    pending
+  end
+
+  describe "#length" do
     it "is always positive (absolute value of the duration used to construct the Event)" do
-      EVENT.new(type, value, -duration).duration.should == duration
+      EVENT.new(type, value, -duration).length.should == duration
     end
   end
 
@@ -53,42 +71,6 @@ describe MTK::Event::AbstractEvent do
   describe "#to_hash" do
     it "is a hash containing all the attributes of the Event" do
       event.to_hash.should == { :type => type, :value => value, :duration => duration }
-    end
-  end
-
-  describe "#clone_with" do
-    it "clones the Event when given an empty hash" do
-      event.clone_with({}).should == event
-    end
-
-    it "creates an Event with the given :value, and the current EVENT's duration if not provided" do
-      event2 = event.clone_with :value => (value * 0.5)
-      event2.value.should == (value * 0.5)
-      event2.duration.should == duration
-    end
-
-    it "creates an Event with the given :duration, and the current EVENT's value if not provided" do
-      event2 = event.clone_with :duration => (duration * 2)
-      event2.value.should == value
-      event2.duration.should == (duration * 2)
-    end
-  end
-
-  describe '#scale_value' do
-    it 'multiplies @value by the argument' do
-      (event.scale_value 0.5).should == EVENT.new(type, value * 0.5, duration)
-    end
-    it 'does not affect the immutability of the Event' do
-      (event.scale_value 0.5).should_not == event
-    end
-  end
-
-  describe '#scale_duration' do
-    it 'multiplies @duration by the argument' do
-      (event.scale_duration 2).should == EVENT.new(type, value, duration*2)
-    end
-    it 'does not affect the immutability of the EVENT' do
-      (event.scale_duration 0.5).should_not == event
     end
   end
 

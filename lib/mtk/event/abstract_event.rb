@@ -12,12 +12,20 @@ module MTK
       # Depends on the event type. For example, the number of a :note type Event is the pitch,
       # and the number of a :control type Event is the controller (CC) number.
       # This value is nil for inapplicable event types.
-      attr_reader :number
+      attr_accessor :number
 
       # The value of event.
       # Depends on event type. For example, the value of a :note type Event is the intensity,
       # and the value of a :control type Event is the controller (CC) value.
-      attr_reader :value
+      attr_accessor :value
+
+      # Duration of the Event in beats (e.g. 1.0 is a quarter note in 4/4 time signatures)
+      # @see length
+      # @see rest?
+      # @see instantaneous?
+      # @see duration_in_pulses
+      attr_accessor :duration
+
 
       def initialize(type, value, duration, number=nil)
         @type, @value, @duration, @number = type, value, duration, number
@@ -33,36 +41,33 @@ module MTK
         hash
       end
 
-      def clone_with(hash)
-        self.class.from_hash(to_hash.merge hash)
-      end
-
       def midi_value
         (127 * @value).round
       end
 
-      def scale_value(scaling_factor)
-        clone_with :value => @value * scaling_factor.to_f
+      def midi_value= value
+        @value = value/127.0
       end
 
-      def scale_duration(scaling_factor)
-        clone_with :duration => @duration * scaling_factor.to_f
-      end
-
-      # Duration of the Event in beats (e.g. 1.0 is a quarter note in 4/4 time signatures)
-      # This is the absolute value of the duration attribute used to construct the object.
+      # The magnitude (absolute value) of the duration.
+      # Indicate the "real" duration for rests.
       # @see rest?
-      def duration
-        @abs_duration ||= @duration.abs
+      def length
+        @duration.abs
       end
 
-      # By convention, any events with negative durations are considered a rest
+      # By convention, any events with negative durations are a rest
       def rest?
         @duration < 0
       end
 
+      # By convention, any events with 0 duration are instantaneous
+      def instantaneous?
+        @duration == 0
+      end
+
       def duration_in_pulses(pulses_per_beat)
-        @duration_in_pulses ||= (duration * pulses_per_beat).round
+        @duration_in_pulses ||= (@duration.abs * pulses_per_beat).round
       end
 
       def == other

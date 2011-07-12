@@ -6,12 +6,12 @@ module MTK
     class Note < AbstractEvent
 
       # Frequency of the note as a {Pitch}.
-      # This is an alias for #{AbstractEvent#number}
-      attr_reader :pitch
+      alias :pitch :number
+      alias :pitch= :number=
 
       # Intensity of the note as a value in the range 0.0 - 1.0.
-      # This is an alias for #{AbstractEvent#value}
-      attr_reader :intensity
+      alias :intensity :value
+      alias :intensity= :value=
 
       def initialize(pitch, intensity, duration)
         @pitch, @intensity = pitch, intensity

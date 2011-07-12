@@ -13,20 +13,20 @@ describe MTK::Event::Note do
     it "is the pitch used to create the Note" do
       note.pitch.should == pitch
     end
+  end
 
-    it "is a read-only attribute" do
-      lambda{ note.pitch = D4 }.should raise_error
-    end
+  describe "#pitch=" do
+    pending
   end
 
   describe "#intensity" do
     it "is the intensity used to create the Event" do
       note.intensity.should == intensity
     end
+  end
 
-    it "is a read-only attribute" do
-      lambda{ note.intensity = 0 }.should raise_error
-    end
+  describe "#intensity=" do
+    pending
   end
 
   describe "#velocity" do
@@ -37,6 +37,10 @@ describe MTK::Event::Note do
     it "rounds to the nearest MIDI velocity" do
       NOTE.new(pitch, 0.5, 0).velocity.should == 64 # not be truncated to 63!
     end
+  end
+
+  describe "#velocity=" do
+    pending
   end
 
   describe ".from_hash" do
