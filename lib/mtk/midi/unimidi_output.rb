@@ -26,12 +26,12 @@ module MTK
       protected
 
       # (see AbstractOutput#note_on)
-      def note_on(pitch, velocity, channel=0)
+      def note_on(pitch, velocity, channel)
         lambda { @device.puts(0x90|channel, pitch, velocity) }
       end
 
       # (see AbstractOutput#note_off)
-      def note_off(pitch, velocity, channel=0)
+      def note_off(pitch, velocity, channel)
         lambda { @device.puts(0x80|channel, pitch, velocity) }
       end
 

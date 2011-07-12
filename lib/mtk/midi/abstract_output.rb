@@ -5,7 +5,9 @@ module MTK
   module MIDI
 
     # Provides a scheduler and common behavior for realtime MIDI output, using the gamelan gem for scheduling.
-    # @abstract Subclass and override {#note_on}, {#note_off}, {#control}, {#channel_pressure}, {#poly_pressure}, {#bend}, and {#program}
+    #
+    # @abstract Subclass and override {#note_on}, {#note_off}, {#control}, {#channel_pressure}, {#poly_pressure}, {#bend}, and {#program} to implement a MIDI output.
+    #
     class AbstractOutput
 
       def play(timeline, options={})
@@ -58,11 +60,11 @@ module MTK
       protected
 
       # Create a Proc that will send a note on event to the MIDI output
-      def note_on(pitch, velocity, channel=0)
+      def note_on(pitch, velocity, channel)
       end
 
       # Create a Proc that will send a note off event to the MIDI output
-      def note_off(pitch, velocity, channel=0)
+      def note_off(pitch, velocity, channel)
       end
 
       # Create a Proc that will send a control change event to the MIDI output
@@ -77,7 +79,7 @@ module MTK
       def poly_pressure(midi_value, channel)
       end
 
-      # Create a Proc that will send a pitch vend event to the MIDI output.
+      # Create a Proc that will send a pitch bend event to the MIDI output.
       def bend(midi_value, channel)
       end
 

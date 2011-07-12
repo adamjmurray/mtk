@@ -1,6 +1,7 @@
 module MTK
 
   module Event
+
     # An abstract musical event that has an intensity and a duration
     # @abstract
     class AbstractEvent
