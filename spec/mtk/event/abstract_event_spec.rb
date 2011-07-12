@@ -119,20 +119,20 @@ describe MTK::Event::AbstractEvent do
   end
 
   describe "#to_s" do
-    it "is the value and duration to 2-decimal places" do
-      EVENT.new(type, 0.454545, 0.789789).to_s.should == "type,0.45,0.79"
+    it "has the value and duration to 2-decimal places" do
+      EVENT.new(type, 0.454545, 0.789789).to_s.should == "Event(type, 0.45, 0.79)"
     end
     it "includes the #number when not nil" do
-      EVENT.new(type, 0.454545, 0.789789, 1).to_s.should == "type[1],0.45,0.79"
+      EVENT.new(type, 0.454545, 0.789789, 1).to_s.should == "Event(type[1], 0.45, 0.79)"
     end
   end
 
   describe "#inspect" do
-    it "is the string values of value and duration" do
-      EVENT.new(:type, 0.454545, 0.789789).inspect.should == "type,0.454545,0.789789"
+    it "has the string values of value and duration" do
+      EVENT.new(:type, 0.454545, 0.789789).inspect.should == "Event(type, 0.454545, 0.789789)"
     end
     it "includes the #number when not nil" do
-      EVENT.new(type, 0.454545, 0.789789, 1).inspect.should == "type[1],0.454545,0.789789"
+      EVENT.new(type, 0.454545, 0.789789, 1).inspect.should == "Event(type[1], 0.454545, 0.789789)"
     end
   end
 

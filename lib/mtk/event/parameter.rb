@@ -20,15 +20,32 @@ module MTK
             else [:unknown, data1, data2]
           end
         )
+        if type == :bend
+          if value == 16383
+            value = 1.0 # special case since the math doesn't quite work out to convert to -1..1 for all values
+          else
+            value = (value / 8192.0) - 1.0
+          end
+        else
+          value /= 127.0
+        end
         new type, value, number  # TODO: channel
       end
 
+      def midi_value
+        if @type == :bend
+          (16383*(@value+1)/2).round
+        else
+          super
+        end
+      end
+
       def to_s
-        "Parameter(#@type" + (@number ? "[#@number]," : ',') + (@value.is_a?(Fixnum) ? @value.to_s : "#{sprintf '%.2f',@value}") + ')'
+        "Parameter(#@type" + (@number ? "[#@number], " : ', ') + "#{sprintf '%.2f',@value})"
       end
 
       def inspect
-        "Parameter(#@type" + (@number ? "[#@number]:" : ':') + "#@value)"
+        "Parameter(#@type" + (@number ? "[#@number], " : ', ') + "#@value)"
       end
 
     end

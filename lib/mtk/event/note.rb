@@ -35,9 +35,7 @@ module MTK
       end
 
       # intensity scaled to the MIDI range 0-127
-      def velocity
-        @velocity ||= (127 * @intensity).round
-      end
+      alias :velocity :midi_value
 
       def transpose(interval)
         self.class.new(@pitch+interval, @intensity, @duration)
@@ -55,11 +53,11 @@ module MTK
       end
 
       def to_s
-        "Note(#@pitch,#{sprintf '%.2f',@value},#{sprintf '%.2f',@duration})"
+        "Note(#@pitch, #{sprintf '%.2f',@value}, #{sprintf '%.2f',@duration})"
       end
 
       def inspect
-        "Note(#{@pitch},#{@value},#{@duration})"
+        "Note(#{@pitch}, #{@value}, #{@duration})"
       end
 
     end

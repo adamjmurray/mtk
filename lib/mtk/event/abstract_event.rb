@@ -37,6 +37,10 @@ module MTK
         self.class.from_hash(to_hash.merge hash)
       end
 
+      def midi_value
+        (127 * @value).round
+      end
+
       def scale_value(scaling_factor)
         clone_with :value => @value * scaling_factor.to_f
       end
@@ -69,11 +73,11 @@ module MTK
       end
 
       def to_s
-        "#@type" + (@number ? "[#@number]" : '') + ",#{sprintf '%.2f',@value},#{sprintf '%.2f',@duration}"
+        "Event(#@type" + (@number ? "[#@number]" : '') + ", #{sprintf '%.2f',@value}, #{sprintf '%.2f',@duration})"
       end
 
       def inspect
-        "#@type" + (@number ? "[#@number]" : '') + ",#@value,#@duration"
+        "Event(#@type" + (@number ? "[#@number]" : '') + ", #@value, #@duration)"
       end
 
     end
