@@ -7,7 +7,7 @@ describe MTK::Event::AbstractEvent do
   let(:type) { :type }
   let(:value) { 0.5 }
   let(:duration) { 2.5 }
-  let(:event) { EVENT.new(type, value, duration) }
+  let(:event) { EVENT.new type, :value => value, :duration => duration }
 
 
   describe "#type" do
@@ -48,13 +48,13 @@ describe MTK::Event::AbstractEvent do
 
   describe "#length" do
     it "is always positive (absolute value of the duration used to construct the Event)" do
-      EVENT.new(type, value, -duration).length.should == duration
+      EVENT.new(type, :duration => -duration).length.should == duration
     end
   end
 
   describe "#rest?" do
     it "is true when the duration used to create the Event was negative" do
-      EVENT.new(type, value, -duration).rest?.should be_true
+      EVENT.new(type, :duration => -duration).rest?.should be_true
     end
 
     it "is false when the duration used to create the Event was positive" do
@@ -76,45 +76,51 @@ describe MTK::Event::AbstractEvent do
 
   describe "#duration_in_pulses" do
     it "converts beats to pulses, given pulses_per_beat" do
-      EVENT.new(type,0,1).duration_in_pulses(60).should == 60
+      EVENT.new(type, :duration => 1).duration_in_pulses(60).should == 60
     end
 
     it "rounds to the nearest pulse" do
-      EVENT.new(type,0,1.5).duration_in_pulses(59).should == 89
+      EVENT.new(type, :duration => 1.5).duration_in_pulses(59).should == 89
     end
 
     it "is always positive (uses absolute value of the duration used to construct the Event)" do
-      EVENT.new(type, value, -1).duration_in_pulses(60).should == 60
+      EVENT.new(type, :duration => -1).duration_in_pulses(60).should == 60
     end
   end
 
   describe "#==" do
-    it "is true when the intensities and durations are equal" do
-      event.should == EVENT.new(type, value, duration)
+    it "is true when the types, values, and durations are equal" do
+      event.should == EVENT.new(type, :value => value, :duration => duration)
+    end
+    it "is false when the types are not equal" do
+      event.should_not == EVENT.new(:another_type, :value => value, :duration => duration)
     end
     it "is false when the intensities are not equal" do
-      event.should_not == EVENT.new(type, value * 0.5, duration)
+      event.should_not == EVENT.new(type, :value => value * 0.5, :duration => duration)
     end
     it "is false when the durations are not equal" do
-      event.should_not == EVENT.new(type, value, duration * 2)
+      event.should_not == EVENT.new(type, :value => value, :duration => duration * 2)
+    end
+    it "takes into account the number" do
+      pending
     end
   end
 
   describe "#to_s" do
     it "has the value and duration to 2-decimal places" do
-      EVENT.new(type, 0.454545, 0.789789).to_s.should == "Event(type, 0.45, 0.79)"
+      EVENT.new(type, :value => 0.454545, :duration => 0.789789).to_s.should == "Event(type, 0.45, 0.79)"
     end
     it "includes the #number when not nil" do
-      EVENT.new(type, 0.454545, 0.789789, 1).to_s.should == "Event(type[1], 0.45, 0.79)"
+      EVENT.new(type, :value => 0.454545, :duration => 0.789789, :number => 1).to_s.should == "Event(type[1], 0.45, 0.79)"
     end
   end
 
   describe "#inspect" do
     it "has the string values of value and duration" do
-      EVENT.new(:type, 0.454545, 0.789789).inspect.should == "Event(type, 0.454545, 0.789789)"
+      EVENT.new(:type, :value => 0.454545, :duration => 0.789789).inspect.should == "Event(type, 0.454545, 0.789789)"
     end
     it "includes the #number when not nil" do
-      EVENT.new(type, 0.454545, 0.789789, 1).inspect.should == "Event(type[1], 0.454545, 0.789789)"
+      EVENT.new(type, :value => 0.454545, :duration => 0.789789, :number => 1).inspect.should == "Event(type[1], 0.454545, 0.789789)"
     end
   end
 

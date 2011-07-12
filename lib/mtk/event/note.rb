@@ -13,13 +13,16 @@ module MTK
       alias :intensity :value
       alias :intensity= :value=
 
-      def initialize(pitch, intensity, duration)
-        @pitch, @intensity = pitch, intensity
-        super(:note, intensity, duration, pitch)
+      # intensity scaled to the MIDI range 0-127
+      alias :velocity :midi_value
+      alias :velocity= :midi_value=
+
+      def initialize(pitch, intensity, duration, channel=nil)
+        super :note, :number => pitch, :value => intensity, :duration => duration, :channel => channel
       end
 
       def self.from_hash(hash)
-        new (hash[:pitch] || hash[:number]), (hash[:intensity] || hash[:value]), hash[:duration]
+        new (hash[:pitch] || hash[:number]), (hash[:intensity] || hash[:value]), hash[:duration], hash[:channel]
       end
 
       def to_hash
@@ -34,15 +37,14 @@ module MTK
         [pitch.to_i, velocity, duration]
       end
 
-      # intensity scaled to the MIDI range 0-127
-      alias :velocity :midi_value
-
       def transpose(interval)
-        self.class.new(@pitch+interval, @intensity, @duration)
+        self.pitch += interval
+        self
       end
 
       def invert(around_pitch)
-        self.class.new(@pitch.invert(around_pitch), @intensity, @duration)
+        self.pitch = self.pitch.invert(around_pitch)
+        self
       end
 
       def ==(other)

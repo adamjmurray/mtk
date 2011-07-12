@@ -4,10 +4,6 @@ module MTK
 
     class Parameter < AbstractEvent
 
-      def initialize(type, value, number=nil)
-        super(type,value,0,number)
-      end
-
       def self.from_midi(status, data1, data2)
         channel = status & 0x0F # TODO: store channel in events
         type, number, value = *(
@@ -29,7 +25,7 @@ module MTK
         else
           value /= 127.0
         end
-        new type, value, number  # TODO: channel
+        new type, :number => number, :value => value, :channel => channel
       end
 
       def midi_value

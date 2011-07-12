@@ -76,9 +76,6 @@ describe MTK::Event::Note do
     it 'adds the given interval to the @pitch' do
       (note.transpose 2.semitones).should == NOTE.new(D4, intensity, duration)
     end
-    it 'does not affect the immutability of the NOTE' do
-      (note.transpose 2.semitones).should_not == note
-    end
   end
 
   describe "#invert" do

@@ -26,18 +26,26 @@ module MTK
       # @see duration_in_pulses
       attr_accessor :duration
 
+      # The channel of the event, for multi-tracked events.
+      attr_accessor :channel
 
-      def initialize(type, value, duration, number=nil)
-        @type, @value, @duration, @number = type, value, duration, number
+
+      def initialize(type, options={})
+        @type = type
+        @value = options.fetch :value, 0
+        @number = options[:number]
+        @duration = options[:duration]
+        @channel = options[:channel]
       end
 
       def self.from_hash(hash)
-        new hash[:type], hash[:value], hash[:duration], hash[:number]
+        new(hash[:type], hash)
       end
 
       def to_hash
-        hash = { :type => @type, :value => @value, :duration => @duration }
+        hash = {:type => @type, :value => @value, :duration => @duration}
         hash[:number] = @number if @number
+        hash[:channel] = @channel if @channel
         hash
       end
 
@@ -63,7 +71,7 @@ module MTK
 
       # By convention, any events with 0 duration are instantaneous
       def instantaneous?
-        @duration == 0
+        @duration.nil? or @duration == 0
       end
 
       def duration_in_pulses(pulses_per_beat)
