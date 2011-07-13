@@ -212,7 +212,7 @@ describe MTK::Event::Parameter do
 
   describe "#inspect" do
     it "includes the #type, #number, and #value.to_s" do
-      PARAMETER.from_midi([:control_change,0], 50, 100).inspect.should == "Parameter(control[50], 0.7874015748031497)"
+      PARAMETER.from_midi([:control_change,0], 50, 100).inspect.should == "Parameter(control[50], #{100/127.0})"
     end
   end
 

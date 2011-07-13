@@ -125,7 +125,7 @@ describe MTK::Event::Note do
 
   describe "#to_s" do
     it "includes the #pitch, #intensity to 2 decimal places, and #duration to 2 decimal places" do
-      NOTE.new(C4, 1/8.0, 1/8.0).to_s.should == "Note(C4, 0.12, 0.12)"
+      NOTE.new(C4, 1/3.0, 1/3.0).to_s.should == "Note(C4, 0.33, 0.33)"
     end
   end
 
