@@ -6,7 +6,7 @@ SUPPORTED_RUBIES = %w[ 1.8.7  1.9.2  jruby-1.5.6  jruby-1.6.3 ]
 
 task :default => :spec
 
-CLEAN.include('html','doc') # clean and clobber do the same thing for now
+CLEAN.include('html','doc','coverage.data','coverage') # clean and clobber do the same thing for now
 
 desc "Run RSpec tests with full output"
 RSpec::Core::RakeTask.new do |spec|
@@ -28,12 +28,22 @@ end
 
 
 namespace :spec do
-  desc "Run RSpecs tests with summary output and fast failure"
+  desc "Run RSpec tests with summary output and fast failure"
   RSpec::Core::RakeTask.new(:fast) do |spec|
     spec.rspec_opts = ["--color", "--fail-fast"]
   end
 
-  desc "Run RSpecs tests on all supported versions of Ruby: #{SUPPORTED_RUBIES.join ', '}"
+  desc "Run RSpec tests and generate a coverage report"
+  RSpec::Core::RakeTask.new(:cov) do |spec|
+    spec.rspec_opts = ["--color", "-r", "#{File.dirname __FILE__}/spec/spec_coverage.rb"]
+  end
+
+  desc "Profile RSpec tests and report 10 slowest"
+  RSpec::Core::RakeTask.new(:prof) do |spec|
+    spec.rspec_opts = ["--color", "-p"]
+  end
+
+  desc "Run RSpec tests on all supported versions of Ruby: #{SUPPORTED_RUBIES.join ', '}"
   task :all do
     fail unless system("rvm #{SUPPORTED_RUBIES.join ','} rake -f #{__FILE__} spec:fast")
   end

@@ -1,5 +1,7 @@
 html
 doc
+coverage
+coverage.data
 .yardoc
 .idea
 *.iml
