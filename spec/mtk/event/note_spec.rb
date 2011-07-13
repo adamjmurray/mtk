@@ -16,7 +16,10 @@ describe MTK::Event::Note do
   end
 
   describe "#pitch=" do
-    pending
+    it "sets the pitch" do
+      note.pitch = D4
+      note.pitch.should == D4
+    end
   end
 
   describe "#intensity" do
@@ -26,7 +29,10 @@ describe MTK::Event::Note do
   end
 
   describe "#intensity=" do
-    pending
+    it "sets the intensity" do
+      note.intensity = fff
+      note.intensity.should == fff
+    end
   end
 
   describe "#velocity" do
@@ -40,7 +46,10 @@ describe MTK::Event::Note do
   end
 
   describe "#velocity=" do
-    pending
+    it "sets the velocity" do
+      note.velocity = 100
+      note.velocity.should == 100
+    end
   end
 
   describe ".from_hash" do
@@ -114,7 +123,20 @@ describe MTK::Event::Note do
     end
   end
 
+  describe "#to_s" do
+    it "includes the #pitch, #intensity to 2 decimal places, and #duration to 2 decimal places" do
+      NOTE.new(C4, 1/8.0, 1/8.0).to_s.should == "Note(C4, 0.12, 0.12)"
+    end
+  end
+
+  describe "#inspect" do
+    it "includes the #pitch, #intensity.to_s, and #duration.to_s" do
+      NOTE.new(C4, 1/8.0, 1/8.0).inspect.should == "Note(C4, 0.125, 0.125)"
+    end
+  end
+
 end
+
 
 describe MTK do
 
