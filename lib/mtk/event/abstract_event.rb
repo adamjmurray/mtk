@@ -33,7 +33,7 @@ module MTK
 
       def initialize(type, options={})
         @type = type
-        @value = options.fetch :value, 0
+        @value = options[:value]
         @number = options[:number]
         @duration = options[:duration]
         @channel = options[:channel]
@@ -44,14 +44,19 @@ module MTK
       end
 
       def to_hash
-        hash = {:type => @type, :value => @value, :duration => @duration}
-        hash[:number] = @number if @number
-        hash[:channel] = @channel if @channel
+        hash = {:type => @type}
+        hash[:value] = @value unless @value.nil?
+        hash[:duration] = @duration unless @duration.nil?
+        hash[:number] = @number unless @number.nil?
+        hash[:channel] = @channel unless @channel.nil?
         hash
       end
 
       def midi_value
-        (127 * @value).round
+        midi_value = (127 * (@value || 0)).round
+        midi_value = 0 if midi_value < 0
+        midi_value = 127 if midi_value > 127
+        midi_value
       end
 
       def midi_value= value
@@ -62,7 +67,7 @@ module MTK
       # Indicate the "real" duration for rests.
       # @see rest?
       def length
-        @duration.abs
+        (@duration || 0).abs
       end
 
       # By convention, any events with negative durations are a rest
@@ -75,15 +80,17 @@ module MTK
         @duration.nil? or @duration == 0
       end
 
+      # Convert duration to an integer number of MIDI pulses, given the pulses_per_beat
       def duration_in_pulses(pulses_per_beat)
-        @duration_in_pulses ||= (@duration.abs * pulses_per_beat).round
+        (length * pulses_per_beat).round
       end
 
       def == other
         other.respond_to? :type and @type == other.type and
         other.respond_to? :number and @number == other.number and
         other.respond_to? :value and @value == other.value and
-        other.respond_to? :duration and @duration == other.duration
+        other.respond_to? :duration and @duration == other.duration and
+        other.respond_to? :channel and @channel == other.channel
       end
 
       def to_s
