@@ -66,6 +66,50 @@ module MTK::Helper
     end
     alias retrograde reverse
 
+
+    # Partition the collection into an Array of sub-collections.
+    #
+    # With a Numeric argument: partition the elements into collections of the given size (plus whatever's left over).
+    #
+    # With an Array argument: partition the elements into collections of the given sizes.
+    #
+    # Otherwise if a block is given: partition the elements into collections with the same block return value.
+    #
+    def partition(arg=nil)
+      partitions = nil
+      case arg
+        when Numeric
+          partitions = self.each_slice(arg)
+
+        when Enumerable
+          partitions = []
+          items, sizes = self.to_enum, arg.to_enum
+          group = []
+          size = sizes.next
+          loop do
+            item = items.next
+            if group.size < size
+              group << item
+            else
+              partitions << group
+              group = []
+              size = sizes.next
+              group << item
+            end
+          end
+          partitions << group unless group.empty?
+
+        else
+          partitions = self.group_by{|item| yield item }.values if block_given?
+      end
+
+      if partitions
+        partitions.map{|p| self.class.from_a(p) }
+      else
+        self
+      end
+    end
+
     def ==(other)
       if other.respond_to? :elements
         if other.respond_to? :options

@@ -252,6 +252,61 @@ describe MTK::Helper::Collection do
     end
   end
 
+  describe "#partition" do
+    # TODO: better descriptions! (and document the method too!)
+
+    context "Numeric argument" do
+      it "partitions the elements into groups of the size, plus whatever's left over as the last element" do
+        collection.partition(2).should == [
+          MockCollection.new([1,2]),
+          MockCollection.new([3,4]),
+          MockCollection.new([5])
+        ]
+      end
+    end
+
+    context "Array argument" do
+      it "partitions the elements into groups of the size of the argument elements" do
+        collection.partition([1,2,2]).should == [
+          MockCollection.new([1]),
+          MockCollection.new([2,3]),
+          MockCollection.new([4,5])
+        ]
+      end
+
+      it "does not include leftover elements" do
+        collection.partition([1,3]).should == [
+          MockCollection.new([1]),
+          MockCollection.new([2,3,4])
+        ]
+      end
+
+      it "does not include extra elements" do
+        collection.partition([1,5]).should == [
+          MockCollection.new([1]),
+          MockCollection.new([2,3,4,5])
+        ]
+      end
+    end
+
+    context "no argument, block given" do
+      it "partitions the elements into groups with the same block return value" do
+        collection.partition{|item| item % 3 }.should =~ [
+          MockCollection.new([1,4]),
+          MockCollection.new([2,5]),
+          MockCollection.new([3])
+        ]
+      end
+    end
+
+    context "incompatible / missing argument, no block given" do
+      it "returns self" do
+        collection.partition.should == collection
+      end
+    end
+
+  end
+
   describe "#==" do
     it "is true when the elements in 2 Collections are equal" do
       collection.should == MockCollection.new(elements)
