@@ -156,6 +156,10 @@ describe MTK::Intervals do
       Intervals['M7'].should == M7
       Intervals['P8'].should == P8
     end
+
+    it "returns nil for arguments it doesn't understand" do
+      Intervals[:invalid].should be_nil
+    end
   end
 
 end

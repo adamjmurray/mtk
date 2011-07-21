@@ -344,3 +344,13 @@ describe MTK::Helper::Collection do
   end
 
 end
+
+
+describe "Array" do
+  describe "#rotate" do
+    # test the Ruby 1.8 backport of Array#rotate
+    it "should rotate the Array, as in Ruby 1.9's API" do
+      [1,2,3].rotate(1).should == [2,3,1]
+    end
+  end
+end

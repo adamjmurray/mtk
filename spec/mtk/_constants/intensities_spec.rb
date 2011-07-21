@@ -119,6 +119,10 @@ describe MTK::Intensities do
         Intensities["#{name}-"].should == Intensities.send(name)-1.0/24
       end
     end
+
+    it "returns nil for arguments it doesn't understand" do
+      Intensities[:invalid].should be_nil
+    end
   end
 
 end

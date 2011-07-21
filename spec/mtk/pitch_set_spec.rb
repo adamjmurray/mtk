@@ -114,12 +114,20 @@ describe MTK::PitchSet do
       PitchSet.new([C4, E4, G4]).should == PitchSet.new([Pitch.from_i(60), Pitch.from_i(64), Pitch.from_i(67)])
     end
 
+    it "is false when not all the pitches are equal" do
+      PitchSet.new([C4, E4, G4]).should_not == PitchSet.new([Pitch.from_i(60), Pitch.from_i(65), Pitch.from_i(67)])
+    end
+
     it "doesn't consider duplicates in the comparison" do
       PitchSet.new([C4, C4]).should == PitchSet.new([C4])
     end
 
     it "doesn't consider the order of pitches" do
       PitchSet.new([G4, E4, C4]).should == PitchSet.new([C4, E4, G4])
+    end
+
+    it "is false when the argument is not compatible" do
+      PitchSet.new([C4, E4, G4]).should_not == :invalid
     end
   end
 

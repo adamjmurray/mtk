@@ -47,6 +47,10 @@ describe MTK::Pitches do
         end
       end
     end
+
+    it "returns nil for arguments it doesn't understand" do
+      Pitches[:invalid].should be_nil
+    end
   end
 
 end

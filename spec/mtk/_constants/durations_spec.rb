@@ -112,6 +112,10 @@ describe MTK::Durations do
         Durations["#{duration}..t.t."].should == Durations.send(duration) * 1.5**4 * (2/3.0)**2
       end
     end
+
+    it "returns nil for arguments it doesn't understand" do
+      Durations[:invalid].should be_nil
+    end
   end
 
 end

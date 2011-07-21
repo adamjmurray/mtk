@@ -54,5 +54,9 @@ describe MTK::PitchClasses do
         PitchClasses[name].should == PitchClass[name]
       end
     end
+
+    it "returns nil for arguments it doesn't understand" do
+      PitchClasses[:invalid].should be_nil
+    end
   end
 end
