@@ -21,7 +21,7 @@ end
 namespace :gem do
   desc "Install gems for supported versions of Ruby: #{SUPPORTED_RUBIES.join ', '}"
   task :install do
-    fail unless system("rvm #{SUPPORTED_RUBIES.join ','} gem install --no-rdoc --no-ri rake rspec yard midilib citrus")
+    fail unless system("rvm #{SUPPORTED_RUBIES.join ','} gem install --no-rdoc --no-ri rake rspec yard midilib citrus gamelan")
   end
 end
 
