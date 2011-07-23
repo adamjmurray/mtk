@@ -75,7 +75,7 @@ module MTK::Helper
     #
     # Otherwise if a block is given: partition the elements into collections with the same block return value.
     #
-    def partition(arg=nil)
+    def partition(arg=nil, &block)
       partitions = nil
       case arg
         when Numeric
@@ -100,7 +100,15 @@ module MTK::Helper
           partitions << group unless group.empty?
 
         else
-          partitions = self.group_by{|item| yield item }.values if block_given?
+          if block
+            group = Hash.new{|h,k| h[k] = [] }
+            if block.arity == 2
+              self.each_with_index{|item,index| group[block[item,index]] << item }
+            else
+              self.each{|item| group[block[item]] << item }
+            end
+            partitions = group.values
+          end
       end
 
       if partitions
@@ -132,11 +140,11 @@ module MTK::Helper
     private
 
     # "clones" the object with the given elements, attempting to maintain any @options
-    # This is designed to work with 2 argument constructors: def initialize(elements, options={})
+    # This is designed to work with 2 argument constructors: def initialize(elements, options=default)
     def clone_with elements
       from_a = self.class.method(:from_a)
-      if from_a.arity == -2
-        from_a[elements, (@options || {})]
+      if from_a.arity == -2 and @options
+        from_a[elements, @options]
       else
         from_a[elements]
       end

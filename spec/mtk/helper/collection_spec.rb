@@ -297,6 +297,14 @@ describe MTK::Helper::Collection do
           MockCollection.new([3])
         ]
       end
+
+      it "optionally passes the item index into the block" do
+        collection.partition{|item,index| (item*index) % 3 }.should =~ [
+          # 1*0, 2*1, 3*2, 4*3, 5*4 => (0, 2, 6, 12, 20) % 3 => 0, 2, 0, 0, 2
+          MockCollection.new([1,3,4]),
+          MockCollection.new([2,5]),
+        ]
+      end
     end
 
     context "incompatible / missing argument, no block given" do
