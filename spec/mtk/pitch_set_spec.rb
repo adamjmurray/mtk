@@ -10,6 +10,30 @@ describe MTK::PitchSet do
     pitch_set.should be_a Enumerable
   end
 
+  describe ".new" do
+    it "maintains the pitch class collection (preserves order and keeps duplicates) by default" do
+      PitchSet.new([C4, E4, G4, E4, B3, C4]).pitches.should == [C4, E4, G4, E4, B3, C4]
+    end
+
+    describe "unique option" do
+      it "removes duplicates" do
+        PitchSet.new([C4, E4, G4, C4], :unique => true).pitches.should == [C4, E4, G4]
+      end
+    end
+
+    describe "uniq option" do
+      it "behaves like the unique option" do
+        PitchSet.new([C4, E4, G4, C4], :uniq => true).should == PitchSet.new([C4, E4, G4, C4], :unique => true)
+      end
+    end
+
+    describe "sort option" do
+      it "sorts the pitches" do
+        PitchSet.new([G4, E4, C4], :sort => true).pitches.should == [C4, E4, G4]
+      end
+    end
+  end
+
   describe '#pitches' do
     it 'is the list of pitches used to construct the scale' do
       pitch_set.pitches.should == pitches
@@ -30,13 +54,6 @@ describe MTK::PitchSet do
       pitch_set.pitches.length.should == 7
     end
 
-    it "does not include duplicates" do
-      PitchSet.new([C4, E4, G4, C4]).pitches.should == [C4, E4, G4]
-    end
-
-    it "sorts the pitches" do
-      PitchSet.new([G4, E4, C4]).pitches.should == [C4, E4, G4]
-    end
   end
 
   describe "#to_a" do
@@ -118,16 +135,42 @@ describe MTK::PitchSet do
       PitchSet.new([C4, E4, G4]).should_not == PitchSet.new([Pitch.from_i(60), Pitch.from_i(65), Pitch.from_i(67)])
     end
 
-    it "doesn't consider duplicates in the comparison" do
-      PitchSet.new([C4, C4]).should == PitchSet.new([C4])
+    it "is false when if otherwise equal PitchSets don't contain the same number of duplicates" do
+      PitchSet.new([C4, E4, G4]).should_not == PitchSet.new([C4, C4, E4, G4])
     end
 
-    it "doesn't consider the order of pitches" do
-      PitchSet.new([G4, E4, C4]).should == PitchSet.new([C4, E4, G4])
+    it "is false when if otherwise equal PitchSets aren't in the same order" do
+      PitchSet.new([C4, E4, G4]).should_not == PitchSet.new([C4, G4, E4])
     end
 
     it "is false when the argument is not compatible" do
       PitchSet.new([C4, E4, G4]).should_not == :invalid
+    end
+
+    it "can be compared directly to Arrays" do
+      PitchSet.new([C4, E4, G4]).should == [C4, E4, G4]
+    end
+  end
+
+  describe "#=~" do
+    it "is true when all the pitches are equal" do
+      PitchSet.new([C4, E4, G4]).should =~ PitchSet.new([C4, E4, G4])
+    end
+
+    it "is true when all the pitches are equal, even with different numbers of duplicates" do
+      PitchSet.new([C4, E4, G4]).should =~ PitchSet.new([C4, C4, E4, G4])
+    end
+
+    it "is true when all the pitches are equal, even in a different order" do
+      PitchSet.new([C4, E4, G4]).should =~ PitchSet.new([C4, G4, E4])
+    end
+
+    it "is false when one PitchSet contains a Pitch not in the other" do
+      PitchSet.new([C4, E4, G4]).should_not =~ PitchSet.new([C4, E4])
+    end
+
+    it "can be compared directly to Arrays" do
+      PitchSet.new([C4, E4, G4]).should =~ [C4, E4, G4]
     end
   end
 

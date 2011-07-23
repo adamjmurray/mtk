@@ -1,7 +1,7 @@
 module MTK
 
-  # An ordered Set of PitchClasses, for 12-tone set-theory pitch analysis and manipulations
-  #
+  # An immutable collection of {PitchClass}es, for 12-tone set-theory analysis and manipulations.
+  # @note Unlike a mathematical set, a PitchClassSet is ordered and may include duplicates (see {#initialize} options).
   class PitchClassSet
 
     include Helper::Collection
@@ -20,8 +20,16 @@ module MTK
       @all ||= new(PitchClasses::PITCH_CLASSES)
     end
 
-    def initialize(pitch_classes)
-      @pitch_classes = pitch_classes.to_a.uniq.freeze
+    # @param pitch_classes [#to_a] the collection of pitch classes
+    # @param options [Hash] options for modifying the collection of pitch classes
+    # @option options :unique when not false, duplicate pitch classes will be removed
+    # @option options :uniq alias for the :unique option
+    # @option options :sort when not false, the pitch classes will be sorted (from C up to B)
+    def initialize(pitch_classes, options=nil)
+      pitch_classes = pitch_classes.to_a.clone
+      pitch_classes.uniq! if options and (options[:unique] or options[:uniq])
+      pitch_classes.sort! if options and options[:sort]
+      @pitch_classes = pitch_classes.freeze
     end
 
     def elements
@@ -33,7 +41,7 @@ module MTK
     end
 
     def normal_order
-      ordering = Array.new(@pitch_classes.sort)
+      ordering = Array.new(@pitch_classes.uniq.sort)
       min_span, start_index_for_normal_order = nil, nil
 
       # check every rotation for the minimal span:
@@ -90,19 +98,15 @@ module MTK
       end
     end
 
-    # Compare for equality, ignoring order
-    # @param other [#pitch_classes, #to_a, #sort, Array]
+    # Compare for equality, ignoring order and duplicates
+    # @param other [#pitch_classes, Array, #to_a]
     def =~ other
-      if other.is_a? Array and other.frozen?
-        @pitch_classes.sort == other
-      elsif other.respond_to? :pitch_classes
-        @pitch_classes.sort == other.pitch_classes.sort
-      elsif other.respond_to? :to_a
-        @pitch_classes.sort == other.to_a.sort
-      elsif other.respond_to? :sort
-        @pitch_classes.sort == other.sort
-      else
-        @pitch_classes.sort == other
+      @normalized_pitch_classes ||= @pitch_classes.uniq.sort
+      @normalized_pitch_classes == case
+        when other.respond_to?(:pitch_classes) then other.pitch_classes.uniq.sort
+        when (other.is_a? Array and other.frozen?) then other
+        when other.respond_to?(:to_a) then other.to_a.uniq.sort
+        else other
       end
     end
 

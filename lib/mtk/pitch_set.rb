@@ -1,7 +1,7 @@
 module MTK
 
-  # A set of {Pitch}es
-  #
+  # An immutable collection of {Pitch}es.
+  # @note Unlike a mathematical set, a PitchSet is ordered and may include duplicates (see {#initialize} options).
   class PitchSet
 
     include Helper::Collection
@@ -11,8 +11,16 @@ module MTK
 
     attr_reader :pitches
 
-    def initialize(pitches)
-      @pitches = pitches.to_a.uniq.sort.freeze
+    # @param pitches [#to_a] the collection of pitches
+    # @param options [Hash] options for modifying the collection of pitches
+    # @option options :unique when not false, duplicate pitches will be removed
+    # @option options :uniq alias for the :unique option
+    # @option options :sort when not false, the pitches will be sorted
+    def initialize(pitches, options=nil)
+      pitches = pitches.to_a.clone
+      pitches.uniq! if options and (options[:unique] or options[:uniq])
+      pitches.sort! if options and options[:sort]
+      @pitches = pitches.freeze
     end
 
     def elements
@@ -34,7 +42,7 @@ module MTK
     # generate a chord inversion (positive numbers move the lowest notes up an octave, negative moves the highest notes down)
     def inversion(number)
       number = number.to_i
-      pitch_set = Array.new(@pitches)
+      pitch_set = Array.new(@pitches.uniq.sort)
       if number > 0
         number.times do |count|
           index = count % pitch_set.length
@@ -46,7 +54,7 @@ module MTK
           pitch_set[index] -= 12
         end
       end
-      self.class.new pitch_set
+      self.class.new pitch_set, :sort => true
     end
 
     def nearest(pitch_class)
@@ -61,6 +69,18 @@ module MTK
         @pitches == other.to_a
       else
         @pitches == other
+      end
+    end
+
+    # Compare for equality, ignoring order and duplicates
+    # @param other [#pitches, Array, #to_a]
+    def =~ other
+      @normalized_pitches ||= @pitches.uniq.sort
+      @normalized_pitches == case
+        when other.respond_to?(:pitches) then other.pitches.uniq.sort
+        when (other.is_a? Array and other.frozen?) then other
+        when other.respond_to?(:to_a) then other.to_a.uniq.sort
+        else other
       end
     end
 

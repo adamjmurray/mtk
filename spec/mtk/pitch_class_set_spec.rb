@@ -26,6 +26,31 @@ describe MTK::PitchClassSet do
     end
   end
 
+  describe ".new" do
+    it "maintains the pitch class collection (preserves order and keeps duplicates) by default" do
+      PitchClassSet.new([C, E, G, E, B, C]).pitch_classes.should == [C, E, G, E, B, C]
+    end
+
+
+    describe "unique option" do
+      it "removes duplicates" do
+        PitchClassSet.new([C, E, G, C], :unique => true).pitch_classes.should == [C, E, G]
+      end
+    end
+
+    describe "uniq option" do
+      it "behaves like the unique option" do
+        PitchClassSet.new([C, E, G, C], :uniq => true).should == PitchClassSet.new([C, E, G, C], :unique => true)
+      end
+    end
+
+    describe "sort option" do
+      it "sorts the pitch classes" do
+        PitchClassSet.new([E,G,C], :sort => true).should == [C,E,G]
+      end
+    end
+  end
+
   describe "#pitch_classes" do
     it "is the list of pitch_classes contained in this set" do
       pitch_class_set.pitch_classes.should == pitch_classes
@@ -44,10 +69,6 @@ describe MTK::PitchClassSet do
       pitch_class_set # force construction before we modify the pitch_classes array
       pitch_classes << D
       pitch_class_set.pitch_classes.length.should == 3
-    end
-
-    it "does not include duplicates" do
-      PitchClassSet.new([C, E, G, C]).pitch_classes.should == [C, E, G]
     end
   end
 
@@ -169,12 +190,6 @@ describe MTK::PitchClassSet do
     end
   end
 
-  describe "#repeat" do
-    it "does nothing to PitchClassSets, since duplicates are removed from Sets" do
-      pitch_class_set.repeat.should == pitch_class_set
-    end
-  end
-
   describe "#rotate" do
     it "produces a PitchClassSet that is rotated by the given offset" do
       pitch_class_set.rotate(2).should == PitchClassSet(G,C,E)
@@ -205,8 +220,8 @@ describe MTK::PitchClassSet do
   end
 
   describe "#concat" do
-    it "appends the non-duplicate pitch classes from the other set" do
-      pitch_class_set.concat(PitchClassSet(D,E,F)).should == PitchClassSet(C,E,G,D,F)
+    it "appends the pitch classes from the other set" do
+      pitch_class_set.concat(PitchClassSet(D,E,F)).should == PitchClassSet(C,E,G,D,E,F)
     end
   end
 
@@ -249,6 +264,10 @@ describe MTK::PitchClassSet do
       pitch_class_set.should_not == PitchClassSet(C,G,E)
     end
 
+    it "is false when if otherwise equal pitch class sets don't contain the same number of duplicates" do
+      PitchSet.new([C, E, G]).should_not == PitchSet.new([C, C, E, G])
+    end
+
     it "is false if two pitch class sets do not contain the same pitch classes" do
       pitch_class_set.should_not == PitchClassSet(C,E)
     end
@@ -261,6 +280,10 @@ describe MTK::PitchClassSet do
   describe "#=~" do
     it "is true if two pitch class sets contain the same set in the same order" do
       pitch_class_set.should =~ PitchClassSet(C,E,G)
+    end
+
+    it "is true when all the pitch classes are equal, even with different numbers of duplicates" do
+      PitchSet.new([C, E, G]).should =~ PitchSet.new([C, C, E, G])
     end
 
     it "is true if two pitch class sets are not in the same order" do
