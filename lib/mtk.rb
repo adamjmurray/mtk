@@ -31,18 +31,22 @@ module MTK
 
 end
 
+require 'mtk/pitch_class'
+require 'mtk/pitch'
+
 require 'mtk/helper/collection'
 require 'mtk/helper/pseudo_constants'
+require 'mtk/helper/convert'
 
 require 'mtk/transform/mappable'
 require 'mtk/transform/transposable'
 require 'mtk/transform/invertible'
 require 'mtk/transform/set_theory_operations'
 
-require 'mtk/pitch_class'
-require 'mtk/pitch_class_set'
-require 'mtk/pitch'
+require 'mtk/pitch_list'
 require 'mtk/pitch_set'
+require 'mtk/pitch_class_list'
+require 'mtk/pitch_class_set'
 
 require 'mtk/event/abstract_event'
 require 'mtk/event/note'
