@@ -14,6 +14,24 @@ describe MTK::Melody do
       Melody.new([C4, E4, G4, E4, B3, C4]).pitches.should == [C4, E4, G4, E4, B3, C4]
     end
   end
+  
+  describe ".from_pitch_classes" do
+    it "creates a pitch sequence from a list of pitch classes and starting point, selecting the nearest pitch to each pitch class" do
+      Melody.from_pitch_classes([C,G,B,Eb,D,C], D3).should == [C3,G2,B2,Eb3,D3,C3]
+    end
+
+    it "defaults to a starting point of C4 (middle C)" do
+      Melody.from_pitch_classes([C]).should == [C4]
+    end
+
+    it "doesn't travel within an octave above or below the starting point by default" do
+      Melody.from_pitch_classes([C,F,Bb,D,A,E,B]).should == [C4,F4,Bb4,D4,A3,E3,B3]
+    end
+
+    it "allows max distance above or below the starting point to be set via the third argument" do
+      Melody.from_pitch_classes([C,F,Bb,D,A,E,B], C4, 6).should == [C4,F4,Bb3,D4,A3,E4,B3]
+    end
+  end
 
   describe '#pitches' do
     it 'is the list of pitches used to construct the scale' do

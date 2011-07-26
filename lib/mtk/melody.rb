@@ -21,6 +21,18 @@ module MTK
       @pitches = pitches.to_a.clone.freeze
     end
 
+    def self.from_pitch_classes(pitch_classes, start=Constant::Pitches::C4, max_distance=12)
+      pitch = start
+      pitches = []
+      for pitch_class in pitch_classes
+        pitch = pitch.nearest(pitch_class)
+        pitch -= 12 if pitch > start+max_distance # keep within max_distance of start (default is one octave)
+        pitch += 12 if pitch < start-max_distance
+        pitches << pitch
+      end
+      new pitches
+    end
+
     # @see Helper::Collection
     def elements
       @pitches
