@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MTK::Durations do
+describe MTK::Constant::Durations do
 
   describe 'w' do
     it 'is 4 beats' do

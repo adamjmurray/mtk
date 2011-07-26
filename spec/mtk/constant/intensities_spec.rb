@@ -1,6 +1,6 @@
 require 'spec_helper'
   
-describe MTK::Intensities do
+describe MTK::Constant::Intensities do
 
   describe 'ppp' do
     it 'is equivalent to MIDI velocity 16' do

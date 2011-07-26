@@ -2,8 +2,8 @@ module MTK
 
   # A class of pitches under octave equivalence.
   #
-  # A {Pitch} has the same PitchClass as the {Pitches} one or more octaves away.
-
+  # A {Pitch} has the same PitchClass as the pitches one or more octaves away.
+  #
   class PitchClass
 
     NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'].freeze

@@ -3,6 +3,10 @@
 # The top level module for this library
 module MTK
 
+  # Constants for modeling frequency, intensity, and duration.
+  module Constant
+  end
+
   # Internal helper classes used to avoid duplicating code in this library.
   module Helper
   end
@@ -53,11 +57,11 @@ require 'mtk/event/parameter'
 
 require 'mtk/timeline'
 
-require 'mtk/_constants/pitch_classes'
-require 'mtk/_constants/pitches'
-require 'mtk/_constants/intervals'
-require 'mtk/_constants/intensities'
-require 'mtk/_constants/durations'
+require 'mtk/constant/pitch_classes'
+require 'mtk/constant/pitches'
+require 'mtk/constant/intervals'
+require 'mtk/constant/intensities'
+require 'mtk/constant/durations'
 
 require 'mtk/pattern/enumerator'
 require 'mtk/pattern/abstract_pattern'

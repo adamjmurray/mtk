@@ -5,8 +5,8 @@ module MTK
     # Takes a list of patterns and constructs a list of {Event}s from the next elements in each pattern.
     class EventBuilder
 
-      DEFAULT_PITCH = MTK::Pitches::C4
-      DEFAULT_INTENSITY = MTK::Intensities::f
+      DEFAULT_PITCH = MTK::Constant::Pitches::C4
+      DEFAULT_INTENSITY = MTK::Constant::Intensities::f
       DEFAULT_DURATION = 1
 
       def initialize(patterns, options={})

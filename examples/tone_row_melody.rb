@@ -5,8 +5,8 @@
 require 'mtk'
 require 'mtk/midi/file'
 include MTK
-include PitchClasses
-include Durations
+include MTK::Constant::PitchClasses
+include MTK::Constant::Durations
 
 file = ARGV[0] || 'MTK-tone_row_melody.mid'
 

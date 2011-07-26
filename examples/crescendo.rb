@@ -5,8 +5,8 @@
 require 'mtk'
 require 'mtk/midi/file'
 include MTK
-include Pitches
-include Intensities
+include MTK::Constant::Pitches
+include MTK::Constant::Intensities
 
 file = ARGV[0] || 'MTK-crescendo.mid'
 
