@@ -156,7 +156,7 @@ describe MTK::Pitch do
 
   describe "#transpose" do
     it "behaves like #+" do
-      middle_c.transpose(2.semitones).should == middle_c + 2
+      middle_c.transpose(2).should == middle_c + 2
     end
   end
 

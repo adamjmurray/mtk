@@ -115,7 +115,7 @@ describe MTK::PitchClassSet do
 
   describe '#transpose' do
     it 'transposes by the given semitones' do
-      (pitch_class_set.transpose 4.semitones).should == PitchClassSet(E, Ab, B)
+      (pitch_class_set.transpose 4).should == PitchClassSet(E, Ab, B)
     end
   end
 

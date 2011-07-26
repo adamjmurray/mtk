@@ -83,7 +83,7 @@ describe MTK::Event::Note do
 
   describe '#transpose' do
     it 'adds the given interval to the @pitch' do
-      (note.transpose 2.semitones).should == NOTE.new(D4, intensity, duration)
+      (note.transpose 2).should == NOTE.new(D4, intensity, duration)
     end
   end
 

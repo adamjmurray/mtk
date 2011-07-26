@@ -78,6 +78,5 @@ require 'mtk/sequencer/step_sequencer'
 require 'mtk/sequencer/rhythmic_sequencer'
 require 'mtk/sequencer/legato_sequencer'
 
-require 'mtk/_numeric_extensions'
 
 

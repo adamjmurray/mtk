@@ -1,3 +1,7 @@
+# Optional Numeric methods for converting a number to common intervals.
+#
+# @note you must require 'mtk/numeric_extensions' to use these methods.
+#
 class Numeric
 
   def semitones

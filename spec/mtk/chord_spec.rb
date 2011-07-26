@@ -34,8 +34,8 @@ describe MTK::Chord do
 
   describe "#nearest" do
     it "returns the nearest Melody where the first Pitch has the given PitchClass" do
-      c_major.nearest(F).should == c_major.transpose(5.semitones)
-      c_major.nearest(G).should == c_major.transpose(-5.semitones)
+      c_major.nearest(F).should == c_major.transpose(5)
+      c_major.nearest(G).should == c_major.transpose(-5)
     end
   end
 

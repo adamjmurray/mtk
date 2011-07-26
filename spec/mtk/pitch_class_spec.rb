@@ -147,7 +147,7 @@ describe MTK::PitchClass do
 
   describe "#transpose" do
     it "behaves like #+" do
-      C.transpose(2.semitones).should == C + 2
+      C.transpose(2).should == C + 2
     end
   end
 
