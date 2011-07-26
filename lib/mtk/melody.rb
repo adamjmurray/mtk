@@ -2,7 +2,14 @@ module MTK
 
   # An ordered collection of {Pitch}es.
   #
-  class PitchList
+  # The "horizontal" (sequential) pitch collection.
+  #
+  # Unlike the strict definition of melody, this class is fairly abstract and only models a succession of pitches.
+  # To create a true, playable melody one must combine an MTK::Melody and rhythms into a {Timeline}.
+  #
+  # @see Chord
+  #
+  class Melody
 
     include Helper::Collection
     include Transform::Mappable
@@ -11,13 +18,8 @@ module MTK
 
     attr_reader :pitches
 
-
     # @param pitches [#to_a] the collection of pitches
-    #
-    # @note duplicate pitches will be removed. See #{PitchList} if you want to maintain duplicates.
-    #
-    # @see MTK#PitchSet
-    # @see PitchList
+    # @see MTK#Melody
     #
     def initialize(pitches)
       @pitches = pitches.to_a.clone.freeze
@@ -36,39 +38,12 @@ module MTK
       new enumerable
     end
 
-    def to_pitch_class_list
-      PitchClassList.new pitch_classes
-    end
-
-    def to_pitch_class_set
-      PitchClassSet.new pitch_classes
+    def to_pitch_class_set(remove_duplicates=true)
+      PitchClassSet.new(remove_duplicates ? pitch_classes.uniq : pitch_classes)
     end
 
     def pitch_classes
       @pitch_classes ||= @pitches.map{|p| p.pitch_class }
-    end
-
-    # generate a chord inversion (positive numbers move the lowest notes up an octave, negative moves the highest notes down)
-    # @note this process will sort the pitches
-    def inversion(number)
-      number = number.to_i
-      pitch_set = Array.new(@pitches.uniq.sort)
-      if number > 0
-        number.times do |count|
-          index = count % pitch_set.length
-          pitch_set[index] += 12
-        end
-      else
-        number.abs.times do |count|
-          index = -(count + 1) % pitch_set.length # count from -1 downward to go backwards through the list starting at the end
-          pitch_set[index] -= 12
-        end
-      end
-      self.class.new pitch_set.sort
-    end
-
-    def nearest(pitch_class)
-      self.transpose @pitches.first.pitch_class.distance_to(pitch_class)
     end
 
     # @param other [#pitches, #to_a, Array]
@@ -100,12 +75,12 @@ module MTK
 
   end
 
-  # Construct an ordered {PitchSet} that allows duplicates
-  # @see #PitchSet
+  # Construct an ordered {Melody} that allows duplicates
+  # @see #Melody
   # @see #Chord
-  def PitchList(*anything)
-    PitchList.new(Helper::Convert.to_pitches *anything)
+  def Melody(*anything)
+    Melody.new(Helper::Convert.to_pitches *anything)
   end
-  module_function :PitchList
+  module_function :Melody
 
 end

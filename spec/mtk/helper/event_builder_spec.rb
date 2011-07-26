@@ -24,7 +24,7 @@ describe MTK::Helper::EventBuilder do
     end
 
     it "builds a list of notes from pitch sets" do
-      event_builder = EVENT_BUILDER.new [ Pattern.Cycle( PitchSet(C4,D4) ) ]
+      event_builder = EVENT_BUILDER.new [ Pattern.Cycle( Melody(C4,D4) ) ]
       event_builder.next.should == notes(C4, D4)
     end
 
@@ -57,8 +57,8 @@ describe MTK::Helper::EventBuilder do
       nexts.should == [notes(C4), notes(E4), notes(G4), notes(C4)]
     end
 
-    it "builds notes from by adding Numeric intervals in :pitch type Patterns to all pitches in the previous PitchSet" do
-      event_builder = EVENT_BUILDER.new [ Pattern.PitchSequence( PitchSet(C4,Eb4), M3, m3, -P5) ]
+    it "builds notes from by adding Numeric intervals in :pitch type Patterns to all pitches in the previous Melody" do
+      event_builder = EVENT_BUILDER.new [ Pattern.PitchSequence( Melody(C4,Eb4), M3, m3, -P5) ]
       nexts = []
       loop { nexts << event_builder.next }
       nexts.should == [notes(C4,Eb4), notes(E4,G4), notes(G4,Bb4), notes(C4,Eb4)]

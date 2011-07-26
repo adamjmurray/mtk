@@ -27,7 +27,7 @@ module MTK
           element = pattern.next
           case element
             when Pitch         then pitches << element
-            when PitchSet      then pitches += element.pitches
+            when Melody        then pitches += element.pitches
             when PitchClass    then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
             when PitchClassSet then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
             else case pattern.type
