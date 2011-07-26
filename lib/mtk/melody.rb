@@ -10,10 +10,7 @@ module MTK
   # @see Chord
   #
   class Melody
-
-    include Helper::Collection
-    include Transform::Transposable
-    include Transform::Invertible
+    include Helper::PitchCollection
 
     attr_reader :pitches
 

@@ -8,11 +8,7 @@ module MTK
   # @see Chord
   #
   class PitchClassSet
-
-    include Helper::Collection
-    include Transform::Transposable
-    include Transform::Invertible
-    include Transform::SetTheoryOperations
+    include Helper::PitchCollection
 
     attr_reader :pitch_classes
 
@@ -90,6 +86,32 @@ module MTK
       norder = normal_order
       first_pc_val = norder.first.to_i
       norder.map{|pitch_class| (pitch_class.to_i - first_pc_val) % 12 }
+    end
+
+    # the collection of elements present in both sets
+    def intersection(other)
+      self.class.from_a(to_a & other.to_a)
+    end
+
+    # the collection of all elements present in either set
+    def union(other)
+      self.class.from_a(to_a | other.to_a)
+    end
+
+    # the collection of elements from this set with any elements from the other set removed
+    def difference(other)
+      self.class.from_a(to_a - other.to_a)
+    end
+
+    # the collection of elements that are members of exactly one of the sets
+    def symmetric_difference(other)
+      union(other).difference( intersection(other) )
+    end
+
+    # the collection of elements that are not members of this set
+    # @note this method requires that the including class define the class method .all(), which returns the collection of all possible elements
+    def complement
+      self.class.all.difference(self)
     end
 
     # @param other [#pitch_classes, #to_a, Array]
