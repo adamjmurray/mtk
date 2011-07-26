@@ -73,6 +73,16 @@ describe MTK::Helper::Collection do
     end
   end
 
+  describe "#map" do
+    it "returns a Collection with each item replaced with the results of the block" do
+      collection.map{|item| item + 10}.should == [11, 12, 13, 14, 15]
+    end
+
+    it "maintains the options from the original collection" do
+      collection_with_options.map{|item| item + 10}.options.should == options
+    end
+  end
+
   describe "#first" do
     it "is #[0] when no argument is given" do
       collection.first.should == collection[0]

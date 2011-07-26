@@ -25,6 +25,14 @@ module MTK::Helper
       elements.each &block
     end
 
+    # the original Enumerable#map implementation, which returns an Array
+    alias enumerable_map map
+
+    # the overriden #map implementation, which returns an object of the same type
+    def map &block
+      clone_with(enumerable_map &block)
+    end
+
     # The first element
     def first(n=nil)
       n ? elements.first(n) : elements.first
@@ -143,7 +151,7 @@ module MTK::Helper
     # This is designed to work with 2 argument constructors: def initialize(elements, options=default)
     def clone_with elements
       from_a = self.class.method(:from_a)
-      if from_a.arity == -2 and @options
+      if @options and from_a.arity == -2
         from_a[elements, @options]
       else
         from_a[elements]

@@ -42,7 +42,6 @@ require 'mtk/helper/collection'
 require 'mtk/helper/pseudo_constants'
 require 'mtk/helper/convert'
 
-require 'mtk/transform/mappable'
 require 'mtk/transform/transposable'
 require 'mtk/transform/invertible'
 require 'mtk/transform/set_theory_operations'

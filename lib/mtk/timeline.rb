@@ -7,8 +7,7 @@ module MTK
   # Enumerable as [time,event_list] pairs.
   #
   class Timeline
-
-    include Transform::Mappable
+    include Enumerable
 
     def initialize()
       @timeline = {}
@@ -98,6 +97,17 @@ module MTK
       end
     end
 
+    # the original Enumerable#map implementation, which returns an Array
+    alias enumerable_map map
+
+    # Constructs a new Timeline by mapping each [time,event_list] pair
+    # @see #map!
+    def map &block
+      self.class.from_a(enumerable_map &block)
+    end
+
+    # Perform #map in place
+    # @see #map
     def map! &block
       # we use the enumerable_map that aliased by the Mappable module,
       # because Mappable#map will create an extra timeline instance, which is unnecessary in this case
