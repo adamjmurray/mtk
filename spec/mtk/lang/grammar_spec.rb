@@ -13,10 +13,15 @@ describe MTK::Lang::Grammar do
       parse("C4 D4 E4", :pitch_sequence).should == Pattern.PitchSequence(C4, D4, E4)
     end
 
+    it "should parse chords" do
+      parse("[C4 E4 G4]", :chord).should == Chord(C4,E4,G4)
+    end
+
     it "should parse pitches" do
       for pitch_class_name in PitchClass::VALID_NAMES
+        pc = PitchClass[pitch_class_name]
         for octave in -1..9
-          parse("#{pitch_class_name}#{octave}", :pitch).should == Pitch[PitchClass[pitch_class_name],octave]
+          parse("#{pitch_class_name}#{octave}", :pitch).should == Pitch[pc,octave]
         end
       end
     end
