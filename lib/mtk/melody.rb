@@ -54,11 +54,11 @@ module MTK
       @pitch_classes ||= @pitches.map{|p| p.pitch_class }
     end
 
-    # @param other [#pitches, #to_a, Array]
+    # @param other [#pitches, Enumerable]
     def == other
       if other.respond_to? :pitches
         @pitches == other.pitches
-      elsif other.respond_to? :to_a
+      elsif other.is_a? Enumerable
         @pitches == other.to_a
       else
         @pitches == other

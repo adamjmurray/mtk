@@ -134,11 +134,11 @@ describe MTK::Melody do
       Melody.new([C4, E4, G4]).should_not == Melody.new([Pitch.from_i(60), Pitch.from_i(65), Pitch.from_i(67)])
     end
 
-    it "is false when if otherwise equal Melodys don't contain the same number of duplicates" do
+    it "is false when if otherwise equal Melodies don't contain the same number of duplicates" do
       Melody.new([C4, E4, G4]).should_not == Melody.new([C4, C4, E4, G4])
     end
 
-    it "is false when if otherwise equal Melodys aren't in the same order" do
+    it "is false when if otherwise equal Melodies aren't in the same order" do
       Melody.new([C4, E4, G4]).should_not == Melody.new([C4, G4, E4])
     end
 
