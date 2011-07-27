@@ -2,9 +2,13 @@ grammar MTK_Grammar
   include MTK
 
   rule pitch_sequence
-    ( pitch (space pitch)* ) {
-      Pattern.PitchSequence( *captures[:pitch].map{|p| p.value } )
+    ( pitch_like (space pitch_like)* ) {
+      Pattern.PitchSequence( *captures[:pitch_like].map{|p| p.value } )
     }
+  end
+
+  rule pitch_like
+    chord | pitch | pitch_class | interval
   end
 
   rule chord

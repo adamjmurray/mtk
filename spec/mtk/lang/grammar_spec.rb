@@ -9,9 +9,44 @@ describe MTK::Lang::Grammar do
 
   describe ".parse" do
 
-    it "should parse pitch sequences" do
-      parse("C4 D4 E4", :pitch_sequence).should == Pattern.PitchSequence(C4, D4, E4)
+
+    context "pitch_sequence" do
+      it "should parse pitch sequences" do
+        parse("C4 D4 E4", :pitch_sequence).should == Pattern.PitchSequence(C4, D4, E4)
+      end
+
+      it "should parse pitch sequences with chords" do
+        parse("C4 [D4 E4]", :pitch_sequence).should == Pattern.PitchSequence( C4, Chord(D4,E4) )
+      end
+
+      it "should parse pitch sequences with pitch classes" do
+        parse("C4 D E4", :pitch_sequence).should == Pattern.PitchSequence( C4, D, E4 )
+      end
+
+      it "should parse pitch sequences with intervals" do
+        parse("C4 m2", :pitch_sequence).should == Pattern.PitchSequence( C4, m2 )
+      end
     end
+
+
+    context "pitch_like" do
+      it "should parse a pitch" do
+        parse("C4", :pitch_like).should == C4
+      end
+
+      it "should parse a chord" do
+        parse("[C4 D4]", :pitch_like).should == Chord(C4,D4)
+      end
+
+      it "should parse a pitch class" do
+        parse("C", :pitch_like).should == C
+      end
+
+      it "should parse intervals" do
+        parse("m2", :pitch_like).should == m2
+      end
+    end
+
 
     it "should parse chords" do
       parse("[C4 E4 G4]", :chord).should == Chord(C4,E4,G4)
