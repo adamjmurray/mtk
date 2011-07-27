@@ -1,4 +1,11 @@
 require 'citrus'
+
+class Citrus::Match
+  def values(token_name)
+    captures[token_name].map{|token| token.value }
+  end
+end
+
 Citrus.load File.join(File.dirname(__FILE__),'mtk_grammar')
 
 module MTK
