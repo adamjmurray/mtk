@@ -10,6 +10,7 @@ describe MTK::Sequencer::AbstractSequencer do
 
   let(:patterns)  { [Pattern.PitchCycle(C4,D4)] }
   let(:sequencer) { ABSTRACT_SEQUENCER.new patterns }
+  let(:pitch) { Helper::EventBuilder::DEFAULT_PITCH }
   let(:intensity) { Helper::EventBuilder::DEFAULT_INTENSITY }
   let(:duration)  { Helper::EventBuilder::DEFAULT_DURATION }
 
@@ -28,7 +29,7 @@ describe MTK::Sequencer::AbstractSequencer do
     end
 
     it "sets @max_time from the options hash" do
-      sequencer = RHYTHMIC_SEQUENCER.new patterns, :max_time => 4
+      sequencer = ABSTRACT_SEQUENCER.new patterns, :max_time => 4
       sequencer.max_time.should == 4
     end
 
@@ -37,14 +38,27 @@ describe MTK::Sequencer::AbstractSequencer do
     end
 
     it "sets @event_buidler from the options hash" do
-      sequencer = RHYTHMIC_SEQUENCER.new patterns, :event_builder => MockEventBuilder
+      sequencer = ABSTRACT_SEQUENCER.new patterns, :event_builder => MockEventBuilder
       sequencer.event_builder.should be_a MockEventBuilder
     end
+    
+    it "allows default pitch to be specified" do
+      sequencer = ABSTRACT_SEQUENCER.new [Pattern.PitchCycle(0)], :default_pitch => Gb4
+      sequencer.next.should == [Note(Gb4, intensity, duration)]
+    end
+    it "allows default intensity to be specified" do
+      sequencer = ABSTRACT_SEQUENCER.new [Pattern.PitchCycle(0)], :default_intensity => ppp
+      sequencer.next.should == [Note(pitch, ppp, duration)]
+    end
+    it "allows default duration to be specified" do
+      sequencer = ABSTRACT_SEQUENCER.new [Pattern.PitchCycle(0)], :default_duration => 5.25
+      sequencer.next.should == [Note(pitch, intensity, 5.25)]
+    end  
   end
 
   describe "#event_builder" do
     it "provides access to the internal EventBuilder" do
-      sequencer = RHYTHMIC_SEQUENCER.new patterns, :event_builder => MockEventBuilder
+      sequencer = ABSTRACT_SEQUENCER.new patterns, :event_builder => MockEventBuilder
       sequencer.event_builder.mock_attribute = :value
       sequencer.event_builder.mock_attribute.should == :value
     end
