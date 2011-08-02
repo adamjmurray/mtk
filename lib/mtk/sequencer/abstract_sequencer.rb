@@ -77,7 +77,7 @@ module MTK
       def rewind
         @time = 0
         @step = -1
-        event_builder.rewind
+        @event_builder.rewind
       end
 
 

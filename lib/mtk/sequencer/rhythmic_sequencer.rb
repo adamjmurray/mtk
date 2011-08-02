@@ -15,6 +15,11 @@ module MTK
         super(patterns, options)
       end
 
+      def rewind
+        super
+        @rhythm.rewind if @rhythm
+      end
+
      ########################
       protected
 
