@@ -20,39 +20,43 @@ module MTK
       # @return [Array] an array of events
       def next
         pitches = []
-        intensity = @default_intensity
-        duration = @default_duration
 
         for pattern in @patterns
           element = pattern.next
+
           case element
-            when Pitch         then pitches << element
-            when Melody        then pitches += element.pitches
-            when PitchClass    then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
-            when PitchClassSet then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
-            else case pattern.type
+            when Pitch           then pitches << element
+            when PitchClass      then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
+            when PitchClassSet   then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
+            when PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
+          else
+            case pattern.type
               when :pitch
-                if element.is_a? Numeric
-                  # pitch interval case
+                if element.is_a? Numeric # then add as an interval
                   if @previous_pitches
                     pitches += @previous_pitches.map{|pitch| pitch + element }
                   else
                     pitches << ((@previous_pitch || @default_pitch) + element)
                   end
+                else # other supported types were handled above in the first 'case'
+                  pitches << :skip
                 end
-              when :intensity then intensity = element
-              when :duration then duration = element
+              when :intensity then intensity = element || :skip
+              when :duration then duration = element || :skip
             end
           end
         end
 
-        if not pitches.empty?
-          @previous_pitch = pitches.last
-          @previous_pitches = pitches.length > 1 ? pitches : nil
-          pitches.map{|pitch| Note(pitch,intensity,duration) }
-        else
-          nil
-        end
+        pitches << @default_pitch if pitches.empty?
+        intensity ||= @default_intensity
+        duration ||= @default_duration
+
+        return nil if intensity==:skip or duration==:skip or pitches.include? :skip
+
+        @previous_pitch = pitches.last
+        @previous_pitches = pitches.length > 1 ? pitches : nil
+
+        pitches.map{|pitch| Note(pitch,intensity,duration) }
       end
 
       # Reset the EventBuilder to its initial state

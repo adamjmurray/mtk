@@ -117,16 +117,14 @@ describe MTK::Helper::EventBuilder do
       event_builder.next.should == [Note(E4, f, 2)]
     end
 
-# TODO: never defined the behavior for nil values. Not sure if below is what we want. Rests also seem appropriate...
-#    it "uses the previous pitch/intensity/duration when it encounters a nil value" do
-#      event_builder = EVENT_BUILDER.new [Pattern.PitchCycle(C4, D4, E4, F4, nil), Pattern.IntensityCycle(mp, mf, f, nil), Pattern.DurationCycle(1, 2, nil)]
-#      event_builder.next.should == [Note(C4, mp, 1)]
-#      event_builder.next.should == [Note(D4, mf, 2)]
-#      event_builder.next.should == [Note(E4, f, 2)]
-#      event_builder.next.should == [Note(F4, f, 1)]
-#      event_builder.next.should == [Note(F4, mp, 2)]
-#      event_builder.next.should == [Note(C4, mf, 2)]
-#    end
+    it "returns nil (for a rest) when it encounters a nil value" do
+      event_builder = EVENT_BUILDER.new [Pattern.PitchCycle(C4, D4, E4, F4, nil), Pattern.IntensityCycle(mp, mf, f, nil), Pattern.DurationCycle(1, 2, nil)]
+      event_builder.next.should == [Note(C4, mp, 1)]
+      event_builder.next.should == [Note(D4, mf, 2)]
+      event_builder.next.should be_nil
+      event_builder.next.should be_nil
+      event_builder.next.should be_nil
+    end
 
     it "goes to the nearest Pitch for any PitchClasses in the pitch list" do
       event_builder = EVENT_BUILDER.new [Pattern::PitchCycle(C4, F, C, G, C)]
@@ -165,6 +163,13 @@ describe MTK::Helper::EventBuilder do
       event_builder.next.should == notes(F4)
       event_builder.next.should == notes(D4)
       event_builder.next.should == notes(Bb3)
+    end
+
+    it "uses the default_pitch when no pitch pattern is provided" do
+      event_builder = EVENT_BUILDER.new [Pattern.IntensityCycle( mp, mf, f )], :default_pitch => G3
+      event_builder.next.should == [Note(G3,mp,1)]
+      event_builder.next.should == [Note(G3,mf,1)]
+      event_builder.next.should == [Note(G3,f,1)]
     end
   end
 
