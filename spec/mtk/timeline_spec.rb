@@ -333,5 +333,31 @@ describe MTK::Timeline do
       Timeline.quantize_time(13,2.5).should == 12.5
     end
   end
+
+  describe "#to_s" do
+    it "has one line per time" do
+      timeline.to_s.split("\n").size.should == timeline.times.size
+    end
+
+    it "has a time => event_list mapping on each line" do
+      for line in timeline.to_s.split("\n")
+        line.should =~ /=>/
+      end
+    end
+
+    it "pretty prints the output by aligning all '=>' arrows" do
+      # alignment is only a factor when the times have different numbers of digits:
+      timeline = Timeline.new
+      timeline.add 0, note1
+      timeline.add 10, note1
+      timeline.add 1000, note1
+      lines = timeline.to_s.split("\n")
+      last = lines.pop
+      arrow_position = last =~ /=>/
+      for line in lines
+        (line =~ /=>/).should == arrow_position
+      end
+    end
+  end
 end
 
