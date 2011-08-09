@@ -1,6 +1,28 @@
 grammar MTK_Grammar
   include MTK
 
+  rule timeline
+    ( '{' space? number space? ':' space? note_like (space number space? ':' space? note_like)* space? '}' ) {
+      Timeline.from_a values(:number).zip(values :note_like)
+    }
+  end
+
+  rule note_like
+    note_list | note
+  end
+
+  rule note_list
+    ( '[' space? note (space note)* space? ']' ) {
+      values(:note)
+    }
+  end
+
+  rule note
+    ( '{' space? pitch space intensity space duration space? '}' ) {
+      Note(pitch.value, intensity.value, duration.value)
+    }
+  end
+
   rule pitch_sequence
     ( left_paren pitch_like (space pitch_like)* right_paren ) {
       Pattern.PitchSequence *values(:pitch_like)

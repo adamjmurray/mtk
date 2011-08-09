@@ -9,6 +9,32 @@ describe MTK::Lang::Grammar do
 
   describe ".parse" do
 
+    context "timeline" do
+      it "should parse a Timeline" do
+        parse("
+          {
+            0: {C4 mp q}
+            1: {D4 f h}
+          }
+        ", :timeline).should == Timeline.from_hash({0 => Note(C4,mp,q), 1 => Note(D4,f,h)})
+      end
+
+      it "should parse a Timeline" do
+        parse("
+          {
+            0: [{C4 mp q} {D4 f h}]
+          }
+        ", :timeline).should == Timeline.from_hash({0 => [Note(C4,mp,q), Note(D4,f,h)]})
+      end
+    end
+
+    it "should parse a list of notes in square brackets as an Array of Notes" do
+      parse("[{C4 mp q} {D4 f h}]", :note_list).should == [Note(C4,mp,q), Note(D4,f,h)]
+    end
+
+    it "should parse {pitch intensity duration} as a Note" do
+      parse("{C4 mp q}", :note).should == Note(C4,mp,q)
+    end
 
     context "pitch_sequence" do
       it "should parse pitch sequences" do
