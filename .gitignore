@@ -6,3 +6,4 @@ coverage.data
 .idea
 *.iml
 *.gem
+Gemfile.lock

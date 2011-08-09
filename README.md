@@ -67,6 +67,11 @@ Development requires the gems for optional features, plus the following:
 * rspec (tests)
 * yard (docs)
 
+You shouldn't need to worry about the dependencies too much. A Gemfile is provided to sort this out for you:
+
+    gem install bundler
+    bundle install
+
 [rvm](https://rvm.beginrescueend.com/) is recommended for cross version testing (see Development Notes below)
 
 
