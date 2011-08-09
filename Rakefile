@@ -2,7 +2,7 @@ require 'rspec/core/rake_task'
 require 'rake/clean'
 require 'yard'
 
-SUPPORTED_RUBIES = %w[ 1.8.7  1.9.2  jruby-1.5.6  jruby-1.6.3 ]
+SUPPORTED_RUBIES = %w[ 1.8.7  1.9.2  jruby-1.6.3 ]
 
 task :default => :spec
 
