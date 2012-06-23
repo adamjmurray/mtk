@@ -42,7 +42,7 @@ Requirements
 
 ### Ruby Version
 
-Ruby 1.8+ or JRuby 1.6+
+Ruby 1.9+ or JRuby 1.6+
 
 
 ### Dependencies
@@ -94,7 +94,7 @@ Test with current version of Ruby:
 
      rake spec
 
-Test with all supported versions of Ruby (requires [rvm](https://rvm.beginrescueend.com/), MRI 1.8.7, YARV 1.9.2, and JRuby 1.6.3):
+Test with all supported versions of Ruby (requires [rvm](https://rvm.beginrescueend.com/), YARV 1.9.3, and JRuby 1.6.7):
 
      rake spec:all
 

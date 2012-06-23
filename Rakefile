@@ -2,7 +2,7 @@ require 'rspec/core/rake_task'
 require 'rake/clean'
 require 'yard'
 
-SUPPORTED_RUBIES = %w[ 1.8.7  1.9.2  jruby-1.6.3 ]
+SUPPORTED_RUBIES = %w[ 1.9.3  jruby-1.6.7 ]
 
 task :default => :spec
 
@@ -21,7 +21,7 @@ end
 namespace :gem do
   desc "Install gems for supported versions of Ruby: #{SUPPORTED_RUBIES.join ', '}"
   task :install do
-    fail unless system("rvm #{SUPPORTED_RUBIES.join ','} gem install --no-rdoc --no-ri rake rspec yard midilib citrus gamelan")
+    fail unless system("rvm #{SUPPORTED_RUBIES.join ','} do bundle install")
   end
 end
 
@@ -45,7 +45,7 @@ namespace :spec do
 
   desc "Run RSpec tests on all supported versions of Ruby: #{SUPPORTED_RUBIES.join ', '}"
   task :all do
-    fail unless system("rvm #{SUPPORTED_RUBIES.join ','} rake -f #{__FILE__} spec:fast")
+    fail unless system("rvm #{SUPPORTED_RUBIES.join ','} do bundle exec rake -f #{__FILE__} spec:fast")
   end
 end
 
