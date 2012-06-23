@@ -87,7 +87,7 @@ module MTK
 
       # Write the Timeline as a MIDI file
       #
-      # @param [Timeline]
+      # @param timeline [Timeline]
       def write_timeline(timeline, parent_sequence=nil)
         sequence = parent_sequence || ::MIDI::Sequence.new
         clock_rate = sequence.ppqn
