@@ -3,7 +3,9 @@ source :rubygems
 group :dev do
   gem "rake",    "~> 0.9"
   gem "rspec",   "~> 2.10"
-  gem "cover_me","~> 1.2"
+  platforms :ruby do
+    gem "cover_me","~> 1.2"
+  end
 end
 
 group :doc do

@@ -33,8 +33,14 @@ namespace :spec do
   end
 
   desc "Run RSpec tests and generate a coverage report"
-  RSpec::Core::RakeTask.new(:cov) do |spec|
-    spec.rspec_opts = ["--color", "-r", "#{File.dirname __FILE__}/spec/spec_coverage.rb"]
+  if RUBY_PLATFORM == "java"
+    task :cov do |t|
+      fail "#{t} task is not compatible with JRuby. Use Ruby 1.9 instead."
+    end
+  else
+    RSpec::Core::RakeTask.new(:cov) do |spec|
+      spec.rspec_opts = ["--color", "-r", "#{File.dirname __FILE__}/spec/spec_coverage.rb"]
+    end
   end
 
   desc "Profile RSpec tests and report 10 slowest"
