@@ -5,18 +5,12 @@ module MTK
     module PitchClasses
 
       # The values of all "psuedo constants" defined in this module
-      PITCH_CLASSES = []
+      PITCH_CLASSES = MTK::PitchClass::PITCH_CLASSES
 
       # The names of all "psuedo constants" defined in this module
-      PITCH_CLASS_NAMES = PitchClass::NAMES
+      PITCH_CLASS_NAMES = MTK::PitchClass::NAMES
 
-      for name in PITCH_CLASS_NAMES
-        pc = PitchClass[name]
-        PITCH_CLASSES << pc
-        const_set name, pc
-      end
-
-      PITCH_CLASSES.freeze
+      PITCH_CLASSES.each { |pc| const_set pc.name, pc }
 
       # Lookup the value of an pitch class constant by name.
       # @example lookup value of 'C'

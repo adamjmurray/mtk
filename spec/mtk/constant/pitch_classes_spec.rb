@@ -20,9 +20,9 @@ describe MTK::Constant::PitchClasses do
 
   it "defines constants for the 12 pitch classes in the twelve-tone octave" do
     cases.length.should == 12
-    cases.each do |const, name, int_value|
+    cases.each do |const, name, value|
       const.name.should == name
-      const.to_i.should == int_value
+      const.value.should == value
     end
   end
 
@@ -49,7 +49,7 @@ describe MTK::Constant::PitchClasses do
   end
 
   describe ".[]" do
-    it "acts like PitchClas.[]" do
+    it "acts like PitchClass.[]" do
       for name in PitchClasses::PITCH_CLASS_NAMES
         PitchClasses[name].should == PitchClass[name]
       end
