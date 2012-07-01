@@ -1,17 +1,7 @@
 source :rubygems
 
-group :dev do
-  gem "rake",    "~> 0.9"
-  gem "rspec",   "~> 2.10"
-  platforms :ruby do
-    gem "cover_me","~> 1.2"
-  end
-end
-
-group :doc do
-  gem "yard", "~> 0.8"
-  gem "redcarpet", "~> 2.1"
-end
+############################
+# Gems required by mtk code
 
 gem "midilib", "~> 2.0"
 gem "gamelan", "~> 0.3"
@@ -22,4 +12,22 @@ platforms :jruby do
 end
 platforms :ruby do
   gem "unimidi", ">= 0.3"
+end
+
+
+############################
+# Gems for development
+
+group :development do
+  gem "yard", "~> 0.8"
+  gem "redcarpet", "~> 2.1"
+
+  platforms :ruby do
+    gem "cover_me","~> 1.2"
+  end
+end
+
+group :test do
+  gem "rake",    "~> 0.9"
+  gem "rspec",   "~> 2.10"
 end

@@ -7,3 +7,5 @@ coverage.data
 *.iml
 *.gem
 Gemfile.lock
+.bundle
+*.mid

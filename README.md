@@ -88,22 +88,24 @@ Latest for source: http://rubydoc.info/github/adamjmurray/mtk/master/frames
 Development Notes
 -----------------
 
+Note: When I say "rake", I mean "bundle exec rake".
+
 ### Run Tests ###
 
 Test with current version of Ruby:
 
-     rake spec
+     rake test
 
 Test with all supported versions of Ruby (requires [rvm](https://rvm.beginrescueend.com/), YARV 1.9.3, and JRuby 1.6.7):
 
-     rake spec:all
+     rake test:all
 
-The spec:all test must pass for a pull request to be accepted or for a release of the mtk gem.
+The test:all test must pass for a pull request to be accepted or for a release of the mtk gem.
 
 
 ### Generate Docs ###
 
-     yard
+     rake doc
      open doc/frames.html
 
 or, to automatically refresh the documentation as you work:

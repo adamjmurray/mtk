@@ -3,12 +3,12 @@ require 'rake/clean'
 
 SUPPORTED_RUBIES = %w[ 1.9.3  jruby-1.6.7 ]
 
-task :default => :spec
+task :default => :test
 
 CLEAN.include('html','doc','coverage.data','coverage') # clean and clobber do the same thing for now
 
 desc "Run RSpec tests with full output"
-RSpec::Core::RakeTask.new do |spec|
+RSpec::Core::RakeTask.new('test') do |spec|
   spec.rspec_opts = ["--color", "--format", "nested"]
   if ARGV[1]
     # only run specs with filenames starting with the command line argument
@@ -25,8 +25,7 @@ namespace :gem do
 end
 
 
-
-namespace :spec do
+namespace :test do
   desc "Run RSpec tests with summary output and fast failure"
   RSpec::Core::RakeTask.new(:fast) do |spec|
     spec.rspec_opts = ["--color", "--fail-fast"]
@@ -57,7 +56,7 @@ end
 
 begin
   require 'yard'
-  YARD::Rake::YardocTask.new do |yard|
+  YARD::Rake::YardocTask.new(:doc) do |yard|
     yard.files   = ['lib/**/*.rb']
   end
 end
