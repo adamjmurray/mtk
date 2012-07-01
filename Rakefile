@@ -59,4 +59,5 @@ begin
   YARD::Rake::YardocTask.new(:doc) do |yard|
     yard.files   = ['lib/**/*.rb']
   end
+rescue Exception # yard is optional, so don't cause rake to fail if it's missing
 end
