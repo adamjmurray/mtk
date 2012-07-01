@@ -1,0 +1,11 @@
+language: ruby
+bundler_args: --without development
+script: "bundle exec rake test"
+env:
+  - CI=true
+notifications:
+  recipients:
+    - adam@compusition.com
+rvm:
+  - 1.9.3
+  - jruby-19mode
