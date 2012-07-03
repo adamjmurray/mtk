@@ -2,6 +2,7 @@ require 'rspec/core/rake_task'
 require 'rake/clean'
 
 SUPPORTED_RUBIES = %w[ 1.9.3  jruby-1.6.7 ]
+ENV['JRUBY_OPTS'] = '--1.9'
 
 task :default => :test
 
@@ -49,7 +50,7 @@ namespace :test do
 
   desc "Run RSpec tests on all supported versions of Ruby: #{SUPPORTED_RUBIES.join ', '}"
   task :all do
-    fail unless system("rvm #{SUPPORTED_RUBIES.join ','} do bundle exec rake -f #{__FILE__} spec:fast")
+    fail unless system("rvm #{SUPPORTED_RUBIES.join ','} do bundle exec rake -f #{__FILE__} test:fast")
   end
 end
 

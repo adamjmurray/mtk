@@ -161,14 +161,3 @@ module MTK::Helper
   end
 
 end
-
-if not Array.instance_methods.include? :rotate
-  # Array#rotate is only available in Ruby 1.9, so we may have to implement it
-  class Array
-    def rotate(offset=1)
-      return self if empty?
-      offset %= length
-      self[offset..-1]+self[0...offset]
-    end
-  end
-end
