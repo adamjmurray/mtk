@@ -29,7 +29,16 @@ module MTK
     ].freeze
 
     # All valid enharmonic pitch class names in a flat list.
+    # @see VALID_NAMES_BY_VALUE
     VALID_NAMES = VALID_NAMES_BY_VALUE.flatten.freeze
+
+    # A mapping from valid names to the value of the pitch class with that name
+    VALUES_BY_NAME = Hash[ # a map from a list of name,value pairs
+      VALID_NAMES_BY_VALUE.map.with_index do |valid_names,value|
+        valid_names.map{|name| [name,value] }
+      end.flatten(1)
+    ].freeze
+
 
     # The name of this pitch class.
     # One of the {NAMES} defined by this class.
@@ -39,6 +48,10 @@ module MTK
     # An integer from 0..11 that indexes this pitch class in {PITCH_CLASSES} and the {#name} in {NAMES}.
     attr_reader :value
 
+
+    private  ######
+    # Even though new is a private_class_method, YARD gets confused so we temporarily go private
+
     def initialize(name, value)
       @name, @value = name, value
     end
@@ -46,29 +59,33 @@ module MTK
 
     @flyweight = {}
 
-    # Lookup a PitchClass by name.
-    # @param name [String, #to_s] one of the values in {VALID_NAMES}
-    def self.[](name)
-      pitch_class = @flyweight[name]
-      return pitch_class if pitch_class
+    public   ######
 
-      # normalize the name:
-      normalized_name = name.to_s
-      normalized_name = normalized_name[0..0].upcase + normalized_name[1..-1].downcase
-      pitch_class = @flyweight[normalized_name]
-      return pitch_class if pitch_class
 
-      VALID_NAMES_BY_VALUE.each_with_index do |names,value|
-        if names.include? normalized_name
-          return ( @flyweight[name] ||= new(normalized_name,value) )
-        end
+    # Lookup a PitchClass by name or value.
+    # @param name_or_value [String,Symbol,Numeric] one of {VALID_NAMES} or 0..12
+    # @return the PitchClass representing the argument
+    # @raise ArgumentError for arguments that cannot be converted to a PitchClass
+    def self.[] name_or_value
+      @flyweight[name_or_value] ||= case name_or_value
+        when String,Symbol then from_name(name_or_value)
+        when Numeric       then from_value(name_or_value.round)
+        else raise ArgumentError.new("PitchClass.[] doesn't understand #{name_or_value.class}")
       end
-      nil
+    end
+
+    # Lookup a PitchClass by name.
+    # @param name [String,#to_s] one of {VALID_NAMES} (case-insensitive)
+    def self.from_name(name)
+      @flyweight[name] ||= (
+        valid_name = name.to_s.capitalize
+        value = VALUES_BY_NAME[valid_name] or raise NameError.new("Invalid PitchClass name: #{name}")
+        new(valid_name,value)
+      )
     end
 
     class << self
-      alias :from_s :[]
-      alias :from_name :[]
+      alias from_s from_name
     end
 
     # All 12 pitch classes in the chromatic scale.
@@ -76,23 +93,32 @@ module MTK
     PITCH_CLASSES = NAMES.map{|name| from_name name }.freeze
 
     # return the pitch class with the given integer value mod 12
-    def self.from_i(value)
+    # @param value [Integer,#to_i]
+    def self.from_value(value)
       PITCH_CLASSES[value.to_i % 12]
     end
 
     class << self
-      alias :from_value :from_i
+      alias from_i from_value
     end
 
     # return the pitch class with the given float rounded to the nearest integer, mod 12
+    # @param value [Float,#to_f]
     def self.from_f(value)
       from_i value.to_f.round
     end
 
+    # Compare 2 pitch classes for equal values.
+    # @param other [PitchClass]
+    # @return true if this pitch class's value is equal to the other pitch class's value
     def == other
       other.is_a? PitchClass and other.value == @value
     end
 
+    # Compare a pitch class with another pitch class or integer value
+    # @param other [PitchClass,#to_i]
+    # @return -1, 0, or +1 depending on whether this pitch class's value is less than, equal to, or greater than the other object's integer value
+    # @see http://ruby-doc.org/core-1.9.3/Comparable.html
     def <=> other
       @value <=> other.to_i
     end
@@ -114,26 +140,31 @@ module MTK
     end
 
     # Transpose this pitch class by adding it's value to the value given (mod 12)
+    # @param interval [PitchClass,Float,#to_f]
     def + interval
-      value = (to_i + interval.to_f).round
-      self.class.from_value value
+      new_value = (value + interval.to_f).round
+      self.class.from_value new_value
     end
     alias transpose +
 
     # Transpose this pitch class by subtracing the given value from this value (mod 12)
+    # @param interval [PitchClass,Float,#to_f]
     def - interval
-      value = (to_i - interval.to_f).round
-      self.class.from_value value
+      new_value = (value - interval.to_f).round
+      self.class.from_value new_value
     end
 
-    def invert(center_pitch_class)
-      delta = (2*(center_pitch_class.to_f - to_i)).round
+    # Inverts (mirrors) the pitch class around the given center
+    # @param center_pitch_class [PitchClass,Pitch,Float,#to_f] the value to "mirror" this pitch class around
+    def invert(center)
+      delta = (2*(center.to_f - value)).round
       self + delta
     end
 
     # the smallest interval in semitones that needs to be added to this PitchClass to reach the given PitchClass
+    # @param pitch_class [PitchClass,#value]
     def distance_to(pitch_class)
-      delta = (pitch_class.to_i - to_i) % 12
+      delta = (pitch_class.value - value) % 12
       if delta > 6
         delta -= 12
       elsif delta == 6 and to_i >= 6
@@ -146,12 +177,21 @@ module MTK
   end
 
   # Construct a {PitchClass} from any supported type
+  # @param anything [PitchClass,String,Symbol,Numeric,#to_f,#to_i,#to_s]
   def PitchClass(anything)
-    case anything
-      when Numeric then PitchClass.from_i(anything)
-      when String, Symbol then PitchClass.from_s(anything)
-      when PitchClass then anything
-      else raise "PitchClass doesn't understand #{anything.class}"
+    return anything if anything.is_a? PitchClass
+    begin
+      PitchClass[anything]
+    rescue ArgumentError
+      if anything.respond_to? :to_f
+        PitchClass.from_f anything.to_f
+      elsif anything.respond_to? :to_i
+          PitchClass.from_i anything.to_i
+      elsif anything.respond_to? :to_s
+        PitchClass.from_s anything.to_s
+      else
+        raise
+      end
     end
   end
   module_function :PitchClass

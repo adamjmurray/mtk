@@ -97,27 +97,42 @@ describe MTK::PitchClass do
       end
     end
     context "the argument is not a valid name" do
-      it "returns nil, if the name doesn't exist" do
-        PitchClass['z'].should be_nil
+      it "raises a NameError if the name doesn't exist" do
+        lambda{ PitchClass['z'] }.should raise_error NameError
       end
     end
   end
 
   
   describe '.from_s' do
-    it "acts like .[]" do
-      for name in ['C', 'bbb', 'z']
-        PitchClass.from_s(name).should == PitchClass[name]
+    it "returns a PitchClass for any valid name" do
+      for name in enharmonic_spellings
+        pc = PitchClass.from_s(name)
+        pc.should be_a PitchClass
+        pc.name.should == name
       end
+    end
+
+    it "does case-insensitive matching" do
+      for name in enharmonic_spellings
+        pc = PitchClass.from_s(name.downcase)
+        pc.should be_a PitchClass
+        pc.name.should == name
+      end
+    end
+
+    it "raises a NameError for invalid arguments" do
+      lambda{ PitchClass.from_s('H') }.should raise_error NameError
     end
   end
 
 
   describe '.from_name' do
-    it "acts like .[]" do
-      for name in ['C', 'bbb', 'z']
-        PitchClass.from_name(name).should == PitchClass[name]
+    it "acts like .from_s" do
+      for name in enharmonic_spellings
+        PitchClass.from_name(name).should == PitchClass.from_s(name)
       end
+      lambda{ PitchClass.from_name('H') }.should raise_error NameError
     end
   end
 
@@ -310,6 +325,12 @@ describe MTK do
 
     it "returns the argument if it's already a PitchClass" do
       PitchClass(C).should be_equal C
+    end
+
+    it "tries to convert objects with #to_s via from_s" do
+      o = Object.new
+      def o.to_s; "A" end
+      PitchClass(o).should be_equal A
     end
 
     it "raises an error for types it doesn't understand" do
