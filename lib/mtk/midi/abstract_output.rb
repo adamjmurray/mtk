@@ -60,31 +60,38 @@ module MTK
       protected
 
       # Create a Proc that will send a note on event to the MIDI output
-      def note_on(pitch, velocity, channel)
+      def note_on(midi_pitch, velocity, channel)
+        lambda{ [:note_on, midi_pitch, velocity, channel] } # stubbed data for testing purposes
       end
 
       # Create a Proc that will send a note off event to the MIDI output
-      def note_off(pitch, velocity, channel)
+      def note_off(midi_pitch, velocity, channel)
+        lambda{ [:note_off, midi_pitch, velocity, channel] } # stubbed data for testing purposes
       end
 
       # Create a Proc that will send a control change event to the MIDI output
       def control(number, midi_value, channel)
-      end
-
-      # Create a Proc that will send a channel pressure event to the MIDI output.
-      def channel_pressure(pitch, midi_value, channel)
+        lambda{ [:control, number, midi_value, channel] } # stubbed data for testing purposes
       end
 
       # Create a Proc that will send a poly pressure event to the MIDI output.
-      def poly_pressure(midi_value, channel)
+      def poly_pressure(midi_pitch, midi_value, channel)
+        lambda{ [:poly_pressure, midi_pitch, midi_value, channel] } # stubbed data for testing purposes
+      end
+
+      # Create a Proc that will send a channel pressure event to the MIDI output.
+      def channel_pressure(midi_value, channel)
+        lambda{ [:channel_pressure, midi_value, channel] } # stubbed data for testing purposes
       end
 
       # Create a Proc that will send a pitch bend event to the MIDI output.
       def bend(midi_value, channel)
+        lambda{ [:bend, midi_value, channel] } # stubbed data for testing purposes
       end
 
       # Create a Proc that will send a program change event to the MIDI output.
       def program(number, channel)
+        lambda{ [:program, number, channel] }
       end
 
       ######################

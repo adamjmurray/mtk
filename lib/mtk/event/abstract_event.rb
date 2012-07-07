@@ -6,7 +6,7 @@ module MTK
     # @abstract
     class AbstractEvent
 
-      # The type of event, such as :note, :control, or :pressure
+      # The type of event: :note, :control, :pressure, :bend, or :program
       attr_reader :type
 
       # The specific element effected by this type of event, when applicable.

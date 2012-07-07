@@ -33,8 +33,12 @@ module MTK
         new MTK::Constant::Pitches::PITCHES[pitch.to_i], velocity/127.0, duration_in_beats, channel
       end
 
+      def midi_pitch
+        pitch.to_i
+      end
+
       def to_midi
-        [pitch.to_i, velocity, duration]
+        [midi_pitch, velocity, duration]
       end
 
       def transpose(interval)
