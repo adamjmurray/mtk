@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe MTK::Event::Parameter do
+describe MTK::Events::Parameter do
 
-  PARAMETER = MTK::Event::Parameter
+  PARAMETER = MTK::Events::Parameter
 
 
   describe ".from_midi" do

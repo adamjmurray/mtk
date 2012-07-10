@@ -64,7 +64,7 @@ module MTK
           time -= start
           time /= beats_per_second
 
-          if message.is_a? MTK::Event::AbstractEvent
+          if message.is_a? MTK::Events::Event
             timeline.add time,message
           else
             case message.type
@@ -77,7 +77,7 @@ module MTK
               if note_ons.has_key? pitch
                 note_on, start_time = note_ons[pitch]
                 duration = time - start_time
-                note = MTK::Event::Note.from_midi pitch, note_on.velocity, duration
+                note = MTK::Events::Note.from_midi pitch, note_on.velocity, duration
                 timeline.add time,note
               end
             end
@@ -112,7 +112,7 @@ module MTK
           case status & 0xF0
             when 0x80 then OpenStruct.new({:type => :note_off, :pitch => data1, :velocity => data2})
             when 0x90 then OpenStruct.new({:type => :note_on,  :pitch => data1, :velocity => data2})
-            else MTK::Event::Parameter.from_midi(status,data1,data2)
+            else MTK::Events::Parameter.from_midi(status,data1,data2)
           end
         )
         time = raw[:timestamp]/1000 - (@start_time - @open_time)

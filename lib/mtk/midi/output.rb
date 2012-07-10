@@ -41,7 +41,7 @@ module MTK
 
       def play(anything, options={})
         timeline = case anything
-          when Array,MTK::Event::AbstractEvent then MTK::Timeline.from_hash(0 => anything)
+          when Array,MTK::Events::Event then MTK::Timeline.from_hash(0 => anything)
           when Hash then MTK::Timeline.from_hash anything
           when MTK::Timeline then anything
           else "#{self.class}.play() doesn't understand #{anything} (#{anything.class})"

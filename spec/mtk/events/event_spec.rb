@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe MTK::Event::AbstractEvent do
+describe MTK::Events::Event do
 
-  EVENT = Event::AbstractEvent
+  EVENT = MTK::Events::Event
 
   let(:type) { :type }
   let(:duration) { 2.5 }

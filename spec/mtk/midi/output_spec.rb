@@ -11,7 +11,7 @@ describe MTK::MIDI::Output do
   end
 
   def timeline_with_param_event(event_type, event_options={})
-    event = MTK::Event::Parameter.new event_type, event_options
+    event = MTK::Events::Parameter.new event_type, event_options
     MTK::Timeline.from_hash 0 => event
   end
 

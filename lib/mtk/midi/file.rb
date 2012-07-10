@@ -48,16 +48,16 @@ module MTK
                   on_time,on_event = note_ons.delete(event.note)
                   if on_event
                     duration = time - on_time
-                    note = MTK::Event::Note.from_midi(event.note, on_event.velocity, duration)
+                    note = MTK::Events::Note.from_midi(event.note, on_event.velocity, duration)
                     timeline.add on_time, note
                   end
 
                 when ::MIDI::Controller, ::MIDI::PolyPressure, ::MIDI::ChannelPressure, ::MIDI::PitchBend, ::MIDI::ProgramChange
-                  timeline.add time, MTK::Event::Parameter.from_midi(*event.data_as_bytes)
+                  timeline.add time, MTK::Events::Parameter.from_midi(*event.data_as_bytes)
 
                 when ::MIDI::Tempo
                   # Not sure if event.tempo needs to be converted? TODO: test!
-                  timeline.add time, MTK::Event::Parameter.new(:tempo, :value => event.tempo)
+                  timeline.add time, MTK::Events::Parameter.new(:tempo, :value => event.tempo)
               end
             end
             timelines << timeline

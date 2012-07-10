@@ -51,11 +51,11 @@ module MTK
               if note_ons.has_key? message.pitch
                 note_on, start_time = *note_ons[message.pitch]
                 duration = time - start_time
-                note = MTK::Event::Note.from_midi(note_on.pitch, note_on.velocity, duration, message.channel)
+                note = MTK::Events::Note.from_midi(note_on.pitch, note_on.velocity, duration, message.channel)
                 timeline.add time,note
               end
 
-            else timeline.add time, MTK::Event::Parameter.from_midi([message.type, message.channel], message.data1, message.data2)
+            else timeline.add time, MTK::Events::Parameter.from_midi([message.type, message.channel], message.data1, message.data2)
           end
         end
 

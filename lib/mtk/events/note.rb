@@ -1,9 +1,9 @@
 module MTK
 
-  module Event
+  module Events
 
     # A musical {Event} defined by a {Pitch}, intensity, and duration
-    class Note < AbstractEvent
+    class Note < Event
 
       # Frequency of the note as a {Pitch}.
       alias :pitch :number
@@ -73,8 +73,8 @@ module MTK
   def Note(*anything)
     anything = anything.first if anything.size == 1
     case anything
-      when Array then MTK::Event::Note.new(*anything)
-      when MTK::Event::Note then anything
+      when Array then MTK::Events::Note.new(*anything)
+      when MTK::Events::Note then anything
       else raise "Note doesn't understand #{anything.class}"
     end
   end

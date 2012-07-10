@@ -1,10 +1,10 @@
 module MTK
 
-  module Event
+  module Events
 
     # An abstract musical event
     # @abstract
-    class AbstractEvent
+    class Event
 
       # The type of event: :note, :control, :pressure, :bend, or :program
       attr_reader :type

@@ -1,8 +1,8 @@
 module MTK
 
-  module Event
+  module Events
 
-    class Parameter < AbstractEvent
+    class Parameter < Event
 
       def self.from_midi(status, data1, data2)
         if status.is_a? Array

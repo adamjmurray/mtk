@@ -12,7 +12,7 @@ module MTK
   end
 
   # Musical events, such as {Event::Note}s and {Event::Parameter} changes, that are arranged in time via a {Timeline}.
-  module Event
+  module Events
   end
 
   # Classes that emit elements one at a time. Used by {Sequencer}s to construct {Timeline}s.
@@ -47,9 +47,9 @@ require 'mtk/pitch_class_set'
 require 'mtk/melody'
 require 'mtk/chord'
 
-require 'mtk/event/abstract_event'
-require 'mtk/event/note'
-require 'mtk/event/parameter'
+require 'mtk/events/event'
+require 'mtk/events/note'
+require 'mtk/events/parameter'
 
 require 'mtk/timeline'
 

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe MTK::Event::Note do
+describe MTK::Events::Note do
 
-  NOTE = Event::Note
+  NOTE = Events::Note
 
   let(:pitch) { C4 }
   let(:intensity) { mf }
