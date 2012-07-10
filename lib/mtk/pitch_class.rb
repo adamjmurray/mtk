@@ -155,7 +155,7 @@ module MTK
     end
 
     # Inverts (mirrors) the pitch class around the given center
-    # @param center_pitch_class [PitchClass,Pitch,Float,#to_f] the value to "mirror" this pitch class around
+    # @param center [PitchClass,Pitch,Float,#to_f] the value to "mirror" this pitch class around
     def invert(center)
       delta = (2*(center.to_f - value)).round
       self + delta

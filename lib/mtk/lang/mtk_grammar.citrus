@@ -25,19 +25,19 @@ grammar MTK_Grammar
 
   rule pitch_sequence
     ( left_paren pitch_like (space pitch_like)* right_paren ) {
-      Pattern.PitchSequence *values(:pitch_like)
+      Patterns.PitchSequence *values(:pitch_like)
     }
   end
 
   rule intensity_sequence
     ( left_paren intensity (space intensity)* right_paren ) {
-      Pattern.IntensitySequence *values(:intensity)
+      Patterns.IntensitySequence *values(:intensity)
     }
   end
 
   rule duration_sequence
     ( left_paren duration (space duration)* right_paren ) {
-      Pattern.DurationSequence *values(:duration)
+      Patterns.DurationSequence *values(:duration)
     }
   end
 

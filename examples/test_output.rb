@@ -1,8 +1,8 @@
 require 'mtk'
-require 'mtk/helper/output_selector'
+require 'mtk/helpers/output_selector'
 include MTK
-include Constant::Pitches
+include Constants::Pitches
 
-output = Helper::OutputSelector.ensure_output ARGV[0]
+output = Helpers::OutputSelector.ensure_output ARGV[0]
 
 output.play Note(C4,1,2)

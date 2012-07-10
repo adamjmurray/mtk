@@ -5,9 +5,9 @@
 require 'mtk'
 require 'mtk/midi/file'
 include MTK
-include MTK::Constant::Pitches
-include MTK::Constant::Intensities
-include MTK::Constant::Intervals
+include MTK::Constants::Pitches
+include MTK::Constants::Intensities
+include MTK::Constants::Intervals
 
 file = ARGV[0] || "MTK-#{File.basename(__FILE__,'.rb')}.mid"
 
@@ -26,13 +26,13 @@ interval_generator = lambda do
   end
 end
 
-pitches = Pattern::Function.new interval_generator, :type => :pitch, :max_elements => 24
+pitches = Patterns::Function.new interval_generator, :type => :pitch, :max_elements => 24
 
 # we'll also use a weighted choice to generate the intensities
-intensities = Pattern::Choice.new [mp, mf, f, ff, fff], :type => :intensity, :weights => [1,2,3,2,1]
+intensities = Patterns::Choice.new [mp, mf, f, ff, fff], :type => :intensity, :weights => [1,2,3,2,1]
 
 
-sequencer = Sequencer::StepSequencer.new [pitches, intensities], :step_size => 0.5
+sequencer = Sequencers::StepSequencer.new [pitches, intensities], :step_size => 0.5
 timeline = sequencer.to_timeline
 
 MIDI_File(file).write timeline

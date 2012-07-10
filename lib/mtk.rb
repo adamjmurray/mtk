@@ -4,25 +4,25 @@
 module MTK
 
   # Constants for modeling frequency, intensity, and duration.
-  module Constant
+  module Constants
   end
 
   # Internal helper classes used to avoid duplicating code in this library.
-  module Helper
+  module Helpers
   end
 
-  # Musical events, such as {Event::Note}s and {Event::Parameter} changes, that are arranged in time via a {Timeline}.
+  # Musical events, such as {Events::Note}s and {Events::Parameter} changes, that are arranged in time via a {Timeline}.
   module Events
   end
 
-  # Classes that emit elements one at a time. Used by {Sequencer}s to construct {Timeline}s.
+  # Classes that emit elements one at a time. Used by {MTK::Sequencers::Sequencer}s to construct {Timeline}s.
   #
-  # The core interface for Pattern classes is {Pattern::Enumerator#next} and {Pattern::Enumerator#rewind}.
-  module Pattern
+  # The core interface for Pattern classes is {Patterns::Enumerator#next} and {Patterns::Enumerator#rewind}.
+  module Patterns
   end
 
-  # Classes that assemble {Pattern}s into {Timeline}s.
-  module Sequencer
+  # Classes that assemble {Patterns::Pattern}s into {Timeline}s.
+  module Sequencers
   end
 
   # Optional classes for the "MTK language", which let's you compose music via MTK without writing any Ruby code
@@ -38,10 +38,10 @@ end
 require 'mtk/pitch_class'
 require 'mtk/pitch'
 
-require 'mtk/helper/collection'
-require 'mtk/helper/pitch_collection'
-require 'mtk/helper/pseudo_constants'
-require 'mtk/helper/convert'
+require 'mtk/helpers/collection'
+require 'mtk/helpers/pitch_collection'
+require 'mtk/helpers/pseudo_constants'
+require 'mtk/helpers/convert'
 
 require 'mtk/pitch_class_set'
 require 'mtk/melody'
@@ -53,26 +53,26 @@ require 'mtk/events/parameter'
 
 require 'mtk/timeline'
 
-require 'mtk/constant/pitch_classes'
-require 'mtk/constant/pitches'
-require 'mtk/constant/intervals'
-require 'mtk/constant/intensities'
-require 'mtk/constant/durations'
+require 'mtk/constants/pitch_classes'
+require 'mtk/constants/pitches'
+require 'mtk/constants/intervals'
+require 'mtk/constants/intensities'
+require 'mtk/constants/durations'
 
-require 'mtk/pattern/enumerator'
-require 'mtk/pattern/abstract_pattern'
-require 'mtk/pattern/sequence'
-require 'mtk/pattern/cycle'
-require 'mtk/pattern/choice'
-require 'mtk/pattern/function'
-require 'mtk/pattern/lines'
-require 'mtk/pattern/palindrome'
+require 'mtk/patterns/enumerator'
+require 'mtk/patterns/pattern'
+require 'mtk/patterns/sequence'
+require 'mtk/patterns/cycle'
+require 'mtk/patterns/choice'
+require 'mtk/patterns/function'
+require 'mtk/patterns/lines'
+require 'mtk/patterns/palindrome'
 
-require 'mtk/helper/event_builder'
-require 'mtk/sequencer/abstract_sequencer'
-require 'mtk/sequencer/step_sequencer'
-require 'mtk/sequencer/rhythmic_sequencer'
-require 'mtk/sequencer/legato_sequencer'
+require 'mtk/helpers/event_builder'
+require 'mtk/sequencers/sequencer'
+require 'mtk/sequencers/step_sequencer'
+require 'mtk/sequencers/rhythmic_sequencer'
+require 'mtk/sequencers/legato_sequencer'
 
 
 

@@ -30,7 +30,7 @@ module MTK
       end
 
       def self.from_midi(pitch, velocity, duration_in_beats, channel=0)
-        new MTK::Constant::Pitches::PITCHES[pitch.to_i], velocity/127.0, duration_in_beats, channel
+        new MTK::Constants::Pitches::PITCHES[pitch.to_i], velocity/127.0, duration_in_beats, channel
       end
 
       def midi_pitch
@@ -69,7 +69,7 @@ module MTK
     end
   end
 
-  # Construct a {Event::Note} from any supported type
+  # Construct a {Events::Note} from any supported type
   def Note(*anything)
     anything = anything.first if anything.size == 1
     case anything

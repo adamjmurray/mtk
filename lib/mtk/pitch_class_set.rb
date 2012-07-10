@@ -8,16 +8,16 @@ module MTK
   # @see Chord
   #
   class PitchClassSet
-    include Helper::PitchCollection
+    include Helpers::PitchCollection
 
     attr_reader :pitch_classes
 
     def self.random_row
-      new(Constant::PitchClasses::PITCH_CLASSES.shuffle)
+      new(Constants::PitchClasses::PITCH_CLASSES.shuffle)
     end
 
     def self.all
-      @all ||= new(Constant::PitchClasses::PITCH_CLASSES)
+      @all ||= new(Constants::PitchClasses::PITCH_CLASSES)
     end
 
     # @param pitch_classes [#to_a] the collection of pitch classes
@@ -155,7 +155,7 @@ module MTK
   # Construct a {PitchClassSet}
   # @see PitchClassSet#initialize
   def PitchClassSet(*anything)
-    PitchClassSet.new Helper::Convert.to_pitch_classes(*anything)
+    PitchClassSet.new Helpers::Convert.to_pitch_classes(*anything)
   end
   module_function :PitchClassSet
 

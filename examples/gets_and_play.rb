@@ -1,10 +1,10 @@
 # Enter space-separated pitch classes (A,B,C,D,E,F,G) at the prompt and hear them play.
 
 require 'mtk'
-require 'mtk/helper/output_selector'
+require 'mtk/helpers/output_selector'
 include MTK
 
-output = Helper::OutputSelector.ensure_output ARGV[0]
+output = Helpers::OutputSelector.ensure_output ARGV[0]
 
 def get_pitch_classes
   puts "Enter pitch classes:"
@@ -15,8 +15,8 @@ rescue
 end
 
 while (pitch_classes = get_pitch_classes)
-  sequence = Pattern::PitchClassSequence *pitch_classes
-  sequencer = Sequencer::StepSequencer.new [sequence]
+  sequence = Patterns::PitchClassSequence *pitch_classes
+  sequencer = Sequencers::StepSequencer.new [sequence]
   timeline = sequencer.to_timeline
 
   puts "Playing: #{pitch_classes}"

@@ -1,6 +1,6 @@
 require 'mtk'
 include MTK
-include Constant
+include Constants
 include PitchClasses
 include Pitches
 include Intensities

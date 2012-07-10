@@ -9,9 +9,9 @@ include MTK
 file = ARGV[0] || 'MTK-random_tone_row.mid'
 
 row = PitchClassSet.random_row
-sequence = Pattern::PitchSequence *row.to_a
+sequence = Patterns::PitchSequence *row.to_a
 
-sequencer = Sequencer::StepSequencer.new [sequence]
+sequencer = Sequencers::StepSequencer.new [sequence]
 timeline = sequencer.to_timeline
 
 MIDI_File(file).write timeline

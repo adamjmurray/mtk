@@ -38,29 +38,29 @@ describe MTK::Lang::Grammar do
 
     context "pitch_sequence" do
       it "should parse pitch sequences" do
-        parse("(C4 D4 E4)", :pitch_sequence).should == Pattern.PitchSequence(C4, D4, E4)
+        parse("(C4 D4 E4)", :pitch_sequence).should == Patterns.PitchSequence(C4, D4, E4)
       end
 
       it "should parse pitch sequences with chords" do
-        parse("(C4 [D4 E4])", :pitch_sequence).should == Pattern.PitchSequence( C4, Chord(D4,E4) )
+        parse("(C4 [D4 E4])", :pitch_sequence).should == Patterns.PitchSequence( C4, Chord(D4,E4) )
       end
 
       it "should parse pitch sequences with pitch classes" do
-        parse("( C4 D E4 )", :pitch_sequence).should == Pattern.PitchSequence( C4, D, E4 )
+        parse("( C4 D E4 )", :pitch_sequence).should == Patterns.PitchSequence( C4, D, E4 )
       end
 
       it "should parse pitch sequences with intervals" do
-        parse("(C4 m2)", :pitch_sequence).should == Pattern.PitchSequence( C4, m2 )
+        parse("(C4 m2)", :pitch_sequence).should == Patterns.PitchSequence( C4, m2 )
       end
     end
 
 
     it "parses intensity sequences" do
-      parse("(ppp mf mp ff)", :intensity_sequence).should == Pattern.IntensitySequence(ppp, mf, mp, ff)
+      parse("(ppp mf mp ff)", :intensity_sequence).should == Patterns.IntensitySequence(ppp, mf, mp, ff)
     end
 
     it "parses duration sequences" do
-      parse("(q e q. ht)", :duration_sequence).should == Pattern.DurationSequence(q, e, q*1.5, h*2/3.0)
+      parse("(q e q. ht)", :duration_sequence).should == Patterns.DurationSequence(q, e, q*1.5, h*2/3.0)
     end
 
 

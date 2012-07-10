@@ -10,7 +10,7 @@ module MTK
   # @see Chord
   #
   class Melody
-    include Helper::PitchCollection
+    include Helpers::PitchCollection
 
     attr_reader :pitches
 
@@ -21,7 +21,7 @@ module MTK
       @pitches = pitches.to_a.clone.freeze
     end
 
-    def self.from_pitch_classes(pitch_classes, start=Constant::Pitches::C4, max_distance=12)
+    def self.from_pitch_classes(pitch_classes, start=Constants::Pitches::C4, max_distance=12)
       pitch = start
       pitches = []
       pitch_classes.each do |pitch_class|
@@ -87,7 +87,7 @@ module MTK
   # @see #Melody
   # @see #Chord
   def Melody(*anything)
-    Melody.new Helper::Convert.to_pitches(*anything)
+    Melody.new Helpers::Convert.to_pitches(*anything)
   end
   module_function :Melody
 
