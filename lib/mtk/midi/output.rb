@@ -39,8 +39,13 @@ module MTK
       end
 
 
-      def play(timeline, options={})
-        # TODO: support playing single events immediately
+      def play(anything, options={})
+        timeline = case anything
+          when Array,MTK::Event::AbstractEvent then MTK::Timeline.from_hash(0 => anything)
+          when Hash then MTK::Timeline.from_hash anything
+          when MTK::Timeline then anything
+          else "#{self.class}.play() doesn't understand #{anything} (#{anything.class})"
+        end
 
         scheduler_rate = options.fetch :scheduler_rate, 500 # default: 500 Hz
         trailing_buffer = options.fetch :trailing_buffer, 2 # default: continue playing for 2 beats after the end of the timeline
@@ -57,8 +62,7 @@ module MTK
               when :note
                 pitch, velocity, duration = event.to_midi
                 @scheduler.at(time) { note_on(pitch,velocity,channel) }
-                time += duration
-                @scheduler.at(time) { note_off(pitch,velocity,channel) }
+                @scheduler.at(time + duration) { note_off(pitch,velocity,channel) }
 
               when :control
                 @scheduler.at(time) { control(event.number, event.midi_value, channel) }
@@ -125,14 +129,6 @@ module MTK
       # Send a program change event to the MIDI output.
       def program(number, channel)
         [:program, number, channel]
-      end
-
-      ######################
-      private
-
-      # Schedule a block to run at a particular time
-      def at time, block
-        @scheduler.at(time) { block.call }
       end
 
     end

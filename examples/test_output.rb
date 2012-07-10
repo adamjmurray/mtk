@@ -1,6 +1,8 @@
 require 'mtk'
 require 'mtk/helper/output_selector'
+include MTK
+include Constant::Pitches
 
-output = MTK::Helper::OutputSelector.ensure_output ARGV[0]
-timeline = MTK::Timeline.from_hash 0 => MTK::Note(MTK::Constant::Pitches::C4,1,2)
-output.play( timeline )
+output = Helper::OutputSelector.ensure_output ARGV[0]
+
+output.play Note(C4,1,2)

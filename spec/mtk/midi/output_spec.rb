@@ -60,6 +60,16 @@ describe MTK::MIDI::Output do
       subject.play timeline_with_param_event(:program, number:7, channel:9)
     end
 
+    it "handles simultaneous events" do
+      should_be_scheduled [
+        [0, [:note_on,  60, 127, 0]],
+        [1, [:note_off, 60, 127, 0]],
+        [0, [:note_on,  67, 127, 0]],
+        [1, [:note_off, 67, 127, 0]]
+      ]
+      subject.play [Note(C4,fff,1),Note(G4,fff,1)]
+    end
+
   end
 
 end
