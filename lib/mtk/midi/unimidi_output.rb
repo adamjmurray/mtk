@@ -1,61 +1,63 @@
-require 'mtk/midi/abstract_output'
+require 'mtk/midi/output'
 require 'unimidi'
 
 module MTK
   module MIDI
 
-    # Provides realtime MIDI output for MRI/YARV Ruby via the unimidi and gamelan gems.
+    # Provides realtime MIDI output for "standard" Ruby (MRI) via the unimidi and gamelan gems.
     # @note This class is optional and only available if you require 'mtk/midi/unimidi_output'.
     #       It depends on the 'unimidi' and 'gamelan' gems.
-    class UniMIDIOutput < AbstractOutput
+    class UniMIDIOutput < Output
 
       attr_reader :device
 
-      def initialize(output, options={})
-        if output.is_a? ::UniMIDI::CongruousApiOutput
-          @device = output
-        else
-          output = /#{output.to_s.sub '_','.*'}/i unless output.is_a? Regexp
-          @device = ::UniMIDI::Output.all.find {|o| o.name =~ output }
-        end
+      def initialize(output_device, options={})
+        @device = output_device
         @device.open
       end
 
+      def self.devices
+        @devices ||= ::UniMIDI::Output.all
+      end
+
+      def self.devices_by_name
+        @devices_by_name ||= devices.each_with_object( Hash.new ){|device,hash| hash[device.name] = device }
+      end
 
       ######################
       protected
 
-      # (see AbstractOutput#note_on)
+      # (see Output#note_on)
       def note_on(pitch, velocity, channel)
         lambda { @device.puts(0x90|channel, pitch, velocity) }
       end
 
-      # (see AbstractOutput#note_off)
+      # (see Output#note_off)
       def note_off(pitch, velocity, channel)
         lambda { @device.puts(0x80|channel, pitch, velocity) }
       end
 
-      # (see AbstractOutput#control)
+      # (see Output#control)
       def control(number, midi_value, channel)
         lambda { @device.puts(0xB0|channel, number, midi_value) }
       end
 
-      # (see AbstractOutput#channel_pressure)
+      # (see Output#channel_pressure)
       def channel_pressure(midi_value, channel)
         lambda { @device.puts(0xD0|channel, midi_value, 0) }
       end
 
-      # (see AbstractOutput#poly_pressure)
+      # (see Output#poly_pressure)
       def poly_pressure(pitch, midi_value, channel)
         lambda { @device.puts(0xA0|channel, pitch, midi_value) }
       end
 
-      # (see AbstractOutput#bend)
+      # (see Output#bend)
       def bend(midi_value, channel)
         lambda { @device.puts(0xE0|channel, midi_value & 127, (midi_value >> 7) & 127) }
       end
 
-      # (see AbstractOutput#program)
+      # (see Output#program)
       def program(number, channel)
         lambda { @device.puts(0xC0|channel, number, 0) }
       end

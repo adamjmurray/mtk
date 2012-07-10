@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Run ruby scripts with MTK on the LOAD_PATH.
+# Example:
+# ./mtk examples/test_output.rb
+
+ruby -v | grep jruby | grep ruby-1.8
+if [ $? == 0 ]
+then
+  bundle exec ruby --1.9 -Ilib $@
+else
+  bundle exec ruby -Ilib $@
+fi

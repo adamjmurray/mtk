@@ -6,11 +6,42 @@ module MTK
 
     # Provides a scheduler and common behavior for realtime MIDI output, using the gamelan gem for scheduling.
     #
-    # @abstract Subclass and override {#note_on}, {#note_off}, {#control}, {#channel_pressure}, {#poly_pressure}, {#bend}, and {#program} to implement a MIDI output.
+    # @abstract Subclasses must provide {.devices}, {.devices_by_name}, {#note_on}, {#note_off}, {#control}, {#channel_pressure}, {#poly_pressure}, {#bend}, and {#program} to implement a MIDI output.
     #
-    class AbstractOutput
+    class Output
+
+      # The underlying output device implementation wrapped by this class.
+      # The device type depends on the platform.
+      attr_reader :device
+
+      class << self
+
+        # All available output devices.
+        def devices
+          @devices_by_name ||= []
+        end
+
+        # Maps output device names to the output device.
+        def devices_by_name
+          @devices_by_name ||= {}
+        end
+
+        def find_by_name name
+          if name.is_a? Regexp
+            matching_name = devices_by_name.keys.find{|device_name| device_name =~ name }
+            device = devices_by_name[matching_name]
+          else
+            device = devices_by_name[name.to_s]
+          end
+          new device if device
+        end
+
+      end
+
 
       def play(timeline, options={})
+        # TODO: support playing single events immediately
+
         scheduler_rate = options.fetch :scheduler_rate, 500 # default: 500 Hz
         trailing_buffer = options.fetch :trailing_buffer, 2 # default: continue playing for 2 beats after the end of the timeline
         in_background = options.fetch :background, false # default: don't run in background Thread
@@ -44,6 +75,8 @@ module MTK
 
               when :program
                 at time, program(event.number, channel)
+
+              else nil
             end
           end
         end
@@ -58,6 +91,8 @@ module MTK
 
       ########################
       protected
+
+      # TODO: stop using lambdas here, the play method can do that
 
       # Create a Proc that will send a note on event to the MIDI output
       def note_on(midi_pitch, velocity, channel)

@@ -1,9 +1,9 @@
 require 'spec_helper'
-require 'mtk/midi/abstract_output'
+require 'mtk/midi/output'
 
-describe MTK::MIDI::AbstractOutput do
+describe MTK::MIDI::Output do
 
-  let(:subject) { MTK::MIDI::AbstractOutput.new }
+  let(:subject) { MTK::MIDI::Output.new }
   let(:scheduler) do
     scheduler = mock(:scheduler)
     Gamelan::Scheduler.stub(:new).and_return scheduler

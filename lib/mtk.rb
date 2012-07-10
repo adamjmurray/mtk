@@ -29,7 +29,7 @@ module MTK
   module Lang
   end
 
-  # Optional classes for MIDI input and output.
+  # Optional classes for MIDI input and {Output}.
   module MIDI
   end
 
