@@ -103,7 +103,7 @@ module MTK
     # Constructs a new Timeline by mapping each [time,event_list] pair
     # @see #map!
     def map &block
-      self.class.from_a(enumerable_map &block)
+      self.class.from_a enumerable_map(&block)
     end
 
     # Perform #map in place
@@ -111,7 +111,7 @@ module MTK
     def map! &block
       # we use the enumerable_map that aliased by the Mappable module,
       # because Mappable#map will create an extra timeline instance, which is unnecessary in this case
-      mapped = enumerable_map &block
+      mapped = enumerable_map(&block)
       clear
       merge mapped
     end

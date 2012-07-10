@@ -87,7 +87,7 @@ module MTK
   # @see #Melody
   # @see #Chord
   def Melody(*anything)
-    Melody.new(Helper::Convert.to_pitches *anything)
+    Melody.new Helper::Convert.to_pitches(*anything)
   end
   module_function :Melody
 

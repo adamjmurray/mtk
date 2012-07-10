@@ -48,7 +48,7 @@ module MTK
   # @see #Chord
   # @see #Melody
   def Chord(*anything)
-    Chord.new(Helper::Convert.to_pitches *anything)
+    Chord.new Helper::Convert.to_pitches(*anything)
   end
   module_function :Chord
 

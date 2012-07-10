@@ -24,7 +24,7 @@ module MTK
         # Look for an output by name using case insensitive matching,
         # treating underscore like either an underscore or whitespace
         def search output_name_pattern
-          output.find_by_name /#{output_name_pattern.to_s.sub '_','(_|\\s+)'}/i
+          output.find_by_name(/#{output_name_pattern.to_s.sub '_','(_|\\s+)'}/i)
         end
 
         # Command line interface to list output choices and select an output.

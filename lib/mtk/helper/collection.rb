@@ -22,7 +22,7 @@ module MTK::Helper
 
     # The each iterator for providing Enumerable functionality
     def each &block
-      elements.each &block
+      elements.each(&block)
     end
 
     # the original Enumerable#map implementation, which returns an Array
@@ -30,7 +30,7 @@ module MTK::Helper
 
     # the overriden #map implementation, which returns an object of the same type
     def map &block
-      clone_with(enumerable_map &block)
+      clone_with enumerable_map(&block)
     end
 
     # The first element

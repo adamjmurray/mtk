@@ -22,7 +22,7 @@ module MTK
       end
 
       def self.from_hash(hash)
-        new (hash[:pitch] || hash[:number]), (hash[:intensity] || hash[:value]), hash[:duration], hash[:channel]
+        new(hash[:pitch] || hash[:number], hash[:intensity] || hash[:value], hash[:duration], hash[:channel])
       end
 
       def to_hash
