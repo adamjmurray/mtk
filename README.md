@@ -74,7 +74,7 @@ You shouldn't need to worry about the dependencies too much. A Gemfile is provid
     gem install bundler
     bundle install
 
-[rvm](https://rvm.beginrescueend.com/) is recommended for cross version testing (see Development Notes below)
+[rvm](https://rvm.beginrescueend.com/) is required for cross version testing (see Development Notes below)
 
 
 
@@ -90,54 +90,25 @@ Latest for source: http://rubydoc.info/github/adamjmurray/mtk/master/frames
 Development Notes
 -----------------
 
-Note: When I say "rake", I mean "bundle exec rake".
-
 ### Run Tests ###
 
 Test with current version of Ruby:
 
-     rake test
+     bundle exec rake test
 
 Test with all supported versions of Ruby (requires [rvm](https://rvm.beginrescueend.com/), YARV 1.9.3, and JRuby 1.6.7):
 
-     rake test:all
+     bundle exec rake test:all
 
 The test:all test must pass for a pull request to be accepted or for a release of the mtk gem.
 
 
 ### Generate Docs ###
 
-     rake doc
+     bundle exec rake doc
      open doc/frames.html
 
 or, to automatically refresh the documentation as you work:
 
-      yard server -r
-      open http://localhost:8808
-
-
-### Project Roadmap ###
-
-https://www.pivotaltracker.com/projects/295419
-
-
-
-Changelog
----------
-
-* Upcoming...
-    - Added realtime MIDI output for (MRI/YARV) Ruby
-
-* July 8, 2011: version 0.0.2
-    - Added a Sequencer module to build Timelines out of Patterns
-    - Overhauled Pattern module: removed type-specific patterns, and added the Palindrome, Lines, and Function patterns
-    - Patterns can now be nested (they can contain other Patterns)
-    - Patterns can now be typed, to distinguish Numeric Patterns as :pitch (i.e. intervals), :intensity, :duration, or :rhythm patterns
-    - Removed auto-sorting behavior from PitchClassSet to support 12-tone rows and atonal composition techniques
-    - Added #quantize and #shift features to Timeline
-    - Got rid of Chord class, model Chords with PitchSets or Arrays of Notes instead
-    - Added support for realtime MIDI I/O with JSound (JRuby only)
-    - various cleanup and reorganization
-
-* June 8, 2011: version 0.0.1
-    - First gem release.
+     bundle exec yard server -r
+     open http://localhost:8808
