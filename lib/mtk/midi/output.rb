@@ -49,8 +49,8 @@ module MTK
 
         @scheduler = Gamelan::Scheduler.new :tempo => bpm, :rate => scheduler_rate
 
-        for time,events in timeline
-          for event in events
+        timeline.each do |time,events|
+          events.each do |event|
             channel = event.channel || 0
 
             case event.type
@@ -75,8 +75,6 @@ module MTK
 
               when :program
                 at time, program(event.number, channel)
-
-              else nil
             end
           end
         end

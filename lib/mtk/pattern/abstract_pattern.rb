@@ -8,7 +8,7 @@ module MTK
     # @abstract Subclass and override {#advance!} and {#current} to implement a Pattern.
     #
     class AbstractPattern
-      include Helper::Collection
+      include MTK::Helper::Collection
       include Enumerator
 
       # The elements in the pattern

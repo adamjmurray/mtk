@@ -30,13 +30,13 @@ module MTK
           pulses_per_beat = sequence.ppqn.to_f
           track_idx = -1
 
-          for track in sequence
+          sequence.each do |track|
             track_idx += 1
             timeline = Timeline.new
             note_ons = {}
             #puts "TRACK #{track_idx}"
 
-            for event in track
+            track.each do |event|
               #puts "#{event.class}: #{event}   @#{event.time_from_start}"
               time = (event.time_from_start)/pulses_per_beat
 
@@ -79,9 +79,7 @@ module MTK
 
       def write_timelines(timelines, parent_sequence=nil)
         sequence = parent_sequence || ::MIDI::Sequence.new
-        for timeline in timelines
-          write_timeline(timeline, sequence)
-        end
+        timelines.each{|timeline| write_timeline(timeline, sequence) }
         write_to_disk sequence unless parent_sequence
       end
 
@@ -93,10 +91,10 @@ module MTK
         clock_rate = sequence.ppqn
         track = add_track sequence
 
-        for time,events in timeline
+        timeline.each do |time,events|
           time *= clock_rate
 
-          for event in events
+          events.each do |event|
             next if event.rest?
 
             channel = event.channel || 0
@@ -143,10 +141,10 @@ module MTK
       end
 
       def print_midi sequence
-        for track in sequence
+        sequence.each do |track|
           puts "\n*** track \"#{track.name}\""
           puts "#{track.events.length} events"
-          for event in track
+          track.each do |event|
             puts "#{event.to_s} (#{event.time_from_start})"
           end
         end

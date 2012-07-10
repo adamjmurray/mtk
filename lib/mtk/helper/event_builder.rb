@@ -20,8 +20,10 @@ module MTK
       # @return [Array] an array of events
       def next
         pitches = []
+        intensity = nil
+        duration = nil
 
-        for pattern in @patterns
+        @patterns.each do |pattern|
           element = pattern.next
 
           case element
@@ -74,7 +76,7 @@ module MTK
 
       def pitches_for_pitch_classes(pitch_classes, previous_pitch)
         pitches = []
-        for pitch_class in pitch_classes
+        pitch_classes.each do |pitch_class|
           pitch = previous_pitch.nearest(pitch_class)
           pitch -= 12 if pitch > @default_pitch+@max_interval # keep within max_distance of start (default is one octave)
           pitch += 12 if pitch < @default_pitch-@max_interval

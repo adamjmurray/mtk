@@ -38,7 +38,7 @@ module MTK
         note_ons = {}
         start = nil
 
-        for message,time in @recorder.messages_with_timestamps
+        @recorder.messages_with_timestamps.each do |message,time|
           start = time unless start
           time -= start
           time /= beats_per_second

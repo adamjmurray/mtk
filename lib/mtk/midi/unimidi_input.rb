@@ -31,7 +31,7 @@ module MTK
         @thread = Thread.new do
           @start_time = Time.now.to_f
           loop do
-            for data in @device.gets
+            @device.gets.each do |data|
               puts data if monitor
               record_raw_data data
             end
@@ -59,15 +59,15 @@ module MTK
         note_ons = {}
         start = nil
 
-        for message,time in @recording
+        @recording.each do |message, time|
           start ||= time
           time -= start
           time /= beats_per_second
 
           if message.is_a? MTK::Event::AbstractEvent
             timeline.add time,message
-
-          else case message.type
+          else
+            case message.type
             when :note_on
               pitch = message.pitch
               note_ons[pitch] = [message,time]

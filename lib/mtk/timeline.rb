@@ -21,7 +21,7 @@ module MTK
     end
 
     def merge enumerable
-      for time,events in enumerable
+      enumerable.each do |time,events|
         add(time,events)
       end
       self
@@ -92,8 +92,8 @@ module MTK
 
     def each
       # this is similar to @timeline.each, but by iterating over #times, we yield the events in chronological order
-      for time in times
-        yield time,@timeline[time]
+      times.each do |time|
+        yield time, @timeline[time]
       end
     end
 
@@ -109,8 +109,6 @@ module MTK
     # Perform #map in place
     # @see #map
     def map! &block
-      # we use the enumerable_map that aliased by the Mappable module,
-      # because Mappable#map will create an extra timeline instance, which is unnecessary in this case
       mapped = enumerable_map(&block)
       clear
       merge mapped
@@ -119,7 +117,7 @@ module MTK
     # Map every individual event, without regard for the time at which is occurs
     def map_events
       mapped_timeline = Timeline.new
-      for time,events in self
+      self.each do |time,events|
         mapped_timeline[time] = events.map{|event| yield event }
       end
       mapped_timeline
@@ -127,7 +125,7 @@ module MTK
 
     # Map every individual event in place, without regard for the time at which is occurs
     def map_events!
-      for time,events in self
+      each do |time,events|
         self[time] = events.map{|event| yield event }
       end
     end
@@ -142,10 +140,10 @@ module MTK
     
     def flatten
       flattened = Timeline.new
-      for time,events in self
-        for event in events
+      self.each do |time,events|
+        events.each do |event|
           if event.is_a? Timeline
-            for subtime,subevent in event.flatten
+            event.flatten.each do |subtime,subevent|
               flattened.add(time+subtime, subevent)
             end
           else
