@@ -37,37 +37,37 @@ module MTK
 
       # (see Output#note_on)
       def note_on(pitch, velocity, channel)
-        lambda { @generator.note_on(pitch, velocity, channel) }
+        @generator.note_on(pitch, velocity, channel)
       end
 
       # (see Output#note_off)
       def note_off(pitch, velocity, channel)
-        lambda { @generator.note_off(pitch, velocity, channel) }
+        @generator.note_off(pitch, velocity, channel)
       end
 
       # (see Output#control)
       def control(number, midi_value, channel)
-        lambda { @generator.control_change(number, midi_value, channel) }
+        @generator.control_change(number, midi_value, channel)
       end
 
       # (see Output#channel_pressure)
       def channel_pressure(midi_value, channel)
-        lambda { @generator.channel_pressure(midi_value, channel) }
+        @generator.channel_pressure(midi_value, channel)
       end
 
       # (see Output#poly_pressure)
       def poly_pressure(pitch, midi_value, channel)
-        lambda { @generator.poly_pressure(pitch, midi_value, channel) }
+        @generator.poly_pressure(pitch, midi_value, channel)
       end
 
       # (see Output#bend)
       def bend(midi_value, channel)
-        lambda { @generator.pitch_bend(midi_value, channel) }
+        @generator.pitch_bend(midi_value, channel)
       end
 
       # (see Output#program)
       def program(number, channel)
-        lambda { @generator.program_change(number, channel) }
+        @generator.program_change(number, channel)
       end
 
     end
