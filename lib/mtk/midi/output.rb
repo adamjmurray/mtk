@@ -41,10 +41,10 @@ module MTK
 
       def play(anything, options={})
         timeline = case anything
-          when Array,MTK::Events::Event then MTK::Timeline.from_hash(0 => anything)
-          when Hash then MTK::Timeline.from_hash anything
           when MTK::Timeline then anything
-          else "#{self.class}.play() doesn't understand #{anything} (#{anything.class})"
+          when Hash then MTK::Timeline.from_hash anything
+          when Enumerable,MTK::Events::Event then MTK::Timeline.from_hash(0 => anything)
+          else raise "#{self.class}.play() doesn't understand #{anything} (#{anything.class})"
         end
 
         scheduler_rate = options.fetch :scheduler_rate, 500 # default: 500 Hz

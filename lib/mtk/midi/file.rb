@@ -68,12 +68,9 @@ module MTK
 
       def write(anything)
         case anything
-          when Timeline then
-            write_timeline(anything)
-          when Array then
-            write_timelines(anything)
-          else
-            raise "#{self.class}#write doesn't understand #{anything.class}"
+          when Timeline then write_timeline(anything)
+          when Enumerable then write_timelines(anything)
+          else raise "#{self.class}#write doesn't understand #{anything.class}"
         end
       end
 

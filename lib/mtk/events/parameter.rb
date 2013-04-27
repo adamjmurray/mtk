@@ -41,7 +41,7 @@ module MTK
       end
 
       def to_s
-        "Parameter(#@type" + (@number ? "[#@number], " : ', ') + "#{sprintf '%.2f',@value})"
+        "Parameter(#@type" + (@number ? "[#@number], " : ', ') + "#{sprintf '%.2f', @value || Float::NAN})"
       end
 
       def inspect
