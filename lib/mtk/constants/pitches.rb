@@ -25,6 +25,8 @@ module MTK
         name = "#{pitch.pitch_class}#{octave_str}"
         PITCH_NAMES << name
 
+        # TODO? also define lower case pseudo constants for consistency with the grammar?
+
         const_set name, pitch
       end
 

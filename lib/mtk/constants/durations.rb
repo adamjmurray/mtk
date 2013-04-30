@@ -32,6 +32,8 @@ module MTK
       # quarter note
       define_constant 'q', 1
 
+      # TODO? make the constant 'e' be 'ei' for consistency with the grammar?
+
       # eight note
       define_constant 'e', Rational(1,2)
 
@@ -50,12 +52,17 @@ module MTK
       # The names of all "psuedo constants" defined in this module
       DURATION_NAMES = %w[w h q e s r x].freeze
 
+      # The case-insensitive names used in the grammar, where 'ei' is eighth note to avoid ambiguity with pitch class E
+      DURATION_NAMES_IN_GRAMMAR = %w[w h q ei s r x].freeze
+
       # Lookup the value of an duration constant by name.
       # This method supports appending any combination of '.' and 't' for more fine-grained values.
       # each '.' multiplies by 3/2, and each 't' multiplies by 2/3.
       # @example lookup value of 'e.' (eight note), which is 0.75 (0.5 * 1.5)
       #         MTK::Durations['e.']
       def self.[](name)
+        name = 'e' if name == 'ei' # special case for eighth in the grammar, since 'e' is the pitch class E
+
         begin
           modifier = nil
           if name =~ /(\w)((.|t)*)/
