@@ -16,8 +16,6 @@ module MTK
   end
 
   # Classes that emit elements one at a time. Used by {MTK::Sequencers::Sequencer}s to construct {Timeline}s.
-  #
-  # The core interface for Pattern classes is {Patterns::Enumerator#next} and {Patterns::Enumerator#rewind}.
   module Patterns
   end
 
@@ -59,7 +57,6 @@ require 'mtk/constants/intervals'
 require 'mtk/constants/intensities'
 require 'mtk/constants/durations'
 
-require 'mtk/patterns/enumerator'
 require 'mtk/patterns/pattern'
 require 'mtk/patterns/sequence'
 require 'mtk/patterns/cycle'

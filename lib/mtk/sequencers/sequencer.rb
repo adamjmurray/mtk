@@ -15,7 +15,7 @@ module MTK
       # nil means no maximum (be careful of infinite loops!)
       attr_accessor :max_time
 
-      # Used by {#to_timeline} to builds event lists from the results of {Patterns::Enumerator#next} for the {Patterns::Pattern}s in this Sequencer.
+      # Used by {#to_timeline} to builds event lists from the results of {Patterns::Pattern#next} for the {Patterns::Pattern}s in this Sequencer.
       attr_reader :event_builder
 
       # The current time offset for the sequencer. Used for the {Timeline} times.

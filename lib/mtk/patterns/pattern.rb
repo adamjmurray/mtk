@@ -9,7 +9,6 @@ module MTK
     #
     class Pattern
       include MTK::Helpers::Collection
-      include MTK::Patterns::Enumerator
 
       # The elements in the pattern
       attr_reader :elements
@@ -58,7 +57,7 @@ module MTK
       # Emit the next element in the pattern
       # @raise StopIteration when the pattern has emitted all values, or has hit the {#max_elements} limit.
       def next
-        if @current.is_a? Enumerator
+        if @current.kind_of? Pattern
           begin
             subpattern_next = @current.next
             subpattern_has_next = true
@@ -78,7 +77,7 @@ module MTK
         end
 
         @current = current
-        if @current.is_a? Enumerator
+        if @current.kind_of? Pattern
           @current.rewind # start over, in case we already enumerated this element and then did a rewind
           return self.next
         end
