@@ -4,15 +4,15 @@ describe MTK::Sequencers::Sequencer do
 
   ABSTRACT_SEQUENCER = Sequencers::Sequencer
 
-  class MockEventBuilder < Helpers::EventBuilder
+  class MockEventBuilder < Patterns::EventChain
     attr_accessor :mock_attribute
   end
 
   let(:patterns)  { [Patterns.PitchCycle(C4,D4)] }
   let(:sequencer) { ABSTRACT_SEQUENCER.new patterns }
-  let(:pitch) { Helpers::EventBuilder::DEFAULT_PITCH }
-  let(:intensity) { Helpers::EventBuilder::DEFAULT_INTENSITY }
-  let(:duration)  { Helpers::EventBuilder::DEFAULT_DURATION }
+  let(:pitch) { Patterns::EventChain::DEFAULT_PITCH }
+  let(:intensity) { Patterns::EventChain::DEFAULT_INTENSITY }
+  let(:duration)  { Patterns::EventChain::DEFAULT_DURATION }
 
   describe "#new" do
     it "defaults @max_steps to nil" do
@@ -33,8 +33,8 @@ describe MTK::Sequencers::Sequencer do
       sequencer.max_time.should == 4
     end
 
-    it "defaults @event_builder to MTK::Helper::EventBuilder" do
-      sequencer.event_builder.should be_a MTK::Helpers::EventBuilder
+    it "defaults @event_builder to MTK::Patterns::EventChain" do
+      sequencer.event_builder.should be_a MTK::Patterns::EventChain
     end
 
     it "sets @event_buidler from the options hash" do
@@ -194,7 +194,7 @@ describe MTK::Sequencers::Sequencer do
       sequencer.next.should == [Note(C4,intensity,duration)]
       sequencer.next.should == [Note(C5,intensity,duration)]
       sequencer.rewind
-      sequencer.next.should == [Note(C4,intensity,duration)] # if the internal EventBuilder is not properly reset, the Note would be C5
+      sequencer.next.should == [Note(C4,intensity,duration)] # if the internal EventChain is not properly reset, the Note would be C5
     end
   end
 

@@ -9,7 +9,7 @@ module MTK
         patterns.each_with_index do |pattern, index|
           if pattern.type == :rhythm
             @rhythm = pattern
-            patterns.delete_at index # so we don't enumerate the rhythm values in EventBuilder
+            patterns.delete_at index # so we don't enumerate the rhythm values in the EventChain
           end
         end
         super(patterns, options)
