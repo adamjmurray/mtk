@@ -12,6 +12,7 @@ module MTK
 
     # All enharmonic names of the 12 pitch classes, including sharps, flats, double-sharps, and double-flats,
     # organized such that each index contains the allowed names of the pitch class with a {#value} equal to that index.
+    # @see VALID_NAMES
     VALID_NAMES_BY_VALUE =
     [ # (valid names ), # value # normalized name
       %w( B#  C  Dbb ), #   0   #   C

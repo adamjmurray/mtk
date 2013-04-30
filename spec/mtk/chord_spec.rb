@@ -16,19 +16,19 @@ describe MTK::Chord do
 
   describe '#inversion' do
     it "adds an octave to the chord's pitches starting from the lowest, for each whole number in a postive argument" do
-      c_major.inversion(2).should == Melody.new([G4,C5,E5])
+      c_major.inversion(2).should == Chord.new([G4,C5,E5])
     end
 
     it "subtracts an octave to the chord's pitches starting fromt he highest, for each whole number in a negative argument" do
-      c_major.inversion(-2).should == Melody.new([E3,G3,C4])
+      c_major.inversion(-2).should == Chord.new([E3,G3,C4])
     end
 
     it "wraps around to the lowest pitch when the argument is bigger than the number of pitches in the chord (positive argument)" do
-      c_major.inversion(4).should == Melody.new([E5,G5,C6])
+      c_major.inversion(4).should == Chord.new([E5,G5,C6])
     end
 
     it "wraps around to the highest pitch when the magnitude of the argument is bigger than the number of pitches in the chord (negative argument)" do
-      c_major.inversion(-4).should == Melody.new([G2,C3,E3])
+      c_major.inversion(-4).should == Chord.new([G2,C3,E3])
     end
   end
 
