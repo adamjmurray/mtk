@@ -111,19 +111,33 @@ module MTK
       end
     end
 
-    # Build any "TypedPattern" (like PitchCycle or DurationPalindrome) or even just Pattern
-    def method_missing(method, *args, &block)
-      # Assuming we get something like PitchCycle, split into 'Pitch' and 'Cycle'
-      camel_case_words = method.to_s.gsub(/([a-z])([A-Z])/,'\1 \2').split(' ')
-      pattern = MTK::Patterns.const_get camel_case_words.last
-      if camel_case_words.length > 1
-        type = camel_case_words.first.downcase.to_sym
-        pattern.new(args, :type => type)
-      else
-        pattern.new(args)
+    class << self
+      %w(Choice Cycle Function Lines Palindrome Pattern Sequence).each do |pattern|
+        define_method pattern do |*args|
+          if args and args.last.is_a? Hash
+            options = args.last
+            args = args[0...-1]
+          else
+            options = {}
+          end
+          args = args[0] if args.length == 1 and args[0].is_a? Array
+          const_get(pattern).new(args,options)
+        end
+        %w(Pitch PitchClass Intensity Duration Note Rhythm).each do |type|
+          define_method "#{type}#{pattern}" do |*args|
+            if args and args.last.is_a? Hash
+              options = args.last
+              args = args[0...-1]
+            else
+              options = {}
+            end
+            args = args[0] if args.length == 1 and args[0].is_a? Array
+            options[:type] = type.downcase.to_sym
+            const_get(pattern).new(args,options)
+          end
+        end
       end
     end
-    module_function :method_missing
 
   end
 end

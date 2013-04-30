@@ -26,13 +26,13 @@ interval_generator = lambda do
   end
 end
 
-pitches = Patterns::Function.new interval_generator, :type => :pitch, :max_elements => 24
+pitches = Patterns::PitchFunction interval_generator, max_elements: 24, max_interval: 17
 
 # we'll also use a weighted choice to generate the intensities
-intensities = Patterns::Choice.new [mp, mf, f, ff, fff], :type => :intensity, :weights => [1,2,3,2,1]
+intensities = Patterns::IntensityChoice [mp, mf, f, ff, fff], weights: [1,2,3,2,1]
 
 
-sequencer = Sequencers::StepSequencer.new [pitches, intensities], :step_size => 0.5
+sequencer = Sequencers::StepSequencer.new [pitches, intensities], step_size: 0.5
 timeline = sequencer.to_timeline
 
 MIDI_File(file).write timeline
