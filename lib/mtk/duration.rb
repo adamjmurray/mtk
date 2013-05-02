@@ -5,7 +5,7 @@ module MTK
 
     include Comparable
 
-    # The names of the base durations. See MTK::Constants::Durations for more info.
+    # The names of the base durations. See {MTK::Constants::Durations} for more info.
     NAMES = %w[w h q i s r x].freeze
 
     VALUES_BY_NAME = {
@@ -84,7 +84,7 @@ module MTK
     end
 
     def inspect
-      "#{self.class}< #{to_s} #{@value > 1 ? 'beats' : 'beat'} >"
+      "#{self.class}<#{to_s} #{@value > 1 ? 'beats' : 'beat'}>"
     end
 
     def ==( other )
@@ -92,7 +92,11 @@ module MTK
     end
 
     def <=> other
-      @value <=> other.value
+      if other.respond_to? :value
+        @value <=> other.value
+      else
+        @value <=> other
+      end
     end
 
     def + duration

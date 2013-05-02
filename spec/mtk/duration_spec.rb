@@ -70,7 +70,7 @@ describe MTK::Duration do
 
   describe '.from_f' do
     it "converts Floats to Rational" do
-      value = Duration.from_i(0.5).value
+      value = Duration.from_f(0.5).value
       value.should be_a Rational
       value.should == Rational(1,2)
     end

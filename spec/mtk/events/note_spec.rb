@@ -6,7 +6,7 @@ describe MTK::Events::Note do
 
   let(:pitch) { C4 }
   let(:intensity) { mf }
-  let(:duration) { 2.5 }
+  let(:duration) { Duration[2.5] }
   let(:note) { NOTE.new(pitch, intensity, duration) }
 
   describe "#pitch" do
@@ -60,13 +60,13 @@ describe MTK::Events::Note do
 
   describe '.from_midi' do
     it "constructs a Note using a MIDI pitch and velocity" do
-      NOTE.from_midi(C4.to_i, mf*127, 2.5).should == note
+      NOTE.from_midi(C4.to_i, mf.value*127, 2.5).should == note
     end
   end
 
   describe "#to_midi" do
     it "converts the Note to an Array of MIDI values: [pitch, velocity, duration]" do
-      note.to_midi.should == [60, (mf*127).round, duration]
+      note.to_midi.should == [60, (mf.value*127).round, duration.to_f]
     end
   end
 
@@ -131,7 +131,7 @@ describe MTK::Events::Note do
 
   describe "#inspect" do
     it "includes the #pitch, #intensity.to_s, and #duration.to_s" do
-      NOTE.new(C4, 1/8.0, 1/8.0).inspect.should == "Note(C4, 0.125, 0.125)"
+      NOTE.new(C4, 1/8.0, 1/8.0).inspect.should == "Note(C4, 0.125, 1/8)"
     end
   end
 

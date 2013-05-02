@@ -6,21 +6,19 @@ Core Concepts
 ### Core data types
 
 These model the basic properties of musical events:
-* pitch_class (MTK class)
-* pitch (MTK class)
-* intensity (Numeric)
-* duration (Numeric)
+* PitchClass
+* Pitch
+* Duration
+* Intensity
 
-Like Numeric types, PitchClass and Pitch are immutable. This helps avoid confusing bugs.
+These types are all immutable. This helps avoid confusing bugs.
 Mostly you don't need to worry about this. Just remember when you call methods that change the value, like #invert,
 it does not change the value in-place. For example:
 
      p = PitchClass[G]
      p = p.invert(E)  # because p.invert(E) does not change p
 
-For efficiency and convenience, intensity and duration are modeled using Ruby's Numeric types (Fixnum, Float, etc).
-
-Intensity is intended to range from 0.0 (minimum intensity) to 1.0 (maximum intensity).
+Intensity values are intended to range from 0.0 (minimum intensity) to 1.0 (maximum intensity).
 
 A Duration of 1 is one beat (usually a quarter note, depending on the meter). By convention, negative durations
 indicate a rest that lasts for the absolute value duration.

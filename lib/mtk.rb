@@ -36,6 +36,7 @@ end
 require 'mtk/pitch_class'
 require 'mtk/pitch'
 require 'mtk/duration'
+require 'mtk/intensity'
 
 require 'mtk/helpers/collection'
 require 'mtk/helpers/pitch_collection'
@@ -65,7 +66,7 @@ require 'mtk/patterns/choice'
 require 'mtk/patterns/function'
 require 'mtk/patterns/lines'
 require 'mtk/patterns/palindrome'
-require 'mtk/patterns/event_chain'
+require 'mtk/patterns/note_chain'
 
 require 'mtk/sequencers/sequencer'
 require 'mtk/sequencers/step_sequencer'

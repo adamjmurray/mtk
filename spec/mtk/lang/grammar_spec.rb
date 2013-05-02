@@ -109,17 +109,17 @@ describe MTK::Lang::Grammar do
     end
 
     it "should parse intensities" do
-      for intensity_name in Intensities::INTENSITY_NAMES
-        parse(intensity_name, :intensity).should == Intensities[intensity_name]
+      for intensity_name in Intensity::NAMES
+        parse(intensity_name, :intensity).should == Intensity(intensity_name)
       end
     end
 
     it "should parse intensities with + and - modifiers" do
-      for intensity_name in Intensities::INTENSITY_NAMES
+      for intensity_name in Intensity::NAMES
         name = "#{intensity_name}+"
-        parse(name, :intensity).should == Intensities[name]
+        parse(name, :intensity).should == Intensity(name)
         name = "#{intensity_name}-"
-        parse(name, :intensity).should == Intensities[name]
+        parse(name, :intensity).should == Intensity(name)
       end
     end
 

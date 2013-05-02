@@ -53,10 +53,15 @@ module MTK
       end
 
       def midi_value
-        midi_value = (127 * (@value || 0)).round
-        midi_value = 0 if midi_value < 0
-        midi_value = 127 if midi_value > 127
-        midi_value
+        if @value and @value.respond_to? :to_midi
+          @value.to_midi
+        else
+          value = @value
+          midi_value = (127 * (value || 0)).round
+          midi_value = 0 if midi_value < 0
+          midi_value = 127 if midi_value > 127
+          midi_value
+        end
       end
 
       def midi_value= value
@@ -67,12 +72,18 @@ module MTK
       # Indicate the "real" duration for rests.
       # @see rest?
       def length
-        (@duration || 0).abs
+        # TODO: is this really necessary? Can we enforce this is a Duration object instead?
+        if @duration and @duration.respond_to? :value
+          value = @duration.value
+        else
+          value = @duration
+        end
+        (value || 0).abs # TODO: introduce duration.length
       end
 
       # By convention, any events with negative durations are a rest
       def rest?
-        @duration < 0
+        @duration < 0 # TODO: introduce duration.rest?
       end
 
       # By convention, any events with 0 duration are instantaneous

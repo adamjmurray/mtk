@@ -79,7 +79,7 @@ grammar MTK_Grammar
 
   rule intensity
     ( ('p'1*3 | 'mp' | 'mf' | 'o' | 'f'2*3) ('+'|'-')? ) {
-      Intensities[to_s]
+      Intensity.from_s(to_s)
     }
   end
 

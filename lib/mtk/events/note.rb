@@ -18,7 +18,7 @@ module MTK
       alias :velocity= :midi_value=
 
       def initialize(pitch, intensity, duration, channel=nil)
-        super :note, :number => pitch, :value => intensity, :duration => duration, :channel => channel
+        super :note, :number => pitch, :value => Intensity(intensity), :duration => Duration(duration), :channel => channel
       end
 
       def self.from_hash(hash)
@@ -30,7 +30,7 @@ module MTK
       end
 
       def self.from_midi(pitch, velocity, duration_in_beats, channel=0)
-        new MTK::Constants::Pitches::PITCHES[pitch.to_i], velocity/127.0, duration_in_beats, channel
+        new MTK::Constants::Pitches::PITCHES[pitch.to_i], Intensity[velocity/127.0], Duration[duration_in_beats], channel
       end
 
       def midi_pitch
@@ -38,7 +38,7 @@ module MTK
       end
 
       def to_midi
-        [midi_pitch, velocity, duration]
+        [midi_pitch, velocity, duration.to_f]
       end
 
       def transpose(interval)

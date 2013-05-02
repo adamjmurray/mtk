@@ -1,9 +1,8 @@
 module MTK
   module Patterns
 
-    # A helper class for {Sequencers::Sequencer}s.
-    # Takes a list of patterns and constructs a list of {Events::Event}s from the next elements in each pattern.
-    class EventChain < Pattern
+    # A special pattern that takes a list of note properties and/or patterns and constructs a list of {Events::Event}s from the next elements in each pattern.
+    class NoteChain < Pattern
 
       DEFAULT_PITCH = MTK::Constants::Pitches::C4
       DEFAULT_INTENSITY = MTK::Constants::Intensities::o
@@ -11,6 +10,7 @@ module MTK
 
       def initialize(patterns, options={})
         @patterns = patterns
+        puts @patterns.inspect
         @options = options
         @max_interval = options.fetch :max_interval, 127
         rewind
@@ -24,28 +24,36 @@ module MTK
         duration = nil
 
         @patterns.each do |pattern|
-          element = pattern.next
+          if pattern.is_a? MTK::Patterns::Pattern
+            element = pattern.next
+          else
+            element = pattern
+          end
 
           case element
             when Pitch           then pitches << element
             when PitchClass      then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
             when PitchClassSet   then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
             when Helpers::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
-          else
-            case pattern.type
-              when :pitch
-                if element.is_a? Numeric # then add as an interval
-                  if @previous_pitches
-                    pitches += @previous_pitches.map{|pitch| pitch + element }
-                  else
-                    pitches << ((@previous_pitch || @default_pitch) + element)
-                  end
-                else # other supported types were handled above in the first 'case'
-                  pitches << :skip
+            when Duration then duration = element
+            when Intensity then puts "Got intensity: #{element}"; intensity = element
+            else
+              if pattern.is_a? MTK::Patterns::Pattern
+                case pattern.type
+                  when :pitch
+                    if element.is_a? Numeric # then add as an interval
+                      if @previous_pitches
+                        pitches += @previous_pitches.map{|pitch| pitch + element }
+                      else
+                        pitches << ((@previous_pitch || @default_pitch) + element)
+                      end
+                    else # other supported types were handled above in the first 'case'
+                      pitches << :skip
+                    end
+                  when :intensity then intensity = element || :skip
+                  when :duration then duration = element || :skip
                 end
-              when :intensity then intensity = element || :skip
-              when :duration then duration = element || :skip
-            end
+              end
           end
         end
 
@@ -69,7 +77,7 @@ module MTK
         @default_duration = @options.fetch :default_duration, DEFAULT_DURATION
         @previous_pitch = nil
         @previous_pitches = nil
-        @patterns.each{|pattern| pattern.rewind }
+        @patterns.each{|pattern| pattern.rewind if pattern.is_a? MTK::Patterns::Pattern }
       end
 
       ########################

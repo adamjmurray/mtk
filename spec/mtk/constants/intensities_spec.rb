@@ -4,7 +4,7 @@ describe MTK::Constants::Intensities do
 
   describe 'ppp' do
     it 'is equivalent to MIDI velocity 16' do
-      (ppp * 127).round.should == 16
+      (ppp.value * 127).round.should == 16
     end
     it 'is available via a module property and via mixin' do
       Intensities::ppp.should == ppp
@@ -13,7 +13,7 @@ describe MTK::Constants::Intensities do
 
   describe 'pp' do
     it 'is equivalent to MIDI velocity 32' do
-      (pp * 127).round.should == 32
+      (pp.value * 127).round.should == 32
     end
     it 'is available via a module property and via mixin' do
       Intensities::pp.should == pp
@@ -22,7 +22,7 @@ describe MTK::Constants::Intensities do
 
   describe 'p' do
     it 'is equivalent to MIDI velocity 48' do
-      (p * 127).round.should == 48
+      (p.value * 127).round.should == 48
     end
     it 'is available via a module property and via mixin' do
       Intensities::p.should == p
@@ -31,7 +31,7 @@ describe MTK::Constants::Intensities do
 
   describe 'mp' do
     it 'is equivalent to MIDI velocity 64' do
-      (mp * 127).round.should == 64
+      (mp.value * 127).round.should == 64
     end
     it 'is available via a module property and via mixin' do
       Intensities::mp.should == mp
@@ -40,7 +40,7 @@ describe MTK::Constants::Intensities do
 
   describe 'mf' do
     it 'is equivalent to MIDI velocity 79' do
-      (mf * 127).round.should == 79
+      (mf.value * 127).round.should == 79
     end
     it 'is available via a module property and via mixin' do
       Intensities::mf.should == mf
@@ -49,7 +49,7 @@ describe MTK::Constants::Intensities do
 
   describe 'o' do # AKA forte
     it 'is equivalent to MIDI velocity 95' do
-      (o * 127).round.should == 95
+      (o.value * 127).round.should == 95
     end
     it 'is available via a module property and via mixin' do
       Intensities::o.should == o
@@ -61,7 +61,7 @@ describe MTK::Constants::Intensities do
 
   describe 'ff' do
     it 'is equivalent to MIDI velocity 111' do
-      (ff * 127).round.should == 111
+      (ff.value * 127).round.should == 111
     end
     it 'is available via a module property and via mixin' do
       Intensities::ff.should == ff
@@ -70,7 +70,7 @@ describe MTK::Constants::Intensities do
 
   describe 'fff' do
     it 'is equivalent to MIDI velocity 127' do
-      (fff * 127).round.should == 127
+      (fff.value * 127).round.should == 127
     end
     it 'is available via a module property and via mixin' do
       Intensities::fff.should == fff
@@ -94,34 +94,6 @@ describe MTK::Constants::Intensities do
 
     it "is immutable" do
       lambda{ Intensities::INTENSITY_NAMES << :something }.should raise_error
-    end
-  end
-
-  describe ".[]" do
-    it "looks up the constant by name" do
-      for name in INTENSITY_NAMES
-        Intensities[name].should == Intensities.send(name)
-      end
-    end
-
-    it "adds 1.0/24 when the name ends with '+', except for 'fff+' which is 1.0 like 'fff'" do
-      for name in INTENSITY_NAMES
-        if name == 'fff'
-          Intensities["#{name}+"].should == 1.0
-        else
-          Intensities["#{name}+"].should == Intensities.send(name)+1.0/24
-        end
-      end
-    end
-
-    it "subtracts 1.0/24 when the name ends with '-'" do
-      for name in INTENSITY_NAMES
-        Intensities["#{name}-"].should == Intensities.send(name)-1.0/24
-      end
-    end
-
-    it "returns nil for arguments it doesn't understand" do
-      Intensities[:invalid].should be_nil
     end
   end
 

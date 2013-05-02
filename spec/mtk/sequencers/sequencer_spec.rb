@@ -4,15 +4,15 @@ describe MTK::Sequencers::Sequencer do
 
   ABSTRACT_SEQUENCER = Sequencers::Sequencer
 
-  class MockEventBuilder < Patterns::EventChain
+  class MockEventBuilder < Patterns::NoteChain
     attr_accessor :mock_attribute
   end
 
   let(:patterns)  { [Patterns.PitchCycle(C4,D4)] }
   let(:sequencer) { ABSTRACT_SEQUENCER.new patterns }
-  let(:pitch) { Patterns::EventChain::DEFAULT_PITCH }
-  let(:intensity) { Patterns::EventChain::DEFAULT_INTENSITY }
-  let(:duration)  { Patterns::EventChain::DEFAULT_DURATION }
+  let(:pitch) { Patterns::NoteChain::DEFAULT_PITCH }
+  let(:intensity) { Patterns::NoteChain::DEFAULT_INTENSITY }
+  let(:duration)  { Patterns::NoteChain::DEFAULT_DURATION }
 
   describe "#new" do
     it "defaults @max_steps to nil" do
@@ -34,7 +34,7 @@ describe MTK::Sequencers::Sequencer do
     end
 
     it "defaults @event_builder to MTK::Patterns::EventChain" do
-      sequencer.event_builder.should be_a MTK::Patterns::EventChain
+      sequencer.event_builder.should be_a MTK::Patterns::NoteChain
     end
 
     it "sets @event_buidler from the options hash" do
