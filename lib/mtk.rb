@@ -66,7 +66,7 @@ require 'mtk/patterns/choice'
 require 'mtk/patterns/function'
 require 'mtk/patterns/lines'
 require 'mtk/patterns/palindrome'
-require 'mtk/patterns/note_chain'
+require 'mtk/patterns/chain'
 
 require 'mtk/sequencers/sequencer'
 require 'mtk/sequencers/step_sequencer'

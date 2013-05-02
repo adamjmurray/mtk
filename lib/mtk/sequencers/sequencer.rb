@@ -36,7 +36,7 @@ module MTK
         @max_time = options[:max_time]
         @filter = options[:filter]
 
-        event_builder_class = options.fetch :event_builder, Patterns::NoteChain
+        event_builder_class = options.fetch :event_builder, Patterns::Chain
         @event_builder = event_builder_class.new(patterns, options)
 
         rewind

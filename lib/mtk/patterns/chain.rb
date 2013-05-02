@@ -1,8 +1,8 @@
 module MTK
   module Patterns
 
-    # A special pattern that takes a list of note properties and/or patterns and constructs a list of {Events::Event}s from the next elements in each pattern.
-    class NoteChain < Pattern
+    # A special pattern that takes a list of event properties and/or patterns and emits lists of {Events::Event}s
+    class Chain < Pattern
 
       DEFAULT_PITCH = MTK::Constants::Pitches::C4
       DEFAULT_INTENSITY = MTK::Constants::Intensities::o

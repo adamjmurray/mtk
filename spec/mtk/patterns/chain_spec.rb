@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe MTK::Patterns::NoteChain do
+describe MTK::Patterns::Chain do
 
-  NOTE_CHAIN = MTK::Patterns::NoteChain
+  NOTE_CHAIN = MTK::Patterns::Chain
 
   let(:pitch) { NOTE_CHAIN::DEFAULT_PITCH }
   let(:intensity) { NOTE_CHAIN::DEFAULT_INTENSITY }
