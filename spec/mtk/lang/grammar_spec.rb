@@ -60,7 +60,7 @@ describe MTK::Lang::Grammar do
     end
 
     it "parses duration sequences" do
-      parse("(q i q. ht)", :duration_sequence).should == Patterns.DurationSequence(q, i, q*1.5, h*2/3.0)
+      parse("(q i q. ht)", :duration_sequence).should == Patterns.DurationSequence(q, i, q*Rational(1.5), h*Rational(2,3))
     end
 
 
@@ -125,18 +125,18 @@ describe MTK::Lang::Grammar do
 
     it "should parse durations" do
       for duration in Durations::DURATION_NAMES
-        parse(duration, :duration).should == Durations[duration]
+        parse(duration, :duration).should == Duration(duration)
       end
     end
 
     it "should parse durations with . and t modifiers" do
       for duration in Durations::DURATION_NAMES
         name = "#{duration}."
-        parse(name, :duration).should == Durations[name]
+        parse(name, :duration).should == Duration(name)
         name = "#{duration}t"
-        parse(name, :duration).should == Durations[name]
+        parse(name, :duration).should == Duration(name)
         name = "#{duration}..t.t"
-        parse(name, :duration).should == Durations[name]
+        parse(name, :duration).should == Duration(name)
       end
     end
 

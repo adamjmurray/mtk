@@ -24,58 +24,31 @@ module MTK
       # @macro [attach] durations.define_constant
       #   @attribute [r]
       #   @return [$2] number of beats for $1
-      define_constant 'w', 4
+      define_constant 'w', MTK::Duration[4]
 
       # half note
-      define_constant 'h', 2
+      define_constant 'h', MTK::Duration[2]
 
       # quarter note
-      define_constant 'q', 1
+      define_constant 'q', MTK::Duration[1]
 
       # eight note
-      define_constant 'i', Rational(1,2)
+      define_constant 'i', MTK::Duration[Rational(1,2)]
 
       # sixteenth note
-      define_constant 's', Rational(1,4)
+      define_constant 's', MTK::Duration[Rational(1,4)]
 
       # thirty-second note
-      define_constant 'r', Rational(1,8)
+      define_constant 'r', MTK::Duration[Rational(1,8)]
 
       # sixty-fourth note
-      define_constant 'x', Rational(1,16)
+      define_constant 'x', MTK::Duration[Rational(1,16)]
 
       # The values of all "psuedo constants" defined in this module
       DURATIONS = [w, h, q, i, s, r, x].freeze
 
       # The names of all "psuedo constants" defined in this module
-      DURATION_NAMES = %w[w h q i s r x].freeze
-
-      # Lookup the value of an duration constant by name.
-      # This method supports appending any combination of '.' and 't' for more fine-grained values.
-      # each '.' multiplies by 3/2, and each 't' multiplies by 2/3.
-      # @example lookup value of 'e.' (eight note), which is 0.75 (0.5 * 1.5)
-      #         MTK::Durations['e.']
-      def self.[](name)
-        begin
-          modifier = nil
-          if name =~ /^(\w)((\.|t)*)$/
-            name = $1
-            modifier = $2
-          end
-
-          value = send name
-          modifier.each_char do |mod|
-            case mod
-              when '.' then value *= Rational(3,2)
-              when 't' then value *= Rational(2,3)
-            end
-          end
-          value
-
-        rescue
-          nil
-        end
-      end
+      DURATION_NAMES = MTK::Duration::NAMES
 
     end
   end

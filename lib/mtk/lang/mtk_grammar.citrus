@@ -85,7 +85,7 @@ grammar MTK_Grammar
 
   rule duration
     ( [whqisrx] ('.'|'t')* ) {
-      Durations[to_s]
+      Duration.from_s(to_s)
     }
   end
 

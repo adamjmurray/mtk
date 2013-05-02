@@ -35,6 +35,7 @@ end
 
 require 'mtk/pitch_class'
 require 'mtk/pitch'
+require 'mtk/duration'
 
 require 'mtk/helpers/collection'
 require 'mtk/helpers/pitch_collection'
