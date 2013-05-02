@@ -3,7 +3,7 @@ require 'spec_helper'
 describe MTK::Timeline do
 
   let(:note1) { Note(C4, p, 1) }
-  let(:note2) { Note(G4, f, 2) }
+  let(:note2) { Note(G4, o, 2) }
   let(:timeline_raw_data) { { 0 => note1, 1 => [note1, note2] } }
   let(:timeline_hash) { { 0 => [note1], 1 => [note1, note2] } }
   let(:timeline) { Timeline.from_hash(timeline_raw_data) }

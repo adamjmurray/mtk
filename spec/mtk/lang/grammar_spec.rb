@@ -14,22 +14,22 @@ describe MTK::Lang::Grammar do
         parse("
           {
             0 => {C4 mp q}
-            1 => {D4 fo h}
+            1 => {D4 o h}
           }
-        ", :timeline).should == Timeline.from_hash({0 => Note(C4,mp,q), 1 => Note(D4,f,h)})
+        ", :timeline).should == Timeline.from_hash({0 => Note(C4,mp,q), 1 => Note(D4,o,h)})
       end
 
       it "should parse a Timeline" do
         parse("
           {
-            0 => [{C4 mp q} {D4 fo h}]
+            0 => [{C4 mp q} {D4 o h}]
           }
-        ", :timeline).should == Timeline.from_hash({0 => [Note(C4,mp,q), Note(D4,f,h)]})
+        ", :timeline).should == Timeline.from_hash({0 => [Note(C4,mp,q), Note(D4,o,h)]})
       end
     end
 
     it "should parse a list of notes in square brackets as an Array of Notes" do
-      parse("[{C4 mp q} {D4 fo h}]", :note_list).should == [Note(C4,mp,q), Note(D4,f,h)]
+      parse("[{C4 mp q} {D4 o h}]", :note_list).should == [Note(C4,mp,q), Note(D4,o,h)]
     end
 
     it "should parse {pitch intensity duration} as a Note" do
@@ -60,7 +60,7 @@ describe MTK::Lang::Grammar do
     end
 
     it "parses duration sequences" do
-      parse("(q ei q. ht)", :duration_sequence).should == Patterns.DurationSequence(q, e, q*1.5, h*2/3.0)
+      parse("(q i q. ht)", :duration_sequence).should == Patterns.DurationSequence(q, i, q*1.5, h*2/3.0)
     end
 
 
@@ -109,13 +109,13 @@ describe MTK::Lang::Grammar do
     end
 
     it "should parse intensities" do
-      for intensity_name in Intensities::INTENSITY_NAMES_IN_GRAMMAR
+      for intensity_name in Intensities::INTENSITY_NAMES
         parse(intensity_name, :intensity).should == Intensities[intensity_name]
       end
     end
 
     it "should parse intensities with + and - modifiers" do
-      for intensity_name in Intensities::INTENSITY_NAMES_IN_GRAMMAR
+      for intensity_name in Intensities::INTENSITY_NAMES
         name = "#{intensity_name}+"
         parse(name, :intensity).should == Intensities[name]
         name = "#{intensity_name}-"
@@ -124,13 +124,13 @@ describe MTK::Lang::Grammar do
     end
 
     it "should parse durations" do
-      for duration in Durations::DURATION_NAMES_IN_GRAMMAR
+      for duration in Durations::DURATION_NAMES
         parse(duration, :duration).should == Durations[duration]
       end
     end
 
     it "should parse durations with . and t modifiers" do
-      for duration in Durations::DURATION_NAMES_IN_GRAMMAR
+      for duration in Durations::DURATION_NAMES
         name = "#{duration}."
         parse(name, :duration).should == Durations[name]
         name = "#{duration}t"

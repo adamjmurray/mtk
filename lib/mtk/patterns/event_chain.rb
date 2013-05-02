@@ -6,7 +6,7 @@ module MTK
     class EventChain < Pattern
 
       DEFAULT_PITCH = MTK::Constants::Pitches::C4
-      DEFAULT_INTENSITY = MTK::Constants::Intensities::f
+      DEFAULT_INTENSITY = MTK::Constants::Intensities::o
       DEFAULT_DURATION = 1
 
       def initialize(patterns, options={})

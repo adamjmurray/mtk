@@ -47,12 +47,12 @@ describe MTK::Constants::Intensities do
     end    
   end
 
-  describe 'f' do
+  describe 'o' do # AKA forte
     it 'is equivalent to MIDI velocity 95' do
-      (f * 127).round.should == 95
+      (o * 127).round.should == 95
     end
     it 'is available via a module property and via mixin' do
-      Intensities::f.should == f
+      Intensities::o.should == o
     end
     it "does not overwrite the PitchClass constant 'F'" do
       F.should be_a PitchClass
@@ -79,7 +79,7 @@ describe MTK::Constants::Intensities do
 
   describe "INTENSITIES" do
     it "contains all Intensities pseudo-constants" do
-      Intensities::INTENSITIES.should =~ [ppp, pp, p, mp, mf, f, ff, fff]
+      Intensities::INTENSITIES.should =~ [ppp, pp, p, mp, mf, o, ff, fff]
     end
 
     it "is immutable" do
@@ -89,7 +89,7 @@ describe MTK::Constants::Intensities do
 
   describe "INTENSITY_NAMES" do
     it "contains all Intensities pseudo-constants names as strings" do
-      Intensities::INTENSITY_NAMES.should =~ ['ppp', 'pp', 'p', 'mp', 'mf', 'f', 'ff', 'fff']
+      Intensities::INTENSITY_NAMES.should =~ ['ppp', 'pp', 'p', 'mp', 'mf', 'o', 'ff', 'fff']
     end
 
     it "is immutable" do

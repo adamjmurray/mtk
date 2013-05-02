@@ -41,10 +41,8 @@ module MTK
       # mezzo-forte
       define_constant 'mf', 0.625
 
-      # TODO? make the constant 'f' be 'fo' for consistency with the grammar?
-
       # forte
-      define_constant 'f', 0.75
+      define_constant 'o', 0.75
 
       # fortissimo
       define_constant 'ff', 0.875
@@ -53,13 +51,10 @@ module MTK
       define_constant 'fff', 1.0
 
       # The values of all "psuedo constants" defined in this module
-      INTENSITIES = [ppp, pp, p, mp, mf, f, ff, fff].freeze
+      INTENSITIES = [ppp, pp, p, mp, mf, o, ff, fff].freeze
 
       # The names of all "psuedo constants" defined in this module
-      INTENSITY_NAMES = %w[ppp pp p mp mf f ff fff].freeze
-
-      # The case-insensitive names used in the grammar, where 'fo' is forte to avoid ambiguity with pitch class F
-      INTENSITY_NAMES_IN_GRAMMAR = %w[ppp pp p mp mf fo ff fff].freeze
+      INTENSITY_NAMES = %w[ppp pp p mp mf o ff fff].freeze
 
       # Lookup the value of an intensity constant by name.
       # This method supports appending '+' or '-' for more fine-grained values.
@@ -68,8 +63,6 @@ module MTK
       #         MTK::Intensities['mp+']
       def self.[](name)
         return 1.0 if name == "fff+" # special case because "fff" is already the maximum
-
-        name = 'f' if name == 'fo' # special case for forte in the grammar, since 'f' is the pitch class F
 
         modifier = nil
         if name =~ /(\w+)([+-])/
