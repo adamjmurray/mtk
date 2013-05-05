@@ -20,5 +20,14 @@ module MTK
 
     end
 
+
+    # Construct a {LegatoSequencer} from any supported type
+    def LegatoSequencer(*args)
+      options  = (args[-1].is_a? Hash) ? args.pop : {}
+      patterns = (args.length==1 and args[0].is_a? Array) ? args[0] : args
+      LegatoSequencer.new(patterns,options)
+    end
+    module_function :LegatoSequencer
+
   end
 end

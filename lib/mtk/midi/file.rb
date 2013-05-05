@@ -134,6 +134,7 @@ module MTK
       private
 
       def write_to_disk(sequence)
+        puts "Writing file #{@file}"
         ::File.open(@file, 'wb') { |f| sequence.write f }
       end
 

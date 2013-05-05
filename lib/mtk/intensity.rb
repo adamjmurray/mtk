@@ -29,11 +29,10 @@ module MTK
     end
 
     # Return an Intensity, only constructing a new instance when not already in the flyweight cache
-    # Also enforces preferred range 0.0-1.0
     def self.[](value)
       value = value.to_f
-      value = 0.0 if value < 0
-      value = 1.0 if value > 1
+      #value = 0.0 if value < 0
+      #value = 1.0 if value > 1
       @flyweight[value] ||= new(value)
     end
 
@@ -48,7 +47,7 @@ module MTK
     # @example lookup value of 'q.' (eight note), which is 1.5 (1 * 1.5)
     #         MTK::Durations['q.']
     def self.from_s(s)
-      return 1.0 if name == "fff+" # special case because "fff" is already the maximum
+      return self[1.0] if s == 'fff+' # special case because "fff" is already the maximum
 
       name = nil
       modifier = nil

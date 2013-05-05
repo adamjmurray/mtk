@@ -53,17 +53,13 @@ describe MTK::Intensity do
       value.should == 0.5
     end
 
-    it "enforces the range 0.0-1.0" do
-      Intensity[4].value.should == 1.0
-    end
-
   end
 
 
   describe '.from_i' do
     it "acts like .[]" do
       Intensity.from_i(0).value.should == 0.0
-      Intensity.from_i(4).value.should == 1.0
+      Intensity.from_i(4).value.should == 4.0
     end
   end
 

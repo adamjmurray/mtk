@@ -10,7 +10,6 @@ module MTK
 
       def initialize(patterns, options={})
         @patterns = patterns
-        puts @patterns.inspect
         @options = options
         @max_interval = options.fetch :max_interval, 127
         rewind
@@ -30,13 +29,15 @@ module MTK
             element = pattern
           end
 
+          return nil if element.nil? or element == :skip
+
           case element
             when Pitch           then pitches << element
             when PitchClass      then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
             when PitchClassSet   then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
             when Helpers::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
             when Duration then duration = element
-            when Intensity then puts "Got intensity: #{element}"; intensity = element
+            when Intensity then intensity = element
             else
               if pattern.is_a? MTK::Patterns::Pattern
                 case pattern.type

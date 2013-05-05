@@ -22,5 +22,14 @@ module MTK
 
     end
 
+
+    # Construct a {StepSequencer} from any supported type
+    def StepSequencer(*args)
+      options  = (args[-1].is_a? Hash) ? args.pop : {}
+      patterns = (args.length==1 and args[0].is_a? Array) ? args[0] : args
+      StepSequencer.new(patterns,options)
+    end
+    module_function :StepSequencer
+
   end
 end
