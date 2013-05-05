@@ -115,12 +115,7 @@ module MTK
       %w(Choice Cycle Function Lines Palindrome Pattern Sequence).each do |pattern|
 
         define_method pattern do |*args|
-          if args and args.last.is_a? Hash
-            options = args.last
-            args = args[0...-1]
-          else
-            options = {}
-          end
+          options  = (args[-1].is_a? Hash) ? args.pop : {}
           args = args[0] if args.length == 1 and args[0].is_a? Array
           const_get(pattern).new(args,options)
         end

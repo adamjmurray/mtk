@@ -44,7 +44,7 @@ describe MTK::Patterns::Chain do
     end
 
     it "builds a list of notes from pitch sets" do
-      event_builder = CHAIN.new [ Patterns.Cycle( Melody(C4,D4) ) ]
+      event_builder = CHAIN.new [ Patterns.Cycle( Chord(C4,D4) ) ]
       event_builder.next.should == notes(C4, D4)
     end
 

@@ -15,8 +15,8 @@ rescue
 end
 
 while (pitch_classes = get_pitch_classes)
-  sequence = Patterns::PitchClassSequence *pitch_classes
-  sequencer = Sequencers::StepSequencer.new [sequence]
+  sequence = Patterns.Sequence pitch_classes
+  sequencer = Sequencers.StepSequencer sequence
   timeline = sequencer.to_timeline
 
   puts "Playing: #{pitch_classes}"

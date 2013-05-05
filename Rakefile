@@ -17,6 +17,8 @@ RSpec::Core::RakeTask.new('test') do |spec|
   end
 end
 
+task :spec => :test
+
 
 namespace :gem do
   desc "Install gems for supported versions of Ruby: #{SUPPORTED_RUBIES.join ', '}"
