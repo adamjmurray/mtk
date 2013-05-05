@@ -26,11 +26,10 @@ interval_generator = lambda do
   end
 end
 
-pitches = Patterns::PitchFunction interval_generator, max_elements: 24, max_interval: 17
+pitches = Patterns::Function interval_generator, max_elements: 24, max_interval: 17
 
 # we'll also use a weighted choice to generate the intensities
-intensities = Patterns::IntensityChoice [mp, mf, f, ff, fff], weights: [1,2,3,2,1]
-
+intensities = Patterns::Choice [mp, mf, o, ff, fff], weights: [1,2,3,2,1]
 
 sequencer = Sequencers::StepSequencer.new [pitches, intensities], step_size: 0.5
 timeline = sequencer.to_timeline

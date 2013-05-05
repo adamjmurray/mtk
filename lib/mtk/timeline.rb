@@ -204,8 +204,9 @@ module MTK
 
     def to_s
       times = self.times
-      width = times.last.to_s.length # nicely align the '=>' against the longest number
-      times.map{|t| sprintf("%#{width}d",t)+" => #{@timeline[t].join ', '}" }.join "\n"
+      last = times.last
+      width = sprintf("%d",last).length # nicely align the '=>' against the longest number
+      times.map{|t| sprintf("%#{width+3}.2f",t)+" => #{@timeline[t].join ', '}" }.join "\n"
     end
 
     def inspect

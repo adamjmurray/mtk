@@ -31,8 +31,6 @@ module MTK
     # Return an Intensity, only constructing a new instance when not already in the flyweight cache
     def self.[](value)
       value = value.to_f
-      #value = 0.0 if value < 0
-      #value = 1.0 if value > 1
       @flyweight[value] ||= new(value)
     end
 
@@ -41,11 +39,8 @@ module MTK
       alias :from_i :[]
     end
 
-    # Lookup a duration by name.
-    # This method supports appending any combination of '.' and 't' for more fine-grained values.
-    # each '.' multiplies by 3/2, and each 't' multiplies by 2/3.
-    # @example lookup value of 'q.' (eight note), which is 1.5 (1 * 1.5)
-    #         MTK::Durations['q.']
+    # Lookup an intensity by name.
+    # This method supports appending '-' or '+' for more fine-grained values.
     def self.from_s(s)
       return self[1.0] if s == 'fff+' # special case because "fff" is already the maximum
 

@@ -38,7 +38,13 @@ module MTK
             when Helpers::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
             when Duration then duration = element
             when Intensity then intensity = element
-            else
+            when Interval then
+              if @previous_pitches
+                pitches += @previous_pitches.map{|pitch| pitch + element }
+              else
+                pitches << ((@previous_pitch || @default_pitch) + element)
+              end
+            else # TODO: phase out these cases?
               if pattern.is_a? MTK::Patterns::Pattern
                 case pattern.type
                   when :pitch

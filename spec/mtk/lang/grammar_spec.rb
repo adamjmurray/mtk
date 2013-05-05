@@ -103,8 +103,8 @@ describe MTK::Lang::Grammar do
     end
 
     it "should parse intervals" do
-      for interval_name in Intervals::INTERVAL_NAMES
-        parse(interval_name, :interval).should == Intervals[interval_name]
+      for interval_name in Interval::ALL_NAMES
+        parse(interval_name, :interval).should == Interval(interval_name)
       end
     end
 

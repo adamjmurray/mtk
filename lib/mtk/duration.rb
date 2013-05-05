@@ -131,6 +131,10 @@ module MTK
       end
     end
 
+    def -@
+      MTK::Duration[@value * -1]
+    end
+
     def coerce(other)
       return MTK::Duration[other], self
     end

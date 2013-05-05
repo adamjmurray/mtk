@@ -4,7 +4,7 @@ describe MTK::Constants::Intervals do
 
   describe 'P1' do
     it 'is 0 semitones' do
-      P1.should == 0
+      P1.should == Interval[0]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -13,7 +13,7 @@ describe MTK::Constants::Intervals do
 
   describe 'm2' do
     it 'is 1 semitone' do
-      m2.should == 1
+      m2.should == Interval[1]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -22,7 +22,7 @@ describe MTK::Constants::Intervals do
 
   describe 'M2' do
     it 'is 2 semitones' do
-      M2.should == 2
+      M2.should == Interval[2]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -31,7 +31,7 @@ describe MTK::Constants::Intervals do
 
   describe 'm3' do
     it 'is 3 semitones' do
-      m3.should == 3
+      m3.should == Interval[3]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -40,7 +40,7 @@ describe MTK::Constants::Intervals do
 
   describe 'M3' do
     it 'is 4 semitones' do
-      M3.should == 4
+      M3.should == Interval[4]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -49,7 +49,7 @@ describe MTK::Constants::Intervals do
 
   describe 'P4' do
     it 'is 5 semitones' do
-      P4.should == 5
+      P4.should == Interval[5]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -58,7 +58,7 @@ describe MTK::Constants::Intervals do
 
   describe 'TT' do
     it 'is 6 semitones' do
-      TT.should == 6
+      TT.should == Interval[6]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -67,7 +67,7 @@ describe MTK::Constants::Intervals do
 
   describe 'P5' do
     it 'is 7 semitones' do
-      P5.should == 7
+      P5.should == Interval[7]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -76,7 +76,7 @@ describe MTK::Constants::Intervals do
 
   describe 'm6' do
     it 'is 8 semitones' do
-      m6.should == 8
+      m6.should == Interval[8]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -85,7 +85,7 @@ describe MTK::Constants::Intervals do
 
   describe 'M6' do
     it 'is 9 semitones' do
-      M6.should == 9
+      M6.should == Interval[9]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -94,7 +94,7 @@ describe MTK::Constants::Intervals do
 
   describe 'm7' do
     it 'is 10 semitones' do
-      m7.should == 10
+      m7.should == Interval[10]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -103,7 +103,7 @@ describe MTK::Constants::Intervals do
 
   describe 'M7' do
     it 'is 11 semitones' do
-      M7.should == 11
+      M7.should == Interval[11]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -112,7 +112,7 @@ describe MTK::Constants::Intervals do
 
   describe 'P8' do
     it 'is 12 semitones' do
-      P8.should == 12
+      P8.should == Interval[12]
     end
     it 'is available via a module property and via mixin' do
       Intervals::P1.should == P1
@@ -137,28 +137,6 @@ describe MTK::Constants::Intervals do
 
     it "is immutable" do
       lambda{ Intervals::INTERVAL_NAMES << :something }.should raise_error
-    end
-  end
-
-  describe ".[]" do
-    it "looks up the constant by name" do
-      Intervals['P1'].should == P1
-      Intervals['m2'].should == m2
-      Intervals['M2'].should == M2
-      Intervals['m3'].should == m3
-      Intervals['M3'].should == M3
-      Intervals['P4'].should == P4
-      Intervals['TT'].should == TT
-      Intervals['P5'].should == P5
-      Intervals['m6'].should == m6
-      Intervals['M6'].should == M6
-      Intervals['m7'].should == m7
-      Intervals['M7'].should == M7
-      Intervals['P8'].should == P8
-    end
-
-    it "returns nil for arguments it doesn't understand" do
-      Intervals[:invalid].should be_nil
     end
   end
 

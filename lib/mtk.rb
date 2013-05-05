@@ -38,6 +38,8 @@ require 'mtk/pitch'
 require 'mtk/duration'
 require 'mtk/intensity'
 
+require 'mtk/interval'
+
 require 'mtk/helpers/collection'
 require 'mtk/helpers/pitch_collection'
 require 'mtk/helpers/pseudo_constants'
