@@ -63,14 +63,14 @@ describe MTK::Patterns::Chain do
     end
 
     it "defaults to intensity 'o' when no intensities are given" do
-      event_builder = CHAIN.new [Patterns.NoteSequence(C4, D4, E4), Patterns.DurationCycle(2)]
+      event_builder = CHAIN.new [Patterns.PitchSequence(C4, D4, E4), Patterns.DurationCycle(2)]
       event_builder.next.should == [Note(C4, o, 2)]
       event_builder.next.should == [Note(D4, o, 2)]
       event_builder.next.should == [Note(E4, o, 2)]
     end
 
     it "defaults to duration 1 when no durations are given" do
-      event_builder =  CHAIN.new [Patterns.NoteSequence(C4, D4, E4), Patterns.IntensityCycle(p,o)]
+      event_builder =  CHAIN.new [Patterns.PitchSequence(C4, D4, E4), Patterns.IntensityCycle(p,o)]
       event_builder.next.should == [Note(C4, p, 1)]
       event_builder.next.should == [Note(D4, o, 1)]
       event_builder.next.should == [Note(E4, p, 1)]

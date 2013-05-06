@@ -109,33 +109,29 @@ module MTK
         raise StopIteration if @max_elements and @element_count > @max_elements
         element
       end
-    end
 
-    class << self
-      %w(Choice Cycle Function Lines Palindrome Pattern Sequence Chain).each do |pattern|
-
-        define_method pattern do |*args|
+      def self.inherited(subclass)
+        # Define a convenience method like MTK::Patterns.Sequence()
+        # that can handle varargs or a single array argument, plus any Hash options
+        classname = subclass.name.sub /.*::/, '' # Strip off module prefixes
+        MTK::Patterns.define_singleton_method classname do |*args|
           options  = (args[-1].is_a? Hash) ? args.pop : {}
           args = args[0] if args.length == 1 and args[0].is_a? Array
-          const_get(pattern).new(args,options)
+          subclass.new(args,options)
         end
 
-        # TODO: phase out
-        %w(Pitch PitchClass Intensity Duration Note Rhythm).each do |type|
-          define_method "#{type}#{pattern}" do |*args|
-            if args and args.last.is_a? Hash
-              options = args.last
-              args = args[0...-1]
-            else
-              options = {}
-            end
+        %w(Pitch PitchClass Intensity Duration Interval Rhythm).each do |type|
+          MTK::Patterns.define_singleton_method "#{type}#{classname}" do |*args|
+            options  = (args[-1].is_a? Hash) ? args.pop : {}
             args = args[0] if args.length == 1 and args[0].is_a? Array
             options[:type] = type.downcase.to_sym
-            const_get(pattern).new(args,options)
+            # TODO: coerce each arg to the type
+            # Note: Rhythm is a special case, needs to coerce to Duration.
+            # We almost don't need to set options[:type], anymore, except it's needed by the RhythmSequencer
+            subclass.new(args,options)
           end
         end
       end
-
     end
 
   end
