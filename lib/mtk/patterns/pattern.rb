@@ -112,7 +112,7 @@ module MTK
     end
 
     class << self
-      %w(Choice Cycle Function Lines Palindrome Pattern Sequence).each do |pattern|
+      %w(Choice Cycle Function Lines Palindrome Pattern Sequence Chain).each do |pattern|
 
         define_method pattern do |*args|
           options  = (args[-1].is_a? Hash) ? args.pop : {}
@@ -120,6 +120,7 @@ module MTK
           const_get(pattern).new(args,options)
         end
 
+        # TODO: phase out
         %w(Pitch PitchClass Intensity Duration Note Rhythm).each do |type|
           define_method "#{type}#{pattern}" do |*args|
             if args and args.last.is_a? Hash

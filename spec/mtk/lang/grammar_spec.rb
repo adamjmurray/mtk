@@ -13,72 +13,82 @@ describe MTK::Lang::Grammar do
       it "should parse a Timeline" do
         parse("
           {
-            0 => {C4 mp q}
-            1 => {D4 o h}
+            0 => C4:mp:q
+            1 => D4:o:h
           }
-        ", :timeline).should == Timeline.from_hash({0 => Note(C4,mp,q), 1 => Note(D4,o,h)})
+        ", :timeline).should == Timeline.from_hash({0 => Patterns.Chain(C4,mp,q), 1 => Patterns.Chain(D4,o,h)})
       end
 
-      it "should parse a Timeline" do
+      it "should parse a Timeline containing a chord" do
         parse("
           {
-            0 => [{C4 mp q} {D4 o h}]
+            0 => [C4 E4 G4]:fff:w
           }
-        ", :timeline).should == Timeline.from_hash({0 => [Note(C4,mp,q), Note(D4,o,h)]})
+        ", :timeline).should == Timeline.from_hash({0 => Patterns.Chain(Chord(C4,E4,G4),fff,w)})
       end
     end
 
-    it "should parse a list of notes in square brackets as an Array of Notes" do
-      parse("[{C4 mp q} {D4 o h}]", :note_list).should == [Note(C4,mp,q), Note(D4,o,h)]
+
+    context "chain" do
+      it "parses a single note property" do
+        parse("G4", :chain).should == Patterns.Chain(G4)
+      end
+
+      it "parses a basic chain of note properties" do
+        parse("G4:h.:ff", :chain).should == Patterns.Chain(G4,h+q,ff)
+      end
     end
 
-    it "should parse {pitch intensity duration} as a Note" do
-      parse("{C4 mp q}", :note).should == Note(C4,mp,q)
-    end
-
-    context "pitch_sequence" do
+    context "sequence" do
       it "should parse pitch sequences" do
-        parse("(C4 D4 E4)", :pitch_sequence).should == Patterns.PitchSequence(C4, D4, E4)
+        parse("(C4 D4 E4)", :sequence).should == Patterns.Sequence(C4, D4, E4)
       end
 
       it "should parse pitch sequences with chords" do
-        parse("(C4 [D4 E4])", :pitch_sequence).should == Patterns.PitchSequence( C4, Chord(D4,E4) )
+        parse("(C4 [D4 E4])", :sequence).should == Patterns.Sequence( C4, Chord(D4,E4) )
       end
 
       it "should parse pitch sequences with pitch classes" do
-        parse("( C4 D E4 )", :pitch_sequence).should == Patterns.PitchSequence( C4, D, E4 )
+        parse("( C4 D E4 )", :sequence).should == Patterns.Sequence( C4, D, E4 )
       end
 
       it "should parse pitch sequences with intervals" do
-        parse("(C4 m2)", :pitch_sequence).should == Patterns.PitchSequence( C4, m2 )
+        parse("(C4 m2)", :sequence).should == Patterns.Sequence( C4, m2 )
+      end
+
+      it "parses intensity sequences" do
+        parse("(ppp mf mp ff)", :sequence).should == Patterns.Sequence(ppp, mf, mp, ff)
+      end
+
+      it "parses duration sequences" do
+        parse("(q i q. ht)", :sequence).should == Patterns.Sequence(q, i, q*Rational(1.5), h*Rational(2,3))
       end
     end
 
 
-    it "parses intensity sequences" do
-      parse("(ppp mf mp ff)", :intensity_sequence).should == Patterns.IntensitySequence(ppp, mf, mp, ff)
-    end
-
-    it "parses duration sequences" do
-      parse("(q i q. ht)", :duration_sequence).should == Patterns.DurationSequence(q, i, q*Rational(1.5), h*Rational(2,3))
-    end
-
-
-    context "pitch_like" do
+    context "sequenceable" do
       it "should parse a pitch" do
-        parse("C4", :pitch_like).should == C4
+        parse("C4", :sequenceable).should == C4
       end
 
       it "should parse a chord" do
-        parse("[C4 D4]", :pitch_like).should == Chord(C4,D4)
+        parse("[C4 D4]", :sequenceable).should == Chord(C4,D4)
       end
 
       it "should parse a pitch class" do
-        parse("C", :pitch_like).should == C
+        parse("C", :sequenceable).should == C
       end
 
       it "should parse intervals" do
-        parse("m2", :pitch_like).should == m2
+        parse("m2", :sequenceable).should == m2
+      end
+
+      it "should parse durations" do
+        parse("h", :sequenceable).should == h
+      end
+
+      it "should parse intensities" do
+        parse("ff", :sequenceable).should == ff
       end
     end
 

@@ -2,55 +2,29 @@ grammar MTK_Grammar
   include MTK
 
   rule timeline
-    ( '{' space? number space? '=>' space? note_like (space number space? '=>' space? note_like)* space? '}' ) {
-      Timeline.from_a values(:number).zip(values :note_like)
+    ( '{' space? number space? '=>' space? pattern (space number space? '=>' space? pattern)* space? '}' ) {
+      Timeline.from_a values(:number).zip(values :pattern)
     }
   end
 
-  rule note_like
-    note_list | note
+  rule pattern
+    sequence | chain
   end
 
-  rule note_list
-    ( '[' space? note (space note)* space? ']' ) {
-      values(:note)
+  rule sequence
+    ( left_paren sequenceable (space sequenceable)* right_paren ) {
+      Patterns.Sequence *values(:sequenceable)
     }
   end
 
-  rule basic_chain
-    sequenceable (':' sequenceable)*
-  end
-
-  rule note
-    ( '{' space? pitch space intensity space duration space? '}' ) {
-      Note(pitch.value, intensity.value, duration.value)
-    }
-  end
-
-  rule pitch_sequence
-    ( left_paren pitch_like (space pitch_like)* right_paren ) {
-      Patterns.PitchSequence *values(:pitch_like)
-    }
-  end
-
-  rule intensity_sequence
-    ( left_paren intensity (space intensity)* right_paren ) {
-      Patterns.IntensitySequence *values(:intensity)
-    }
-  end
-
-  rule duration_sequence
-    ( left_paren duration (space duration)* right_paren ) {
-      Patterns.DurationSequence *values(:duration)
+  rule chain
+    ( sequenceable (':' sequenceable)* ){
+      Patterns.Chain *values(:sequenceable)
     }
   end
 
   rule sequenceable
-    (pitch_like | intensity | duration)
-  end
-
-  rule pitch_like
-    chord | pitch | pitch_class | interval
+    ( chord | intensity | duration | interval | pitch | pitch_class )
   end
 
   rule chord
