@@ -69,6 +69,8 @@ end
 
 describe MTK::Patterns do
 
+  let(:mock_lambda) { lambda{|_|:mock_value} }
+
   describe "#Function" do
     it "creates a Function" do
       MTK::Patterns.Function(nil).should be_a MTK::Patterns::Function
@@ -90,11 +92,12 @@ describe MTK::Patterns do
 
   describe "#PitchFunction" do
     it "creates a Function" do
-      MTK::Patterns.PitchFunction(:mock_lambda).should be_a MTK::Patterns::Function
+      MTK::Patterns.PitchFunction(mock_lambda).should be_a MTK::Patterns::Function
     end
 
     it "sets #elements from the varargs" do
-      MTK::Patterns.PitchFunction(:mock_lambda).function.should == :mock_lambda
+      func = mock_lambda
+      MTK::Patterns.PitchFunction(func).function.should == func
     end
 
     it "sets #type to :pitch" do
@@ -104,28 +107,28 @@ describe MTK::Patterns do
 
   describe "#IntensityFunction" do
     it "creates a Function" do
-      MTK::Patterns.IntensityFunction(:mock_lambda).should be_a MTK::Patterns::Function
+      MTK::Patterns.IntensityFunction(mock_lambda).should be_a MTK::Patterns::Function
     end
 
     it "sets #elements from the varargs" do
-      MTK::Patterns.IntensityFunction(:mock_lambda).function.should == :mock_lambda
+      MTK::Patterns.IntensityFunction(mock_lambda).function.should == mock_lambda
     end
 
-    it "sets #type to :pitch" do
+    it "sets #type to :intensity" do
       MTK::Patterns.IntensityFunction([]).type.should == :intensity
     end
   end
 
   describe "#DurationFunction" do
     it "creates a Function" do
-      MTK::Patterns.DurationFunction(:mock_lambda).should be_a MTK::Patterns::Function
+      MTK::Patterns.DurationFunction(mock_lambda).should be_a MTK::Patterns::Function
     end
 
     it "sets #elements from the varargs" do
-      MTK::Patterns.DurationFunction(:mock_lambda).function.should == :mock_lambda
+      MTK::Patterns.DurationFunction(mock_lambda).function.should == mock_lambda
     end
 
-    it "sets #type to :pitch" do
+    it "sets #type to :duration" do
       MTK::Patterns.DurationFunction([]).type.should == :duration
     end
   end

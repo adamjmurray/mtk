@@ -85,7 +85,7 @@ describe MTK::Patterns do
     end
 
     it "sets #elements from the varargs" do
-      MTK::Patterns.PitchPalindrome(1,2,3).elements.should == [1,2,3]
+      MTK::Patterns.PitchPalindrome(1,2,3).elements.should == [Pitch(1),Pitch(2),Pitch(3)]
     end
 
     it "sets #type to :pitch" do
@@ -99,10 +99,10 @@ describe MTK::Patterns do
     end
 
     it "sets #elements from the varargs" do
-      MTK::Patterns.IntensityPalindrome(1,2,3).elements.should == [1,2,3]
+      MTK::Patterns.IntensityPalindrome(1,2,3).elements.should == [Intensity(1),Intensity(2),Intensity(3)]
     end
 
-    it "sets #type to :pitch" do
+    it "sets #type to :intensity" do
       MTK::Patterns.IntensityPalindrome([]).type.should == :intensity
     end
   end
@@ -113,10 +113,10 @@ describe MTK::Patterns do
     end
 
     it "sets #elements from the varargs" do
-      MTK::Patterns.DurationPalindrome(1,2,3).elements.should == [1,2,3]
+      MTK::Patterns.DurationPalindrome(1,2,3).elements.should == [Duration(1),Duration(2),Duration(3)]
     end
 
-    it "sets #type to :pitch" do
+    it "sets #type to :duration" do
       MTK::Patterns.DurationPalindrome([]).type.should == :duration
     end
   end

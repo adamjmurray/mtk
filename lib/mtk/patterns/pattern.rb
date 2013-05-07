@@ -124,10 +124,9 @@ module MTK
           MTK::Patterns.define_singleton_method "#{type}#{classname}" do |*args|
             options  = (args[-1].is_a? Hash) ? args.pop : {}
             args = args[0] if args.length == 1 and args[0].is_a? Array
+            constructorForType = (type == 'Rhythm') ? 'Duration' : type
+            args = args.map{|arg| (arg.nil? or arg.is_a? Proc) ? arg : MTK.send(constructorForType, arg)  } # coerce to the given type (or Duration for rhythm type)
             options[:type] = type.downcase.to_sym
-            # TODO: coerce each arg to the type
-            # Note: Rhythm is a special case, needs to coerce to Duration.
-            # We almost don't need to set options[:type], anymore, except it's needed by the RhythmSequencer
             subclass.new(args,options)
           end
         end

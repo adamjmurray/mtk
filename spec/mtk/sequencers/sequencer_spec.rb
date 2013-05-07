@@ -43,15 +43,15 @@ describe MTK::Sequencers::Sequencer do
     end
     
     it "allows default pitch to be specified" do
-      sequencer = ABSTRACT_SEQUENCER.new [Patterns.PitchCycle(0)], :default_pitch => Gb4
+      sequencer = ABSTRACT_SEQUENCER.new [Patterns.IntervalCycle(0)], :default_pitch => Gb4
       sequencer.next.should == [Note(Gb4, intensity, duration)]
     end
     it "allows default intensity to be specified" do
-      sequencer = ABSTRACT_SEQUENCER.new [Patterns.PitchCycle(0)], :default_intensity => ppp
+      sequencer = ABSTRACT_SEQUENCER.new [Patterns.IntervalCycle(0)], :default_intensity => ppp
       sequencer.next.should == [Note(pitch, ppp, duration)]
     end
     it "allows default duration to be specified" do
-      sequencer = ABSTRACT_SEQUENCER.new [Patterns.PitchCycle(0)], :default_duration => 5.25
+      sequencer = ABSTRACT_SEQUENCER.new [Patterns.IntervalCycle(0)], :default_duration => 5.25
       sequencer.next.should == [Note(pitch, intensity, 5.25)]
     end  
   end
@@ -144,7 +144,7 @@ describe MTK::Sequencers::Sequencer do
 
     context "pitch patterns" do
       it "adds Numeric elements (intervals) to the previous pitch" do
-        sequencer = ABSTRACT_SEQUENCER.new [Patterns.PitchCycle(C4, 1, 2, 3)]
+        sequencer = ABSTRACT_SEQUENCER.new [Patterns.Cycle(C4, m2, M2, m3)]
         sequencer.next.should == [Note(C4,intensity,duration)]
         sequencer.next.should == [Note(C4+1,intensity,duration)]
         sequencer.next.should == [Note(C4+1+2,intensity,duration)]
@@ -152,14 +152,14 @@ describe MTK::Sequencers::Sequencer do
       end
 
       it "returns a note with the given pitch when encountering a Pitch after another type" do
-        sequencer = ABSTRACT_SEQUENCER.new [Patterns.PitchCycle(C4, 1, C4)]
+        sequencer = ABSTRACT_SEQUENCER.new [Patterns.Cycle(C4, m2, C4)]
         sequencer.next
         sequencer.next
         sequencer.next.should == [Note(C4,intensity,duration)]
       end
 
       it "goes to the nearest Pitch for any PitchClasses in the pitch list" do
-        sequencer = ABSTRACT_SEQUENCER.new [Patterns.PitchCycle(C4, F, C, G, C)]
+        sequencer = ABSTRACT_SEQUENCER.new [Patterns.Cycle(C4, F, C, G, C)]
         sequencer.next.should == [Note(C4,intensity,duration)]
         sequencer.next.should == [Note(F4,intensity,duration)]
         sequencer.next.should == [Note(C4,intensity,duration)]
@@ -168,7 +168,7 @@ describe MTK::Sequencers::Sequencer do
       end
 
       it "does not endlessly ascend or descend when alternating between two pitch classes a tritone apart" do
-        sequencer = ABSTRACT_SEQUENCER.new [Patterns.PitchCycle(C4, Gb, C, Gb, C)]
+        sequencer = ABSTRACT_SEQUENCER.new [Patterns.Cycle(C4, Gb, C, Gb, C)]
         sequencer.next.should == [Note(C4,intensity,duration)]
         sequencer.next.should == [Note(Gb4,intensity,duration)]
         sequencer.next.should == [Note(C4,intensity,duration)]
@@ -189,7 +189,7 @@ describe MTK::Sequencers::Sequencer do
     end
 
     it "resets pitches properly for patterns that rely on previous pitches" do
-      relative_pitch_pattern = Patterns.PitchSequence(C,P8)
+      relative_pitch_pattern = Patterns.Sequence(C,P8)
       sequencer = ABSTRACT_SEQUENCER.new [relative_pitch_pattern]
       sequencer.next.should == [Note(C4,intensity,duration)]
       sequencer.next.should == [Note(C5,intensity,duration)]

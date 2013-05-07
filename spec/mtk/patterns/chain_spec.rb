@@ -14,15 +14,15 @@ describe MTK::Patterns::Chain do
 
   describe "#new" do
     it "allows default pitch to be specified" do
-      event_builder = CHAIN.new [Patterns.PitchCycle(0)], :default_pitch => Gb4
+      event_builder = CHAIN.new [Patterns.IntervalCycle(0)], :default_pitch => Gb4
       event_builder.next.should == [Note(Gb4, intensity, duration)]
     end
     it "allows default intensity to be specified" do
-      event_builder = CHAIN.new [Patterns.PitchCycle(0)], :default_intensity => ppp
+      event_builder = CHAIN.new [Patterns.IntervalCycle(0)], :default_intensity => ppp
       event_builder.next.should == [Note(pitch, ppp, duration)]
     end
     it "allows default duration to be specified" do
-      event_builder = CHAIN.new [Patterns.PitchCycle(0)], :default_duration => 5.25
+      event_builder = CHAIN.new [Patterns.IntervalCycle(0)], :default_duration => 5.25
       event_builder.next.should == [Note(pitch, intensity, 5.25)]
     end
   end
@@ -92,14 +92,14 @@ describe MTK::Patterns::Chain do
     end
 
     it "builds notes from by adding Numeric intervals in :pitch type Patterns to all pitches in the previous Chord" do
-      event_builder = CHAIN.new [ Patterns.PitchSequence( Chord(C4,Eb4), M3, m3, -P5) ]
+      event_builder = CHAIN.new [ Patterns.Sequence( Chord(C4,Eb4), M3, m3, -P5) ]
       nexts = []
       loop { nexts << event_builder.next }
       nexts.should == [notes(C4,Eb4), notes(E4,G4), notes(G4,Bb4), notes(C4,Eb4)]
     end
 
     it "builds notes from intensities" do
-      event_builder = CHAIN.new [ Patterns.PitchCycle(C4), Patterns.IntensitySequence(mf, p, fff) ]
+      event_builder = CHAIN.new [ Patterns.Cycle(C4), Patterns.Sequence(mf, p, fff) ]
       nexts = []
       loop { nexts += event_builder.next }
       nexts.should == [Note(C4, mf, duration), Note(C4, p, duration), Note(C4, fff, duration)]
@@ -132,7 +132,7 @@ describe MTK::Patterns::Chain do
     end
 
     it "goes to the nearest Pitch for any PitchClasses in the pitch list" do
-      event_builder = CHAIN.new [Patterns::PitchCycle(C4, F, C, G, C)]
+      event_builder = CHAIN.new [Patterns::Cycle(C4, F, C, G, C)]
       event_builder.next.should == notes(C4)
       event_builder.next.should == notes(F4)
       event_builder.next.should == notes(C4)
@@ -141,7 +141,7 @@ describe MTK::Patterns::Chain do
     end
 
     it "does not endlessly ascend or descend when alternating between two pitch classes a tritone apart" do
-      event_builder = CHAIN.new [Patterns::PitchCycle(C4, Gb, C, Gb, C)]
+      event_builder = CHAIN.new [Patterns::Cycle(C4, Gb, C, Gb, C)]
       event_builder.next.should == notes(C4)
       event_builder.next.should == notes(Gb4)
       event_builder.next.should == notes(C4)
@@ -150,14 +150,14 @@ describe MTK::Patterns::Chain do
     end
 
     it "handles pitches and chords intermixed" do
-      event_builder = CHAIN.new [Patterns.PitchCycle( Chord(C4, E4, G4), C4, Chord(D4, F4, A4) )]
+      event_builder = CHAIN.new [Patterns.Cycle( Chord(C4, E4, G4), C4, Chord(D4, F4, A4) )]
       event_builder.next.should == notes(C4,E4,G4)
       event_builder.next.should == notes(C4)
       event_builder.next.should == notes(D4,F4,A4)
     end
 
     it "adds numeric intervals to Chord" do
-      event_builder = CHAIN.new [Patterns::PitchCycle( Chord(C4, E4, G4), 2 )]
+      event_builder = CHAIN.new [Patterns::Cycle( Chord(C4, E4, G4), M2 )]
       event_builder.next.should == notes(C4,E4,G4)
       event_builder.next.should == notes(D4,Gb4,A4)
     end
