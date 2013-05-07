@@ -56,10 +56,6 @@ describe MTK::Patterns do
     it "sets #elements from the varargs" do
       MTK::Patterns.Choice(1,2,3).elements.should == [1,2,3]
     end
-
-    it "does not set a type" do
-      MTK::Patterns.Choice(1,2,3).type.should be_nil
-    end
   end
 
   describe "#PitchChoice" do
@@ -69,10 +65,6 @@ describe MTK::Patterns do
 
     it "sets #elements from the varargs" do
       MTK::Patterns.PitchChoice(1,2,3).elements.should == [Pitch(1),Pitch(2),Pitch(3)]
-    end
-
-    it "sets #type to :pitch" do
-      MTK::Patterns.PitchChoice([]).type.should == :pitch
     end
   end
 
@@ -84,10 +76,6 @@ describe MTK::Patterns do
     it "sets #elements from the varargs" do
       MTK::Patterns.IntensityChoice(1,2,3).elements.should == [Intensity(1),Intensity(2),Intensity(3)]
     end
-
-    it "sets #type to :intensity" do
-      MTK::Patterns.IntensityChoice([]).type.should == :intensity
-    end
   end
 
   describe "#DurationChoice" do
@@ -97,10 +85,6 @@ describe MTK::Patterns do
 
     it "sets #elements from the varargs" do
       MTK::Patterns.DurationChoice(1,2,3).elements.should == [q,h,h+q]
-    end
-
-    it "sets #type to :duration" do
-      MTK::Patterns.DurationChoice([]).type.should == :duration
     end
   end
 

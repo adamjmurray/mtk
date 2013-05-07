@@ -20,7 +20,7 @@ describe MTK::Sequencers::Sequencer do
     end
 
     it "sets @max_steps from the options hash" do
-      sequencer = RHYTHMIC_SEQUENCER.new patterns, :max_steps => 4
+      sequencer = ABSTRACT_SEQUENCER.new patterns, :max_steps => 4
       sequencer.max_steps.should == 4
     end
 

@@ -80,10 +80,6 @@ describe MTK::Patterns do
       MTK::Patterns.Function(:mock_lambda).function.should == :mock_lambda
     end
 
-    it "does not set a type" do
-      MTK::Patterns.Function(:mock_lambda).type.should be_nil
-    end
-
     it "doesn't wrap a lambda in the varargs Array" do
       function = MTK::Patterns.Function( lambda{ 1 + 1 } )
       function.next.should == 2
@@ -99,10 +95,6 @@ describe MTK::Patterns do
       func = mock_lambda
       MTK::Patterns.PitchFunction(func).function.should == func
     end
-
-    it "sets #type to :pitch" do
-      MTK::Patterns.PitchFunction([]).type.should == :pitch
-    end
   end
 
   describe "#IntensityFunction" do
@@ -113,10 +105,6 @@ describe MTK::Patterns do
     it "sets #elements from the varargs" do
       MTK::Patterns.IntensityFunction(mock_lambda).function.should == mock_lambda
     end
-
-    it "sets #type to :intensity" do
-      MTK::Patterns.IntensityFunction([]).type.should == :intensity
-    end
   end
 
   describe "#DurationFunction" do
@@ -126,10 +114,6 @@ describe MTK::Patterns do
 
     it "sets #elements from the varargs" do
       MTK::Patterns.DurationFunction(mock_lambda).function.should == mock_lambda
-    end
-
-    it "sets #type to :duration" do
-      MTK::Patterns.DurationFunction([]).type.should == :duration
     end
   end
 

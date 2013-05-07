@@ -8,7 +8,7 @@ describe MTK::Sequencers::RhythmicSequencer do
   let(:intensities) { Patterns.IntensitySequence(0.3, 0.6, 0.9, 1.0) }
   let(:durations)   { Patterns.DurationSequence(1, 1, 2, 1) }
   let(:rhythm)      { Patterns.RhythmSequence(0.5, 1.5, 4) }
-  let(:rhythmic_sequencer) { RHYTHMIC_SEQUENCER.new [pitches, intensities, durations, rhythm] }
+  let(:rhythmic_sequencer) { RHYTHMIC_SEQUENCER.new [pitches, intensities, durations], rhythm: rhythm }
 
   describe "#new" do
     it "defaults @max_steps to nil" do
@@ -16,7 +16,7 @@ describe MTK::Sequencers::RhythmicSequencer do
     end
 
     it "sets @max_steps from the options hash" do
-      rhythmic_sequencer = RHYTHMIC_SEQUENCER.new [], :max_steps => 4
+      rhythmic_sequencer = RHYTHMIC_SEQUENCER.new [], rhythm: :mock_pattern, max_steps: 4
       rhythmic_sequencer.max_steps.should == 4
     end
   end

@@ -15,11 +15,6 @@ module MTK
 
       attr_reader :options
 
-      # The type of elements in the pattern, such as :pitch, :intensity, or :duration
-      #
-      # This is often needed by {Sequencers::Sequencer} classes to interpret the pattern elements.
-      attr_reader :type
-
       # The number of elements emitted since the last {#rewind}
       attr_reader :element_count
       
@@ -126,7 +121,6 @@ module MTK
             args = args[0] if args.length == 1 and args[0].is_a? Array
             constructorForType = (type == 'Rhythm') ? 'Duration' : type
             args = args.map{|arg| (arg.nil? or arg.is_a? Proc) ? arg : MTK.send(constructorForType, arg)  } # coerce to the given type (or Duration for rhythm type)
-            options[:type] = type.downcase.to_sym
             subclass.new(args,options)
           end
         end

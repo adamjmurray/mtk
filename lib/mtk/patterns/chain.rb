@@ -44,23 +44,8 @@ module MTK
               else
                 pitches << ((@previous_pitch || @default_pitch) + element)
               end
-            else # TODO: phase out these cases?
-              if pattern.is_a? MTK::Patterns::Pattern
-                case pattern.type
-                  when :pitch
-                    if element.is_a? Numeric # then add as an interval
-                      if @previous_pitches
-                        pitches += @previous_pitches.map{|pitch| pitch + element }
-                      else
-                        pitches << ((@previous_pitch || @default_pitch) + element)
-                      end
-                    else # other supported types were handled above in the first 'case'
-                      pitches << :skip
-                    end
-                  when :intensity then intensity = element || :skip
-                  when :duration then duration = element || :skip
-                end
-              end
+            # TODO? String/Symbols for special behaviors like :skip, or :break (something like StopIteration for the current Pattern?)
+            # else ??? raise error?
           end
         end
 

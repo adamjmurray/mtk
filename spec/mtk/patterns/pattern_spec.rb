@@ -6,12 +6,6 @@ describe MTK::Patterns::Pattern do
 
   let(:elements) { [1,2,3] }
 
-  describe "#type" do
-    it "is the :type value from the constuctor's options hash" do
-      PATTERN.new([], :type => :my_type).type.should == :my_type
-    end
-  end
-
   describe "#max_elements" do
     it "is the :max_elements option the pattern was constructed with" do
       PATTERN.new([], :max_elements => 1).max_elements.should == 1

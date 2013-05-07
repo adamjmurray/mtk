@@ -5,14 +5,8 @@ module MTK
     class RhythmicSequencer < Sequencer
 
       def initialize(patterns, options={})
-        patterns = patterns.clone
-        patterns.each_with_index do |pattern, index|
-          if pattern.type == :rhythm
-            @rhythm = pattern
-            patterns.delete_at index # so we don't enumerate the rhythm values in the EventChain
-          end
-        end
-        super(patterns, options)
+        super
+        @rhythm = options[:rhythm] or raise ArgumentError.new(":rhythm option is required")
       end
 
       def rewind
