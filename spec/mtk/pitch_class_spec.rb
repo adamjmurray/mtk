@@ -98,7 +98,7 @@ describe MTK::PitchClass do
     end
     context "the argument is not a valid name" do
       it "raises a NameError if the name doesn't exist" do
-        lambda{ PitchClass['z'] }.should raise_error NameError
+        lambda{ PitchClass['z'] }.should raise_error ArgumentError
       end
     end
   end
@@ -121,8 +121,8 @@ describe MTK::PitchClass do
       end
     end
 
-    it "raises a NameError for invalid arguments" do
-      lambda{ PitchClass.from_s('H') }.should raise_error NameError
+    it "raises a ArgumentError for invalid arguments" do
+      lambda{ PitchClass.from_s('H') }.should raise_error ArgumentError
     end
   end
 
@@ -132,7 +132,7 @@ describe MTK::PitchClass do
       for name in enharmonic_spellings
         PitchClass.from_name(name).should == PitchClass.from_s(name)
       end
-      lambda{ PitchClass.from_name('H') }.should raise_error NameError
+      lambda{ PitchClass.from_name('H') }.should raise_error ArgumentError
     end
   end
 
@@ -327,14 +327,16 @@ describe MTK do
       PitchClass(C).should be_equal C
     end
 
-    it "tries to convert objects with #to_s via from_s" do
-      o = Object.new
-      def o.to_s; "A" end
-      PitchClass(o).should be_equal A
+    it "raises an error for Strings it doesn't understand" do
+      lambda{ PitchClass('H') }.should raise_error ArgumentError
+    end
+
+    it "raises an error for Symbols it doesn't understand" do
+      lambda{ PitchClass(:H) }.should raise_error ArgumentError
     end
 
     it "raises an error for types it doesn't understand" do
-      lambda{ PitchClass({:not => :compatible}) }.should raise_error
+      lambda{ PitchClass({:not => :compatible}) }.should raise_error ArgumentError
     end
   end
 

@@ -80,7 +80,7 @@ module MTK
     def self.from_name(name)
       @flyweight[name] ||= (
         valid_name = name.to_s.capitalize
-        value = VALUES_BY_NAME[valid_name] or raise NameError.new("Invalid PitchClass name: #{name}")
+        value = VALUES_BY_NAME[valid_name] or raise ArgumentError.new("Invalid PitchClass name: #{name}")
         new(valid_name,value)
       )
     end
@@ -178,21 +178,13 @@ module MTK
   end
 
   # Construct a {PitchClass} from any supported type
-  # @param anything [PitchClass,String,Symbol,Numeric,#to_f,#to_i,#to_s]
+  # @param anything [PitchClass,String,Symbol,Numeric]
   def PitchClass(anything)
-    return anything if anything.is_a? PitchClass
-    begin
-      PitchClass[anything]
-    rescue ArgumentError
-      if anything.respond_to? :to_f
-        PitchClass.from_f anything.to_f
-      elsif anything.respond_to? :to_i
-          PitchClass.from_i anything.to_i
-      elsif anything.respond_to? :to_s
-        PitchClass.from_s anything.to_s
-      else
-        raise
-      end
+    case anything
+      when Numeric then PitchClass.from_f(anything)
+      when String, Symbol then PitchClass.from_s(anything)
+      when PitchClass then anything
+      else raise ArgumentError.new("PitchClass doesn't understand #{anything.class}")
     end
   end
   module_function :PitchClass

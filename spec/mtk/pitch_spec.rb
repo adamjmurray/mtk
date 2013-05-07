@@ -69,6 +69,10 @@ describe MTK::Pitch do
     it("converts 'B#4' to middle c") { Pitch.from_s('B#4').should == middle_c }
     it("converts 'C-1' to a low c, 5 octaves below middle C") { Pitch.from_s('C-1').should == middle_c - 60 }
     it("converts 'C4+50.0cents' to middle C and 50 cents") { Pitch.from_s('C4+50.0cents').should == middle_c_and_50_cents }
+
+    it "raises an ArgumentError for invalid arguments" do
+      lambda{ Pitch.from_s('H4') }.should raise_error ArgumentError
+    end
   end
 
   describe '.from_name' do
@@ -266,6 +270,14 @@ describe MTK do
 
     it "acts like Pitch.new() for a 3-element Array" do
       Pitch(C, 4, 0.5).should == Pitch.new(C, 4, 0.5)
+    end
+
+    it "raises an error for Strings it doesn't understand" do
+      lambda{ Pitch('H4') }.should raise_error
+    end
+
+    it "raises an error for Symbols it doesn't understand" do
+      lambda{ Pitch(:H4) }.should raise_error
     end
 
     it "raises an error for types it doesn't understand" do

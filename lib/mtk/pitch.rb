@@ -26,8 +26,8 @@ module MTK
     #         Pitch.from_s('C4')
     # @example get the Pitch for middle C + 50 cents:
     #         Pitch.from_s('C4+50cents')
-    def self.from_s( s )
-      s = s.to_s
+    def self.from_s( name )
+      s = name.to_s
       s = s[0..0].upcase + s[1..-1].downcase # normalize name
       if s =~ /^([A-G](#|##|b|bb)?)(-?\d+)(\+(\d+(\.\d+)?)cents)?$/
         pitch_class = PitchClass.from_s($1)
@@ -35,12 +35,13 @@ module MTK
           octave = $3.to_i
           offset_in_cents = $5.to_f
           if offset_in_cents.nil? or offset_in_cents.zero?
-            self[pitch_class, octave]
+            return self[pitch_class, octave]
           else
-            new( pitch_class, octave, offset_in_cents/100.0 )
+            return new( pitch_class, octave, offset_in_cents/100.0 )
           end
         end
       end
+      raise ArgumentError.new("Invalid pitch name: #{name.inspect}")
     end
 
     class << self
@@ -143,7 +144,7 @@ module MTK
         else
           Pitch.new(*anything)
         end
-      else raise "Pitch doesn't understand #{anything.class}"
+      else raise ArgumentError.new("Pitch doesn't understand #{anything.class}")
     end
   end
   module_function :Pitch
