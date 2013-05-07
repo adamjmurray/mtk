@@ -1,6 +1,16 @@
 grammar MTK_Grammar
   include MTK
 
+  rule root
+    bare_sequence | pattern | timeline
+  end
+
+  rule bare_sequence
+    ( sequenceable (space sequenceable)* ) {
+      Patterns.Sequence *values(:sequenceable)
+    }
+  end
+
   rule timeline
     ( '{' space? number space? '=>' space? pattern (space number space? '=>' space? pattern)* space? '}' ) {
       Timeline.from_a values(:number).zip(values :pattern)
@@ -17,14 +27,18 @@ grammar MTK_Grammar
     }
   end
 
+  rule sequenceable
+    chain | unchained
+   end
+
   rule chain
-    ( sequenceable (':' sequenceable)* ){
-      Patterns.Chain *values(:sequenceable)
+    ( unchained ':' unchained (':' unchained)* ){
+      Patterns.Chain *values(:unchained)
     }
   end
 
-  rule sequenceable
-    ( chord | intensity | duration | interval | pitch | pitch_class )
+  rule unchained
+    ( chord | intensity | duration | interval | pitch | pitch_class | sequence )
   end
 
   rule chord

@@ -14,7 +14,7 @@ module MTK
     # Parser for the {file:lib/mtk/lang/mtk_grammar.citrus MTK grammar}
     class Grammar
 
-      def self.parse(syntax, root=:timeline)
+      def self.parse(syntax, root=:root)
         syntax = syntax.to_s.strip
         return nil if syntax.empty?
         MTK_Grammar.parse(syntax, :root => root).value

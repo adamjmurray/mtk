@@ -3,11 +3,42 @@ require 'mtk/lang/grammar'
 
 describe MTK::Lang::Grammar do
 
-  def parse syntax, root
-    MTK::Lang::Grammar.parse(syntax, root)
+  def chain *args
+    Patterns.Chain *args
+  end
+
+  def seq *args
+    Patterns.Sequence *args
+  end
+
+
+  def parse(*args)
+    MTK::Lang::Grammar.parse(*args)
   end
 
   describe ".parse" do
+    context "default (root rule) behavior" do
+      it "can parse a sequence of pitch classes" do
+        parse('C D E F G').should == seq(C, D, E, F, G)
+      end
+
+      it "can parse a sequence of pitches" do
+        parse('C4 D4 E4 F4 G3').should == seq(C4, D4, E4, F4, G3)
+      end
+
+      it "can parse a sequence of pitch classes + pitches" do
+        parse('C4 D E3 F G5').should == seq(C4, D, E3, F, G5)
+      end
+
+      it "can parse pitchclass:duration chains" do
+        parse('C:q D:q E:i F:i G:h').should == seq(chain(C,q), chain(D,q), chain(E,i), chain(F,i), chain(G,h))
+      end
+
+      it "can parse a mix of chained and unchained pitches, pitch classes, durations, and intensities" do
+        parse('C:q:mp D4:ff A i:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp').should ==
+          seq( chain(C,q,mp), chain(D4,ff), A, chain(i,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )
+      end
+    end
 
     context "timeline" do
       it "should parse a Timeline" do
@@ -30,10 +61,6 @@ describe MTK::Lang::Grammar do
 
 
     context "chain" do
-      it "parses a single note property" do
-        parse("G4", :chain).should == Patterns.Chain(G4)
-      end
-
       it "parses a basic chain of note properties" do
         parse("G4:h.:ff", :chain).should == Patterns.Chain(G4,h+q,ff)
       end
