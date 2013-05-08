@@ -59,6 +59,13 @@ describe MTK::Lang::Grammar do
       end
     end
 
+    context "sequencer" do
+      it "parses a legato sequencer containing a pattern" do
+        sequencer = parse("{C D E}", :sequencer)
+        sequencer.should be_a Sequencers::LegatoSequencer
+        sequencer.patterns.should == [Patterns.Sequence(C,D,E)]
+      end
+    end
 
     context "chain" do
       it "parses a basic chain of note properties" do

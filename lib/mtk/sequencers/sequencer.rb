@@ -24,6 +24,8 @@ module MTK
       # The current sequencer step index (the number of times-1 that {#next} has been called), or -1 if the sequencer has not yet started.
       attr_reader :step
 
+      attr_reader :patterns
+
       # @param patterns [Array] the list of patterns to be sequenced into a {Timeline}
       # @param  options [Hash] the options to create a message with.
       # @option options [String] :max_steps set {#max_steps}
