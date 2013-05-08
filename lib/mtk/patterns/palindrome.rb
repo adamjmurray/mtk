@@ -5,6 +5,7 @@ module MTK
     # looping back to the beginning when elements run out.
     class Palindrome < Cycle
 
+      # (see Pattern#rewind)
       def rewind
         @direction = 1
         super

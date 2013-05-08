@@ -4,7 +4,7 @@ module MTK
     # A finite list of elements, which can be enumerated one at a time.
     class Sequence < Pattern
 
-      # Reset the sequence to the beginning
+      # (see Pattern#rewind)
       def rewind
         @index = -1
         super

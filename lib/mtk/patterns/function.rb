@@ -13,8 +13,8 @@ module MTK
         # unpack from the varargs Array that may be passed in from the "convenience constructor methods" defined in MTK::Pattern                        \
         @function = @function.first if @function.is_a? Enumerable
       end
-      
-      # Reset the sequence to the beginning
+
+      # (see Pattern#rewind)
       def rewind
         @prev = nil
         @function_call_count = -1

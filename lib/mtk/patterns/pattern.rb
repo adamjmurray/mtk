@@ -90,7 +90,7 @@ module MTK
         raise StopIteration if @elements.nil? or @elements.empty?
       end
 
-      # The current element in the pattern, which will be returned by {#next} (after a call to {#advance!}).
+      # The current element in the pattern, which was returned by the last call to {#next}
       def current
         @elements[0]
       end
@@ -120,7 +120,7 @@ module MTK
             options  = (args[-1].is_a? Hash) ? args.pop : {}
             args = args[0] if args.length == 1 and args[0].is_a? Array
             constructorForType = (type == 'Rhythm') ? 'Duration' : type
-            args = args.map{|arg| (arg.nil? or arg.is_a? Proc) ? arg : MTK.send(constructorForType, arg)  } # coerce to the given type (or Duration for rhythm type)
+            args = args.map{|arg| (arg.nil? or arg.is_a? Proc) ? arg : MTK.send(constructorForType, arg) } # coerce to the given type (or Duration for rhythm type)
             subclass.new(args,options)
           end
         end

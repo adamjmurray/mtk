@@ -7,7 +7,7 @@ module MTK
     # The "steps_to_reach_value" for the first element is ignored and may be omitted, since it takes 0 steps to start.
     class Lines < Pattern
 
-      # Reset the sequence to the beginning
+      # (see Pattern#rewind)
       def rewind
         @index = -1
         @steps = -1

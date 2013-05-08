@@ -16,7 +16,7 @@ module MTK
         @max_cycles = options[:max_cycles]
       end
 
-      # Reset the sequence to the beginning
+      # (see Pattern#rewind)
       def rewind
         @index = -1
         @cycle_count = 0
