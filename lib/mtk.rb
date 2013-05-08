@@ -70,6 +70,7 @@ require 'mtk/patterns/lines'
 require 'mtk/patterns/palindrome'
 require 'mtk/patterns/chain'
 
+require 'mtk/sequencers/event_builder'
 require 'mtk/sequencers/sequencer'
 require 'mtk/sequencers/step_sequencer'
 require 'mtk/sequencers/rhythmic_sequencer'

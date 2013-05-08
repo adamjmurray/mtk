@@ -10,9 +10,9 @@ describe MTK::Sequencers::Sequencer do
 
   let(:patterns)  { [Patterns.PitchCycle(C4,D4)] }
   let(:sequencer) { ABSTRACT_SEQUENCER.new patterns }
-  let(:pitch) { Patterns::Chain::DEFAULT_PITCH }
-  let(:intensity) { Patterns::Chain::DEFAULT_INTENSITY }
-  let(:duration)  { Patterns::Chain::DEFAULT_DURATION }
+  let(:pitch)     { ::MTK::Sequencers::EventBuilder::DEFAULT_PITCH }
+  let(:intensity) { ::MTK::Sequencers::EventBuilder::DEFAULT_INTENSITY }
+  let(:duration)  { ::MTK::Sequencers::EventBuilder::DEFAULT_DURATION }
 
   describe "#new" do
     it "defaults @max_steps to nil" do
@@ -33,8 +33,8 @@ describe MTK::Sequencers::Sequencer do
       sequencer.max_time.should == 4
     end
 
-    it "defaults @event_builder to MTK::Patterns::EventChain" do
-      sequencer.event_builder.should be_a MTK::Patterns::Chain
+    it "defaults @event_builder to ::MTK::Sequencers::EventBuilder" do
+      sequencer.event_builder.should be_a ::MTK::Sequencers::EventBuilder
     end
 
     it "sets @event_buidler from the options hash" do

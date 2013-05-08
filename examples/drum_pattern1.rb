@@ -16,7 +16,7 @@ pattern = {# 0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
 
 timeline = Timeline.new
 for pitch,intensities in pattern
-  track = Sequencers::StepSequencer( Patterns.Sequence intensities, default_pitch: pitch )
+  track = Sequencers::StepSequencer( Patterns.Sequence(intensities), default_pitch: pitch )
   timeline.merge track.to_timeline
 end
 
