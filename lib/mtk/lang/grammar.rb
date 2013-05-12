@@ -14,10 +14,12 @@ module MTK
     # Parser for the {file:lib/mtk/lang/mtk_grammar.citrus MTK grammar}
     class Grammar
 
-      def self.parse(syntax, root=:root)
+      def self.parse(syntax, root=:root, dump=false)
         syntax = syntax.to_s.strip
         return nil if syntax.empty?
-        MTK_Grammar.parse(syntax, :root => root).value
+        matcher = ::MTK_Grammar.parse(syntax, :root => root)
+        puts matcher.dump if dump
+        matcher.value
       end
 
     end

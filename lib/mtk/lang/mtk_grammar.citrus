@@ -1,35 +1,44 @@
 grammar MTK_Grammar
-  include MTK
 
   rule root
-    bare_sequence | pattern | timeline
-  end
-
-  rule bare_sequence
-    ( sequenceable (space sequenceable)* ) {
-      Patterns.Sequence *values(:sequenceable)
+    ( space? root:(sequencer | bare_sequencer | timeline) space? ) {
+      root.value
     }
   end
 
-  rule timeline
-    ( '{' space? number space? '=>' space? pattern (space number space? '=>' space? pattern)* space? '}' ) {
-      Timeline.from_a values(:number).zip(values :pattern)
+  rule bare_sequencer
+    ( '' pattern ) {
+      # it seems at least 2 elements are needed for me to access the pattern submatch,
+      # so using an empty string as a workaround
+      ::MTK::Sequencers.LegatoSequencer pattern.value
     }
   end
 
   rule sequencer
-    ( '{' space? root space? '}' ) {
-      Sequencers.LegatoSequencer *values(:root)
+    ( left_curly bare_sequencer right_curly ) {
+      bare_sequencer.value
+    }
+  end
+
+  rule timeline
+    ( left_curly timepoint pattern (space timepoint pattern)* right_curly ) {
+      ::MTK::Timeline.from_a values(:timepoint).zip(values :pattern)
     }
   end
 
   rule pattern
-    sequence | chain
+    sequence | bare_sequence | chain
+  end
+
+  rule bare_sequence
+    ( sequenceable (space sequenceable)* ) {
+      ::MTK::Patterns.Sequence *values(:sequenceable)
+    }
   end
 
   rule sequence
-    ( left_paren sequenceable (space sequenceable)* right_paren ) {
-      Patterns.Sequence *values(:sequenceable)
+    ( left_paren bare_sequence right_paren ) {
+      bare_sequence.value
     }
   end
 
@@ -39,7 +48,7 @@ grammar MTK_Grammar
 
   rule chain
     ( unchained ':' unchained (':' unchained)* ){
-      Patterns.Chain *values(:unchained)
+      ::MTK::Patterns.Chain *values(:unchained)
     }
   end
 
@@ -48,38 +57,44 @@ grammar MTK_Grammar
   end
 
   rule chord
-    ( '[' space? pitch (space pitch)* space? ']' ) {
-        Chord *values(:pitch)
+    ( left_bracket pitch (space pitch)* right_bracket ) {
+      ::MTK::Chord *values(:pitch)
     }
   end
 
   rule pitch
     ( pitch_class int ) {
-      Pitch[pitch_class.value, int.value]
+      ::MTK::Pitch[pitch_class.value, int.value]
     }
   end
 
   rule pitch_class
     ( [A-Ga-g] [#b]*2 ) {
-      PitchClass[to_s]
+      ::MTK::PitchClass[to_s]
     }
   end
 
   rule interval
     ( [Pp] [1458] | ('maj'|'min'|[Mm]) [2367] | 'TT' | 'tt' ) {
-      Interval.from_s(to_s)
+      ::MTK::Interval.from_s(to_s)
     }
   end
 
   rule intensity
     ( ('p'1*3 | 'mp' | 'mf' | 'o' | 'f'2*3) ('+'|'-')? ) {
-      Intensity.from_s(to_s)
+      ::MTK::Intensity.from_s(to_s)
     }
   end
 
   rule duration
     ( [whqisrx] ('.'|'t')* ) {
-      Duration.from_s(to_s)
+      ::MTK::Duration.from_s(to_s)
+    }
+  end
+
+  rule timepoint
+    ( number right_arrow ) {
+      number.value
     }
   end
 
@@ -113,6 +128,18 @@ grammar MTK_Grammar
 
   rule right_bracket
     ( space? ']' )  { nil }
+  end
+
+  rule left_curly
+    ( '{' space? ) { nil }
+  end
+
+  rule right_curly
+    ( space? '}' ) { nil }
+  end
+
+  rule right_arrow
+    ( space? '=>' space? ) { nil }
   end
 
   rule space

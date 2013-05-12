@@ -31,13 +31,13 @@ module MTK
           return nil if element.nil? or element == :skip
 
           case element
-            when Pitch           then pitches << element
-            when PitchClass      then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
-            when PitchClassSet   then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
-            when Helpers::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
-            when Duration then duration = element
-            when Intensity then intensity = element
-            when Interval then
+            when ::MTK::Pitch           then pitches << element
+            when ::MTK::PitchClass      then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
+            when ::MTK::PitchClassSet   then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
+            when ::MTK::Helpers::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
+            when ::MTK::Duration then duration = element
+            when ::MTK::Intensity then intensity = element
+            when ::MTK::Interval then
               if @previous_pitches
                 pitches += @previous_pitches.map{|pitch| pitch + element }
               else
@@ -58,7 +58,7 @@ module MTK
         @previous_pitch = pitches.last
         @previous_pitches = pitches.length > 1 ? pitches : nil
 
-        pitches.map{|pitch| Note(pitch,intensity,duration) }
+        pitches.map{|pitch| ::MTK.Note(pitch,intensity,duration) }
       end
 
       # Reset the EventChain to its initial state
