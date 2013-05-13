@@ -171,6 +171,13 @@ describe MTK::Sequencers::EventBuilder do
       event_builder.next.should == [Note(G3,mf,1)]
       event_builder.next.should == [Note(G3,o,1)]
     end
+
+    it "handles chains of sequences" do
+      event_builder = EVENT_BUILDER.new [ Patterns.Chain( Patterns.Sequence(C4,D4,E4), Patterns.Sequence(mp,mf,ff), Patterns.Sequence(q,h,w) ) ]
+      event_builder.next.should == [Note(C4,mp,q)]
+      event_builder.next.should == [Note(D4,mf,h)]
+      event_builder.next.should == [Note(E4,ff,w)]
+    end
   end
 
   describe "#rewind" do

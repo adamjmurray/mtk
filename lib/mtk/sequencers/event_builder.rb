@@ -26,25 +26,29 @@ module MTK
         duration = nil
 
         @patterns.each do |pattern|
-          element = pattern.next
+          pattern_value = pattern.next
 
-          return nil if element.nil? or element == :skip
+          elements = pattern_value.is_a?(Enumerable) ? pattern_value : [pattern_value]
+          elements.each do |element|
+            return nil if element.nil? or element == :skip
 
-          case element
-            when ::MTK::Pitch           then pitches << element
-            when ::MTK::PitchClass      then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
-            when ::MTK::PitchClassSet   then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
-            when ::MTK::Helpers::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
-            when ::MTK::Duration then duration = element
-            when ::MTK::Intensity then intensity = element
-            when ::MTK::Interval then
-              if @previous_pitches
-                pitches += @previous_pitches.map{|pitch| pitch + element }
-              else
-                pitches << ((@previous_pitch || @default_pitch) + element)
-              end
-                                                                          # TODO? String/Symbols for special behaviors like :skip, or :break (something like StopIteration for the current Pattern?)
-                                                                          # else ??? raise error?
+            case element
+              when ::MTK::Pitch           then pitches << element
+              when ::MTK::PitchClass      then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
+              when ::MTK::PitchClassSet   then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
+              when ::MTK::Helpers::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
+              when ::MTK::Duration then duration = element
+              when ::MTK::Intensity then intensity = element
+              when ::MTK::Interval then
+                if @previous_pitches
+                  pitches += @previous_pitches.map{|pitch| pitch + element }
+                else
+                  pitches << ((@previous_pitch || @default_pitch) + element)
+                end
+              # TODO? String/Symbols for special behaviors like :skip, or :break (something like StopIteration for the current Pattern?)
+              # else ??? raise error?
+            end
+
           end
         end
 

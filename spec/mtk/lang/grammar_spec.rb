@@ -18,7 +18,32 @@ describe MTK::Lang::Grammar do
 
   describe ".parse" do
     context "default (root rule) behavior" do
+      it "can parse a bare_sequencer" do
+        sequencer = parse('C:q:mp D4:ff A i:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp')
+        sequencer.should be_a Sequencers::Sequencer
+        sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(i,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
+      end
 
+      it "can parse a sequencer" do
+        sequencer = parse('( C:q:mp D4:ff A i:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp  )')
+        sequencer.should be_a Sequencers::Sequencer
+        sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(i,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
+      end
+
+      it "can parse a timeline" do
+        parse("
+          {
+            0 => C4:mp:q
+            1 => D4:o:h
+          }
+        ").should == Timeline.from_hash({0 => chain(C4,mp,q), 1 => chain(D4,o,h)})
+      end
+
+      it "can parse a chain of sequences" do
+        sequencer = parse("(C D E F G):(mp mf ff):(q h w)")
+        sequencer.should be_a Sequencers::Sequencer
+        sequencer.patterns.should == [ chain( seq(C,D,E,F,G), seq(mp,mf,ff), seq(q,h,w) ) ]
+      end
     end
 
 
@@ -90,7 +115,7 @@ describe MTK::Lang::Grammar do
 
     context "timeline rule" do
       it "should parse a very simple Timeline" do
-        parse("{0 => C}", :timeline).should == Timeline.from_hash({0 => Patterns.Chain(C)})
+        parse("{0 => C}", :timeline).should == Timeline.from_hash({0 => seq(C)})
       end
 
       it "should parse a Timeline with one entry" do
@@ -98,7 +123,7 @@ describe MTK::Lang::Grammar do
           {
             0 => C4:mp:q
           }
-        ", :timeline).should == Timeline.from_hash({0 => seq(Patterns.Chain(C4,mp,q))})
+        ", :timeline).should == Timeline.from_hash({0 => chain(C4,mp,q)})
       end
 
       it "should parse a Timeline with multiple entries" do
@@ -107,7 +132,7 @@ describe MTK::Lang::Grammar do
             0 => C4:mp:q
             1 => D4:o:h
           }
-        ", :timeline).should == Timeline.from_hash({0 => seq(Patterns.Chain(C4,mp,q)), 1 => seq(Patterns.Chain(D4,o,h))})
+        ", :timeline).should == Timeline.from_hash({0 => chain(C4,mp,q), 1 => chain(D4,o,h)})
       end
 
       it "should parse a Timeline containing a chord" do
@@ -115,7 +140,7 @@ describe MTK::Lang::Grammar do
           {
             0 => [C4 E4 G4]:fff:w
           }
-        ", :timeline).should == Timeline.from_hash({0 => seq(Patterns.Chain(Chord(C4,E4,G4),fff,w))})
+        ", :timeline).should == Timeline.from_hash({0 => chain(Chord(C4,E4,G4),fff,w)})
       end
     end
 
@@ -139,7 +164,15 @@ describe MTK::Lang::Grammar do
       it 'parses chains and wraps them in a Sequence' do
         # The wrapping behavior isn't completely desirable,
         # but I'm having trouble making the grammar do exactly what I want in all scenarios, so this is a compromise
-        parse("C4:q:ff", :pattern).should == seq(Patterns.Chain(C4, q, ff))
+        parse("C4:q:ff", :pattern).should == chain(C4, q, ff)
+      end
+
+      it "parses chains of sequencers" do
+        parse("(C D E F G):(mp mf ff):(q h w)", :pattern).should == chain( seq(C,D,E,F,G), seq(mp,mf,ff), seq(q,h,w) )
+      end
+
+      it "esnures a single element is wrapped in a Pattern" do
+        parse("C", :pattern).should be_a ::MTK::Patterns::Pattern
       end
     end
 
@@ -205,29 +238,29 @@ describe MTK::Lang::Grammar do
     end
 
 
-    context "sequenceable rule" do
+    context "chainable rule" do
       it "should parse a pitch" do
-        parse("C4", :sequenceable).should == C4
+        parse("C4", :chainable).should == C4
       end
 
       it "should parse a chord" do
-        parse("[C4 D4]", :sequenceable).should == Chord(C4,D4)
+        parse("[C4 D4]", :chainable).should == Chord(C4,D4)
       end
 
       it "should parse a pitch class" do
-        parse("C", :sequenceable).should == C
+        parse("C", :chainable).should == C
       end
 
       it "should parse intervals" do
-        parse("m2", :sequenceable).should == m2
+        parse("m2", :chainable).should == m2
       end
 
       it "should parse durations" do
-        parse("h", :sequenceable).should == h
+        parse("h", :chainable).should == h
       end
 
       it "should parse intensities" do
-        parse("ff", :sequenceable).should == ff
+        parse("ff", :chainable).should == ff
       end
     end
 

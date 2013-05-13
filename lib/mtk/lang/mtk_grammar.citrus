@@ -1,13 +1,13 @@
 grammar MTK_Grammar
 
   rule root
-    ( space? root:(sequencer | bare_sequencer | timeline) space? ) {
+    ( space? root:(bare_sequencer | sequencer | timeline) space? ) {
       root.value
     }
   end
 
   rule bare_sequencer
-    ( '' pattern ) {
+    ( pattern '' ) {
       # it seems at least 2 elements are needed for me to access the pattern submatch,
       # so using an empty string as a workaround
       ::MTK::Sequencers.LegatoSequencer pattern.value
@@ -27,12 +27,16 @@ grammar MTK_Grammar
   end
 
   rule pattern
-    sequence | bare_sequence | chain
+    ( pattern:(bare_sequence | sequence) '' ) {
+      val = first.value
+      val.is_a?(::MTK::Patterns::Pattern) ? val : ::MTK::Patterns.Sequence(val)
+    }
   end
 
   rule bare_sequence
-    ( sequenceable (space sequenceable)* ) {
-      ::MTK::Patterns.Sequence *values(:sequenceable)
+    ( chain (space chain)* ) {
+      vals = values(:chain)
+      vals.length == 1 ? vals[0] : ::MTK::Patterns.Sequence(*vals)
     }
   end
 
@@ -42,18 +46,15 @@ grammar MTK_Grammar
     }
   end
 
-  rule sequenceable
-    chain | unchained
-  end
-
   rule chain
-    ( unchained ':' unchained (':' unchained)* ){
-      ::MTK::Patterns.Chain *values(:unchained)
+    ( chainable (':' chainable)* ) {
+      vals = values(:chainable)
+      vals.length == 1 ? vals[0] : ::MTK::Patterns.Chain(*vals)
     }
   end
 
-  rule unchained
-    ( chord | intensity | duration | interval | pitch | pitch_class | sequence )
+  rule chainable
+    ( sequence | chord | intensity | duration | interval | pitch | pitch_class )
   end
 
   rule chord
