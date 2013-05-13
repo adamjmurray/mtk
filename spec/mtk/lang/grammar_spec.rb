@@ -15,6 +15,10 @@ describe MTK::Lang::Grammar do
     Patterns.Cycle *args
   end
 
+  def choice *args
+    Patterns.Choice *args
+  end
+
   def parse(*args)
     MTK::Lang::Grammar.parse(*args)
   end
@@ -194,6 +198,70 @@ describe MTK::Lang::Grammar do
 
       it "ensures a single element is wrapped in a Pattern" do
         parse("C", :pattern).should be_a ::MTK::Patterns::Pattern
+      end
+
+      it "parse 'recursively' nested constructs" do
+        parse('C <D|E <F|G F>> | A B:(q h <q|h:mp h:<mf|ff fff>>)', :pattern).should ==
+          choice(
+            seq(C, choice(D, seq(E, choice(F,seq(G,F))))),
+            seq(A, chain(B,seq(q, h, choice(q,seq(chain(h,mp),chain(h,choice(mf,seq(ff,fff))))))))
+          )
+      end
+    end
+
+
+    context 'bare_choice rule (no parentheses)' do
+      it "parses a choice of simple elements" do
+        parse('C | D | E', :bare_choice).should == choice(C,D,E)
+      end
+
+      it 'parses a choice of sequences (parentheses implied)' do
+        parse('C D E | D E F | E F', :bare_choice).should == choice(seq(C,D,E), seq(D,E,F), seq(E,F))
+      end
+
+      it 'parses a choice of sequences and simple elements' do
+        parse('C D E | G | E F | A', :bare_choice).should == choice(seq(C,D,E), G, seq(E,F), A)
+      end
+
+      it "doesn't require spaces around the pipe characters"do
+        parse('C D E|G|E F', :bare_choice).should == choice(seq(C,D,E), G, seq(E,F))
+      end
+
+      it 'parses choices containing chains' do
+        parse('C D:q | G | A:mp|E:fff:h F:s', :bare_choice).should ==
+            choice( seq(C,chain(D,q)), G, chain(A,mp), seq(chain(E,fff,h),chain(F,s)) )
+      end
+
+      it 'parses choices containing nested choices' do
+        parse('C <D|E> | F | G', :bare_choice).should == choice(seq(C,choice(D,E)), F, G)
+      end
+    end
+
+
+    context 'choice rule' do
+      it "parses a choice of simple elements" do
+        parse('<C | D | E>', :bare_choice).should == choice(C,D,E)
+      end
+
+      it 'parses a choice of sequences (parentheses implied)' do
+        parse('< C D E | D E F | E F>', :bare_choice).should == choice(seq(C,D,E), seq(D,E,F), seq(E,F))
+      end
+
+      it 'parses a choice of sequences and simple elements' do
+        parse('<C D E | G | E F | A >', :bare_choice).should == choice(seq(C,D,E), G, seq(E,F), A)
+      end
+
+      it "doesn't require spaces around the pipe characters"do
+        parse('<  C D E|G|E F >', :bare_choice).should == choice(seq(C,D,E), G, seq(E,F))
+      end
+
+      it 'parses choices containing chains' do
+        parse('<C D:q | G | A:mp|E:fff:h F:s>', :bare_choice).should ==
+            choice( seq(C,chain(D,q)), G, chain(A,mp), seq(chain(E,fff,h),chain(F,s)) )
+      end
+
+      it 'parses choices containing nested choices' do
+        parse('< C <D|E> | F | G >', :bare_choice).should == choice(seq(C,choice(D,E)), F, G)
       end
     end
 

@@ -27,9 +27,30 @@ grammar MTK_Grammar
   end
 
   rule pattern
-    ( pattern:(bare_sequence | sequence) '' ) {
+    ( pattern:(bare_choice | choice) '' ) {
       val = first.value
-      val.is_a?(::MTK::Patterns::Pattern) ? val : ::MTK::Patterns.Sequence(val)
+      if val.is_a? ::MTK::Patterns::Pattern then val else ::MTK::Patterns::Pattern.new [val] end
+    }
+  end
+
+
+  rule bare_choice
+    (
+      seq:(bare_sequence | sequence) (pipe seq:(bare_sequence | sequence))*
+    )
+    {
+      vals = values_of :seq
+      if vals.length==1 then vals[0] else ::MTK::Patterns.Choice(*vals) end
+    }
+  end
+
+
+  rule choice
+    (
+      left_angle bare_choice right_angle
+    )
+    {
+      bare_choice.value
     }
   end
 
@@ -39,8 +60,8 @@ grammar MTK_Grammar
       chain (space chain)*
     )
     {
-      vals = values_of(:chain)
-      vals.length == 1 ? vals[0] : ::MTK::Patterns.Sequence(*vals)
+      vals = values_of :chain
+      if vals.length==1 then vals[0] else ::MTK::Patterns.Sequence(*vals) end
     }
   end
 
@@ -75,7 +96,7 @@ grammar MTK_Grammar
   end
 
   rule chainable
-    ( sequence | chord | intensity | duration | interval | pitch | pitch_class )
+    ( choice | sequence | chord | intensity | duration | interval | pitch | pitch_class )
   end
 
   rule chord
@@ -158,6 +179,18 @@ grammar MTK_Grammar
 
   rule right_curly
     ( space? '}' ) { nil }
+  end
+
+  rule left_angle
+    ( '<' space? ) { nil }
+  end
+
+  rule right_angle
+    ( space? '>' )  { nil }
+  end
+
+  rule pipe
+    ( space? '|' space? ) { nil }
   end
 
   rule right_arrow
