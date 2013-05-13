@@ -171,7 +171,7 @@ describe MTK::Lang::Grammar do
         parse("(C D E F G):(mp mf ff):(q h w)", :pattern).should == chain( seq(C,D,E,F,G), seq(mp,mf,ff), seq(q,h,w) )
       end
 
-      it "esnures a single element is wrapped in a Pattern" do
+      it "ensures a single element is wrapped in a Pattern" do
         parse("C", :pattern).should be_a ::MTK::Patterns::Pattern
       end
     end
@@ -227,6 +227,11 @@ describe MTK::Lang::Grammar do
 
       it "parses duration sequences" do
         parse("(q i q. ht)", :sequence).should == seq(q, i, q*Rational(1.5), h*Rational(2,3))
+      end
+
+      it "can parse sequences with a max_cycles modifier" do
+        sequence = parse("(C D)*2", :sequence)
+        sequence.should == Patterns.Cycle(C,D, max_cycles: 2)
       end
     end
 

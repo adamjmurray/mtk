@@ -22,7 +22,7 @@ grammar MTK_Grammar
 
   rule timeline
     ( left_curly timepoint pattern (space timepoint pattern)* right_curly ) {
-      ::MTK::Timeline.from_a values(:timepoint).zip(values :pattern)
+      ::MTK::Timeline.from_a values_of(:timepoint).zip(values_of :pattern)
     }
   end
 
@@ -35,20 +35,27 @@ grammar MTK_Grammar
 
   rule bare_sequence
     ( chain (space chain)* ) {
-      vals = values(:chain)
+      vals = values_of(:chain)
       vals.length == 1 ? vals[0] : ::MTK::Patterns.Sequence(*vals)
     }
   end
 
-  rule sequence
-    ( left_paren bare_sequence right_paren ) {
-      bare_sequence.value
+  rule sequence # or cycle depending on the presence of the max_cycles option
+    ( left_paren chain (space chain)* right_paren ('*' max_cycles:int)? ) {
+      vals = values_of(:chain)
+      if max_cycles
+        ::MTK::Patterns::Cycle.new vals, max_cycles: max_cycles.value
+      elsif vals.length > 1
+        ::MTK::Patterns::Sequence.new vals
+      else
+        vals[0] # Don't form a sequence unnecessarily
+      end
     }
   end
 
   rule chain
     ( chainable (':' chainable)* ) {
-      vals = values(:chainable)
+      vals = values_of(:chainable)
       vals.length == 1 ? vals[0] : ::MTK::Patterns.Chain(*vals)
     }
   end
@@ -59,7 +66,7 @@ grammar MTK_Grammar
 
   rule chord
     ( left_bracket pitch (space pitch)* right_bracket ) {
-      ::MTK::Chord *values(:pitch)
+      ::MTK::Chord *values_of(:pitch)
     }
   end
 

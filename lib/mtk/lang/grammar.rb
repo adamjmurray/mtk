@@ -1,7 +1,7 @@
 require 'citrus'
 
 class Citrus::Match
-  def values(token_name)
+  def values_of(token_name)
     captures[token_name].map{|token| token.value }
   end
 end
