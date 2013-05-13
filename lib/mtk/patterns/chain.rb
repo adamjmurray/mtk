@@ -27,6 +27,7 @@ module MTK
             begin
               element.next
             rescue StopIteration
+              raise StopIteration if element.max_elements_exceeded?
               @is_element_done[index] = true
               element.rewind
               element.next

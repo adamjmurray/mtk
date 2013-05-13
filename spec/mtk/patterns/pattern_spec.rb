@@ -15,10 +15,17 @@ describe MTK::Patterns::Pattern do
       PATTERN.new([]).max_elements.should be_nil
     end
 
-    it "causes a StopIteration exception after the number of elements have been emitted" do
-      cycle = PATTERN.new([:anything], :max_elements => 5)
-      5.times { cycle.next }
-      lambda { cycle.next }.should raise_error
+    it "causes a StopIteration exception once max_elements have been emitted" do
+      pattern = PATTERN.new([:anything], :max_elements => 5)
+      5.times { pattern.next }
+      lambda { pattern.next }.should raise_error
+    end
+
+    it "has max_elements_exceeded once max_elements have been emitted" do
+      pattern = PATTERN.new([:anything], :max_elements => 5)
+      5.times { pattern.max_elements_exceeded?.should be_false and pattern.next }
+      pattern.max_elements_exceeded?.should be_true
+      lambda { pattern.next }.should raise_error
     end
   end
 

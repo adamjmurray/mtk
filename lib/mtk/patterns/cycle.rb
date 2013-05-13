@@ -35,8 +35,7 @@ module MTK
           if @max_cycles and @cycle_count >= @max_cycles
             raise StopIteration
           end
-          @index = -1
-          advance!
+          @index = 0
         end
       end
 

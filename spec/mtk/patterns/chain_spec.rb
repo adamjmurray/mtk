@@ -53,6 +53,22 @@ describe MTK::Patterns::Chain do
 
     # TODO: more than 2 patterns, and more than 2 + basic attribute(s)
 
+    it 'throws StopIteration when any subpattern throws StopIteration with max_elements_exceeded' do
+      chain = CHAIN.new [Patterns.Sequence(C,D,E,F,G), Patterns.Sequence(w,h,q,i,  max_elements:3)]
+      chain.next.should == [C,w]
+      chain.next.should == [D,h]
+      chain.next.should == [E,q]
+      lambda{ chain.next }.should raise_error StopIteration
+    end
+
+    it 'throws StopIteration with max_elements_exceeded (edge case actual element length == max_elements)' do
+      chain = CHAIN.new [Patterns.Sequence(C,D,E,F,G), Patterns.Sequence(w,h,q,  max_elements:3)]
+      chain.next.should == [C,w]
+      chain.next.should == [D,h]
+      chain.next.should == [E,q]
+      lambda{ chain.next }.should raise_error StopIteration
+    end
+
   end
 
   describe '#rewind' do

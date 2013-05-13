@@ -12,6 +12,7 @@ module MTK
         @function = @elements
         # unpack from the varargs Array that may be passed in from the "convenience constructor methods" defined in MTK::Pattern                        \
         @function = @function.first if @function.is_a? Enumerable
+        @elements = [@function]
       end
 
       # (see Pattern#rewind)
@@ -23,11 +24,6 @@ module MTK
 
       ###################
       protected
-
-      # (see Pattern#advance!)
-      def advance!
-        raise StopIteration if @elements.nil?
-      end
 
       # (see Pattern#current)
       def current

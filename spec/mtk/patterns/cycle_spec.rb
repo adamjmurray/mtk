@@ -38,6 +38,10 @@ describe MTK::Patterns::Cycle do
       cycle.max_cycles.should be_nil
     end
 
+    it "loops indefinitely when it's nil" do
+      lambda { 100.times { cycle.next } }.should_not raise_error
+    end
+
     it "causes a StopIteration exception after the number of cycles has completed" do
       cycle = CYCLE.new(elements, :max_cycles => 2)
       2.times do
@@ -53,9 +57,15 @@ describe MTK::Patterns::Cycle do
 
   describe "#max_elements" do
     it "causes a StopIteration exception after the number of elements have been emitted" do
-      cycle = CYCLE.new(elements, :max_elements => 5)
+      cycle = CYCLE.new(elements, max_cycles:2, max_elements:5)
       5.times { cycle.next }
-      lambda { cycle.next }.should raise_error
+      lambda { cycle.next }.should raise_error StopIteration
+    end
+
+    it "causes a StopIteration exception after the number of elements have been emitted" do
+      cycle = CYCLE.new(elements, max_elements:5)
+      5.times { cycle.next }
+      lambda { cycle.next }.should raise_error StopIteration
     end
   end
 

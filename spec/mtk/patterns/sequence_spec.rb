@@ -64,6 +64,15 @@ describe MTK::Patterns::Sequence do
 
   end
 
+
+  it "has max_elements_exceeded once max_elements have been emitted (edge case, has same number of elements)" do
+    sequence = SEQUENCE.new([1,2,3,4,5], :max_elements => 5)
+    5.times { sequence.max_elements_exceeded?.should(be_false) and sequence.next }
+    sequence.max_elements_exceeded?.should be_true
+    lambda { sequence.next }.should raise_error
+  end
+  
+
   describe "#rewind" do
     it "restarts at the beginning of the sequence" do
       loop { sequence.next }

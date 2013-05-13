@@ -55,13 +55,10 @@ module MTK
         if @current.kind_of? Pattern
           begin
             subpattern_next = @current.next
-            subpattern_has_next = true
+            return emit(subpattern_next)
           rescue StopIteration
-            subpattern_has_next = false
+            # fall through and continue with normal behavior
           end
-
-          return emit subpattern_next if subpattern_has_next
-          # else fall through and continue with normal behavior
         end
 
         begin
@@ -80,6 +77,13 @@ module MTK
         emit @current
       end
 
+      def max_elements_exceeded?
+        @max_elements and @element_count >= @max_elements
+      end
+
+      def empty?
+        @elements.nil? or @elements.empty?
+      end
 
       ##################
       protected
@@ -87,7 +91,7 @@ module MTK
       # Update internal state (index, etc) so that {#current} will refer to the next element.
       # @raise StopIteration if there are no more elements
       def advance!
-        raise StopIteration if @elements.nil? or @elements.empty?
+        raise StopIteration if empty? or max_elements_exceeded?
       end
 
       # The current element in the pattern, which was returned by the last call to {#next}
@@ -101,7 +105,6 @@ module MTK
 
       def emit element
         @element_count += 1
-        raise StopIteration if @max_elements and @element_count > @max_elements
         element
       end
 

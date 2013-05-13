@@ -8,7 +8,7 @@ grammar MTK_Grammar
 
   rule bare_sequencer
     ( pattern '' ) {
-      # it seems at least 2 elements are needed for me to access the pattern submatch,
+      # it seems at least 2 elements are needed to access the pattern submatch,
       # so using an empty string as a workaround
       ::MTK::Sequencers.LegatoSequencer pattern.value
     }
@@ -33,25 +33,39 @@ grammar MTK_Grammar
     }
   end
 
+
   rule bare_sequence
-    ( chain (space chain)* ) {
+    (
+      chain (space chain)*
+    )
+    {
       vals = values_of(:chain)
       vals.length == 1 ? vals[0] : ::MTK::Patterns.Sequence(*vals)
     }
   end
 
+
   rule sequence # or cycle depending on the presence of the max_cycles option
-    ( left_paren chain (space chain)* right_paren ('*' max_cycles:int)? ) {
-      vals = values_of(:chain)
+    (
+      left_paren chain (space chain)* right_paren ('*' max_cycles:int)? ('&' max_elements:int)?
+    )
+    {
+      chains = values_of(:chain)
+      options = max_elements ? {max_elements: max_elements.value} : {}
+
       if max_cycles
-        ::MTK::Patterns::Cycle.new vals, max_cycles: max_cycles.value
-      elsif vals.length > 1
-        ::MTK::Patterns::Sequence.new vals
+        options[:max_cycles] = max_cycles.value
+        ::MTK::Patterns::Cycle.new chains, options
+
+      elsif chains.length > 1 || max_elements
+        ::MTK::Patterns::Sequence.new chains, options
+
       else
         vals[0] # Don't form a sequence unnecessarily
       end
     }
   end
+
 
   rule chain
     ( chainable (':' chainable)* ) {

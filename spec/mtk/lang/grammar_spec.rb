@@ -11,26 +11,30 @@ describe MTK::Lang::Grammar do
     Patterns.Sequence *args
   end
 
+  def cycle *args
+    Patterns.Cycle *args
+  end
 
   def parse(*args)
     MTK::Lang::Grammar.parse(*args)
   end
 
+
   describe ".parse" do
     context "default (root rule) behavior" do
-      it "can parse a bare_sequencer" do
+      it "parses a bare_sequencer" do
         sequencer = parse('C:q:mp D4:ff A i:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp')
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(i,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
       end
 
-      it "can parse a sequencer" do
+      it "parses a sequencer" do
         sequencer = parse('( C:q:mp D4:ff A i:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp  )')
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(i,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
       end
 
-      it "can parse a timeline" do
+      it "parses a timeline" do
         parse("
           {
             0 => C4:mp:q
@@ -39,7 +43,7 @@ describe MTK::Lang::Grammar do
         ").should == Timeline.from_hash({0 => chain(C4,mp,q), 1 => chain(D4,o,h)})
       end
 
-      it "can parse a chain of sequences" do
+      it "parses a chain of sequences" do
         sequencer = parse("(C D E F G):(mp mf ff):(q h w)")
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [ chain( seq(C,D,E,F,G), seq(mp,mf,ff), seq(q,h,w) ) ]
@@ -48,31 +52,31 @@ describe MTK::Lang::Grammar do
 
 
     context 'bare_sequencer rule (no curly braces)' do
-      it "can parse a sequence of pitch classes" do
+      it "parses a sequence of pitch classes" do
         sequencer = parse('C D E F G', :bare_sequencer)
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq(C, D, E, F, G)]
       end
 
-      it "can parse a sequence of pitches" do
+      it "parses a sequence of pitches" do
         sequencer = parse('C4 D4 E4 F4 G3', :bare_sequencer)
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq(C4, D4, E4, F4, G3)]
       end
 
-      it "can parse a sequence of pitch classes + pitches" do
+      it "parses a sequence of pitch classes + pitches" do
         sequencer = parse('C4 D E3 F G5', :bare_sequencer)
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq(C4, D, E3, F, G5)]
       end
 
-      it "can parse pitchclass:duration chains" do
+      it "parses pitchclass:duration chains" do
         sequencer = parse('C:q D:q E:i F:i G:h', :bare_sequencer)
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq(chain(C,q), chain(D,q), chain(E,i), chain(F,i), chain(G,h))]
       end
 
-      it "can parse a mix of chained and unchained pitches, pitch classes, durations, and intensities" do
+      it "parses a mix of chained and unchained pitches, pitch classes, durations, and intensities" do
         sequencer = parse('C:q:mp D4:ff A i:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp', :bare_sequencer)
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(i,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
@@ -81,31 +85,31 @@ describe MTK::Lang::Grammar do
 
 
     context 'sequencer rule' do
-      it "can parse a sequence of pitch classes" do
+      it "parses a sequence of pitch classes" do
         sequencer = parse('{C D E F G}', :sequencer)
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq(C, D, E, F, G)]
       end
 
-      it "can parse a sequence of pitches" do
+      it "parses a sequence of pitches" do
         sequencer = parse('{ C4 D4 E4 F4 G3}', :sequencer)
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq(C4, D4, E4, F4, G3)]
       end
 
-      it "can parse a sequence of pitch classes + pitches" do
+      it "parses a sequence of pitch classes + pitches" do
         sequencer = parse('{C4 D E3 F G5 }', :sequencer)
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq(C4, D, E3, F, G5)]
       end
 
-      it "can parse pitchclass:duration chains" do
+      it "parses pitchclass:duration chains" do
         sequencer = parse('{  C:q D:q E:i F:i G:h }', :sequencer)
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq(chain(C,q), chain(D,q), chain(E,i), chain(F,i), chain(G,h))]
       end
 
-      it "can parse a mix of chained and unchained pitches, pitch classes, durations, and intensities" do
+      it "parses a mix of chained and unchained pitches, pitch classes, durations, and intensities" do
         sequencer = parse('{ C:q:mp D4:ff A i:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp   }', :sequencer)
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(i,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
@@ -114,11 +118,11 @@ describe MTK::Lang::Grammar do
 
 
     context "timeline rule" do
-      it "should parse a very simple Timeline" do
+      it "parses a very simple Timeline" do
         parse("{0 => C}", :timeline).should == Timeline.from_hash({0 => seq(C)})
       end
 
-      it "should parse a Timeline with one entry" do
+      it "parses a Timeline with one entry" do
         parse("
           {
             0 => C4:mp:q
@@ -126,7 +130,7 @@ describe MTK::Lang::Grammar do
         ", :timeline).should == Timeline.from_hash({0 => chain(C4,mp,q)})
       end
 
-      it "should parse a Timeline with multiple entries" do
+      it "parses a Timeline with multiple entries" do
         parse("
           {
             0 => C4:mp:q
@@ -135,7 +139,7 @@ describe MTK::Lang::Grammar do
         ", :timeline).should == Timeline.from_hash({0 => chain(C4,mp,q), 1 => chain(D4,o,h)})
       end
 
-      it "should parse a Timeline containing a chord" do
+      it "parses a Timeline containing a chord" do
         parse("
           {
             0 => [C4 E4 G4]:fff:w
@@ -171,6 +175,23 @@ describe MTK::Lang::Grammar do
         parse("(C D E F G):(mp mf ff):(q h w)", :pattern).should == chain( seq(C,D,E,F,G), seq(mp,mf,ff), seq(q,h,w) )
       end
 
+      it "parses chains of sequencers with modifiers" do
+        pattern = parse('(C D E F)*3:(q h w)&2', :pattern)
+        pattern.should == chain( cycle(C,D,E,F, max_cycles:3), seq(q,h,w, max_elements:2))
+        pattern.next
+        pattern.next
+        lambda{ pattern.next }.should raise_error StopIteration
+      end
+
+      it "parses chains of sequencers with modifiers" do
+        pattern = parse('(C D E F G):(q h w)&3', :pattern)
+        pattern.should == chain( seq(C,D,E,F,G), seq(q,h,w, max_elements:3))
+        pattern.next
+        pattern.next
+        pattern.next
+        lambda{ pattern.next }.should raise_error StopIteration
+      end
+
       it "ensures a single element is wrapped in a Pattern" do
         parse("C", :pattern).should be_a ::MTK::Patterns::Pattern
       end
@@ -178,19 +199,19 @@ describe MTK::Lang::Grammar do
 
 
     context 'bare_sequence rule (no parentheses)' do
-      it "should parse pitch sequences" do
+      it "parses pitch sequences" do
         parse("C4 D4 E4", :bare_sequence).should == seq(C4, D4, E4)
       end
 
-      it "should parse pitch sequences with chords" do
+      it "parses pitch sequences with chords" do
         parse("C4 [D4 E4]", :bare_sequence).should == seq( C4, Chord(D4,E4) )
       end
 
-      it "should parse pitch sequences with pitch classes" do
+      it "parses pitch sequences with pitch classes" do
         parse("C4 D E4", :bare_sequence).should == seq( C4, D, E4 )
       end
 
-      it "should parse pitch sequences with intervals" do
+      it "parses pitch sequences with intervals" do
         parse("C4 m2", :bare_sequence).should == seq( C4, m2 )
       end
 
@@ -205,19 +226,19 @@ describe MTK::Lang::Grammar do
 
 
     context "sequence rule" do
-      it "should parse pitch sequences" do
+      it "parses pitch sequences" do
         parse("(C4 D4 E4)", :sequence).should == seq(C4, D4, E4)
       end
 
-      it "should parse pitch sequences with chords" do
+      it "parses pitch sequences with chords" do
         parse("( C4 [D4 E4])", :sequence).should == seq( C4, Chord(D4,E4) )
       end
 
-      it "should parse pitch sequences with pitch classes" do
+      it "parses pitch sequences with pitch classes" do
         parse("(C4 D E4 )", :sequence).should == seq( C4, D, E4 )
       end
 
-      it "should parse pitch sequences with intervals" do
+      it "parses pitch sequences with intervals" do
         parse("( C4 m2  )", :sequence).should == seq( C4, m2 )
       end
 
@@ -229,9 +250,14 @@ describe MTK::Lang::Grammar do
         parse("(q i q. ht)", :sequence).should == seq(q, i, q*Rational(1.5), h*Rational(2,3))
       end
 
-      it "can parse sequences with a max_cycles modifier" do
+      it "parses sequences with a max_cycles modifier" do
         sequence = parse("(C D)*2", :sequence)
         sequence.should == Patterns.Cycle(C,D, max_cycles: 2)
+      end
+
+      it "parses sequences with a max_elements modifier" do
+        sequence = parse("(C D E)&2", :sequence)
+        sequence.should == Patterns.Cycle(C,D,E, max_elements: 2)
       end
     end
 
@@ -244,41 +270,41 @@ describe MTK::Lang::Grammar do
 
 
     context "chainable rule" do
-      it "should parse a pitch" do
+      it "parses a pitch" do
         parse("C4", :chainable).should == C4
       end
 
-      it "should parse a chord" do
+      it "parses a chord" do
         parse("[C4 D4]", :chainable).should == Chord(C4,D4)
       end
 
-      it "should parse a pitch class" do
+      it "parses a pitch class" do
         parse("C", :chainable).should == C
       end
 
-      it "should parse intervals" do
+      it "parses intervals" do
         parse("m2", :chainable).should == m2
       end
 
-      it "should parse durations" do
+      it "parses durations" do
         parse("h", :chainable).should == h
       end
 
-      it "should parse intensities" do
+      it "parses intensities" do
         parse("ff", :chainable).should == ff
       end
     end
 
 
     context 'chord rule' do
-      it "should parse chords" do
+      it "parses chords" do
         parse("[C4 E4 G4]", :chord).should == Chord(C4,E4,G4)
       end
     end
 
 
     context 'pitch rule' do
-      it "should parse pitches" do
+      it "parses pitches" do
         for pitch_class_name in PitchClass::VALID_NAMES
           pc = PitchClass[pitch_class_name]
           for octave in -1..9
@@ -290,7 +316,7 @@ describe MTK::Lang::Grammar do
 
 
     context 'pitch_class rule' do
-      it "should parse pitch classes" do
+      it "parses pitch classes" do
         for pitch_class_name in PitchClass::VALID_NAMES
           parse(pitch_class_name, :pitch_class).should == PitchClass[pitch_class_name]
         end
@@ -299,7 +325,7 @@ describe MTK::Lang::Grammar do
 
 
     context 'interval rule' do
-      it "should parse intervals" do
+      it "parses intervals" do
         for interval_name in Interval::ALL_NAMES
           parse(interval_name, :interval).should == Interval(interval_name)
         end
@@ -308,13 +334,13 @@ describe MTK::Lang::Grammar do
 
 
     context 'intensity rule' do
-      it "should parse intensities" do
+      it "parses intensities" do
         for intensity_name in Intensity::NAMES
           parse(intensity_name, :intensity).should == Intensity(intensity_name)
         end
       end
 
-      it "should parse intensities with + and - modifiers" do
+      it "parses intensities with + and - modifiers" do
         for intensity_name in Intensity::NAMES
           name = "#{intensity_name}+"
           parse(name, :intensity).should == Intensity(name)
@@ -326,13 +352,13 @@ describe MTK::Lang::Grammar do
 
 
     context 'duration rule' do
-      it "should parse durations" do
+      it "parses durations" do
         for duration in Durations::DURATION_NAMES
           parse(duration, :duration).should == Duration(duration)
         end
       end
 
-      it "should parse durations with . and t modifiers" do
+      it "parses durations with . and t modifiers" do
         for duration in Durations::DURATION_NAMES
           name = "#{duration}."
           parse(name, :duration).should == Duration(name)
@@ -346,43 +372,43 @@ describe MTK::Lang::Grammar do
 
 
     context 'number rule' do
-      it "should parse ints as numbers" do
+      it "parses ints as numbers" do
         parse("123", :number).should == 123
       end
 
-      it "should parse floats as numbers" do
+      it "parses floats as numbers" do
         parse("1.23", :number).should == 1.23
       end
     end
 
     context 'float rule' do
-      it "should parse floats" do
+      it "parses floats" do
         parse("1.23", :float).should == 1.23
       end
 
-      it "should parse negative floats" do
+      it "parses negative floats" do
         parse("-1.23", :float).should == -1.23
       end
     end
 
 
     context 'int rule' do
-      it "should parse ints" do
+      it "parses ints" do
         parse("123", :int).should == 123
       end
 
-      it "should parse negative ints" do
+      it "parses negative ints" do
         parse("-123", :int).should == -123
       end
 
-      it "should parse negative ints" do
+      it "parses negative ints" do
         parse("-123", :int).should == -123
       end
     end
 
 
     context 'space rule' do
-      it "should give nil as the value for whitespace" do
+      it "returns nil as the value for whitespace" do
         parse(" \t\n", :space).should == nil
       end
     end
