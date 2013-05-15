@@ -40,6 +40,8 @@ require 'mtk/intensity'
 
 require 'mtk/interval'
 
+require 'mtk/variable'
+
 require 'mtk/helpers/collection'
 require 'mtk/helpers/pitch_collection'
 require 'mtk/helpers/pseudo_constants'
@@ -69,6 +71,7 @@ require 'mtk/patterns/function'
 require 'mtk/patterns/lines'
 require 'mtk/patterns/palindrome'
 require 'mtk/patterns/chain'
+require 'mtk/patterns/for_each'
 
 require 'mtk/sequencers/event_builder'
 require 'mtk/sequencers/sequencer'
