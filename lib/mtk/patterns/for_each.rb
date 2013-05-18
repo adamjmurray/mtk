@@ -28,9 +28,12 @@ module MTK
 
           begin
             value = elem.next
+
+            # evaluate variables
             if value.is_a? ::MTK::Variable
-              # for now, just assume all vars are '$'
-              value = @vars[-1] # TODO: use number of $'s? Like in CoSy...
+              if value.implicit?
+                value = @vars[-value.name.length] # '$' is most recently pushed value, $$' goes back 2 levels, '$$$' goes back 3, etc
+              end
             end
 
             if is_last # then emit values

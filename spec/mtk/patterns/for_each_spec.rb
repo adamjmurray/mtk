@@ -60,7 +60,22 @@ describe MTK::Patterns::ForEach do
       vals.should ==  [F,G,C,G,F,G,E,G,F,G,D,G,F,G,E,G]
     end
 
-    # TODO: var('$$')
+    it "evaluates the '$$' var by going back 2 levels in the variables stack" do
+      foreach = FOREACH.new [ seq(C,D), seq(E,F), seq(var('$$'),var('$')) ]
+      vals = []
+      8.times{ vals << foreach.next }
+      lambda{ foreach.next }.should raise_error StopIteration
+      vals.should ==  [C,E,C,F,D,E,D,F]
+    end
+
+
+    it "evaluates the '$$$' var by going back 3 levels in the variables stack" do
+      foreach = FOREACH.new [ seq(C,D), seq(E,F), seq(G,A), seq(var('$$$'),var('$$'),var('$')) ]
+      vals = []
+      24.times{ vals << foreach.next }
+      lambda{ foreach.next }.should raise_error StopIteration
+      vals.should ==  [C,E,G,C,E,A,C,F,G,C,F,A,D,E,G,D,E,A,D,F,G,D,F,A]
+    end
 
     # TODO: update the rest of these to test ForEach
     #

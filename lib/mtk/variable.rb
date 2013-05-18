@@ -1,14 +1,23 @@
 module MTK
 
-  # A placeholder element for a variable value, for use within a {Pattern} such as a {ForEach} pattern.
+  # A placeholder element for a variable value, for use within a {Patterns::Pattern} such as a {Patterns::ForEach} pattern.
   # Will be evaluated to an actual value by the Pattern or Sequencer
   #
   class Variable
 
-    attr_accessor :name
+    attr_reader :name
 
-    def initialize name
+    attr_accessor :value
+
+    def initialize name, value=nil
       @name = name
+      @value = value
+      @implicit = !!(name =~ /^\$+$/)
+    end
+
+    # @return true when this variable has no specific value and references the implicit variable stack (such as in a {Patterns::ForEach})
+    def implicit?
+      @implicit
     end
 
     def == other
