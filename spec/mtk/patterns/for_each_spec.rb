@@ -77,107 +77,47 @@ describe MTK::Patterns::ForEach do
       vals.should ==  [C,E,G,C,E,A,C,F,G,C,F,A,D,E,G,D,E,A,D,F,G,D,F,A]
     end
 
-    # TODO: update the rest of these to test ForEach
-    #
-    #it "raises StopIteration when the end of the Sequence is reached" do
-    #  elements.length.times{ sequence.next }
-    #  lambda{ sequence.next }.should raise_error(StopIteration)
-    #end
-    #
-    #it "should automatically break out of Kernel#loop" do
-    #  nexts = []
-    #  loop do # loop rescues StopIteration and exits the loop
-    #    nexts << sequence.next
-    #  end
-    #  nexts.should == elements
-    #end
-    #
-    #it "enumerates the elements in sub-sequences" do
-    #  sub_sequence = SEQUENCE.new [2,3]
-    #  sequence = SEQUENCE.new [1,sub_sequence,4]
-    #  nexts = []
-    #  loop { nexts << sequence.next }
-    #  nexts.should == [1,2,3,4]
-    #end
-    #
-    #it "skips over empty sub-sequences" do
-    #  sub_sequence = SEQUENCE.new []
-    #  sequence = SEQUENCE.new [1,sub_sequence,4]
-    #  nexts = []
-    #  loop { nexts << sequence.next }
-    #  nexts.should == [1,4]
-    #end
-
   end
 
 
-  #
-  #describe "#rewind" do
-  #  it "restarts at the beginning of the sequence" do
-  #    loop { sequence.next }
-  #    sequence.rewind
-  #    sequence.next.should == elements.first
-  #  end
-  #
-  #  it "returns self, so it can be chained to #next" do
-  #    first = sequence.next
-  #    sequence.rewind.next.should == first
-  #  end
-  #
-  #  it "causes sub-sequences to start from the beginning when encountered again after #rewind" do
-  #    sub_sequence = SEQUENCE.new [2,3]
-  #    sequence = SEQUENCE.new [1,sub_sequence,4]
-  #    loop { sequence.next }
-  #    sequence.rewind
-  #    nexts = []
-  #    loop { nexts << sequence.next }
-  #    nexts.should == [1,2,3,4]
-  #  end
-  #end
+
+  describe "#rewind" do
+    it "restarts at the beginning of the sequence" do
+      foreach = FOREACH.new [ seq(C,D,E), seq(var('$'),G,A) ]
+      6.times{ foreach.next }
+      foreach.next.should == E
+      foreach.rewind
+      vals = []
+      9.times{ vals << foreach.next }
+      lambda{ foreach.next }.should raise_error StopIteration
+      vals.should ==  [C,G,A,D,G,A,E,G,A]
+    end
+
+    it "returns self, so it can be chained to #next" do
+      foreach = FOREACH.new [ seq(C,D,E), seq(var('$'),G,A) ]
+      first = foreach.next
+      foreach.rewind.next.should == first
+      foreach.rewind.next.should == first
+    end
+  end
 
 end
 
 
-#describe MTK::Patterns do
-#
-#  describe "#Sequence" do
-#    it "creates a Sequence" do
-#      MTK::Patterns.Sequence(1,2,3).should be_a MTK::Patterns::Sequence
-#    end
-#
-#    it "sets #elements from the varargs" do
-#      MTK::Patterns.Sequence(1,2,3).elements.should == [1,2,3]
-#    end
-#  end
-#
-#  describe "#PitchSequence" do
-#    it "creates a Sequence" do
-#      MTK::Patterns.PitchSequence(1,2,3).should be_a MTK::Patterns::Sequence
-#    end
-#
-#    it "sets #elements from the varargs" do
-#      MTK::Patterns.PitchSequence(1,2,3).elements.should == [Pitch(1),Pitch(2),Pitch(3)]
-#    end
-#  end
-#
-#  describe "#IntensitySequence" do
-#    it "creates a Sequence" do
-#      MTK::Patterns.IntensitySequence(1,2,3).should be_a MTK::Patterns::Sequence
-#    end
-#
-#    it "sets #elements from the varargs" do
-#      MTK::Patterns.IntensitySequence(1,2,3).elements.should == [Intensity(1),Intensity(2),Intensity(3)]
-#    end
-#  end
-#
-#  describe "#DurationSequence" do
-#    it "creates a Sequence" do
-#      MTK::Patterns.DurationSequence(1,2,3).should be_a MTK::Patterns::Sequence
-#    end
-#
-#    it "sets #elements from the varargs" do
-#      MTK::Patterns.DurationSequence(1,2,3).elements.should == [Duration(1),Duration(2),Duration(3)]
-#    end
-#  end
-#
-#end
+describe MTK::Patterns do
+
+  def seq(*args)
+    ::MTK::Patterns.Sequence(*args)
+  end
+
+  describe "#ForEach" do
+    it "creates a Sequence" do
+      MTK::Patterns.ForEach(seq(1,2),seq(3,4)).should be_a MTK::Patterns::ForEach
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Patterns.ForEach(seq(1,2),seq(3,4)).elements.should == [seq(1,2),seq(3,4)]
+    end
+  end
+
+end
