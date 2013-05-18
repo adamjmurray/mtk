@@ -15,57 +15,52 @@ describe MTK::Patterns::ForEach do
 
   describe "#elements" do
     it "is the array the sequence was constructed with" do
-      FOREACH.new([1,2,3]).elements.should == [1,2,3]
+      FOREACH.new([seq(1,2),seq(3,4)]).elements.should == [seq(1,2),seq(3,4)]
     end
   end
 
   describe "#next" do
     it "enumerates each element in the second pattern for each element in the first, with variable '$' as the first pattern's current element" do
       foreach = FOREACH.new [ seq(C,D,E), seq(var('$'),G,A) ]
-      foreach.next.should == C
-      foreach.next.should == G
-      foreach.next.should == A
-      foreach.next.should == D
-      foreach.next.should == G
-      foreach.next.should == A
-      foreach.next.should == E
-      foreach.next.should == G
-      foreach.next.should == A
+      vals = []
+      9.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
+      vals.should ==  [C,G,A,D,G,A,E,G,A]
     end
 
     it "enumerates the foreach construct with a variable in the middle of the second pattern" do
       foreach = FOREACH.new [ seq(C,D,E), seq(G,var('$'),A) ]
-      foreach.next.should == G
-      foreach.next.should == C
-      foreach.next.should == A
-      foreach.next.should == G
-      foreach.next.should == D
-      foreach.next.should == A
-      foreach.next.should == G
-      foreach.next.should == E
-      foreach.next.should == A
+      vals = []
+      9.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
+      vals.should ==  [G,C,A,G,D,A,G,E,A]
     end
 
     it "enumerates the foreach construct with multiple variables" do
       foreach = FOREACH.new [ seq(C,D,E), seq(G,var('$'),A,var('$')) ]
-      foreach.next.should == G
-      foreach.next.should == C
-      foreach.next.should == A
-      foreach.next.should == C
-      foreach.next.should == G
-      foreach.next.should == D
-      foreach.next.should == A
-      foreach.next.should == D
-      foreach.next.should == G
-      foreach.next.should == E
-      foreach.next.should == A
-      foreach.next.should == E
+      vals = []
+      12.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
+      vals.should ==  [G,C,A,C,G,D,A,D,G,E,A,E]
     end
 
-    # TODO: 3-level ForEach
+    it "handles 3-level nesting" do
+      foreach = FOREACH.new [ seq(C,D), seq(var('$'),F), seq(G,var('$')) ]
+      vals = []
+      8.times{ vals << foreach.next }
+      lambda{ foreach.next }.should raise_error StopIteration
+      vals.should ==  [G,C,G,F,G,D,G,F]
+    end
+
+    it "handles 4-level nesting" do
+      foreach = FOREACH.new [ seq(C,D), seq(var('$'),E), seq(F,var('$')), seq(var('$'),G) ]
+      vals = []
+      16.times{ vals << foreach.next }
+      lambda{ foreach.next }.should raise_error StopIteration
+      vals.should ==  [F,G,C,G,F,G,E,G,F,G,D,G,F,G,E,G]
+    end
+
+    # TODO: var('$$')
 
     # TODO: update the rest of these to test ForEach
     #

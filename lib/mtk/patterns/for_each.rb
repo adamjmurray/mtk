@@ -13,39 +13,45 @@ module MTK
 
       # (see Pattern#rewind)
       def rewind
-        @index = -1
+        @index = 0
         @vars = []
+        @elements.each{|elem| elem.rewind }
         super
       end
 
       def next
         # going to assume all elements are Patterns, otherwise this construct doesn't really have a point...
+        len = @elements.length
+        while @index < len
+          elem = @elements[@index]
+          is_last = (@index == len-1)
 
-        if @index < 0
-          @index = 0
-          elem = @elements[0]
-          elem.rewind
-          @vars.push elem.next
-          @index = 1
-        end
-
-        # TODO: generalize to handle more than 2 patterns
-        loop do
-          elem = @elements[1]
           begin
-            @current = elem.next
-            if @current.is_a? ::MTK::Variable
-              # for now, just assume '$'
-              @current = @vars[-1] # TODO: use number of $'s? Like in CoSy...
+            value = elem.next
+            if value.is_a? ::MTK::Variable
+              # for now, just assume all vars are '$'
+              value = @vars[-1] # TODO: use number of $'s? Like in CoSy...
             end
-            return emit(@current)
+
+            if is_last # then emit values
+              @current = value
+              return emit(value)
+
+            else # not last element, so store variables
+              @vars.push value
+              @index += 1
+            end
+
           rescue StopIteration
-            @elements[1].rewind
-            @vars.pop
-            @vars.push @elements[0].next # when elements[0].next raises StopIteration, we are done
+            if @index==0
+              raise # We're done when the first pattern is done
+            else
+              elem.rewind
+              @vars.pop
+              @index -= 1
+            end
           end
         end
-        raise StopIteration
       end
 
       ###################
