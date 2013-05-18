@@ -19,6 +19,15 @@ describe MTK::Lang::Grammar do
     Patterns.Choice *args
   end
 
+  def foreach *args
+    Patterns.ForEach *args
+  end
+
+  def var(name)
+    ::MTK::Variable.new(name)
+  end
+
+
   def parse(*args)
     MTK::Lang::Grammar.parse(*args)
   end
@@ -330,9 +339,31 @@ describe MTK::Lang::Grammar do
     end
 
 
+    context "foreach rule" do
+      it "parses a for each pattern with 2 subpatterns" do
+        foreach = parse('(C D)@(E F)', :foreach)
+        foreach.should == Patterns.ForEach(seq(C,D),seq(E,F))
+      end
+
+      it "parses a for each pattern with 3 subpatterns" do
+        foreach = parse('(C D)@(E F)@(G A B)', :foreach)
+        foreach.should == Patterns.ForEach(seq(C,D),seq(E,F),seq(G,A,B))
+      end
+
+      it "parses a for each pattern with '$' variables" do
+        foreach = parse('(C D)@(E F)@($ $$)', :foreach)
+        foreach.should == Patterns.ForEach(seq(C,D),seq(E,F),seq(var('$'),var('$$')))
+      end
+    end
+
+
     context "chain rule" do
       it "parses a basic chain of note properties" do
         parse("G4:h.:ff", :chain).should == Patterns.Chain(G4,h+q,ff)
+      end
+
+      it "parses a chain of for each patterns" do
+        parse('(C D)@(E F):(G A)@(B C)', :chain).should == chain( foreach(seq(C,D),seq(E,F)), foreach(seq(G,A),seq(B,C)) )
       end
     end
 
@@ -435,6 +466,19 @@ describe MTK::Lang::Grammar do
           name = "#{duration}..t.t"
           parse(name, :duration).should == Duration(name)
         end
+      end
+    end
+
+
+    context 'variable rule' do
+      it "parses the '$' variable" do
+        parse('$', :variable).should == var('$')
+      end
+
+      it "parses the '$$', '$$$', etc variables" do
+        parse('$$', :variable).should == var('$$')
+        parse('$$$', :variable).should == var('$$$')
+        parse('$$$$', :variable).should == var('$$$$')
       end
     end
 
