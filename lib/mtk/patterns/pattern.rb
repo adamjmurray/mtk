@@ -23,13 +23,11 @@ module MTK
 
       # @param elements [Enumerable] the list of elements in the pattern
       # @param options [Hash] the pattern options
-      # @option options [String] :type the pattern {#type}
       # @option options [Fixnum] :max_elements the {#max_elements}
       def initialize(elements, options={})
         elements = elements.to_a if elements.is_a? Enumerable
         @elements = elements
         @options = options
-        @type = options[:type]
         @max_elements = options[:max_elements]
         rewind
       end
