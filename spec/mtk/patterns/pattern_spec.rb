@@ -25,7 +25,13 @@ describe MTK::Patterns::Pattern do
       pattern = PATTERN.new([:anything], :max_elements => 5)
       5.times { pattern.max_elements_exceeded?.should be_false and pattern.next }
       pattern.max_elements_exceeded?.should be_true
-      lambda { pattern.next }.should raise_error
+      lambda { pattern.next }.should raise_error StopIteration
+    end
+
+    it "raises a StopIteration error when a nested pattern has emitted more than max_elements" do
+      pattern = PATTERN.new([Patterns.Cycle(1,2)], :max_elements => 5)
+      5.times{ pattern.next }
+      lambda{ pattern.next }.should raise_error StopIteration
     end
   end
 

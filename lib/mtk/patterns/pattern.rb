@@ -102,6 +102,7 @@ module MTK
       private
 
       def emit element
+        raise StopIteration if max_elements_exceeded?
         @element_count += 1
         element
       end
