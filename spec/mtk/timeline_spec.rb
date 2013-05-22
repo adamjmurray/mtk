@@ -139,6 +139,24 @@ describe MTK::Timeline do
     end
   end
 
+  describe "length" do
+    it "is the lastest time + the longest duration of events at that time" do
+      len = timeline.length
+      len.should be_a ::MTK::Duration
+      len.should == ::MTK.Duration(3)
+    end
+  end
+
+  describe "empty?" do
+    it "is true when there are no events in the timeline" do
+      Timeline.new.empty?.should be_true
+    end
+
+    it "is false where there are events in the timeline" do
+      timeline.empty?.should be_false
+    end
+  end
+
   describe "#==" do
     it "is true when the underlying Hashes are equal" do
       timeline.should == Timeline.from_hash(timeline_hash)

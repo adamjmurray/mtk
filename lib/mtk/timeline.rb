@@ -82,6 +82,12 @@ module MTK
       @timeline.keys.sort
     end
 
+    def length
+      last_time = times.last
+      events = @timeline[last_time]
+      last_time + events.map{|event| event.duration }.max
+    end
+
     def empty?
       @timeline.empty?
     end
