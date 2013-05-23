@@ -19,16 +19,26 @@ module MTK
       attr_reader :element_count
       
       # The maximum number of elements this Pattern will emit before a StopIteration exception
+      # A nil value means infinite elements.
       attr_reader :max_elements
+
+      # The number of cycles emitted (1 cycle == all elements emitted) since the last {#rewind}
+      attr_reader :cycle_count
+
+      # The maximum number of cycles this Pattern will emit before a StopIteration exception.
+      # A nil value means inifinite cycles.
+      attr_reader :max_cycles
 
       # @param elements [Enumerable] the list of elements in the pattern
       # @param options [Hash] the pattern options
-      # @option options [Fixnum] :max_elements the {#max_elements}
+      # @option options [Fixnum] :max_elements the {#max_elements} (default is nil, which means unlimited)
+      # @option options [Fixnum] :max_cycles the {#max_cycles} (default is 1)
       def initialize(elements, options={})
         elements = elements.to_a if elements.is_a? Enumerable
         @elements = elements
         @options = options
         @max_elements = options[:max_elements]
+        @max_cycles = options.fetch(:max_cycles, 1)
         rewind
       end
 
@@ -43,30 +53,40 @@ module MTK
       # Reset the pattern to the beginning
       def rewind
         @current = nil
+        @index = -1
         @element_count = 0
+        @cycle_count = 0
         self
       end
 
       # Emit the next element in the pattern
       # @raise StopIteration when the pattern has emitted all values, or has hit the {#max_elements} limit.
       def next
+        raise StopIteration if empty?
+
         if @current.kind_of? Pattern
           begin
             subpattern_next = @current.next
             return emit(subpattern_next)
           rescue StopIteration
-            # fall through and continue with normal behavior
+            raise if max_elements_exceeded?
+            # else fall through and continue with normal behavior
           end
         end
 
         begin
           advance!
         rescue StopIteration
-          @current = nil
-          raise
+          @cycle_count += 1
+          if @max_cycles and @cycle_count >= @max_cycles
+            @current = nil
+            raise
+          else
+            @index = -1
+            return self.next
+          end
         end
 
-        @current = current
         if @current.kind_of? Pattern
           @current.rewind # start over, in case we already enumerated this element and then did a rewind
           return self.next
@@ -86,15 +106,9 @@ module MTK
       ##################
       protected
 
-      # Update internal state (index, etc) so that {#current} will refer to the next element.
-      # @raise StopIteration if there are no more elements
+      # Update internal state (index, etc) and set @current to the next element.
       def advance!
-        raise StopIteration if empty? or max_elements_exceeded?
-      end
-
-      # The current element in the pattern, which was returned by the last call to {#next}
-      def current
-        @elements[0]
+        @current = elements[0]
       end
 
 

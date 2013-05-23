@@ -13,10 +13,11 @@ module MTK
 
       # (see Pattern#rewind)
       def rewind
-        @index = 0
+        super
+        @index = 0 # TODO: why the inconsistency with base Pattern?
         @vars = []
         @elements.each{|elem| elem.rewind }
-        super
+        self
       end
 
       def next
@@ -55,15 +56,6 @@ module MTK
             end
           end
         end
-      end
-
-      ###################
-      protected
-
-
-      # (see Pattern#current)
-      def current
-        @current
       end
 
     end

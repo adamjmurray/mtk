@@ -56,7 +56,7 @@ describe MTK::Patterns::Cycle do
   end
 
   describe "#max_elements" do
-    it "causes a StopIteration exception after the number of elements have been emitted" do
+    it "causes a StopIteration exception after the number of elements have been emitted, with a higher max_cycles" do
       cycle = CYCLE.new(elements, max_cycles:2, max_elements:5)
       5.times { cycle.next }
       lambda { cycle.next }.should raise_error StopIteration

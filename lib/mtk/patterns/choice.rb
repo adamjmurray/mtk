@@ -22,12 +22,15 @@ module MTK
       #####################
       protected
 
-      # (see Pattern#current)
-      def current
+      def advance!
         target = rand * @total_weight
         @weights.each_with_index do |weight,index|
-          return @elements[index] if target < weight
-          target -= weight
+          if target < weight
+            @current = @elements[index]
+            break
+          else
+            target -= weight
+          end
         end
       end
 

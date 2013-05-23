@@ -22,7 +22,7 @@ module MTK
 
       # (see Pattern#advance!)
       def advance!
-        super
+        # super
 
         while @step_count >= @steps
           @step_count = 0
@@ -42,15 +42,12 @@ module MTK
         end
 
         @step_count += 1
-      end
 
-      # (see Pattern#current)
-      def current
         if @prev and @next
           # linear interpolation
-          @prev + (@next - @prev)*@step_count/@steps
+          @current = @prev + (@next - @prev)*@step_count/@steps
         else
-          @next
+          @current = @next
         end
       end
 

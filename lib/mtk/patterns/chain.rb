@@ -21,8 +21,7 @@ module MTK
 
       # (see Pattern#advance!)
       def advance!
-        super
-        @current_attributes = @elements.map.with_index do |element,index|
+        @current = @elements.map.with_index do |element,index|
           if element.is_a? ::MTK::Patterns::Pattern
             begin
               element.next
@@ -42,11 +41,6 @@ module MTK
         @elements.each.with_index do |element,index|
           @is_element_done[index] = true unless element.is_a? ::MTK::Patterns::Pattern
         end
-      end
-
-      # (see Pattern#current)
-      def current
-        @current_attributes
       end
 
     end

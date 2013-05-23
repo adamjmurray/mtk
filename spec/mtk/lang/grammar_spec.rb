@@ -61,6 +61,18 @@ describe MTK::Lang::Grammar do
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [ chain( seq(C,D,E,F,G), seq(mp,mf,ff), seq(q,h,w) ) ]
       end
+      #
+      #it "parses a chain of choices" do
+      #  sequencer = parse("<i|s>:<c|d|e>")
+      #  sequencer.patterns.should == [ chain( choice(i,s), choice(C,D,E) ) ]
+      #  # puts sequencer.to_timeline #TODO: bug goes into infinite loop!
+      #end
+      #
+      #it "parses a chain of choices" do
+      #  sequencer = parse("(<i|s>:<c|d|e>)&8")
+      #  # sequencer.patterns.should == [ chain( choice(i,s), choice(C,D,E) ) ]
+      #  puts sequencer.to_timeline #TODO: bug goes into infinite loop!
+      #end
     end
 
 

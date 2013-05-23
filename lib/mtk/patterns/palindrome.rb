@@ -35,6 +35,8 @@ module MTK
           @index = 0
           @index += 1 unless repeat_ends? or @elements.length == 1
         end
+
+        @current = @elements[@index]
       end
 
     end

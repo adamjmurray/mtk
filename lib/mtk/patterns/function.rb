@@ -17,7 +17,6 @@ module MTK
 
       # (see Pattern#rewind)
       def rewind
-        @prev = nil
         @function_call_count = -1
         super
       end
@@ -25,14 +24,13 @@ module MTK
       ###################
       protected
 
-      # (see Pattern#current)
-      def current
+      def advance!
         @function_call_count += 1
-        @prev = case @function.arity
+        @current = case @function.arity
           when 0 then @function.call
-          when 1 then @function.call(@prev)
-          when 2 then @function.call(@prev, @function_call_count)
-          else @function.call(@prev, @function_call_count, @element_count)
+          when 1 then @function.call(@current)
+          when 2 then @function.call(@current, @function_call_count)
+          else @function.call(@current, @function_call_count, @element_count)
         end
       end
 
