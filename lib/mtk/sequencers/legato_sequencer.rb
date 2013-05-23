@@ -13,8 +13,8 @@ module MTK
      ########################
       protected
 
-      # (see Sequencer#advance!)
-      def advance!
+      # (see Sequencer#advance)
+      def advance
         @time += @previous_events.map{|event| event.duration }.max
       end
 

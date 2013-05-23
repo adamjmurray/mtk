@@ -5,7 +5,7 @@ module MTK
     #
     # Patterns can be reset to the beginning via {#rewind}.
     #
-    # @abstract Subclass and override {#advance!} and {#current} to implement a Pattern.
+    # @abstract Subclass and override {#advance} and {#current} to implement a Pattern.
     #
     class Pattern
       include MTK::Helpers::Collection
@@ -72,7 +72,7 @@ module MTK
         end
 
         begin
-          advance!
+          advance
         rescue StopIteration
           @cycle_count += 1
           if @max_cycles and @cycle_count >= @max_cycles
@@ -117,7 +117,7 @@ module MTK
       end
 
       # Update internal state (index, etc) and set @current to the next element.
-      def advance!
+      def advance
         @current = elements[0]
       end
 

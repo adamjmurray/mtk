@@ -22,7 +22,7 @@ module MTK
       #####################
       protected
 
-      def advance!
+      def advance
         @index += 1
         raise StopIteration if @index > 0
 

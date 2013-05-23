@@ -19,8 +19,8 @@ module MTK
         super
       end
 
-      # (see Pattern#advance!)
-      def advance!
+      # (see Pattern#advance)
+      def advance
         raise StopIteration if @elements.nil? or @elements.empty? # prevent infinite loops
 
         @index += @direction

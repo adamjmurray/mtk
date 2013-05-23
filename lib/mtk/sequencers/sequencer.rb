@@ -3,7 +3,7 @@ module MTK
 
     # A Sequencer produces {Timeline}s from a collection of {Patterns::Pattern}s.
     #
-    # @abstract Subclass and override {#advance!} to implement a Sequencer.
+    # @abstract Subclass and override {#advance} to implement a Sequencer.
     #
     class Sequencer
 
@@ -62,7 +62,7 @@ module MTK
       #    so you can ignore this method unless you want to hack on sequencers at a lower level.
       def next
         if @step >= 0
-          advance!
+          advance
           raise StopIteration if @max_time and @time > @max_time
         end
         @step += 1
@@ -87,7 +87,7 @@ module MTK
       protected
 
       # Advance @time to the next time for the {Timeline} being produced by {#to_timeline}
-      def advance!
+      def advance
         @time += 1 # default behavior simply advances one beat at a time
       end
 

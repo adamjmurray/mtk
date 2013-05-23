@@ -19,8 +19,8 @@ module MTK
         super
       end
 
-      # (see Pattern#advance!)
-      def advance!
+      # (see Pattern#advance)
+      def advance
         @current = @elements.map.with_index do |element,index|
           if element.is_a? ::MTK::Patterns::Pattern
             begin

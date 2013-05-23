@@ -7,8 +7,8 @@ module MTK
       ###################
       protected
 
-      # (see Pattern#advance!)
-      def advance!
+      # (see Pattern#advance)
+      def advance
         @index += 1
         raise StopIteration if @index >= @elements.length
         @current = @elements[@index]

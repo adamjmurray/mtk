@@ -19,8 +19,8 @@ module MTK
         super
       end
 
-      # (see Pattern#advance!)
-      def advance!
+      # (see Pattern#advance)
+      def advance
         while @step_count >= @steps
           @step_count = 0
 

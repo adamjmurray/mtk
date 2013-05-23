@@ -48,10 +48,10 @@ describe MTK::Sequencers::RhythmicSequencer do
 
   describe "#rewind" do
     it "rewinds the rhythm pattern (in addition to normal #rewind behavior)" do
-      rhythm.length.times{ rhythmic_sequencer.send :advance! }
+      rhythm.length.times{ rhythmic_sequencer.send :advance }
       # now the next call would normally throw a StopIteration exception
       rhythmic_sequencer.rewind
-      rhythm.length.times{ rhythmic_sequencer.send :advance! }
+      rhythm.length.times{ rhythmic_sequencer.send :advance }
       # if we didn't get an exception, then #rewind did it's job
     end
   end

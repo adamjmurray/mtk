@@ -23,7 +23,7 @@ module MTK
         super
       end
 
-      def advance!
+      def advance
         @function_call_count += 1
         @current = case @function.arity
           when 0 then @function.call
