@@ -5,9 +5,11 @@ module MTK
 
     # Defines duration constants using abbreviations for standard rhythm values ('w' for whole note, 'h' for half note, etc).
     #
-    # These can be thought of like constants, but in order to distinguish 'e' (eighth note) from the {PitchClass} 'E'
-    # it was necessary to use lower-case names and therefore define them as "pseudo constant" methods.
-    # The methods are available either through the module (MTK::Durations::e) or via mixin (include MTK::Durations; e)
+    # In order to avoid conflict with pitch class 'e', the constant for eighth note is 'i'
+    #
+    # These can be thought of like constants, but they
+    # use lower-case names and therefore define them as "pseudo constant" methods.
+    # The methods are available either through the module (MTK::Durations::e) or via mixin (include MTK::Durations; q)
     #
     # These values assume the quarter note is one beat (1.0), so they work best with 4/4 and other */4 time signatures.
     #
