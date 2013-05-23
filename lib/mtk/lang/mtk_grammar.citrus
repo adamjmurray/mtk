@@ -136,7 +136,7 @@ grammar MTK_Grammar
   end
 
   rule duration
-    ( [whqisrx] ('.'|'t')* ) {
+    ( rest:'-'? [whqisrx] ('.'|'t')* ) {
       ::MTK::Duration.from_s(to_s)
     }
   end

@@ -48,9 +48,10 @@ module MTK
     # @example lookup value of 'q.' (eight note), which is 1.5 (1 * 1.5)
     #         MTK::Durations['q.']
     def self.from_s(s)
-      if s =~ /^([whqisrx])((\.|t)*)$/i
-        name = $1.downcase
-        modifier = $2.downcase
+      if s =~ /^(-)?([whqisrx])((\.|t)*)$/i
+        name = $2.downcase
+        modifier = $3.downcase
+        modifier << $1 if $1
       else
         raise ArgumentError.new("Invalid Duration string '#{s}'")
       end
@@ -58,6 +59,7 @@ module MTK
       value = VALUES_BY_NAME[name]
       modifier.each_char do |mod|
         case mod
+          when '-' then value *= -1
           when '.' then value *= Rational(3,2)
           when 't' then value *= Rational(2,3)
         end

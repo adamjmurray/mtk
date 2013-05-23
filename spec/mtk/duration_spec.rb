@@ -82,6 +82,12 @@ describe MTK::Duration do
         Duration.from_s(name).value.should == Duration::VALUES_BY_NAME[name]
       end
     end
+
+    it "converts any of the duration names with a '-' in front to the negative of that duration" do
+      for name in Duration::NAMES
+        Duration.from_s("-#{name}").value.should == -1 * Duration::VALUES_BY_NAME[name]
+      end
+    end
   end
 
   describe '.from_name' do

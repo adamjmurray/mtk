@@ -399,6 +399,10 @@ describe MTK::Lang::Grammar do
         parse("h", :chainable).should == h
       end
 
+      it "parses rests" do
+        parse("-h", :chainable).should == -h
+      end
+
       it "parses intensities" do
         parse("ff", :chainable).should == ff
       end
@@ -475,6 +479,12 @@ describe MTK::Lang::Grammar do
           parse(name, :duration).should == Duration(name)
           name = "#{duration}..t.t"
           parse(name, :duration).should == Duration(name)
+        end
+      end
+
+      it "parses durations with - modifier (it parses rests)" do
+        for duration in Durations::DURATION_NAMES
+          parse("-#{duration}", :duration).should == -1 * Duration(duration)
         end
       end
     end
