@@ -72,6 +72,11 @@ describe MTK::Patterns::Chain do
       lambda{ chain.next }.should raise_error StopIteration
     end
 
+    it 'flattens attribute lists with nested chains' do
+      chain = CHAIN.new( [1, 2, CHAIN.new([3, CHAIN.new([4,5])])] )
+      chain.next.should == [1,2,3,4,5]
+    end
+
     it 'throws StopIteration when any subpattern throws StopIteration with max_elements_exceeded' do
       chain = CHAIN.new [Patterns.Sequence(C,D,E,F,G), Patterns.Sequence(w,h,q,i,  max_elements:3)]
       chain.next.should == [C,w]

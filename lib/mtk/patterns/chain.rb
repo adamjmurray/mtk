@@ -34,7 +34,7 @@ module MTK
           else
             element
           end
-        end
+        end.flatten
 
         raise StopIteration if @is_element_done.all?{|done| done }
 
