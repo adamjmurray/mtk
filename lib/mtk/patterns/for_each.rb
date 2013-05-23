@@ -5,29 +5,23 @@ module MTK
     #
     class ForEach < Pattern
 
-      # @param (see Pattern#initialize)
-      # @option (see Pattern#initialize)
-      def initialize(elements, options={})
-        super
-      end
-
       # (see Pattern#rewind)
       def rewind
-        super
-        @index = 0 # TODO: why the inconsistency with base Pattern?
         @vars = []
         @elements.each{|elem| elem.rewind }
-        self
+        super
       end
 
-      def next
-        # going to assume all elements are Patterns, otherwise this construct doesn't really have a point...
-        len = @elements.length
-        while @index < len
-          elem = @elements[@index]
-          is_last = (@index == len-1)
 
+      # (see Pattern#next)
+      def next
+        @index = 0 if @index < 0
+
+        last_index = @elements.length-1
+        while @index <= last_index
+          elem = @elements[@index]
           begin
+            # assume all elements are Patterns, otherwise this construct doesn't really have a point...
             value = elem.next
 
             # evaluate variables
@@ -37,7 +31,7 @@ module MTK
               end
             end
 
-            if is_last # then emit values
+            if @index == last_index # then emit values
               @current = value
               return emit(value)
 
