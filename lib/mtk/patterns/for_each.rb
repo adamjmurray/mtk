@@ -11,17 +11,11 @@ module MTK
 
         last_index = @elements.length-1
         while @index <= last_index
-          elem = @elements[@index]
+          # assume all elements are Patterns, otherwise this construct doesn't really have a point...
+          pattern = @elements[@index]
           begin
-            # assume all elements are Patterns, otherwise this construct doesn't really have a point...
-            value = elem.next
-
-            # evaluate variables
-            if value.is_a? ::MTK::Variable
-              if value.implicit?
-                value = @vars[-value.name.length] # '$' is most recently pushed value, $$' goes back 2 levels, '$$$' goes back 3, etc
-              end
-            end
+            element = pattern.next
+            value = evaluate_variables(element)
 
             if @index == last_index # then emit values
               @current = value
@@ -36,7 +30,7 @@ module MTK
             if @index==0
               raise # We're done when the first pattern is done
             else
-              elem.rewind
+              pattern.rewind
               @vars.pop
               @index -= 1
             end
@@ -53,6 +47,22 @@ module MTK
         @vars = []
         @elements.each{|elem| elem.rewind }
         super
+      end
+
+
+      ####################
+      private
+
+      def evaluate_variables(element)
+        case element
+          when ::MTK::Variable
+            if element.implicit?
+              return @vars[-element.name.length] # '$' is most recently pushed value, $$' goes back 2 levels, '$$$' goes back 3, etc
+            end
+          when Array
+            return element.map{|e| evaluate_variables(e) }
+        end
+        return element
       end
 
     end

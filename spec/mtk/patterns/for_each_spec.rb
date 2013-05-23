@@ -12,6 +12,10 @@ describe MTK::Patterns::ForEach do
     ::MTK::Patterns.Sequence(*args)
   end
 
+  def chain(*args)
+    ::MTK::Patterns.Chain(*args)
+  end
+
 
   describe "#elements" do
     it "is the array the sequence was constructed with" do
@@ -75,6 +79,15 @@ describe MTK::Patterns::ForEach do
       24.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
       vals.should ==  [C,E,G,C,E,A,C,F,G,C,F,A,D,E,G,D,E,A,D,F,G,D,F,A]
+    end
+
+    it "evaluates nested variables" do
+      # (C4 Bb Ab G)@( (C D C $):(q i i)*4:(mp mf) )
+      foreach = FOREACH.new( [seq(G,A), chain(seq(C,D,var('$')),seq(q,i,s))] )
+      vals = []
+      6.times{ vals << foreach.next }
+      lambda{ foreach.next }.should raise_error StopIteration
+      vals.should == [[C,q],[D,i],[G,s],[C,q],[D,i],[A,s]]
     end
 
   end
