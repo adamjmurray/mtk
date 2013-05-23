@@ -33,18 +33,25 @@ module MTK
             return nil if element.nil? or element == :skip
 
             case element
-              when ::MTK::Pitch           then pitches << element
-              when ::MTK::PitchClass      then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
-              when ::MTK::PitchClassSet   then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
+              when ::MTK::Pitch         then pitches << element
+              when ::MTK::PitchClass    then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
+              when ::MTK::PitchClassSet then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
               when ::MTK::Helpers::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
-              when ::MTK::Duration then duration = element # TODO: if we receive more than one duration (from a Chain) then add them
-              when ::MTK::Intensity then intensity = element # TODO: if we receive more than one intensity (from a Chain) then average them
-              when ::MTK::Interval then
+
+              when ::MTK::Duration
+                duration ||= 0
+                duration += element
+
+              when ::MTK::Intensity
+                intensity = element # TODO: if we receive more than one intensity (from a Chain) then average them
+
+              when ::MTK::Interval
                 if @previous_pitches
                   pitches += @previous_pitches.map{|pitch| pitch + element }
                 else
                   pitches << ((@previous_pitch || @default_pitch) + element)
                 end
+
               # TODO? String/Symbols for special behaviors like :skip, or :break (something like StopIteration for the current Pattern?)
               # else ??? raise error?
             end

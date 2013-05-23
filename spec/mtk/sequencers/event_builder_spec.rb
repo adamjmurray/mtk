@@ -202,6 +202,11 @@ describe MTK::Sequencers::EventBuilder do
       13.times{ pitches << event_builder.next[0].pitch }
       pitches.should == [C4,F3,Bb3,Eb3,Ab3,Db3,Gb3,B3,E3,A3,D3,G3,C4]
     end
+
+    it "adds chained durations together" do
+      event_builder = EVENT_BUILDER.new( [Patterns.Chain(h,q,i,s)] )
+      event_builder.next[0].duration.should == h+q+i+s
+    end
   end
 
   describe "#rewind" do
