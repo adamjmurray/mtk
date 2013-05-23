@@ -6,9 +6,15 @@ describe MTK::Patterns::Choice do
   CHOICE = MTK::Patterns::Choice
 
   let(:elements) { [1,2,3] }
-  let(:choice) { CHOICE.new elements }
+  let(:choice) { CHOICE.new elements, max_cycles:500 }
 
   describe "#next" do
+    it "throws StopIteration on the second call to #next, by default" do
+      choice = CHOICE.new elements
+      choice.next
+      lambda{ choice.next }.should raise_error StopIteration
+    end
+
     it "randomly chooses one of the elements" do
       choosen = Set.new
       100.times do
@@ -19,7 +25,7 @@ describe MTK::Patterns::Choice do
     end
 
     it "does a weighted random selection when a weights list is passed in via constructor options[:weights]" do
-      choice = CHOICE.new elements, :weights => [1,3,0] # only choose first 2 elements, and choose the second three times as often
+      choice = CHOICE.new elements, max_cycles:100, weights:[1,3,0] # only choose first 2 elements, and choose the second three times as often
       choosen = Set.new
       first_count, second_count = 0,0
       100.times do
@@ -33,7 +39,7 @@ describe MTK::Patterns::Choice do
     end
 
     it "enumerates a choosen sub-sequence" do
-      choice = CHOICE.new [MTK::Patterns.Sequence(4,5,6)]
+      choice = CHOICE.new [MTK::Patterns.Sequence(4,5,6)], max_cycles:10
       choice.next.should == 4
       choice.next.should == 5
       choice.next.should == 6

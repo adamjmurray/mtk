@@ -23,6 +23,9 @@ module MTK
       protected
 
       def advance!
+        @index += 1
+        raise StopIteration if @index > 0
+
         target = rand * @total_weight
         @weights.each_with_index do |weight,index|
           if target < weight
