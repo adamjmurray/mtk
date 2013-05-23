@@ -66,23 +66,19 @@ grammar MTK_Grammar
   end
 
 
-  rule sequence # or cycle depending on the presence of the max_cycles option
+  rule sequence
     (
       left_paren chain (space chain)* right_paren ('*' max_cycles:int)? ('&' max_elements:int)?
     )
     {
       chains = values_of(:chain)
-      options = max_elements ? {max_elements: max_elements.value} : {}
-
-      if max_cycles
-        options[:max_cycles] = max_cycles.value
-        ::MTK::Patterns::Cycle.new chains, options
-
-      elsif chains.length > 1 || max_elements
-        ::MTK::Patterns::Sequence.new chains, options
-
+      options = {}
+      options[:max_elements] = max_elements.value if max_elements
+      options[:max_cycles] = max_cycles.value if max_cycles
+      if chains.length == 1 and options.empty?
+        chains[0] # Don't form a chain unnecessarily
       else
-        vals[0] # Don't form a sequence unnecessarily
+        ::MTK::Patterns::Sequence.new chains, options
       end
     }
   end
