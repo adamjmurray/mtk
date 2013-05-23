@@ -212,6 +212,24 @@ describe MTK::Sequencers::EventBuilder do
       event_builder = EVENT_BUILDER.new( [Patterns.IntensityChain(0.1, 0.2, 0.3, 0.4)] )
       event_builder.next[0].intensity.should == Intensity(0.25)
     end
+
+    it "defaults the intensity to the previous intensity" do
+      event_builder = EVENT_BUILDER.new(
+        [Patterns.Sequence(Patterns.Chain(C4,ppp,q), Patterns.Chain(D4,i), Patterns.Chain(E4,ff,h), Patterns.Chain(F4,i))]
+      )
+      notes = []
+      4.times{ notes += event_builder.next }
+      notes.should == [Note(C4,ppp,q), Note(D4,ppp,i), Note(E4,ff,h), Note(F4,ff,i)]
+    end
+
+    it "defaults the duration to the previous duration" do
+      event_builder = EVENT_BUILDER.new(
+          [Patterns.Sequence(Patterns.Chain(C4,ppp,h), Patterns.Chain(D4,mp), Patterns.Chain(E4,ff,s), Patterns.Chain(F4,mf))]
+      )
+      notes = []
+      4.times{ notes += event_builder.next }
+      notes.should == [Note(C4,ppp,h), Note(D4,mp,h), Note(E4,ff,s), Note(F4,mf,s)]
+    end
   end
 
   describe "#rewind" do

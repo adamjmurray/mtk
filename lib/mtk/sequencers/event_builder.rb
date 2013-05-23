@@ -34,8 +34,8 @@ module MTK
 
             case element
               when ::MTK::Pitch         then pitches << element
-              when ::MTK::PitchClass    then pitches += pitches_for_pitch_classes([element], @previous_pitch || @default_pitch)
-              when ::MTK::PitchClassSet then pitches += pitches_for_pitch_classes(element, @previous_pitch || @default_pitch)
+              when ::MTK::PitchClass    then pitches += pitches_for_pitch_classes([element], @previous_pitch)
+              when ::MTK::PitchClassSet then pitches += pitches_for_pitch_classes(element, @previous_pitch)
               when ::MTK::Helpers::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
 
               when ::MTK::Duration
@@ -49,7 +49,7 @@ module MTK
                 if @previous_pitches
                   pitches += @previous_pitches.map{|pitch| pitch + element }
                 else
-                  pitches << ((@previous_pitch || @default_pitch) + element)
+                  pitches << (@previous_pitch + element)
                 end
 
               # TODO? String/Symbols for special behaviors like :skip, or :break (something like StopIteration for the current Pattern?)
@@ -60,10 +60,9 @@ module MTK
           end
         end
 
-        # TODO: use previous values here instead? That can be a default. Make the old behavior an option.
-        pitches   << @default_pitch if pitches.empty?
-        intensities << @default_intensity if intensities.empty?
-        duration ||= @default_duration
+        pitches     << @previous_pitch if pitches.empty?
+        intensities << @previous_intensity if intensities.empty?
+        duration   ||= @previous_duration
 
         # Not using this yet, maybe later...
         # return nil if duration==:skip or intensities.include? :skip or pitches.include? :skip
@@ -73,14 +72,18 @@ module MTK
 
         @previous_pitch = pitches.last   # Consider doing something different, maybe averaging?
         @previous_pitches = pitches.length > 1 ? pitches : nil
+        @previous_intensity = intensity
+        @previous_duration = duration
 
         pitches.map{|pitch| ::MTK.Note(pitch,intensity,duration) }
       end
 
-      # Reset the EventChain to its initial state
+      # Reset the EventBuilder to its initial state
       def rewind
-        @previous_pitch = nil
-        @previous_pitches = nil
+        @previous_pitch     = @default_pitch
+        @previous_pitches   = [@default_pitch]
+        @previous_intensity = @default_intensity
+        @previous_duration  = @default_duration
         @max_pitch = nil
         @min_pitch = nil
         @patterns.each{|pattern| pattern.rewind if pattern.is_a? MTK::Patterns::Pattern }
@@ -95,12 +98,12 @@ module MTK
 
       def constrain_pitch(pitches)
         if @max_pitch.nil? or @min_pitch.nil?
-          first = pitches.first
+          first_pitch = pitches.first
 
-          @max_pitch = first + @max_interval
+          @max_pitch = first_pitch + @max_interval
           @max_pitch = 127 if @max_pitch > 127
 
-          @min_pitch = first - @max_interval
+          @min_pitch = first_pitch - @max_interval
           @min_pitch = 0 if @min_pitch < 0
 
           @small_max_span = (@max_pitch - @min_pitch < 12)
