@@ -8,15 +8,13 @@ module MTK
       attr_reader :function
       
       def initialize(elements, options={})
-        super
-        @function = @elements
         # unpack from the varargs Array that may be passed in from the "convenience constructor methods" defined in MTK::Pattern                        \
-        @function = @function.first if @function.is_a? Enumerable
-        @elements = [@function]
+        @function = if elements.is_a? Enumerable then elements.first else elements end
+        super [@function], options
       end
 
       # (see Pattern#rewind)
-      def rewind
+      def rewind(is_cycling=false)
         @function_call_count = -1
         super
       end

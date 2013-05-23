@@ -51,7 +51,26 @@ describe MTK::Patterns::Chain do
       lambda{ chain.next }.should raise_error StopIteration
     end
 
+
     # TODO: more than 2 patterns, and more than 2 + basic attribute(s)
+
+
+    it 'combines Choice patterns with max_cycles' do
+      chain = CHAIN.new [Patterns.Choice(i,s), Patterns.Choice(C,D,E)], max_cycles:100
+      100.times do |time|
+        attrs = chain.next
+        attrs.length.should == 2
+        (attrs[0]==i or attrs[0]==s).should be_true
+        (attrs[1]==C or attrs[1]==D or attrs[1]==E).should be_true
+      end
+      lambda{ chain.next }.should raise_error StopIteration
+    end
+
+    it 'combines Choice patterns and emits a only single combination of attributes by default' do
+      chain = CHAIN.new [Patterns.Choice(i,s), Patterns.Choice(C,D,E)]
+      chain.next
+      lambda{ chain.next }.should raise_error StopIteration
+    end
 
     it 'throws StopIteration when any subpattern throws StopIteration with max_elements_exceeded' do
       chain = CHAIN.new [Patterns.Sequence(C,D,E,F,G), Patterns.Sequence(w,h,q,i,  max_elements:3)]
@@ -68,7 +87,6 @@ describe MTK::Patterns::Chain do
       chain.next.should == [E,q]
       lambda{ chain.next }.should raise_error StopIteration
     end
-
   end
 
   describe '#rewind' do

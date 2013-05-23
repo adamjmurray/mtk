@@ -8,8 +8,7 @@ module MTK
     class Lines < Pattern
 
       # (see Pattern#rewind)
-      def rewind
-        @index = -1
+      def rewind(is_cycling=false)
         @steps = -1
         @step_count = -1
         @prev = nil

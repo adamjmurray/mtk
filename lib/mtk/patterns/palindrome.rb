@@ -6,7 +6,7 @@ module MTK
     class Palindrome < Cycle
 
       # (see Pattern#rewind)
-      def rewind
+      def rewind(is_cycling=false)
         @direction = 1
         super
       end

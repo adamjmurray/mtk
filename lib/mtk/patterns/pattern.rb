@@ -51,11 +51,17 @@ module MTK
       end
 
       # Reset the pattern to the beginning
-      def rewind
+      def rewind(is_cycling=false)
         @current = nil
         @index = -1
-        @element_count = 0
-        @cycle_count = 0
+        unless is_cycling
+          @element_count = 0
+          @cycle_count = 0
+        end
+
+        # and rewind child patterns
+        @elements.each{|element| element.rewind if element.is_a? Pattern }
+
         self
       end
 
@@ -64,7 +70,7 @@ module MTK
       def next
         raise StopIteration if empty?
 
-        if @current.kind_of? Pattern
+        if @current.is_a? Pattern
           begin
             subpattern_next = @current.next
             return emit(subpattern_next)
@@ -82,7 +88,7 @@ module MTK
             @current = nil
             raise
           else
-            @index = -1
+            rewind(true)
             return self.next
           end
         end

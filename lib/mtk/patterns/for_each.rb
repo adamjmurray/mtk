@@ -6,7 +6,7 @@ module MTK
     class ForEach < Pattern
 
       # (see Pattern#rewind)
-      def rewind
+      def rewind(is_cycling=false)
         @vars = []
         @elements.each{|elem| elem.rewind }
         super

@@ -11,7 +11,7 @@ module MTK
       end
 
       # (see Pattern#rewind)
-      def rewind
+      def rewind(is_cycling=false)
         @is_element_done = Array.new(elements.size)
         super
       end
