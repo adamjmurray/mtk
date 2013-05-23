@@ -71,8 +71,8 @@ describe MTK::Sequencers::EventBuilder do
       event_builder.next.should == [Note(E4, p, 1)]
     end
 
-    it "builds notes from pitch class sets, selecting the neartest pitch classes to the previous/default pitch" do
-      pitch_class_sequence = Patterns::Sequence.new([PitchClassSet(C,G),PitchClassSet(B,Eb),PitchClassSet(D,C)])
+    it "builds notes from pitch class sets, selecting the nearest pitch classes to the previous/default pitch" do
+      pitch_class_sequence = MTK::Patterns::Sequence.new([PitchClassSet(C,G),PitchClassSet(B,Eb),PitchClassSet(D,C)])
       event_builder = EVENT_BUILDER.new [pitch_class_sequence], :default_pitch => D3
       event_builder.next.should == notes(C3,G3)
       event_builder.next.should == notes(B3,Eb3)
@@ -177,6 +177,30 @@ describe MTK::Sequencers::EventBuilder do
       event_builder.next.should == [Note(C4,mp,q)]
       event_builder.next.should == [Note(D4,mf,h)]
       event_builder.next.should == [Note(E4,ff,w)]
+    end
+
+    it "enforces the max_interval option for rising intervals" do
+      event_builder = EVENT_BUILDER.new( [ Patterns.Sequence(C4,P5,P5,P5,P5,P5,P5,P5,P5,P5,P5,P5,P5)], max_interval:12 )
+      pitches = []
+      13.times{ pitches << event_builder.next[0].pitch }
+      pitches.should == [C4,G4,D4,A4,E4,B4,Gb4,Db4,Ab4,Eb4,Bb4,F4,C5]
+
+      event_builder = EVENT_BUILDER.new( [ Patterns.Sequence(C4,P5,P5,P5,P5,P5,P5,P5,P5,P5,P5,P5,P5)], max_interval:11 )
+      pitches = []
+      13.times{ pitches << event_builder.next[0].pitch }
+      pitches.should == [C4,G4,D4,A4,E4,B4,Gb4,Db4,Ab4,Eb4,Bb4,F4,C4]
+    end
+
+    it "enforces the max_interval option for falling intervals" do
+      event_builder = EVENT_BUILDER.new( [ Patterns.Sequence(C4,-P5,-P5,-P5,-P5,-P5,-P5,-P5,-P5,-P5,-P5,-P5,-P5)], max_interval:12 )
+      pitches = []
+      13.times{ pitches << event_builder.next[0].pitch }
+      pitches.should == [C4,F3,Bb3,Eb3,Ab3,Db3,Gb3,B3,E3,A3,D3,G3,C3]
+
+      event_builder = EVENT_BUILDER.new( [ Patterns.Sequence(C4,-P5,-P5,-P5,-P5,-P5,-P5,-P5,-P5,-P5,-P5,-P5,-P5)], max_interval:11 )
+      pitches = []
+      13.times{ pitches << event_builder.next[0].pitch }
+      pitches.should == [C4,F3,Bb3,Eb3,Ab3,Db3,Gb3,B3,E3,A3,D3,G3,C4]
     end
   end
 
