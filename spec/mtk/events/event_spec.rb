@@ -43,8 +43,8 @@ describe MTK::Events::Event do
       event.duration.should == options[:duration]
     end
 
-    it "defaults to nil" do
-      EVENT.new(type).duration.should be_nil
+    it "defaults to 0" do
+      EVENT.new(type).duration.should == 0
     end
   end
 

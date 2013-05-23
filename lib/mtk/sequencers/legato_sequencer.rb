@@ -15,7 +15,7 @@ module MTK
 
       # (see Sequencer#advance)
       def advance
-        @time += @previous_events.map{|event| event.duration }.max
+        @time += @previous_events.map{|event| event.length }.max
       end
 
     end

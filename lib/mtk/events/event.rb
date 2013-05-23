@@ -35,7 +35,7 @@ module MTK
         @type = type
         @value = options[:value]
         @number = options[:number]
-        @duration = options[:duration]
+        @duration = options.fetch(:duration, 0)
         @channel = options[:channel]
       end
 
@@ -72,13 +72,9 @@ module MTK
       # Indicate the "real" duration for rests.
       # @see rest?
       def length
-        # TODO: is this really necessary? Can we enforce this is a Duration object instead?
-        if @duration and @duration.respond_to? :value
-          value = @duration.value
-        else
-          value = @duration
-        end
-        (value || 0).abs # TODO: introduce duration.length
+        len = @duration || 0
+        len = -len if len < 0
+        len
       end
 
       # By convention, any events with negative durations are a rest
@@ -93,7 +89,7 @@ module MTK
 
       # Convert duration to an integer number of MIDI pulses, given the pulses_per_beat
       def duration_in_pulses(pulses_per_beat)
-        (length * pulses_per_beat).round
+        (length.to_f * pulses_per_beat).round
       end
 
       def == other

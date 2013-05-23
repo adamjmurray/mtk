@@ -51,7 +51,10 @@ module MTK
         timeline = Timeline.new
         loop do
           events = self.next
-          timeline[@time] = events if events
+          if events
+            events = events.reject{|e| e.rest? }
+            timeline[@time] = events unless events.empty?
+          end
         end
         timeline
       end

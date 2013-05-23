@@ -13,9 +13,16 @@ describe MTK::Sequencers::LegatoSequencer do
   describe "#to_timeline" do
     it "contains notes assembled from the given patterns, with Timeline time deltas from the max event duration at the previous step" do
       legato_sequencer.to_timeline.should == Timeline.from_hash({
-        0 => Note(C4,0.3,1),
+        0   => Note(C4,0.3,1),
         1.0 => Note(D4,0.6,0.5),
         1.5 => Note(E4,0.9,1.5),
+        3.0 => Note(C4,1.0,4)
+      })
+    end
+
+    it "treats negative durations as rests" do
+      legato_sequencer = LEGATO_SEQUENCER.new( [pitches, intensities, Patterns.DurationSequence(-1,-0.5,-1.5,4)] )
+      legato_sequencer.to_timeline.should == Timeline.from_hash({
         3.0 => Note(C4,1.0,4)
       })
     end

@@ -56,6 +56,8 @@ module MTK
 
         timeline.each do |time,events|
           events.each do |event|
+            next if event.rest?
+
             channel = event.channel || 0
 
             case event.type
