@@ -22,3 +22,17 @@ describe MTK::Sequencers::LegatoSequencer do
   end
 
 end
+
+
+describe MTK::Sequencers do
+
+  describe "#LegatoSequencer" do
+    it "creates a LegatoSequencer" do
+      MTK::Sequencers.LegatoSequencer(1,2,3, rhythm:1).should be_a MTK::Sequencers::LegatoSequencer
+    end
+
+    it "sets #patterns from the varargs" do
+      MTK::Sequencers.LegatoSequencer(1,2,3, rhythm:1).patterns.should == [1,2,3]
+    end
+  end
+end

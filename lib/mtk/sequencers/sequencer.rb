@@ -91,6 +91,17 @@ module MTK
         @time += 1 # default behavior simply advances one beat at a time
       end
 
+      def self.inherited(subclass)
+        # Define a convenience method like MTK::Patterns.Sequence()
+        # that can handle varargs or a single array argument, plus any Hash options
+        classname = subclass.name.sub /.*::/, '' # Strip off module prefixes
+        MTK::Sequencers.define_singleton_method classname do |*args|
+          options  = (args[-1].is_a? Hash) ? args.pop : {}
+          args = args[0] if args.length == 1 and args[0].is_a? Array
+          subclass.new(args,options)
+        end
+      end
+
     end
 
   end

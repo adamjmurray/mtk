@@ -69,3 +69,17 @@ describe MTK::Sequencers::StepSequencer do
   end
 
 end
+
+
+describe MTK::Sequencers do
+
+  describe "#StepSequencer" do
+    it "creates a StepSequencer" do
+      MTK::Sequencers.StepSequencer(1,2,3).should be_a MTK::Sequencers::StepSequencer
+    end
+
+    it "sets #patterns from the varargs" do
+      MTK::Sequencers.StepSequencer(1,2,3).patterns.should == [1,2,3]
+    end
+  end
+end

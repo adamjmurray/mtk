@@ -57,3 +57,17 @@ describe MTK::Sequencers::RhythmicSequencer do
   end
 
 end
+
+
+describe MTK::Sequencers do
+
+  describe "#RhythmicSequencer" do
+    it "creates a RhythmicSequencer" do
+      MTK::Sequencers.RhythmicSequencer(1,2,3, rhythm:1).should be_a MTK::Sequencers::RhythmicSequencer
+    end
+
+    it "sets #patterns from the varargs" do
+      MTK::Sequencers.RhythmicSequencer(1,2,3, rhythm:1).patterns.should == [1,2,3]
+    end
+  end
+end
