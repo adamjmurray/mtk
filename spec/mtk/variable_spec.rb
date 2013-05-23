@@ -39,4 +39,14 @@ describe MTK::Variable do
     end
   end
 
+  describe '#to_s' do
+    it "includes just the variable name when there's no value" do
+      var('$').to_s.should == 'MTK::Variable<$>'
+    end
+
+    it "includes just the variable name and value when there's a value" do
+      var('x',1).to_s.should == 'MTK::Variable<x=1>'
+    end
+  end
+
 end

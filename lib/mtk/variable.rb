@@ -23,6 +23,10 @@ module MTK
     def == other
       other.is_a? self.class and other.name == self.name
     end
+
+    def to_s
+      "#{self.class}<#{name}#{'='+value.to_s if value}>"
+    end
   end
 
 end
