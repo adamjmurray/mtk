@@ -207,6 +207,11 @@ describe MTK::Sequencers::EventBuilder do
       event_builder = EVENT_BUILDER.new( [Patterns.Chain(h,q,i,s)] )
       event_builder.next[0].duration.should == h+q+i+s
     end
+
+    it "averages chained intensities together" do
+      event_builder = EVENT_BUILDER.new( [Patterns.IntensityChain(0.1, 0.2, 0.3, 0.4)] )
+      event_builder.next[0].intensity.should == Intensity(0.25)
+    end
   end
 
   describe "#rewind" do

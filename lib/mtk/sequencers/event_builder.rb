@@ -22,7 +22,7 @@ module MTK
       # @return [Array] an array of events
       def next
         pitches = []
-        intensity = nil
+        intensities = []
         duration = nil
 
         @patterns.each do |pattern|
@@ -43,7 +43,7 @@ module MTK
                 duration += element
 
               when ::MTK::Intensity
-                intensity = element # TODO: if we receive more than one intensity (from a Chain) then average them
+                intensities << element
 
               when ::MTK::Interval
                 if @previous_pitches
@@ -53,20 +53,23 @@ module MTK
                 end
 
               # TODO? String/Symbols for special behaviors like :skip, or :break (something like StopIteration for the current Pattern?)
-              # else ??? raise error?
+
+              else STDERR.puts "#{self.class}#next: Unexpected type '#{element.class}'"
             end
 
           end
         end
 
         # TODO: use previous values here instead? That can be a default. Make the old behavior an option.
-        pitches << @default_pitch if pitches.empty?
-        intensity ||= @default_intensity
+        pitches   << @default_pitch if pitches.empty?
+        intensities << @default_intensity if intensities.empty?
         duration ||= @default_duration
 
-        return nil if intensity==:skip or duration==:skip or pitches.include? :skip
+        # Not using this yet, maybe later...
+        # return nil if duration==:skip or intensities.include? :skip or pitches.include? :skip
 
         constrain_pitch(pitches)
+        intensity = intensities.map{|i| i.to_f }.inject(:+)/intensities.length # average the intensities
 
         @previous_pitch = pitches.last   # Consider doing something different, maybe averaging?
         @previous_pitches = pitches.length > 1 ? pitches : nil
