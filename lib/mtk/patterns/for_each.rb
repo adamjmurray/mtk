@@ -5,14 +5,6 @@ module MTK
     #
     class ForEach < Pattern
 
-      # (see Pattern#rewind)
-      def rewind(is_cycling=false)
-        @vars = []
-        @elements.each{|elem| elem.rewind }
-        super
-      end
-
-
       # (see Pattern#next)
       def next
         @index = 0 if @index < 0
@@ -50,6 +42,17 @@ module MTK
             end
           end
         end
+      end
+
+
+      ###################
+      protected
+
+      # (see Pattern#rewind_or_cycle)
+      def rewind_or_cycle(is_cycling=false)
+        @vars = []
+        @elements.each{|elem| elem.rewind }
+        super
       end
 
     end

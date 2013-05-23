@@ -51,17 +51,8 @@ module MTK
       end
 
       # Reset the pattern to the beginning
-      def rewind(is_cycling=false)
-        @current = nil
-        @index = -1
-        unless is_cycling
-          @element_count = 0
-          @cycle_count = 0
-        end
-
-        # and rewind child patterns
-        @elements.each{|element| element.rewind if element.is_a? Pattern }
-
+      def rewind
+        rewind_or_cycle
         self
       end
 
@@ -88,7 +79,7 @@ module MTK
             @current = nil
             raise
           else
-            rewind(true)
+            rewind_or_cycle(true)
             return self.next
           end
         end
@@ -111,6 +102,19 @@ module MTK
 
       ##################
       protected
+
+      # Reset the pattern to the beginning
+      # @param is_cycling [Boolean] true when #next is performing a cycle back to the beginning of the Pattern. false for a normal #rewind
+      def rewind_or_cycle(is_cycling=false)
+        @current = nil
+        @index = -1
+        unless is_cycling
+          @element_count = 0
+          @cycle_count = 0
+        end
+        # and rewind child patterns
+        @elements.each{|element| element.rewind if element.is_a? Pattern }
+      end
 
       # Update internal state (index, etc) and set @current to the next element.
       def advance!

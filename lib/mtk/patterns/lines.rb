@@ -7,8 +7,11 @@ module MTK
     # The "steps_to_reach_value" for the first element is ignored and may be omitted, since it takes 0 steps to start.
     class Lines < Pattern
 
-      # (see Pattern#rewind)
-      def rewind(is_cycling=false)
+      ###################
+      protected
+
+      # (see Pattern#rewind_or_cycle)
+      def rewind_or_cycle(is_cycling=false)
         @steps = -1
         @step_count = -1
         @prev = nil
@@ -16,13 +19,8 @@ module MTK
         super
       end
 
-      ###################
-      protected
-
       # (see Pattern#advance!)
       def advance!
-        # super
-
         while @step_count >= @steps
           @step_count = 0
 

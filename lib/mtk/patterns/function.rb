@@ -13,14 +13,15 @@ module MTK
         super [@function], options
       end
 
-      # (see Pattern#rewind)
-      def rewind(is_cycling=false)
-        @function_call_count = -1
-        super
-      end
 
       ###################
       protected
+
+      # (see Pattern#rewind_or_cycle)
+      def rewind_or_cycle(is_cycling=false)
+        @function_call_count = -1
+        super
+      end
 
       def advance!
         @function_call_count += 1

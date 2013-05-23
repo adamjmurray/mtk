@@ -5,12 +5,6 @@ module MTK
     # looping back to the beginning when elements run out.
     class Palindrome < Cycle
 
-      # (see Pattern#rewind)
-      def rewind(is_cycling=false)
-        @direction = 1
-        super
-      end
-
       # true if the first/last element are repeated when the ends are reached, else false
       def repeat_ends?
         @repeat_ends ||= @options.fetch :repeat_ends, false
@@ -18,6 +12,12 @@ module MTK
 
       ##############
       protected
+
+      # (see Pattern#rewind_or_cycle)
+      def rewind_or_cycle(is_cycling=false)
+        @direction = 1
+        super
+      end
 
       # (see Pattern#advance!)
       def advance!

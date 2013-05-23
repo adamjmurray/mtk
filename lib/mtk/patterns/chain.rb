@@ -10,14 +10,14 @@ module MTK
         @stop_after_first = true if @elements.all?{|element| not element.is_a? ::MTK::Patterns::Pattern }
       end
 
-      # (see Pattern#rewind)
-      def rewind(is_cycling=false)
+      ###################
+      protected
+
+      # (see Pattern#rewind_or_cycle)
+      def rewind_or_cycle(is_cycling=false)
         @is_element_done = Array.new(elements.size)
         super
       end
-
-      ###################
-      protected
 
       # (see Pattern#advance!)
       def advance!
