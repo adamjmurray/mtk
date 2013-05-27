@@ -43,6 +43,14 @@ describe MTK::Sequencers::StepSequencer do
         2 => Note(E4,1.0,2)
       })
     end
+
+    it "treats negative durations as rests" do
+      timeline = STEP_SEQUENCER.new( [pitches, intensities, Patterns.DurationSequence(1, -1, 2)] ).to_timeline
+      timeline.should == Timeline.from_hash({
+        0 => Note(C4,0.3,1),
+        2 => Note(E4,1.0,2)
+      })
+    end
   end
 
   describe "#step_size" do

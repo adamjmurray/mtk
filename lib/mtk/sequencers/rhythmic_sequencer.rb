@@ -19,7 +19,7 @@ module MTK
 
       # (see Sequencer#advance)
       def advance
-        @time += @rhythm.next
+        @time += @rhythm.next.length
       end
 
     end
