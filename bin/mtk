@@ -1,0 +1,133 @@
+#!/usr/bin/env ruby
+
+require 'mtk'
+require 'optparse'
+
+options = {}
+
+option_parser = OptionParser.new do |opts|
+
+  opts.banner = "Usage: #{$0} [options]"
+  opts.separator ''
+  opts.separator 'Options:'
+
+  opts.on('-p FILE', '--play FILE', 'play or print the contents of a MIDI file',
+          'if no --output is specified, print the MIDI file') {|file| options[:play] = file }
+
+  opts.separator ''
+
+  opts.on('-c FILE', '--convert FILE', 'convert a file containing MTK syntax to MIDI',
+          'if a --file is given, write the MIDI to a file',
+          'if an --output is given, play the MIDI',
+          'otherwise print the MIDI') {|file| options[:convert] = file }
+
+  opts.separator ''
+
+  opts.on('-i [syntax]', '--interpret [syntax]', 'convert the given MTK syntax String to MIDI',
+          'if no [syntax] is given, starts an interactive interpreter',
+          'if a --file is given, write the MIDI to a file',
+          'if an --output is given, play the MIDI',
+          'otherwise print the MIDI') {|syntax| options[:interpret] = syntax }
+
+  opts.separator ''
+
+  opts.on('-f FILE', '--file FILE', 'write the output of --convert or --record to a file') {|file| options[:file] = file }
+
+  opts.separator ''
+
+  opts.on('-l', '--list', 'list available MIDI devices for --record and --output') { options[:list] = true }
+
+  opts.separator ''
+
+  opts.on('-r INPUT', '--record INPUT', 'record MIDI input',
+          'if no --file is specified, prints the recorded MIDI') {|input| options[:record] = input }
+
+  opts.separator ''
+
+  opts.on('-o OUTPUT', '--output OUTPUT', 'set MIDI output for playing') {|output| options[:output] = output }
+
+  opts.separator ''
+
+  opts.on('-t', '--tutorial', 'Start an interactive tutorial for the MTK syntax') { options[:tutorial] = true }
+
+  opts.separator ''
+
+  opts.on('-h', '--help', 'Show this message') { puts opts; exit }
+
+end
+
+
+puts option_parser and exit if ARGV.length == 0
+#p ARGV
+#p options
+begin
+  option_parser.parse!
+rescue OptionParser::MissingArgument
+  puts "Invalid command, #{$!}"
+  puts "For command line help: #{$0} --help"
+end
+
+
+def setup_io
+  if RUBY_PLATFORM == 'java'
+    require 'mtk/midi/jsound_input'
+    require 'mtk/midi/jsound_output'
+    @inputs  = MTK::MIDI::JSoundInput
+    @outputs = MTK::MIDI::JSoundOutput
+  else
+    require 'mtk/midi/unimidi_input'
+    require 'mtk/midi/unimidi_output'
+    @inputs  = MTK::MIDI::UniMIDIInput
+    @outputs = MTK::MIDI::UniMIDIOutput
+  end
+end
+
+
+def convert(mtk_syntax)
+  require 'mtk/lang/grammar'
+  sequencer = MTK::Lang::Grammar.parse(mtk_syntax)
+  timeline = sequencer.to_timeline
+  puts timeline
+  # TODO: support an --output
+end
+
+
+if options[:play]
+  filename = options[:play]
+  require 'mtk/midi/file'
+  puts "Contents of MIDI file #{filename}:", MTK::MIDI_File(filename).to_timelines
+  # TODO: support an --output
+end
+
+
+if options[:list]
+  setup_io
+  input_names  = ['INPUTS:'] + @inputs.devices.map{|d| d.name unless d.name.strip.empty? }.compact
+  output_names = ['OUTPUTS:'] + @outputs.devices.map{|d| d.name unless d.name.strip.empty? }.compact
+  puts
+  puts input_names.join("\n * ")
+  puts
+  puts output_names.join("\n * ")
+  puts
+  puts 'When specifying --record INPUT or --output OUTPUT, the first substring match will be used.'
+  puts "For example: --output IAC will use 'Apple Inc. IAC Driver' if it's the first OUTPUT containing 'IAC'"
+  puts
+  exit
+end
+
+
+if options.has_key? :interpret
+  mtk_syntax = options[:interpret]
+  if mtk_syntax.nil?
+    puts "TODO: interactive interpreter"
+  else
+    convert(mtk_syntax)
+  end
+end
+
+
+if options[:convert]
+  mtk_syntax_file = options[:convert]
+  mtk_syntax = IO.read(input)
+  convert(mtk_syntax)
+end

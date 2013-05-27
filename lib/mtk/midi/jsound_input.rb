@@ -9,6 +9,15 @@ module MTK
     #       It depends on the 'jsound' gem.
     class JSoundInput
 
+      def self.devices
+        @devices ||= ::JSound::Midi::INPUTS.devices
+      end
+
+      def self.devices_by_name
+        @devices_by_name ||= devices.each_with_object( Hash.new ){|device,hash| hash[device.description] = device }
+      end
+
+
       attr_reader :device
 
       def initialize(input_device)

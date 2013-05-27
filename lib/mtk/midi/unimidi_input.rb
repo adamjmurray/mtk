@@ -10,6 +10,15 @@ module MTK
     #       It depends on the 'unimidi' gem.
     class UniMIDIInput
 
+      def self.devices
+        @devices ||= ::UniMIDI::Input.all
+      end
+
+      def self.devices_by_name
+        @devices_by_name ||= devices.each_with_object( Hash.new ){|device,hash| hash[device.name] = device }
+      end
+
+
       attr_reader :device, :recording, :thread
 
       def initialize(input, options={})
