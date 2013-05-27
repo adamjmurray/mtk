@@ -1,6 +1,7 @@
 module MTK
 
   # A measure of time in musical beats.
+  # May be negative to indicate a rest, which uses the absolute value for the effective duration.
   class Duration
 
     include Comparable
@@ -69,6 +70,19 @@ module MTK
 
     class << self
       alias :from_name :from_s
+    end
+
+    # The magnitude (absolute value) of the duration.
+    # Indicate the "real" duration for rests.
+    # @see rest?
+    def length
+      @value < 0 ? -@value : @value
+    end
+
+    # By convention, any negative durations are a rests
+    # @see length
+    def rest?
+      @value < 0
     end
 
     # The number of beats as a floating point number

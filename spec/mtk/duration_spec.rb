@@ -106,6 +106,28 @@ describe MTK::Duration do
   end
 
 
+  describe '#length' do
+    it 'is the value for positive values' do
+      Duration.new(4).length.should == 4
+    end
+
+    it 'is the absolute value for negative values' do
+      Duration.new(-4).length.should == 4
+    end
+  end
+
+
+  describe '#rest?' do
+    it 'is false for positive values' do
+      Duration.new(4).rest?.should be_false
+    end
+
+    it 'is true for negative values' do
+      Duration.new(-4).rest?.should be_true
+    end
+  end
+
+
   describe '#to_f' do
     it "is the value as a floating point number" do
       f = Duration.new(Rational(1,2)).to_f
