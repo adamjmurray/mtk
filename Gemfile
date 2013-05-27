@@ -20,7 +20,7 @@ end
 
 group :development do
   gem "yard", "~> 0.8"
-  gem "redcarpet", "~> 2.1"
+  gem "kramdown", "~> 1.0"
 
   platforms :ruby do
     gem "cover_me","~> 1.2"

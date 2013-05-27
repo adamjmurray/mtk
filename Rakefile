@@ -1,7 +1,7 @@
 require 'rspec/core/rake_task'
 require 'rake/clean'
 
-SUPPORTED_RUBIES = %w[ 1.9.3  jruby-1.6.7 ]
+SUPPORTED_RUBIES = %w[ 1.9.3  2.0  jruby-1.7.4 ]
 ENV['JRUBY_OPTS'] = '--1.9'
 
 task :default => :test
