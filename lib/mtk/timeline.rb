@@ -2,7 +2,7 @@ module MTK
 
   # A collection of timed events. The core data structure used to interface with input and output.
   #
-  # Maps sorted times to lists of events.
+  # Maps sorted floating point times to lists of events.
   #
   # Enumerable as [time,event_list] pairs.
   #
@@ -42,23 +42,23 @@ module MTK
     end
 
     def [](time)
-      @timeline[time]
+      @timeline[time.to_f]
     end
 
     def []=(time, events)
       time = time.to_f unless time.is_a? Numeric
       case events
         when nil?
-          @timeline.delete time
+          @timeline.delete time.to_f
         when Array
-          @timeline[time] = events
+          @timeline[time.to_f] = events
         else
-          @timeline[time] = [events]
+          @timeline[time.to_f] = [events]
       end
     end
 
     def add(time, event)
-      events = @timeline[time]
+      events = @timeline[time.to_f]
       if events
         if event.is_a? Array
           events.concat event
@@ -71,11 +71,11 @@ module MTK
     end
 
     def delete(time)
-      @timeline.delete(time)
+      @timeline.delete(time.to_f)
     end
 
     def has_time? time
-      @timeline.has_key? time
+      @timeline.has_key? time.to_f
     end
 
     def times

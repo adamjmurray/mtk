@@ -72,9 +72,9 @@ describe MTK::Sequencers::Sequencer do
       sequencer = ABSTRACT_SEQUENCER.new [pitches, intensities, durations]
       # default implementation just increments the time by 1 for each event (more interesting behavior is provided by subclasses)
       sequencer.to_timeline.should == {
-        0 => [Note(C4,0.3,1)],
-        1 => [Note(D4,0.7,2)],
-        2 => [Note(E4,1.0,3)]
+        0.0 => [Note(C4,0.3,1)],
+        1.0 => [Note(D4,0.7,2)],
+        2.0 => [Note(E4,1.0,3)]
       }
     end
 
@@ -85,14 +85,14 @@ describe MTK::Sequencers::Sequencer do
       sequencer = ABSTRACT_SEQUENCER.new [pitches, intensities, durations]
       # default implementation just increments the time by 1 for each event (more interesting behavior is provided by subclasses)
       sequencer.to_timeline.should == {
-        0 => [Note(C4,0.5,1)],
-        1 => [Note(D4,1.0,2)],
-        2 => [Note(E4,0.5,3)],
-        3 => [Note(F4,1.0,2)],
-        4 => [Note(G4,0.5,1)],
-        5 => [Note(A4,1.0,2)],
-        6 => [Note(B4,0.5,3)],
-        7 => [Note(C5,1.0,2)]
+        0.0 => [Note(C4,0.5,1)],
+        1.0 => [Note(D4,1.0,2)],
+        2.0 => [Note(E4,0.5,3)],
+        3.0 => [Note(F4,1.0,2)],
+        4.0 => [Note(G4,0.5,1)],
+        5.0 => [Note(A4,1.0,2)],
+        6.0 => [Note(B4,0.5,3)],
+        7.0 => [Note(C5,1.0,2)]
       }
     end
 

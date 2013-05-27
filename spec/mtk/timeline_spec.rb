@@ -4,8 +4,8 @@ describe MTK::Timeline do
 
   let(:note1) { Note(C4, p, 1) }
   let(:note2) { Note(G4, o, 2) }
-  let(:timeline_raw_data) { { 0 => note1, 1 => [note1, note2] } }
-  let(:timeline_hash) { { 0 => [note1], 1 => [note1, note2] } }
+  let(:timeline_raw_data) { { 0.0 => note1, 1.0 => [note1, note2] } }
+  let(:timeline_hash) { { 0.0 => [note1], 1.0 => [note1, note2] } }
   let(:timeline) { Timeline.from_hash(timeline_raw_data) }
 
   let(:unquantized_data) { { 0.0 => [note1], 0.7 => [note1], 1.24 => [note1], 1.25 => [note1] } }
@@ -13,8 +13,8 @@ describe MTK::Timeline do
   let(:quantization_interval) { 0.5 }
   let(:quantized_data) { { 0.0 => [note1], 0.5 => [note1], 1.0 => [note1], 1.5 => [note1] } }
 
-  let(:shifted_data) { { 5 => [note1], 6 => [note1, note2] } }
-  let(:reverse_shifted_data) { { -5 => [note1], -4 => [note1, note2] } }
+  let(:shifted_data) { { 5.0 => [note1], 6.0 => [note1, note2] } }
+  let(:reverse_shifted_data) { { -5.0 => [note1], -4.0 => [note1, note2] } }
   let(:shift_amount) { 5 }
 
   it "is Enumerable" do
@@ -81,23 +81,42 @@ describe MTK::Timeline do
     it "returns nil when no events exist at the timepoint" do
       timeline[3].should == nil
     end
+
+    it "coerces the argument for consistent lookup behavior" do
+      timeline[0].should == [note1]
+      timeline[0.0].should == [note1]
+      timeline[Rational(0)].should == [note1]
+      timeline[nil].should == [note1]
+    end
   end
+
 
   describe "#[]=" do
     it "set a single event at the given timepoint" do
       timeline[5] = note1
       timeline[5].should == [note1]
     end
+
     it "set an array of events at the given timepoint" do
       timeline[5] = [note1, note2]
       timeline[5].should == [note1, note2]
     end
+
     it "replaces existing events at the timepoint" do
       timeline[5] = note1
       timeline[5] = note2
       timeline[5].should == [note2]
     end
+
+    it "coerces the argument to floating point for consistent lookup behavior" do
+      timeline = Timeline.new
+      timeline[nil] = note1
+      timeline[1] = note1
+      timeline[Rational(3,2)] = note1
+      timeline.times.should == [0.0, 1.0, 1.5]
+    end
   end
+
 
   describe "#add" do
     it "creates a new event list at a previously empty timepoint" do
@@ -115,12 +134,25 @@ describe MTK::Timeline do
       timeline.add 5, [note1, note2]
       timeline[5].should == [note1, note2]
     end
+
+    it "coerces the argument to floating point for consistent lookup behavior" do
+      timeline = Timeline.new
+      timeline.add(nil, note1)
+      timeline.add(1, note1)
+      timeline.add(Rational(3,2), note1)
+      timeline.times.should == [0.0, 1.0, 1.5]
+    end
   end
 
   describe "#delete" do
     it "removes an event list at the given time" do
       timeline.delete(1)
-      timeline.should == { 0 => [note1] }
+      timeline.should == { 0.0 => [note1] }
+    end
+
+    it "coerces the argument to floating point for consistent lookup behavior" do
+      timeline.delete(Rational(1))
+      timeline.should == { 0.0 => [note1] }
     end
   end
 
@@ -186,7 +218,7 @@ describe MTK::Timeline do
   describe "#map" do
     it "returns a new Timeline where each [time,event] pair is replaced by the result of block" do
       mapped = timeline.map{|time,events| [time+1, events.map{|e| e.transpose(time+2) }] }
-      mapped.should == { 1 => [note1.transpose(2)], 2 => [note1.transpose(3), note2.transpose(3)] }
+      mapped.should == { 1.0 => [note1.transpose(2)], 2.0 => [note1.transpose(3), note2.transpose(3)] }
     end
 
     it "does not modify this Timeline" do
@@ -198,14 +230,14 @@ describe MTK::Timeline do
   describe "#map!" do
     it "maps the Timeline in place" do
       timeline.map! {|time,events| [time+1, events.map{|e| e.transpose(time+2) }] }
-      timeline.should == { 1 => [note1.transpose(2)], 2 => [note1.transpose(3), note2.transpose(3)] }
+      timeline.should == { 1.0 => [note1.transpose(2)], 2.0 => [note1.transpose(3), note2.transpose(3)] }
     end
   end
 
   describe "#map_events" do
     it "maps the Timeline in place" do
       mapped = timeline.map_events {|event| event.transpose(1) }
-      mapped.should == { 0 => [note1.transpose(1)], 1=> [note1.transpose(1), note2.transpose(1)] }
+      mapped.should == { 0.0 => [note1.transpose(1)], 1.0 => [note1.transpose(1), note2.transpose(1)] }
     end
 
     it "does not modify this Timeline" do
@@ -216,8 +248,8 @@ describe MTK::Timeline do
 
   describe "#map_events!" do
     it "maps the Timeline in place" do
-      timeline.map_events! {|event| event.transpose(1) }
-      timeline.should == { 0 => [note1.transpose(1)], 1=> [note1.transpose(1), note2.transpose(1)] }
+      timeline.map_events! {|event| event.transpose(1.0) }
+      timeline.should == { 0.0 => [note1.transpose(1)], 1.0 => [note1.transpose(1), note2.transpose(1)] }
     end
   end
 
@@ -312,13 +344,13 @@ describe MTK::Timeline do
   describe "#flatten" do
     it "flattens nested timelines so that all nested subtimes are converted to absolute times in a single timeline" do
       timeline[10] = Timeline.from_hash({ 0 => note2, 1 => note1 })
-      timeline.flatten.should == timeline_hash.merge({ 10 => [note2], 11 => [note1] })
+      timeline.flatten.should == timeline_hash.merge({ 10.0 => [note2], 11.0 => [note1] })
     end
     
     it "handles nested timelines which have nested timelines inside of them" do
       nested = Timeline.from_hash({ 0 => note1 })
       timeline[10] = Timeline.from_hash({ 100 => nested })
-      timeline.flatten.should == timeline_hash.merge({ 110 => [note1] })
+      timeline.flatten.should == timeline_hash.merge({ 110.0 => [note1] })
     end
     
     it "returns a new Timeline" do
