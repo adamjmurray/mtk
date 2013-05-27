@@ -4,10 +4,10 @@ module MTK
     # Defines a constant for each {PitchClass} in the Western chromatic scale.
     module PitchClasses
 
-      # The values of all "psuedo constants" defined in this module
+      # The values of all constants defined in this module
       PITCH_CLASSES = MTK::PitchClass::PITCH_CLASSES
 
-      # The names of all "psuedo constants" defined in this module
+      # The names of all constants defined in this module
       PITCH_CLASS_NAMES = MTK::PitchClass::NAMES
 
       PITCH_CLASSES.each { |pc| const_set pc.name, pc }

@@ -18,7 +18,6 @@ module MTK
 
       # Read a MIDI file into an Array of {Timeline}s
       #
-      # @param filepath [String, #path] path of the file to be written
       # @return [Timeline]
       #
       def to_timelines
@@ -171,7 +170,7 @@ module MTK
       end
 
       def poly_pressure(channel, pitch, value)
-        ::Midi::PolyPressure(channel, pitch.to_i, value)
+        ::MIDI::PolyPressure(channel, pitch.to_i, value)
       end
 
       def channel_pressure(channel, value)

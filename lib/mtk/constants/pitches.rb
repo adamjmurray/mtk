@@ -11,10 +11,10 @@ module MTK
     #     the low pitches use '_' (underscore) in place of '-' (minus) (for example C_1).
     module Pitches
 
-      # The values of all "psuedo constants" defined in this module
+      # The values of all constants defined in this module
       PITCHES = []
 
-      # The names of all "psuedo constants" defined in this module
+      # The names of all constants defined in this module
       PITCH_NAMES = []
 
       128.times do |note_number|

@@ -72,14 +72,23 @@ module MTK
       # Indicate the "real" duration for rests.
       # @see rest?
       def length
-        len = @duration || 0
-        len = -len if len < 0
+        if @duration.is_a? ::MTK::Duration
+          len = @duration.length
+        else
+          len = @duration || 0
+          len = -len if len < 0
+        end
         len
       end
 
       # By convention, any events with negative durations are a rest
       def rest?
-        @duration < 0 # TODO: introduce duration.rest?
+        if @duration.is_a? ::MTK::Duration
+          @duration.rest?
+        else
+          @duration < 0 # TODO: introduce duration.rest?
+        end
+
       end
 
       # By convention, any events with 0 duration are instantaneous

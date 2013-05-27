@@ -173,7 +173,7 @@ describe MTK::Lang::Grammar do
 
 
     context 'timepoint rule' do
-      it 'should evalute a number followed by "=>" as the numberical value' do
+      it 'should evaluate a number followed by "=>" as the numerical value' do
         parse('42 => ', :timepoint).should == 42
       end
     end

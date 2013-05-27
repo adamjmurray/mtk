@@ -12,7 +12,7 @@ describe MTK::Events::Event do
 
 
   describe "#type" do
-    it "is the first agument passed to AbstractEvent.new" do
+    it "is the first argument passed to AbstractEvent.new" do
       event.type.should == type
     end
 

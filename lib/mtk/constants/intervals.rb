@@ -7,9 +7,9 @@ module MTK
     #   P#: perfect interval
     #   M#: major interval
     #   m#: minor interval
-    #   TT: tritone (AKA augmented 4th or diminshed 5th)
+    #   TT: tritone (AKA augmented 4th or diminished 5th)
     #
-    # These can be thought of like constants, but in order to succintly distinguish 'm2' (minor) from 'M2' (major),
+    # These can be thought of like constants, but in order to succinctly distinguish 'm2' (minor) from 'M2' (major),
     # it was necessary to use lower-case names for some of the values and therefore define them as "pseudo constant" methods.
     # The methods are available either through the module (MTK::Intervals::m2) or via mixin (include MTK::Intervals; m2)
     module Intervals
