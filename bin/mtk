@@ -128,6 +128,6 @@ end
 
 if options[:convert]
   mtk_syntax_file = options[:convert]
-  mtk_syntax = IO.read(input)
+  mtk_syntax = IO.read(mtk_syntax_file)
   convert(mtk_syntax)
 end
