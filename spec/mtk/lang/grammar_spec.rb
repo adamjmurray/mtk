@@ -487,6 +487,28 @@ describe MTK::Lang::Grammar do
           parse("-#{duration}", :duration).should == -1 * Duration(duration)
         end
       end
+
+      it "parses durations with integer multipliers" do
+        Durations::DURATION_NAMES.each_with_index do |duration, index|
+          multiplier = index+5
+          parse("#{multiplier}#{duration}", :duration).should == multiplier * Duration(duration)
+        end
+      end
+
+      it "parses durations with float multipliers" do
+        Durations::DURATION_NAMES.each_with_index do |duration, index|
+          multiplier = (index+1)*1.123
+          parse("#{multiplier}#{duration}", :duration).should == multiplier * Duration(duration)
+        end
+      end
+
+      it "parses durations with float multipliers" do
+        Durations::DURATION_NAMES.each_with_index do |duration, index|
+          multiplier = Rational(index+1, index+2)
+          parse("#{multiplier}#{duration}", :duration).should == multiplier * Duration(duration)
+        end
+      end
+
     end
 
 
@@ -504,13 +526,18 @@ describe MTK::Lang::Grammar do
 
 
     context 'number rule' do
+      it "parses floats as numbers" do
+        parse("1.23", :number).should == 1.23
+      end
+
+      it "parses rationals as numbers" do
+        parse("12/34", :number).should == Rational(12,34)
+      end
+
       it "parses ints as numbers" do
         parse("123", :number).should == 123
       end
 
-      it "parses floats as numbers" do
-        parse("1.23", :number).should == 1.23
-      end
     end
 
     context 'float rule' do
@@ -523,14 +550,20 @@ describe MTK::Lang::Grammar do
       end
     end
 
+    context 'rational rule' do
+      it 'parses rationals' do
+        parse('12/13', :rational).should == Rational(12,13)
+      end
+
+      it 'parses negative rationals' do
+        parse('-12/13', :rational).should == -Rational(12,13)
+      end
+    end
+
 
     context 'int rule' do
       it "parses ints" do
         parse("123", :int).should == 123
-      end
-
-      it "parses negative ints" do
-        parse("-123", :int).should == -123
       end
 
       it "parses negative ints" do

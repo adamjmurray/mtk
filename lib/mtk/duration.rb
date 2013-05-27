@@ -21,7 +21,7 @@ module MTK
 
     @flyweight = {}
 
-    # The number of beats, typically representation as a Rational
+    # The number of beats, typically represented as a Rational
     attr_reader :value
 
     def initialize( length_in_beats )
@@ -46,13 +46,19 @@ module MTK
     # Lookup a duration by name.
     # This method supports appending any combination of '.' and 't' for more fine-grained values.
     # each '.' multiplies by 3/2, and each 't' multiplies by 2/3.
-    # @example lookup value of 'q.' (eight note), which is 1.5 (1 * 1.5)
-    #         MTK::Durations['q.']
+    # You may use the prefix '-' to negate the duration (which turns it into a rest of the same length).
+    # You may also prefix (after the '-' if present) the base duration name with an integer, float, or rational number
+    # to multiply the base duration value. Rationals are in the form "#{{numerator_integer}}/#{{denominator_integer}}".
+    # @example lookup value of 'q.', which is 1.5 times a quarter note (1.5 beats):
+    #          MTK::Duration.from_s('q.')
+    # @example lookup the value of 3/4w, which three-quarters of a whole note (3 beats):
+    #          MTK::Duration.from_s('3/4w')
     def self.from_s(s)
-      if s =~ /^(-)?([whqisrx])((\.|t)*)$/i
-        name = $2.downcase
-        modifier = $3.downcase
-        modifier << $1 if $1
+      if s =~ /^(-)?(\d+([\.\/]\d+)?)?([whqisrx])((\.|t)*)$/i
+        name = $4.downcase
+        modifier = $5.downcase
+        modifier << $1 if $1 # negation
+        multiplier = $2
       else
         raise ArgumentError.new("Invalid Duration string '#{s}'")
       end
@@ -65,6 +71,19 @@ module MTK
           when 't' then value *= Rational(2,3)
         end
       end
+
+      if multiplier
+        case multiplier
+          when /\./
+            value *= multiplier.to_f
+          when /\//
+            numerator, denominator = multiplier.split('/')
+            value *= Rational(numerator.to_i, denominator.to_i)
+          else
+            value *= multiplier.to_i
+        end
+      end
+
       self[value]
     end
 
@@ -73,14 +92,15 @@ module MTK
     end
 
     # The magnitude (absolute value) of the duration.
-    # Indicate the "real" duration for rests.
-    # @see rest?
+    # This is the actual duration for rests.
+    # @see #rest?
     def length
       @value < 0 ? -@value : @value
     end
 
-    # By convention, any negative durations are a rests
-    # @see length
+    # Durations with negative values are rests.
+    # @see #length
+    # @see #-@
     def rest?
       @value < 0
     end
@@ -119,6 +139,8 @@ module MTK
       end
     end
 
+    # Add this duration to another.
+    # @return a new Duration that has a value of the sum of the arguments.
     def + duration
       if duration.is_a? MTK::Duration
         MTK::Duration[@value + duration.value]
@@ -127,6 +149,8 @@ module MTK
       end
     end
 
+    # Subtract another duration from this one.
+    # @return a new Duration that has a value of the difference of the arguments.
     def - duration
       if duration.is_a? MTK::Duration
         MTK::Duration[@value - duration.value]
@@ -135,6 +159,8 @@ module MTK
       end
     end
 
+    # Multiply this duration with another.
+    # @return a new Duration that has a value of the product of the arguments.
     def * duration
       if duration.is_a? MTK::Duration
         MTK::Duration[@value * duration.value]
@@ -143,6 +169,8 @@ module MTK
       end
     end
 
+    # Divide this duration with another.
+    # @return a new Duration that has a value of the division of the arguments.
     def / duration
       if duration.is_a? MTK::Duration
         MTK::Duration[to_f / duration.value]
@@ -151,10 +179,15 @@ module MTK
       end
     end
 
+    # Negate the duration value.
+    # Turns normal durations into rests and vice versa.
+    # @return a new Duration that has a negated value.
+    # @see #rest?
     def -@
       MTK::Duration[@value * -1]
     end
 
+    # Allow basic math operations with Numeric objects.
     def coerce(other)
       return MTK::Duration[other], self
     end

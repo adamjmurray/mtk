@@ -136,7 +136,7 @@ grammar MTK_Grammar
   end
 
   rule duration
-    ( rest:'-'? [whqisrx] ('.'|'t')* ) {
+    ( rest:'-'? multiplier:number? [whqisrx] ('.'|'t')* ) {
       ::MTK::Duration.from_s(to_s)
     }
   end
@@ -154,12 +154,18 @@ grammar MTK_Grammar
   end
 
   rule number
-    float | int
+    float | rational | int
   end
 
   rule float
     ( '-'? [0-9]+ '.' [0-9]+ ) {
       to_f
+    }
+  end
+
+  rule rational
+    ( numerator:int '/' denominator:[0-9]+ ) {
+      Rational(numerator.value, denominator.to_i)
     }
   end
 

@@ -83,10 +83,58 @@ describe MTK::Duration do
       end
     end
 
-    it "converts any of the duration names with a '-' in front to the negative of that duration" do
+    it "converts any of the duration names prefixed with a '-' to the negative value" do
       for name in Duration::NAMES
         Duration.from_s("-#{name}").value.should == -1 * Duration::VALUES_BY_NAME[name]
       end
+    end
+
+    it "converts any of the duration names suffixed a 't' to 2/3 of the value" do
+      for name in Duration::NAMES
+        Duration.from_s("#{name}t").value.should == Rational(2,3) * Duration::VALUES_BY_NAME[name]
+      end
+    end
+
+    it "converts any of the duration names suffixed a '.' to 3/2 of the value" do
+      for name in Duration::NAMES
+        Duration.from_s("#{name}.").value.should == Rational(3,2) * Duration::VALUES_BY_NAME[name]
+      end
+    end
+
+    it "converts suffix combinations of 't' and '.' (multiplying by 2/3 and 3/2 for each)" do
+      trip = Rational(2,3)
+      dot  = Rational(3,2)
+      for name in Duration::NAMES
+        for suffix,multiplier in {'tt' => trip*trip, 't.' => trip*dot, '..' => dot*dot, 't..t.' => trip*dot*dot*trip*dot}
+          Duration.from_s("#{name}#{suffix}").value.should == multiplier * Duration::VALUES_BY_NAME[name]
+        end
+      end
+    end
+
+    it "parses durations with integer multipliers" do
+      Durations::DURATION_NAMES.each_with_index do |duration, index|
+        multiplier = index+5
+        Duration.from_s("#{multiplier}#{duration}").should == multiplier * Duration(duration)
+      end
+    end
+
+    it "parses durations with float multipliers" do
+      Durations::DURATION_NAMES.each_with_index do |duration, index|
+        multiplier = (index+1)*1.123
+        Duration.from_s("#{multiplier}#{duration}").should == multiplier * Duration(duration)
+      end
+    end
+
+    it "parses durations with float multipliers" do
+      Durations::DURATION_NAMES.each_with_index do |duration, index|
+        multiplier = Rational(index+1, index+2)
+        Duration.from_s("#{multiplier}#{duration}").should == multiplier * Duration(duration)
+      end
+    end
+
+    it "parses combinations of all modifiers" do
+      Duration.from_s("-4/5qt.").value.should == -4.0/5 * 1 * 2/3.0 * 3/2.0
+      Duration.from_s("-11.234h.tt").value.should == 2 * 3/2.0 * 2/3.0 * 2/3.0 * -11.234
     end
   end
 
