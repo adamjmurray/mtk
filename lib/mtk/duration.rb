@@ -104,7 +104,11 @@ module MTK
     end
 
     def ==( other )
-      other.is_a? MTK::Duration and other.value == @value
+      if other.is_a? MTK::Duration
+        other.value == @value
+      else
+        other == @value
+      end
     end
 
     def <=> other

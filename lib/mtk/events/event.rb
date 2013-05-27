@@ -25,7 +25,13 @@ module MTK
       # @see rest?
       # @see instantaneous?
       # @see duration_in_pulses
-      attr_accessor :duration
+      attr_reader :duration
+
+      def duration= duration
+        @duration = duration
+        @duration = ::MTK::Duration[@duration || 0] unless @duration.is_a? ::MTK::Duration
+        @duration
+      end
 
       # The channel of the event, for multi-tracked events.
       attr_accessor :channel
@@ -36,6 +42,7 @@ module MTK
         @value = options[:value]
         @number = options[:number]
         @duration = options.fetch(:duration, 0)
+        @duration = ::MTK::Duration[@duration] unless @duration.is_a? ::MTK::Duration
         @channel = options[:channel]
       end
 
@@ -72,23 +79,12 @@ module MTK
       # Indicate the "real" duration for rests.
       # @see rest?
       def length
-        if @duration.is_a? ::MTK::Duration
-          len = @duration.length
-        else
-          len = @duration || 0
-          len = -len if len < 0
-        end
-        len
+        @duration.length
       end
 
       # By convention, any events with negative durations are a rest
       def rest?
-        if @duration.is_a? ::MTK::Duration
-          @duration.rest?
-        else
-          @duration < 0 # TODO: introduce duration.rest?
-        end
-
+        @duration.rest?
       end
 
       # By convention, any events with 0 duration are instantaneous
@@ -114,7 +110,7 @@ module MTK
       end
 
       def inspect
-        "Event(#@type" + (@number ? "[#@number]" : '') + ", #@value, #@duration)"
+        "Event(#@type" + (@number ? "[#@number]" : '') + ", #@value, #{@duration.to_f})"
       end
 
     end
