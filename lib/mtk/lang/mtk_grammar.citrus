@@ -102,7 +102,20 @@ grammar MTK_Grammar
   end
 
   rule chainable
-    ( foreach | choice | sequence | chord | intensity | duration | interval | pitch | pitch_class | variable )
+    ( foreach | choice | sequence | element )
+  end
+
+  rule element
+    (
+      elem:( chord | intensity | duration | interval | pitch | pitch_class | variable ) ('*' max_cycles:int)?
+    )
+    {
+      if max_cycles
+        ::MTK::Patterns::Sequence.new( [elem.value], max_cycles: max_cycles.value )
+      else
+        elem.value
+      end
+    }
   end
 
   rule chord

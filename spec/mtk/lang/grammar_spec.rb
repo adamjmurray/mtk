@@ -71,6 +71,11 @@ describe MTK::Lang::Grammar do
         sequencer = parse("(<i|s>:<c|d|e>)&8")
         sequencer.patterns.should == [ seq( chain( choice(i,s), choice(C,D,E) ), max_elements:8 ) ]
       end
+
+      it "parses the repetition of a basic note property" do
+        sequencer = parse("c*4")
+        sequencer.patterns.should == [ seq(C, max_cycles:4) ]
+      end
     end
 
 
@@ -375,6 +380,10 @@ describe MTK::Lang::Grammar do
       it "parses a chain of for each patterns" do
         parse('(C D)@(E F):(G A)@(B C)', :chain).should == chain( foreach(seq(C,D),seq(E,F)), foreach(seq(G,A),seq(B,C)) )
       end
+
+      it "parses chains of elements with max_cycles" do
+        parse('C*3:mp*4:q*5', :chain).should == chain( seq(C,max_cycles:3), seq(mp,max_cycles:4), seq(q,max_cycles:5))
+      end
     end
 
 
@@ -405,6 +414,14 @@ describe MTK::Lang::Grammar do
 
       it "parses intensities" do
         parse("ff", :chainable).should == ff
+      end
+    end
+
+    context 'element rule' do
+      it "parses the repetition of a basic note property as a sequence with a max_cycles option" do
+        sequence = parse("c*4", :element)
+        sequence.elements.should == [ C ]
+        sequence.max_cycles.should == 4
       end
     end
 
