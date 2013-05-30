@@ -1,114 +1,56 @@
-MTK
+MTK: a Music Tool Kit for Ruby
 ===
 
-[![Build Status](https://secure.travis-ci.org/adamjmurray/mtk.png)](http://travis-ci.org/adamjmurray/mtk)
+MTK is a Ruby library and custom [domain-specific language](https://en.wikipedia.org/wiki/Domain-specific_language) (DSL) for generating musical material.
 
-Music ToolKit for Ruby
-----------------------
-
-Classes for modeling music with a focus on simplicity. Support for reading/writing MIDI files and realtime MIDI.
+MTK is flexible: You may use the custom music-generating language without writing any Ruby code, or you may avoid the custom language
+ and only program in Ruby, or anywhere in between.
 
 
+Features
+--------
+* A minimalist syntax (DSL) for generating musical patterns
+* Read and write MIDI files
+* Record and output realtime MIDI signals
+* Sequence MIDI-compatible event streams
+* Manipulate musical objects like pitch, duration, and intensity
+* Generate deterministic and non-deterministic music via flexible patterns such as looping sequences and random choices
 
 Getting Started
 ---------------
 
-    gem install mtk
+# NOTE: This project is not ready yet, these instructions will not work! Please check back in a little while once I have mtk version 0.0.3 released to rubygems.org.
 
-or download the source from here and add mtk/lib to your $LOAD_PATH. Then...
+MTK works with Ruby 1.9, Ruby 2.0, and JRuby
 
-    require 'mtk'
+0. Install
 
-Some examples are available in the examples folder (more coming soon).
-The specs provide a lot of details of usage...
+        gem install mtk
 
+    or if using JRuby:
 
+        jgem install mtk
 
-Goals
------
+0. Learn the command-line interface:
 
-* Build musical generators to assist with composing music
-* Re-implement Cosy (http://compusition.com/web/software/cosy) using these models as the "backend"
+        mtk --help
 
+0. Learn the MTK syntax:
 
+        mtk --tutorial
 
-Status
-------
+0. Check out examples: ... TODO
 
-Alpha phase, API subject to change. Feedback welcome!
+0. Read the [MTK Ruby library documentation](http://rubydoc.info/github/adamjmurray/mtk/master/frames) (TODO: update this 0.0.3 gem version when ready)
 
-
-
-Requirements
-------------
-
-### Ruby Version
-
-Ruby 1.9+ or JRuby 1.6+
+TODO: explain how to hear output on different platforms (maybe in the mtk command line help?)
 
 
-### Dependencies
+About this project
+------------------
+This project is developed by [Adam Murray (github.com/adamjmurray)](http://github.com/adamjmurray).
 
-MTK's core features should not depend on anything outside of the Ruby standard library.
+It is a free and open source project licensed under [a permissive BSD-style license](https://github.com/adamjmurray/mtk/blob/master/LICENSE.txt).
+I simply ask for credit by including my copyright in derivative works.
 
-
-MTK's optional features typically require gems. Currently the following gems are required:
-
-* MIDI file I/O requires the __midilib__ gem
-
-* realtime MIDI I/O with (MRI/YARV) Ruby requires the __unimidi__ and __gamelan__ gems
-
-* realtime MIDI I/O with JRuby require the __jsound__ and __gamelan__ gems
-
-* The custom MTK syntax (work in progress) requires the __citrus__ gem
-
-
-Development requires the gems for optional features, plus the following:
-
-* rake
-* rspec (tests)
-* yard (docs)
-
-You shouldn't need to worry about the dependencies too much. A Gemfile is provided to sort this out for you:
-
-    gem install bundler
-    bundle install
-
-[rvm](https://rvm.beginrescueend.com/) is required for cross version testing (see Development Notes below)
-
-
-
-Documentation
--------------
-
-Gem: http://rdoc.info/gems/mtk/0.0.2/frames
-
-Latest for source: http://rubydoc.info/github/adamjmurray/mtk/master/frames
-
-
-
-Development Notes
------------------
-
-### Run Tests ###
-
-Test with current version of Ruby:
-
-     bundle exec rake test
-
-Test with all supported versions of Ruby (requires [rvm](https://rvm.beginrescueend.com/), YARV 1.9.3, and JRuby 1.6.7):
-
-     bundle exec rake test:all
-
-The test:all test must pass for a pull request to be accepted or for a release of the mtk gem.
-
-
-### Generate Docs ###
-
-     bundle exec rake doc
-     open doc/frames.html
-
-or, to automatically refresh the documentation as you work:
-
-     bundle exec yard server -r
-     open http://localhost:8808
+You can learn more about the development of this project at the [development notes page](https://github.com/adamjmurray/mtk/blob/master/DEVELOPMENT_NOTES.md).
