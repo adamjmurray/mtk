@@ -29,7 +29,7 @@ describe MTK::Patterns::Cycle do
     end
   end
 
-  describe "#max_cycles" do
+  describe "@max_cycles" do
     it "is the :max_cycles option the pattern was constructed with" do
       CYCLE.new([], :max_cycles => 1).max_cycles.should == 1
     end
@@ -49,13 +49,9 @@ describe MTK::Patterns::Cycle do
       end
       lambda { cycle.next }.should raise_error
     end
-
-    it "is maintained when applying Collection operations" do
-      CYCLE.new(elements, :max_cycles => 2).reverse.max_cycles.should == 2
-    end
   end
 
-  describe "#max_elements" do
+  describe "@max_elements" do
     it "causes a StopIteration exception after the number of elements have been emitted, with a higher max_cycles" do
       cycle = CYCLE.new(elements, max_cycles:2, max_elements:5)
       5.times { cycle.next }

@@ -64,6 +64,58 @@ describe MTK::Patterns::Sequence do
 
   end
 
+  describe "@min_elements" do
+    it "prevents a StopIteration error until min_elements have been emitted" do
+      pattern = SEQUENCE.new([1,2,3], cycle_count: 1, min_elements: 5)
+      5.times{ pattern.next }
+      lambda{ pattern.next }.should raise_error StopIteration
+    end
+  end
+
+
+  describe "@max_cycles" do
+    it "is the :max_cycles option the pattern was constructed with" do
+      SEQUENCE.new( [], max_cycles: 2 ).max_cycles.should == 2
+    end
+
+    it "is 1 by default" do
+      SEQUENCE.new( [] ).max_cycles.should == 1
+    end
+
+    it "loops indefinitely when it's nil" do
+      sequence = SEQUENCE.new( [1], max_cycles: nil )
+      lambda { 100.times { sequence.next } }.should_not raise_error
+    end
+
+    it "causes a StopIteration exception after the number of cycles has completed" do
+      sequence = SEQUENCE.new( elements, max_cycles: 2 )
+      2.times do
+        elements.length.times { sequence.next } # one full cycle
+      end
+      lambda { sequence.next }.should raise_error StopIteration
+    end
+  end
+
+
+  describe "#max_cycles_exceeded?" do
+    it "is false until max_elements have been emitted" do
+      sequence = SEQUENCE.new( elements, max_cycles: 2 )
+      2.times do
+        sequence.max_cycles_exceeded?.should be_false
+        elements.length.times { sequence.next } # one full cycle
+      end
+      # unlike with element_count and max_elements_exceeded?, cycle_count doesn't get bumped until
+      # you ask for the next element and a StopIteration is thrown
+      lambda { sequence.next }.should raise_error StopIteration
+      sequence.max_cycles_exceeded?.should be_true
+    end
+
+    it "is always false when max_cycles is not set" do
+      pattern = PATTERN.new([:anything], max_cycles: nil)
+      15.times { pattern.max_cycles_exceeded?.should be_false and pattern.next }
+    end
+  end
+
 
   it "has max_elements_exceeded once max_elements have been emitted (edge case, has same number of elements)" do
     sequence = SEQUENCE.new([1,2,3,4,5], :max_elements => 5)

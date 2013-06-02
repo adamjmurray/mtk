@@ -17,9 +17,15 @@ module MTK
 
       # The number of elements emitted since the last {#rewind}
       attr_reader :element_count
-      
+
+      # The minimum number of elements this Pattern will emit before a StopIteration exception
+      # This overrides any conflicting max_cycles setting.
+      attr_reader :min_elements
+
       # The maximum number of elements this Pattern will emit before a StopIteration exception
       # A nil value means infinite elements.
+      # @note {max_cycles} may cause this Pattern to end before max_elements are emitted.
+      #       If this is undesirable then use min_elements to override max_cycles.
       attr_reader :max_elements
 
       # The number of cycles emitted (1 cycle == all elements emitted) since the last {#rewind}
@@ -37,6 +43,7 @@ module MTK
         elements = elements.to_a if elements.is_a? Enumerable
         @elements = elements
         @options = options
+        @min_elements = options[:min_elements]
         @max_elements = options[:max_elements]
         @max_cycles = options.fetch(:max_cycles, 1)
         rewind
@@ -63,8 +70,7 @@ module MTK
 
         if @current.is_a? Pattern
           begin
-            subpattern_next = @current.next
-            return emit(subpattern_next)
+            return emit(@current.next)
           rescue StopIteration
             raise if max_elements_exceeded?
             # else fall through and continue with normal behavior
@@ -74,26 +80,29 @@ module MTK
         begin
           advance
         rescue StopIteration
-          @cycle_count += 1
-          if @max_cycles and @cycle_count >= @max_cycles
-            @current = nil
-            raise
-          else
-            rewind_or_cycle(true)
-            return self.next
-          end
-        end
-
-        if @current.kind_of? Pattern
-          @current.rewind # start over, in case we already enumerated this element and then did a rewind
+          rewind_or_cycle(true)
           return self.next
         end
 
-        emit @current
+        if @current.kind_of? Pattern
+          @current.rewind # ensure nested patterns start from the beginning each time they are encountered
+          return self.next
+        end
+
+        emit(@current)
+      end
+
+
+      def min_elements_unmet?
+        @min_elements and @element_count < @min_elements
       end
 
       def max_elements_exceeded?
         @max_elements and @element_count >= @max_elements
+      end
+
+      def max_cycles_exceeded?
+        @max_cycles and @cycle_count >= @max_cycles
       end
 
       def empty?
@@ -108,12 +117,17 @@ module MTK
       def rewind_or_cycle(is_cycling=false)
         @current = nil
         @index = -1
-        unless is_cycling
+
+        # and rewind child patterns
+        @elements.each{|element| element.rewind if element.is_a? Pattern }
+
+        if is_cycling
+          @cycle_count += 1
+          raise StopIteration if max_cycles_exceeded? and not min_elements_unmet?
+        else
           @element_count = 0
           @cycle_count = 0
         end
-        # and rewind child patterns
-        @elements.each{|element| element.rewind if element.is_a? Pattern }
       end
 
       # Update internal state (index, etc) and set @current to the next element.
@@ -126,7 +140,7 @@ module MTK
       private
 
       def emit element
-        raise StopIteration if max_elements_exceeded?
+        raise StopIteration if (max_elements_exceeded? or max_cycles_exceeded?) and not min_elements_unmet?
         @element_count += 1
         element
       end
