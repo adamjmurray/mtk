@@ -9,11 +9,9 @@ end
 require 'mtk'
 require 'mtk/midi/file'
 require 'mtk/helpers/output_selector'
-include MTK
 
-output = Helpers::OutputSelector.ensure_output output_name
+output = MTK::Helpers::OutputSelector.ensure_output(output_name)
 
-# for now this example just plays the first track (MTK's outputs need to be enhanced to support multiple timelines)
-timeline = MIDI_File(file).to_timelines.first
+timeline = MTK.MIDI_File(file).to_timelines
 
-output.play timeline
+output.play(timeline)

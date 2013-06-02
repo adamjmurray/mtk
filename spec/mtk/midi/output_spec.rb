@@ -70,6 +70,14 @@ describe MTK::MIDI::Output do
       subject.play [Note(C4,fff,1),Note(G4,fff,1)]
     end
 
+    it "handles a list of timelines" do
+      should_be_scheduled  0 => [:note_on,  60, 127, 0],
+                           1 => [:note_off, 60, 127, 0],
+                           2 => [:note_on,  67, 127, 0],
+                           3 => [:note_off, 67, 127, 0]
+      subject.play [MTK::Timeline.from_hash( 0 => Note(C4,fff,1) ), MTK::Timeline.from_hash( 2 => Note(G4,fff,1) )]
+    end
+
   end
 
 end

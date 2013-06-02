@@ -352,6 +352,11 @@ describe MTK::Timeline do
       timeline[10] = Timeline.from_hash({ 100 => nested })
       timeline.flatten.should == timeline_hash.merge({ 110.0 => [note1] })
     end
+
+    it "handles multiple nested timeslines at the same time point" do
+      timeline[10] = [Timeline.from_hash({ 0 => note2, 1 => note1 }), Timeline.from_hash({ 2 => note1, 3 => note2 })]
+      timeline.flatten.should == timeline_hash.merge({ 10.0 => [note2], 11.0 => [note1], 12.0 => [note1], 13.0 => [note2] })
+    end
     
     it "returns a new Timeline" do
       timeline.flatten.should_not equal(timeline)

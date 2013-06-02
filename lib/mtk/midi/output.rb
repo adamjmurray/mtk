@@ -46,6 +46,7 @@ module MTK
           when Enumerable,MTK::Events::Event then MTK::Timeline.from_hash(0 => anything)
           else raise "#{self.class}.play() doesn't understand #{anything} (#{anything.class})"
         end
+        timeline = timeline.flatten
 
         scheduler_rate = options.fetch :scheduler_rate, 500 # default: 500 Hz
         trailing_buffer = options.fetch :trailing_buffer, 2 # default: continue playing for 2 beats after the end of the timeline
