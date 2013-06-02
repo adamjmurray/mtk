@@ -68,12 +68,14 @@ grammar MTK_Grammar
 
   rule sequence
     (
-      left_paren chain (space chain)* right_paren ('*' max_cycles:int)? ('&' max_elements:int)?
+      left_paren chain (space chain)* right_paren ('*' max_cycles:int)? ('&' element_count:int)?
     )
     {
       chains = values_of(:chain)
       options = {}
-      options[:max_elements] = max_elements.value if max_elements
+      if element_count
+        options[:min_elements] = options[:max_elements] = element_count.value
+      end
       options[:max_cycles] = max_cycles.value if max_cycles
       if chains.length == 1 and options.empty?
         chains[0] # Don't form a chain unnecessarily

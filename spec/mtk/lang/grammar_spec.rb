@@ -69,7 +69,7 @@ describe MTK::Lang::Grammar do
 
       it "parses a chain of choices" do
         sequencer = parse("(<i|s>:<c|d|e>)&8")
-        sequencer.patterns.should == [ seq( chain( choice(i,s), choice(C,D,E) ), max_elements:8 ) ]
+        sequencer.patterns.should == [ seq( chain( choice(i,s), choice(C,D,E) ), min_elements:8, max_elements:8 ) ]
       end
 
       it "parses the repetition of a basic note property" do
@@ -205,7 +205,7 @@ describe MTK::Lang::Grammar do
 
       it "parses chains of sequencers with modifiers" do
         pattern = parse('(C D E F)*3:(q h w)&2', :pattern)
-        pattern.should == chain( cycle(C,D,E,F, max_cycles:3), seq(q,h,w, max_elements:2))
+        pattern.should == chain( cycle(C,D,E,F, max_cycles:3), seq(q,h,w, min_elements:2, max_elements:2))
         pattern.next
         pattern.next
         lambda{ pattern.next }.should raise_error StopIteration
@@ -213,7 +213,7 @@ describe MTK::Lang::Grammar do
 
       it "parses chains of sequencers with modifiers" do
         pattern = parse('(C D E F G):(q h w)&3', :pattern)
-        pattern.should == chain( seq(C,D,E,F,G), seq(q,h,w, max_elements:3))
+        pattern.should == chain( seq(C,D,E,F,G), seq(q,h,w, min_elements:3, max_elements:3))
         pattern.next
         pattern.next
         pattern.next
@@ -347,9 +347,9 @@ describe MTK::Lang::Grammar do
         sequence.should == Patterns.Cycle(C,D, max_cycles: 2)
       end
 
-      it "parses sequences with a max_elements modifier" do
+      it "parses sequences with a min+max_elements modifier" do
         sequence = parse("(C D E)&2", :sequence)
-        sequence.should == Patterns.Cycle(C,D,E, max_elements: 2)
+        sequence.should == Patterns.Cycle(C,D,E, min_elements: 2, max_elements: 2)
       end
     end
 
