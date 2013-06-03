@@ -8,10 +8,10 @@ describe MTK::Timeline do
   let(:timeline_hash) { { 0.0 => [note1], 1.0 => [note1, note2] } }
   let(:timeline) { Timeline.from_hash(timeline_raw_data) }
 
-  let(:unquantized_data) { { 0.0 => [note1], 0.7 => [note1], 1.24 => [note1], 1.25 => [note1] } }
+  let(:unquantized_data) { { 0.0 => [note1], 0.7 => [note1], 1.1 => [note2], 1.24 => [note1], 1.25 => [note1] } }
   let(:unquantized_timeline) { Timeline.from_hash(unquantized_data) }
   let(:quantization_interval) { 0.5 }
-  let(:quantized_data) { { 0.0 => [note1], 0.5 => [note1], 1.0 => [note1], 1.5 => [note1] } }
+  let(:quantized_data) { { 0.0 => [note1], 0.5 => [note1], 1.0 => [note2, note1], 1.5 => [note1] } }
 
   let(:shifted_data) { { 5.0 => [note1], 6.0 => [note1, note2] } }
   let(:reverse_shifted_data) { { -5.0 => [note1], -4.0 => [note1, note2] } }
@@ -219,6 +219,18 @@ describe MTK::Timeline do
     it "returns a new Timeline where each [time,event] pair is replaced by the result of block" do
       mapped = timeline.map{|time,events| [time+1, events.map{|e| e.transpose(time+2) }] }
       mapped.should == { 1.0 => [note1.transpose(2)], 2.0 => [note1.transpose(3), note2.transpose(3)] }
+    end
+
+    it "handle events from different times being mapped to the same time" do
+      timeline = MTK::Timeline.from_hash({ 0.0 => [note1], 1.0 => [note1], 2.0 => [note2] })
+      mapped = timeline.map do |time,events|
+        if events == [note1]
+          [1.0, events]
+        else
+          [2.0, events]
+        end
+      end
+      mapped.should == { 1.0 => [note1,note1], 2.0 => [note2] }
     end
 
     it "does not modify this Timeline" do

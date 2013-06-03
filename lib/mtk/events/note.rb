@@ -18,7 +18,7 @@ module MTK
       alias :velocity= :midi_value=
 
       def initialize(pitch, intensity, duration, channel=nil)
-        super :note, :number => pitch, :value => ::MTK::Intensity(intensity), :duration => ::MTK::Duration(duration), :channel => channel
+        super :note, number:pitch, value:intensity, duration:duration, channel:channel
       end
 
       def self.from_hash(hash)
@@ -26,11 +26,11 @@ module MTK
       end
 
       def to_hash
-        super.merge({ :pitch => pitch, :intensity => intensity })
+        super.merge({ pitch: @number, intensity: @value })
       end
 
       def self.from_midi(pitch, velocity, duration_in_beats, channel=0)
-        new ::MTK::Constants::Pitches::PITCHES[pitch.to_i], ::MTK::Intensity[velocity/127.0], ::MTK::Duration[duration_in_beats], channel
+        new( ::MTK::Constants::Pitches::PITCHES[pitch.to_i], ::MTK::Intensity[velocity/127.0], ::MTK::Duration[duration_in_beats], channel )
       end
 
       def midi_pitch
@@ -69,12 +69,14 @@ module MTK
     end
   end
 
-  # Construct a {Events::Note} from any supported type
+  # Construct a {Events::Note} from a list of any supported type for the arguments: pitch, intensity, duration, channel
   def Note(*anything)
     anything = anything.first if anything.size == 1
     case anything
-      when Array then ::MTK::Events::Note.new(*anything)
-      when ::MTK::Events::Note then anything
+      when MTK::Events::Note then anything
+      when Array
+        # TODO: make this more flexible
+        MTK::Events::Note.new( MTK.Pitch(anything[0]), MTK.Intensity(anything[1]), MTK.Duration(anything[2]), anything[3].to_i )
       else raise "Note doesn't understand #{anything.class}"
     end
   end
