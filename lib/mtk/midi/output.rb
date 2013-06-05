@@ -175,14 +175,15 @@ module MTK
 end
 
 
+unless $__RUNNING_RSPEC_TESTS__ # I can't get this working on Travis-CI, problem installing native dependencies
+  if RbConfig::CONFIG['host_os'] =~ /darwin/
+    # We're running on OS X
+    require 'mtk/midi/dls_synth_output'
+  end
 
-if RbConfig::CONFIG['host_os'] =~ /darwin/
-  # We're running on OS X
-  require 'mtk/midi/dls_synth_output'
-end
-
-if RUBY_PLATFORM == 'java'
-  require 'mtk/midi/jsound_output'
-else
-  require 'mtk/midi/unimidi_output'
+  if RUBY_PLATFORM == 'java'
+    require 'mtk/midi/jsound_output'
+  else
+    require 'mtk/midi/unimidi_output'
+  end
 end
