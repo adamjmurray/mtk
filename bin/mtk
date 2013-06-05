@@ -23,7 +23,7 @@ option_parser = OptionParser.new do |opts|
 
   opts.separator ''
 
-  opts.on('-i [syntax]', '--interpret [syntax]', 'convert the given MTK syntax String to MIDI',
+  opts.on('-e [syntax]', '--evaluate [syntax]', 'convert the given MTK syntax String to MIDI',
           'if no [syntax] is given, starts an interactive interpreter',
           'if a --file is given, write the MIDI to a file',
           'if an --output is given, play the MIDI',
@@ -62,23 +62,22 @@ puts option_parser and exit if ARGV.length == 0
 #p options
 begin
   option_parser.parse!
-rescue OptionParser::MissingArgument
+rescue OptionParser::MissingArgument, OptionParser::InvalidOption
   puts "Invalid command, #{$!}"
   puts "For command line help: #{$0} --help"
 end
 
 
 def setup_io
+  require 'mtk/midi/output'
+
+  # TODO: update inputs to automatically handle this like in MTK::MIDI::Output
   if RUBY_PLATFORM == 'java'
     require 'mtk/midi/jsound_input'
-    require 'mtk/midi/jsound_output'
     @inputs  = MTK::MIDI::JSoundInput
-    @outputs = MTK::MIDI::JSoundOutput
   else
     require 'mtk/midi/unimidi_input'
-    require 'mtk/midi/unimidi_output'
     @inputs  = MTK::MIDI::UniMIDIInput
-    @outputs = MTK::MIDI::UniMIDIOutput
   end
 end
 
@@ -87,32 +86,55 @@ def convert(mtk_syntax)
   require 'mtk/lang/grammar'
   sequencer = MTK::Lang::Grammar.parse(mtk_syntax)
   timeline = sequencer.to_timeline
-  puts timeline
-  # TODO: support an --output
+  output(timeline)
+end
+
+
+def output(timelines, print_header='Timeline')
+  timelines = [timelines] unless timelines.is_a? Array
+  if @output
+    @output.play timelines.first # TODO: support multiple timelines
+  else
+    puts print_header, timelines
+  end
+end
+
+
+
+if options[:list]
+  setup_io
+  input_names  = @inputs.devices
+  output_names = MTK::MIDI::Output.devices
+  puts
+  puts (['INPUTS:'] + input_names).join("\n * ")
+  puts
+  puts (['OUTPUTS:']+output_names).join("\n * ")
+  puts
+  puts 'When specifying --record INPUT or --output OUTPUT, the first substring match will be used.'
+  puts "For example: --output IAC will use 'Apple Inc. IAC Driver' if it's the first OUTPUT containing 'IAC'"
+  puts
+  exit
+end
+
+
+if options[:output]
+  setup_io
+  output_name = options[:output]
+  @output = MTK::MIDI::Output.find_by_name /#{output_name}/
+  if @output
+    puts "Using output '#{@output.name}'"
+  else
+    STDERR.puts "#{output_name} not found."
+    exit 2
+  end
 end
 
 
 if options[:play]
   filename = options[:play]
   require 'mtk/midi/file'
-  puts "Contents of MIDI file #{filename}:", MTK::MIDI_File(filename).to_timelines
-  # TODO: support an --output
-end
-
-
-if options[:list]
-  setup_io
-  input_names  = ['INPUTS:'] + @inputs.devices.map{|d| d.name unless d.name.strip.empty? }.compact
-  output_names = ['OUTPUTS:'] + @outputs.devices.map{|d| d.name unless d.name.strip.empty? }.compact
-  puts
-  puts input_names.join("\n * ")
-  puts
-  puts output_names.join("\n * ")
-  puts
-  puts 'When specifying --record INPUT or --output OUTPUT, the first substring match will be used.'
-  puts "For example: --output IAC will use 'Apple Inc. IAC Driver' if it's the first OUTPUT containing 'IAC'"
-  puts
-  exit
+  timelines = MTK::MIDI_File(filename).to_timelines
+  output(timelines, "Timeline for #{filename}")
 end
 
 
@@ -130,4 +152,17 @@ if options[:convert]
   mtk_syntax_file = options[:convert]
   mtk_syntax = IO.read(mtk_syntax_file)
   convert(mtk_syntax)
+end
+
+
+if options.has_key? :tutorial
+  puts "TODO: tutorial"
+end
+
+if options[:record]
+  puts "TODO: recording feature"
+end
+
+if options[:file]
+  puts "TODO: file output"
 end

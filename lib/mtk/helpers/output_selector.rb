@@ -1,8 +1,4 @@
-if RUBY_PLATFORM == 'java'
-  require 'mtk/midi/jsound_output'
-else
-  require 'mtk/midi/unimidi_output'
-end
+require 'mtk/midi/output'
 
 module MTK
   module Helpers
@@ -14,11 +10,7 @@ module MTK
       class << self
 
         def output
-          @output ||= if RUBY_PLATFORM == 'java'
-            MTK::MIDI::JSoundOutput
-          else
-            MTK::MIDI::UniMIDIOutput
-          end
+          MTK::MIDI::Output
         end
 
         # Look for an output by name using case insensitive matching,
@@ -46,8 +38,12 @@ module MTK
               number = STDIN.gets.to_i
               name = names_by_number[number]
               device = devices_by_name[name]
-              return output.new device if device
+              return output.open(device) if device
             rescue
+              if $DEBUG
+                puts $!
+                puts $!.backtrace
+              end
               # keep looping
             end
             print "Invalid input. Enter a number listed above: "

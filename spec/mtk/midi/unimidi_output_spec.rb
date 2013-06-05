@@ -1,5 +1,6 @@
 begin
 require 'spec_helper'
+require 'mtk/midi/output'
 require 'mtk/midi/unimidi_output'
 
 describe MTK::MIDI::UniMIDIOutput do

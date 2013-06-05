@@ -1,4 +1,4 @@
-require 'rubygems'
+require 'rbconfig'
 require 'gamelan'
 
 module MTK
@@ -10,34 +10,64 @@ module MTK
     #
     class Output
 
-      # The underlying output device implementation wrapped by this class.
-      # The device type depends on the platform.
-      attr_reader :device
-
       class << self
+
+        def inherited(subclass)
+          available_output_types << subclass
+        end
+
+        def available_output_types
+          @available_output_types ||= []
+        end
+
+        def output_types_by_device
+          @output_types_by_device ||= (
+            available_output_types.each_with_object( Hash.new ) do |output_type,hash|
+              output_type.devices.each{|device| hash[device] = output_type }
+            end
+          )
+        end
 
         # All available output devices.
         def devices
-          @devices_by_name ||= []
+          @devices ||= available_output_types.map{|output_type| output_type.devices }.flatten
         end
 
         # Maps output device names to the output device.
         def devices_by_name
-          @devices_by_name ||= {}
+          @devices_by_name ||= (
+            available_output_types.each_with_object( Hash.new ) do |output_type,hash|
+              hash.merge!( output_type.devices_by_name )
+            end
+          )
         end
 
-        def find_by_name name
+        def find_by_name(name)
           if name.is_a? Regexp
             matching_name = devices_by_name.keys.find{|device_name| device_name =~ name }
             device = devices_by_name[matching_name]
           else
             device = devices_by_name[name.to_s]
           end
-          new device if device
+          open(device) if device
         end
 
+        def open(device)
+          output_type = output_types_by_device[device]
+          output_type.new(device) if output_type
+        end
       end
 
+      ########################
+      public
+
+      # The underlying output device implementation wrapped by this class.
+      # The device type depends on the platform.
+      attr_reader :device
+
+      def name
+        @device.name
+      end
 
       def play(anything, options={})
         timeline = case anything
@@ -97,6 +127,11 @@ module MTK
       ########################
       protected
 
+      def initialize(output_device, options={})
+        @device = output_device
+        @device.open
+      end
+
       # these all return stubbed data for testing purposes
 
       # Send a note on event to the MIDI output
@@ -139,3 +174,15 @@ module MTK
   end
 end
 
+
+
+if RbConfig::CONFIG['host_os'] =~ /darwin/
+  # We're running on OS X
+  require 'mtk/midi/dls_synth_output'
+end
+
+if RUBY_PLATFORM == 'java'
+  require 'mtk/midi/jsound_output'
+else
+  require 'mtk/midi/unimidi_output'
+end

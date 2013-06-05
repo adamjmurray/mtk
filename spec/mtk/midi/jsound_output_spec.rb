@@ -1,5 +1,6 @@
 begin
 require 'spec_helper'
+require 'mtk/midi/output'
 require 'mtk/midi/jsound_output'
 
 describe MTK::MIDI::JSoundOutput do

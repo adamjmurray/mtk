@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'jsound'
 
 module MTK

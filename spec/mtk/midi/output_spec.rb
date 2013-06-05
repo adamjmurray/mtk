@@ -3,12 +3,20 @@ require 'mtk/midi/output'
 
 describe MTK::MIDI::Output do
 
-  let(:subject) { MTK::MIDI::Output.new }
+  let(:mock_device) do
+    mock_device = mock(:device)
+    mock_device.stub(:open)
+    mock_device
+  end
+
+  let(:subject) { MTK::MIDI::Output.new(mock_device) }
+
   let(:scheduler) do
     scheduler = mock(:scheduler)
     Gamelan::Scheduler.stub(:new).and_return scheduler
     scheduler
   end
+
 
   def timeline_with_param_event(event_type, event_options={})
     event = MTK::Events::Parameter.new event_type, event_options
@@ -27,7 +35,14 @@ describe MTK::MIDI::Output do
   end
 
 
-  describe "play" do
+  describe ".new" do
+    it "opens the given device" do
+      mock_device.should_receive(:open)
+      subject
+    end
+  end
+
+  describe "#play" do
 
     it "handles note events" do
       should_be_scheduled 0 => [:note_on,  60, 127, 0],

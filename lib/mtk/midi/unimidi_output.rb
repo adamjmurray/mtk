@@ -1,4 +1,3 @@
-require 'mtk/midi/output'
 require 'unimidi'
 
 module MTK
@@ -9,20 +8,14 @@ module MTK
     #       It depends on the 'unimidi' and 'gamelan' gems.
     class UniMIDIOutput < Output
 
-      attr_reader :device
-
-      def initialize(output_device, options={})
-        @device = output_device
-        @device.open
-      end
-
       def self.devices
-        @devices ||= ::UniMIDI::Output.all
+        @devices ||= ::UniMIDI::Output.all.reject{|d| d.name.strip.empty? }
       end
 
       def self.devices_by_name
         @devices_by_name ||= devices.each_with_object( Hash.new ){|device,hash| hash[device.name] = device }
       end
+
 
       ######################
       protected
@@ -66,3 +59,60 @@ module MTK
   end
 end
 
+
+#####################################################################
+# MONKEY PATCHING for https://github.com/arirusso/ffi-coremidi/pull/2
+# This can be removed once that pull request is released.
+
+module CoreMIDI
+  class Device
+    def initialize(id, device_pointer, options = {})
+      include_if_offline = options[:include_offline] || false
+      @id = id
+      @resource = device_pointer
+      @entities = []
+
+      prop = Map::CF.CFStringCreateWithCString( nil, "name", 0 )
+      begin
+        name_ptr = FFI::MemoryPointer.new(:pointer)
+        Map::MIDIObjectGetStringProperty(@resource, prop, name_ptr)
+        name = name_ptr.read_pointer
+        len = Map::CF.CFStringGetMaximumSizeForEncoding(Map::CF.CFStringGetLength(name), :kCFStringEncodingUTF8)
+        bytes = FFI::MemoryPointer.new(len + 1)
+        raise RuntimeError.new("CFStringGetCString") unless Map::CF.CFStringGetCString(name, bytes, len, :kCFStringEncodingUTF8)
+        @name = bytes.read_string
+      ensure
+        Map::CF.CFRelease(name) unless name.nil? || name.null?
+        Map::CF.CFRelease(prop) unless prop.null?
+      end
+      populate_entities(:include_offline => include_if_offline)
+    end
+
+  end
+
+  module Map
+    module CF
+
+      extend FFI::Library
+      ffi_lib '/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation'
+
+      typedef :pointer, :CFStringRef
+      typedef :long, :CFIndex
+      enum :CFStringEncoding, [ :kCFStringEncodingUTF8, 0x08000100 ]
+
+      # CFString* CFStringCreateWithCString( ?, CString, encoding)
+      attach_function :CFStringCreateWithCString, [:pointer, :string, :int], :pointer
+      # CString* CFStringGetCStringPtr(CFString*, encoding)
+      attach_function :CFStringGetCStringPtr, [:pointer, :int], :pointer
+
+      attach_function :CFStringGetLength, [ :CFStringRef ], :CFIndex
+
+      attach_function :CFStringGetMaximumSizeForEncoding, [ :CFIndex, :CFStringEncoding ], :long
+
+      attach_function :CFStringGetCString, [ :CFStringRef, :pointer, :CFIndex, :CFStringEncoding ], :bool
+
+      attach_function :CFRelease, [ :pointer ], :void
+
+    end
+  end
+end

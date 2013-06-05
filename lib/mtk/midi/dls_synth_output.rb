@@ -1,4 +1,3 @@
-require 'mtk/midi/output'
 require 'mtk/midi/dls_synth_device'
 
 module MTK
@@ -9,10 +8,14 @@ module MTK
     #       It depends on the 'gamelan' gem.
     class DLSSynthOutput < Output
 
-      def initialize()
-        @device = DLSSynthDevice.new
-        @device.open
+      def self.devices
+        @devices ||= [DLSSynthDevice.new]
       end
+
+      def self.devices_by_name
+        @devices_by_name ||= {devices.first.name => devices.first}
+      end
+
 
       ######################
       protected

@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'unimidi'
 require 'ostruct'
 
@@ -11,7 +10,7 @@ module MTK
     class UniMIDIInput
 
       def self.devices
-        @devices ||= ::UniMIDI::Input.all
+        @devices ||= ::UniMIDI::Input.all.reject{|d| d.name.strip.empty? }
       end
 
       def self.devices_by_name

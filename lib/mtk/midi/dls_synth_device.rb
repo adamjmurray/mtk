@@ -28,7 +28,7 @@ module MTK
           return bytes
         end
 
-        AUDIO_UNIT_MANUFACTURER_APPLE = to_bytes('appl') # to_bytes may not be strictly necessary but these are supposed to be 4 byte numbers
+        AUDIO_UNIT_MANUFACTURER_APPLE = to_bytes('appl')
         AUDIO_UNIT_TYPE_MUSIC_DEVICE = to_bytes('aumu')
         AUDIO_UNIT_SUBTYPE_DLS_SYNTH = to_bytes('dls ')
         AUDIO_UNIT_TYPE_OUTPUT = to_bytes('auou')
@@ -67,6 +67,13 @@ module MTK
         # void * MusicDeviceMIDIEvent(void *, int, int, int, int)
         attach_function :MusicDeviceMIDIEvent, [:pointer, :int, :int, :int, :int], :void
 
+      end
+
+
+      ##################################
+
+      def name
+        'Apple DLS Synthesizer'
       end
 
 

@@ -50,7 +50,7 @@ About this project
 ------------------
 This project is developed by [Adam Murray (github.com/adamjmurray)](http://github.com/adamjmurray).
 
-It is a free and open source project licensed under [a permissive BSD-style license](https://github.com/adamjmurray/mtk/blob/master/LICENSE.txt).
+It is a free and open source project licensed under [a permissive BSD-style license](https://raw.github.com/adamjmurray/mtk/master/LICENSE.txt).
 I simply ask for credit by including my copyright in derivative works.
 
 You can learn more about the development of this project at the [development notes page](https://github.com/adamjmurray/mtk/blob/master/DEVELOPMENT_NOTES.md).

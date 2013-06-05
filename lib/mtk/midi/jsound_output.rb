@@ -1,4 +1,3 @@
-require 'mtk/midi/output'
 require 'jsound'
 
 module MTK
@@ -9,8 +8,17 @@ module MTK
     #       It depends on the 'jsound' and 'gamelan' gems.
     class JSoundOutput < Output
 
-      def initialize(output, options={})
-        @device = output
+      def self.devices
+        @devices ||= ::JSound::Midi::OUTPUTS.devices
+      end
+
+      def self.devices_by_name
+        @devices_by_name ||= devices.each_with_object( Hash.new ){|device,hash| hash[device.description] = device }
+      end
+
+
+      def initialize(device, options={})
+        @device = device
 
         # and create an object for generating MIDI message to send to the output:
         @generator = ::JSound::Midi::Devices::Generator.new
@@ -24,12 +32,8 @@ module MTK
         @device.open
       end
 
-      def self.devices
-        @devices ||= ::JSound::Midi::OUTPUTS.devices
-      end
-
-      def self.devices_by_name
-        @devices_by_name ||= devices.each_with_object( Hash.new ){|device,hash| hash[device.description] = device }
+      def name
+        @device.description
       end
 
       ######################
