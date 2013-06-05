@@ -11,12 +11,7 @@ option_parser = OptionParser.new do |opts|
   opts.separator ''
   opts.separator 'Options:'
 
-  opts.on('-p FILE', '--play FILE', 'play or print the contents of a MIDI file',
-          'if no --output is specified, print the MIDI file') {|file| options[:play] = file }
-
-  opts.separator ''
-
-  opts.on('-c FILE', '--convert FILE', 'convert a file containing MTK syntax to MIDI',
+   opts.on('-c FILE', '--convert FILE', 'convert a file containing MTK syntax to MIDI',
           'if a --file is given, write the MIDI to a file',
           'if an --output is given, play the MIDI',
           'otherwise print the MIDI') {|file| options[:convert] = file }
@@ -35,12 +30,20 @@ option_parser = OptionParser.new do |opts|
 
   opts.separator ''
 
+  opts.on('-h', '--help', 'Show this message') { puts opts; exit }
+
+  opts.separator ''
+
+  opts.on('-i INPUT', '--input INPUT', 'set MIDI input for recording',
+          'if no --file is specified, prints the recorded MIDI') {|input| options[:input] = input }
+
+  opts.separator ''
+
   opts.on('-l', '--list', 'list available MIDI devices for --record and --output') { options[:list] = true }
 
   opts.separator ''
 
-  opts.on('-r INPUT', '--record INPUT', 'record MIDI input',
-          'if no --file is specified, prints the recorded MIDI') {|input| options[:record] = input }
+  opts.on('-m', '--monitor', 'monitor MIDI input while recording') { options[:monitor] = true }
 
   opts.separator ''
 
@@ -48,11 +51,14 @@ option_parser = OptionParser.new do |opts|
 
   opts.separator ''
 
-  opts.on('-t', '--tutorial', 'Start an interactive tutorial for the MTK syntax') { options[:tutorial] = true }
+  opts.on('-p FILE', '--play FILE', 'play or print the contents of a MIDI file',
+          'if no --output is specified, print the MIDI file') {|file| options[:play] = file }
 
   opts.separator ''
 
-  opts.on('-h', '--help', 'Show this message') { puts opts; exit }
+  opts.on('-t', '--tutorial', 'Start an interactive tutorial for the MTK syntax') { options[:tutorial] = true }
+
+  opts.separator ''
 
 end
 
@@ -60,25 +66,26 @@ end
 puts option_parser and exit if ARGV.length == 0
 #p ARGV
 #p options
+
+
+ERROR_INVALID_COMMAND  = 1
+ERROR_FILE_NOT_FOUND   = 2
+ERROR_OUTPUT_NOT_FOUND = 3
+ERROR_INPUT_NOT_FOUND  = 4
+
+
 begin
   option_parser.parse!
 rescue OptionParser::MissingArgument, OptionParser::InvalidOption
   puts "Invalid command, #{$!}"
   puts "For command line help: #{$0} --help"
+  exit ERROR_INVALID_COMMAND
 end
 
 
 def setup_io
+  require 'mtk/midi/input'
   require 'mtk/midi/output'
-
-  # TODO: update inputs to automatically handle this like in MTK::MIDI::Output
-  if RUBY_PLATFORM == 'java'
-    require 'mtk/midi/jsound_input'
-    @inputs  = MTK::MIDI::JSoundInput
-  else
-    require 'mtk/midi/unimidi_input'
-    @inputs  = MTK::MIDI::UniMIDIInput
-  end
 end
 
 
@@ -100,11 +107,29 @@ def output(timelines, print_header='Timeline')
 end
 
 
+def record
+  if @input
+    print "Press Enter to begin recording MIDI input..."
+    gets
+    puts "Recording input. Press control-C to stop."
+    @input.record monitor:@monitor
+    Signal.trap("INT") do # SIGINT = control-C
+      @input.stop
+      puts
+      puts "Recorded MIDI data"
+      puts @input.to_timeline
+      exit
+    end
+    loop{ sleep 0.001 }
+  end
+end
+
+
 
 if options[:list]
   setup_io
-  input_names  = @inputs.devices
-  output_names = MTK::MIDI::Output.devices
+  input_names  = MTK::MIDI::Input.devices_by_name.keys
+  output_names = MTK::MIDI::Output.devices_by_name.keys
   puts
   puts (['INPUTS:'] + input_names).join("\n * ")
   puts
@@ -116,6 +141,7 @@ if options[:list]
   exit
 end
 
+@monitor = true if options[:monitor]
 
 if options[:output]
   setup_io
@@ -124,8 +150,8 @@ if options[:output]
   if @output
     puts "Using output '#{@output.name}'"
   else
-    STDERR.puts "#{output_name} not found."
-    exit 2
+    STDERR.puts "Output '#{output_name}' not found."
+    exit ERROR_OUTPUT_NOT_FOUND
   end
 end
 
@@ -159,10 +185,21 @@ if options.has_key? :tutorial
   puts "TODO: tutorial"
 end
 
-if options[:record]
-  puts "TODO: recording feature"
+if options[:input]
+  setup_io
+  input_name = options[:input]
+  @input = MTK::MIDI::Input.find_by_name /#{input_name}/
+  if @input
+    puts "Using input '#{@input.name}'"
+  else
+    STDERR.puts "Input '#{input_name}' not found."
+    exit ERROR_INPUT_NOT_FOUND
+  end
 end
 
 if options[:file]
   puts "TODO: file output"
 end
+
+
+record if @input

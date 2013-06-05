@@ -6,7 +6,9 @@ module MTK
     # Provides realtime MIDI input for JRuby via the jsound gem.
     # @note This class is optional and only available if you require 'mtk/midi/jsound_input'.
     #       It depends on the 'jsound' gem.
-    class JSoundInput
+    class JSoundInput < Input
+
+      public_class_method :new
 
       def self.devices
         @devices ||= ::JSound::Midi::INPUTS.devices
@@ -19,18 +21,24 @@ module MTK
 
       attr_reader :device
 
-      def initialize(input_device)
-        if input_device.is_a? ::JSound::Midi::Device
-          @device = input_device
-        else
-          @device = ::JSound::Midi::INPUTS.send input_device
-        end
+      def initialize(input_device, options={})
+        @device = input_device
         @recorder = ::JSound::Midi::Devices::Recorder.new(false)
-        @device >> @recorder
         @device.open
       end
 
-      def record
+      def name
+        @device.description
+      end
+
+      def record(options={})
+        if options[:monitor]
+          @monitor = ::JSound::Midi::Devices::Monitor.new
+          @device >> [@monitor, @recorder]
+        else
+          @device >> @recorder
+        end
+
         @recorder.clear
         @recorder.start
       end

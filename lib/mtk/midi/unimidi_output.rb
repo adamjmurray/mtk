@@ -8,6 +8,8 @@ module MTK
     #       It depends on the 'unimidi' and 'gamelan' gems.
     class UniMIDIOutput < Output
 
+      public_class_method :new
+
       def self.devices
         @devices ||= ::UniMIDI::Output.all.reject{|d| d.name.strip.empty? }
       end

@@ -58,6 +58,15 @@ module MTK
         end
       end
 
+
+      def initialize(output_device, options={})
+        @device = output_device
+        @device.open
+        @options = options
+      end
+      private_class_method :new
+
+
       ########################
       public
 
@@ -126,11 +135,6 @@ module MTK
 
       ########################
       protected
-
-      def initialize(output_device, options={})
-        @device = output_device
-        @device.open
-      end
 
       # these all return stubbed data for testing purposes
 

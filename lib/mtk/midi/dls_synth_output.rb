@@ -8,6 +8,8 @@ module MTK
     #       It depends on the 'gamelan' gem.
     class DLSSynthOutput < Output
 
+      public_class_method :new
+
       def self.devices
         @devices ||= [DLSSynthDevice.new]
       end

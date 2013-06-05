@@ -8,6 +8,8 @@ module MTK
     #       It depends on the 'jsound' and 'gamelan' gems.
     class JSoundOutput < Output
 
+      public_class_method :new
+
       def self.devices
         @devices ||= ::JSound::Midi::OUTPUTS.devices
       end

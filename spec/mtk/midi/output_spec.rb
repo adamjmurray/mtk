@@ -3,13 +3,17 @@ require 'mtk/midi/output'
 
 describe MTK::MIDI::Output do
 
+  class MockOuput < MTK::MIDI::Output
+    public_class_method :new
+  end
+
+  let(:subject) { MockOuput.new(mock_device) }
+
   let(:mock_device) do
     mock_device = mock(:device)
     mock_device.stub(:open)
     mock_device
   end
-
-  let(:subject) { MTK::MIDI::Output.new(mock_device) }
 
   let(:scheduler) do
     scheduler = mock(:scheduler)
