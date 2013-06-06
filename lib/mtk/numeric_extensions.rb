@@ -4,6 +4,14 @@
 #
 class Numeric
 
+  def beats
+    MTK::Duration(self)
+  end
+  alias beat beats
+
+
+  # TODO: these should all return intervals
+
   def semitones
     self
   end

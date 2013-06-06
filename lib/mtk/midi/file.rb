@@ -96,7 +96,7 @@ module MTK
 
             case event.type
               when :note
-                pitch, velocity = event.pitch, event.velocity
+                pitch, velocity = event.midi_pitch, event.velocity
                 add_event track, time => note_on(channel, pitch, velocity)
                 duration = event.duration_in_pulses(clock_rate)
                 add_event track, time+duration => note_off(channel, pitch, velocity)

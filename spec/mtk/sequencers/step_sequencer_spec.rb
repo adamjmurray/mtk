@@ -38,17 +38,17 @@ describe MTK::Sequencers::StepSequencer do
     it "contains notes assembled from the given patterns" do
       timeline = step_sequencer.to_timeline
       timeline.should == Timeline.from_hash({
-        0 => Note(C4,0.3,1),
-        1 => Note(D4,0.7,1),
-        2 => Note(E4,1.0,2)
+        0 => Note(C4,1,0.3),
+        1 => Note(D4,1,0.7),
+        2 => Note(E4,2,1.0)
       })
     end
 
     it "treats negative durations as rests" do
       timeline = STEP_SEQUENCER.new( [pitches, intensities, Patterns.DurationSequence(1, -1, 2)] ).to_timeline
       timeline.should == Timeline.from_hash({
-        0 => Note(C4,0.3,1),
-        2 => Note(E4,1.0,2)
+        0 => Note(C4,1,0.3),
+        2 => Note(E4,2,1.0)
       })
     end
   end
@@ -58,9 +58,9 @@ describe MTK::Sequencers::StepSequencer do
       step_sequencer.step_size = 2
       timeline = step_sequencer.to_timeline
       timeline.should == Timeline.from_hash({
-        0 => Note(C4,0.3,1),
-        2 => Note(D4,0.7,1),
-        4 => Note(E4,1.0,2)
+        0 => Note(C4,1,0.3),
+        2 => Note(D4,1,0.7),
+        4 => Note(E4,2,1.0)
       })
     end
   end
@@ -70,8 +70,8 @@ describe MTK::Sequencers::StepSequencer do
       step_sequencer.max_steps = 2
       timeline = step_sequencer.to_timeline
       timeline.should == Timeline.from_hash({
-        0 => Note(C4,0.3,1),
-        1 => Note(D4,0.7,1)
+        0 => Note(C4,1,0.3),
+        1 => Note(D4,1,0.7)
       })
     end
   end

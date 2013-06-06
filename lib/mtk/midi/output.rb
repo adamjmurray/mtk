@@ -102,7 +102,9 @@ module MTK
 
             case event.type
               when :note
-                pitch, velocity, duration = event.to_midi
+                pitch = event.midi_pitch
+                velocity = event.velocity
+                duration = event.duration.to_f
                 @scheduler.at(time) { note_on(pitch,velocity,channel) }
                 @scheduler.at(time + duration) { note_off(pitch,velocity,channel) }
 

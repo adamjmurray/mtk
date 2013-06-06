@@ -23,7 +23,7 @@ describe MTK::Sequencers::EventBuilder do
     end
     it "allows default duration to be specified" do
       event_builder = EVENT_BUILDER.new [Patterns.IntervalCycle(0)], :default_duration => 5.25
-      event_builder.next.should == [Note(pitch, intensity, 5.25)]
+      event_builder.next.should == [Note(pitch, 5.25, intensity)]
     end
   end
 

@@ -3,8 +3,8 @@ MTK
 
 [![Build Status](https://secure.travis-ci.org/adamjmurray/mtk.png)](http://travis-ci.org/adamjmurray/mtk)
 
-Music ToolKit for Ruby
-----------------------
+Music Tool Kit for Ruby
+-----------------------
 
 Classes for modeling music with a focus on simplicity. Support for reading/writing MIDI files and realtime MIDI.
 

@@ -11,9 +11,9 @@ module MTK
       def initialize(patterns, options={})
         @patterns = patterns
         @options = options
-        @default_pitch = options.fetch(:default_pitch, DEFAULT_PITCH)
-        @default_duration = options.fetch(:default_duration, DEFAULT_DURATION)
-        @default_intensity = options.fetch(:default_intensity, DEFAULT_INTENSITY)
+        @default_pitch     = if options.has_key? :default_pitch     then MTK::Pitch(    options[:default_pitch])     else DEFAULT_PITCH     end
+        @default_duration  = if options.has_key? :default_duration  then MTK::Duration( options[:default_duration])  else DEFAULT_DURATION  end
+        @default_intensity = if options.has_key? :default_intensity then MTK::Intensity(options[:default_intensity]) else DEFAULT_INTENSITY end
         @max_interval = options.fetch(:max_interval, 127)
         rewind
       end
@@ -61,21 +61,25 @@ module MTK
         end
 
         pitches     << @previous_pitch if pitches.empty?
-        intensities << @previous_intensity if intensities.empty?
         duration   ||= @previous_duration
+
+        if intensities.empty?
+          intensity = @previous_intensity
+        else
+          intensity = MTK::Intensity[intensities.map{|i| i.to_f }.inject(:+)/intensities.length] # average the intensities
+        end
 
         # Not using this yet, maybe later...
         # return nil if duration==:skip or intensities.include? :skip or pitches.include? :skip
 
         constrain_pitch(pitches)
-        intensity = intensities.map{|i| i.to_f }.inject(:+)/intensities.length # average the intensities
 
         @previous_pitch = pitches.last   # Consider doing something different, maybe averaging?
         @previous_pitches = pitches.length > 1 ? pitches : nil
         @previous_intensity = intensity
         @previous_duration = duration
 
-        pitches.map{|pitch| ::MTK.Note(pitch,intensity,duration) }
+        pitches.map{|pitch| MTK::Events::Note.new(pitch,duration,intensity) }
       end
 
       # Reset the EventBuilder to its initial state

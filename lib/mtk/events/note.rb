@@ -5,6 +5,9 @@ module MTK
     # A musical {Event} defined by a {Pitch}, intensity, and duration
     class Note < Event
 
+      DEFAULT_DURATION  = MTK::Duration[1]
+      DEFAULT_INTENSITY = MTK::Intensity[0.75]
+
       # Frequency of the note as a {Pitch}.
       alias :pitch :number
       alias :pitch= :number=
@@ -17,12 +20,12 @@ module MTK
       alias :velocity :midi_value
       alias :velocity= :midi_value=
 
-      def initialize(pitch, intensity, duration, channel=nil)
-        super :note, number:pitch, value:intensity, duration:duration, channel:channel
+      def initialize(pitch, duration=DEFAULT_DURATION, intensity=DEFAULT_INTENSITY, channel=nil)
+        super :note, number:pitch, duration:duration, value:intensity, channel:channel
       end
 
       def self.from_hash(hash)
-        new(hash[:pitch] || hash[:number], hash[:intensity] || hash[:value], hash[:duration], hash[:channel])
+        new(hash[:pitch]||hash[:number], hash[:duration], hash[:intensity]||hash[:value], hash[:channel])
       end
 
       def to_hash
@@ -30,15 +33,11 @@ module MTK
       end
 
       def self.from_midi(pitch, velocity, duration_in_beats, channel=0)
-        new( ::MTK::Constants::Pitches::PITCHES[pitch.to_i], ::MTK::Intensity[velocity/127.0], ::MTK::Duration[duration_in_beats], channel )
+        new( MTK::Constants::Pitches::PITCHES[pitch.to_i], MTK::Duration[duration_in_beats], MTK::Intensity[velocity/127.0], channel )
       end
 
       def midi_pitch
         pitch.to_i
-      end
-
-      def to_midi
-        [midi_pitch, velocity, duration.to_f]
       end
 
       def transpose(interval)
@@ -59,11 +58,11 @@ module MTK
       end
 
       def to_s
-        "Note(#@number, #{sprintf '%.2f',@value}, #{sprintf '%.2f',@duration})"
+        "Note(#@number, #{sprintf '%.2f',@duration}, #{sprintf '%.2f',@value})"
       end
 
       def inspect
-        "Note(#{@number}, #{@value}, #{@duration})"
+        "MTK::Note<#{@number.inspect}, #{@duration.inspect}, #{@value.inspect}>"
       end
 
     end
@@ -74,10 +73,38 @@ module MTK
     anything = anything.first if anything.size == 1
     case anything
       when MTK::Events::Note then anything
+
+      when MTK::Pitch then MTK::Events::Note.new(anything)
+
       when Array
-        # TODO: make this more flexible
-        MTK::Events::Note.new( MTK.Pitch(anything[0]), MTK.Intensity(anything[1]), MTK.Duration(anything[2]), anything[3].to_i )
-      else raise "Note doesn't understand #{anything.class}"
+        pitch = nil
+        duration = nil
+        intensity = nil
+        channel = nil
+        unknowns = []
+        anything.each do |item|
+          case item
+            when MTK::Pitch then pitch = item
+            when MTK::Duration then duration = item
+            when MTK::Intensity then intensity = item
+            else unknowns << item
+          end
+        end
+
+        pitch = MTK::Pitch(unknowns.shift) if pitch.nil? and not unknowns.empty?
+        raise "MTK::Note() couldn't find a pitch in arguments: #{anything.inspect}" if pitch.nil?
+
+        duration  = MTK::Duration(unknowns.shift)  if duration.nil?  and not unknowns.empty?
+        intensity = MTK::Intensity(unknowns.shift) if intensity.nil? and not unknowns.empty?
+        channel = unknowns.shift.to_i if channel.nil? and not unknowns.empty?
+
+        duration  ||= MTK::Events::Note::DEFAULT_DURATION
+        intensity ||= MTK::Events::Note::DEFAULT_INTENSITY
+
+        MTK::Events::Note.new( pitch, duration, intensity, channel )
+
+      else
+        raise "MTK::Note() doesn't understand #{anything.class}"
     end
   end
   module_function :Note
