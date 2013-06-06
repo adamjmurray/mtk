@@ -79,7 +79,7 @@ module MTK
             when :note_off
               pitch = message.pitch
               if note_ons.has_key? pitch
-                note_on, start_time = note_ons[pitch]
+                note_on, start_time = note_ons.delete(pitch)
                 duration = time - start_time
                 note = MTK::Events::Note.from_midi pitch, note_on.velocity, duration
                 timeline.add time,note
