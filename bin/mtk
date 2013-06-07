@@ -90,8 +90,7 @@ end
 
 
 def convert(mtk_syntax)
-  require 'mtk/lang/grammar'
-  sequencer = MTK::Lang::Grammar.parse(mtk_syntax)
+  sequencer = MTK::Lang::Parser.parse(mtk_syntax)
   timeline = sequencer.to_timeline
   output(timeline)
 end

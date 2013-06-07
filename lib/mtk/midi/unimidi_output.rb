@@ -66,6 +66,7 @@ end
 # MONKEY PATCHING for https://github.com/arirusso/ffi-coremidi/pull/2
 # This can be removed once that pull request is released.
 
+# @private
 module CoreMIDI
   class Device
     def initialize(id, device_pointer, options = {})

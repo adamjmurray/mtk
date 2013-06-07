@@ -1,7 +1,6 @@
 require 'spec_helper'
-require 'mtk/lang/grammar'
 
-describe MTK::Lang::Grammar do
+describe MTK::Lang::Parser do
 
   def chain *args
     Patterns.Chain *args
@@ -29,7 +28,7 @@ describe MTK::Lang::Grammar do
 
 
   def parse(*args)
-    MTK::Lang::Grammar.parse(*args)
+    MTK::Lang::Parser.parse(*args)
   end
 
 

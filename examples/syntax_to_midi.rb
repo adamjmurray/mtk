@@ -4,8 +4,6 @@
 
 require 'mtk'
 require 'mtk/midi/file'
-require 'mtk/lang/grammar'
-
 
 input = ARGV[0]
 if input.nil?
@@ -23,7 +21,7 @@ output = ARGV[1] || "MTK-#{File.basename(__FILE__,'.rb')}.mid"
 
 
 syntax = IO.read(input)
-sequencer = MTK::Lang::Grammar.parse(syntax)
+sequencer = MTK::Lang::Parser.parse(syntax)
 timeline = sequencer.to_timeline
 
 MTK::MIDI_File(output).write timeline

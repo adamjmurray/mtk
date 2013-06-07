@@ -1,5 +1,6 @@
 require 'citrus'
 
+# @private
 class Citrus::Match
   def values_of(token_name)
     captures[token_name].map{|token| token.value }
@@ -12,7 +13,7 @@ module MTK
   module Lang
 
     # Parser for the {file:lib/mtk/lang/mtk_grammar.citrus MTK grammar}
-    class Grammar
+    class Parser
 
       def self.parse(syntax, root=:root, dump=false)
         syntax = syntax.to_s.strip

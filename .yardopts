@@ -1,7 +1,8 @@
 --readme README.md
---title 'MTK (Music ToolKit for Ruby)'
+--title 'MTK (Music Tool Kit for Ruby)'
 --charset utf-8
 --protected
+--no-private
 lib/**/*.rb
 - *.md
 - examples/*
