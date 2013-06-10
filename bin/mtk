@@ -5,28 +5,31 @@ require 'optparse'
 
 options = {}
 
+
+#######################################################################
+
 option_parser = OptionParser.new do |opts|
 
   opts.banner = "Usage: #{$0} [options]"
   opts.separator ''
   opts.separator 'Options:'
 
-   opts.on('-c FILE', '--convert FILE', 'convert a file containing MTK syntax to MIDI',
+   opts.on('-c FILE', '--convert FILE', 'Convert a file containing MTK syntax to MIDI',
           'if a --file is given, write the MIDI to a file',
           'if an --output is given, play the MIDI',
           'otherwise print the MIDI') {|file| options[:convert] = file }
 
   opts.separator ''
 
-  opts.on('-e [syntax]', '--evaluate [syntax]', 'convert the given MTK syntax String to MIDI',
-          'if no [syntax] is given, starts an interactive interpreter',
+  opts.on('-e [syntax]', '--eval [syntax]', 'Convert the given MTK syntax String to MIDI',
+          'or start an interactive interpreter when [syntax] is omitted',
           'if a --file is given, write the MIDI to a file',
           'if an --output is given, play the MIDI',
-          'otherwise print the MIDI') {|syntax| options[:interpret] = syntax }
+          'otherwise print the MIDI') {|syntax| options[:eval] = syntax }
 
   opts.separator ''
 
-  opts.on('-f FILE', '--file FILE', 'write the output of --convert or --record to a file') {|file| options[:file] = file }
+  opts.on('-f FILE', '--file FILE', 'Write the output of --convert, --eval, or --input to a file') {|file| options[:file] = file }
 
   opts.separator ''
 
@@ -34,45 +37,51 @@ option_parser = OptionParser.new do |opts|
 
   opts.separator ''
 
-  opts.on('-i INPUT', '--input INPUT', 'set MIDI input for recording',
+  opts.on('-i INPUT', '--input INPUT', 'Set MIDI input for recording',
           'if no --file is specified, prints the recorded MIDI') {|input| options[:input] = input }
 
   opts.separator ''
 
-  opts.on('-l', '--list', 'list available MIDI devices for --record and --output') { options[:list] = true }
+  opts.on('-l', '--list', 'List available MIDI devices for --input and --output') { options[:list] = true }
 
   opts.separator ''
 
-  opts.on('-m', '--monitor', 'monitor MIDI input while recording') { options[:monitor] = true }
+  opts.on('-m', '--monitor', 'Monitor MIDI input while recording') { options[:monitor] = true }
 
   opts.separator ''
 
-  opts.on('-o OUTPUT', '--output OUTPUT', 'set MIDI output for playing') {|output| options[:output] = output }
+  opts.on('-o OUTPUT', '--output OUTPUT', 'Set MIDI output for playing') {|output| options[:output] = output }
 
   opts.separator ''
 
-  opts.on('-p FILE', '--play FILE', 'play or print the contents of a MIDI file',
+  opts.on('-p FILE', '--play FILE', 'Play or print the contents of a MIDI file',
           'if no --output is specified, print the MIDI file') {|file| options[:play] = file }
 
   opts.separator ''
 
-  opts.on('-t', '--tutorial', 'Start an interactive tutorial for the MTK syntax') { options[:tutorial] = true }
-
-  opts.separator ''
+  #opts.on('-t', '--tutorial', 'Start an interactive tutorial for the MTK syntax') { options[:tutorial] = true }
+  #
+  #opts.separator ''
 
 end
 
 
+#######################################################################
+
 puts option_parser and exit if ARGV.length == 0
 #p ARGV
 #p options
-
 
 ERROR_INVALID_COMMAND  = 1
 ERROR_FILE_NOT_FOUND   = 2
 ERROR_OUTPUT_NOT_FOUND = 3
 ERROR_INPUT_NOT_FOUND  = 4
 
+# Immediately trying to play output while Ruby is still "warming up" can cause timing issues with
+# the first couple notes. So we play this "empty" Timeline containing a rest to address that issue.
+WARMUP = MTK::Timeline.from_hash( {0 => MTK::Events::Note.new(MTK::Pitch(60), MTK::Duration(-1))} )
+
+#######################################################################
 
 begin
   option_parser.parse!
@@ -99,9 +108,14 @@ end
 def output(timelines, print_header='Timeline')
   timelines = [timelines] unless timelines.is_a? Array
   if @output
+    @output.play WARMUP
     @output.play timelines.first # TODO: support multiple timelines
+  elsif @file
+    require 'mtk/midi/file'
+    MTK::MIDI_File(@file).write timelines
   else
     puts print_header, timelines
+    puts
   end
 end
 
@@ -114,16 +128,15 @@ def record
     @input.record monitor:@monitor
     Signal.trap("INT") do # SIGINT = control-C
       @input.stop
-      puts
-      puts "Recorded MIDI data"
-      puts @input.to_timeline
+      output @input.to_timeline, "\nRecorded MIDI data"
       exit
     end
-    loop{ sleep 0.001 }
+    loop{ sleep 0.01 }
   end
 end
 
 
+#######################################################################
 
 if options[:list]
   setup_io
@@ -134,55 +147,13 @@ if options[:list]
   puts
   puts (['OUTPUTS:']+output_names).join("\n * ")
   puts
-  puts 'When specifying --record INPUT or --output OUTPUT, the first substring match will be used.'
+  puts 'When specifying --input INPUT or --output OUTPUT, the first substring match will be used.'
   puts "For example: --output IAC will use 'Apple Inc. IAC Driver' if it's the first OUTPUT containing 'IAC'"
   puts
   exit
 end
 
 @monitor = true if options[:monitor]
-
-if options[:output]
-  setup_io
-  output_name = options[:output]
-  @output = MTK::MIDI::Output.find_by_name /#{output_name}/
-  if @output
-    puts "Using output '#{@output.name}'"
-  else
-    STDERR.puts "Output '#{output_name}' not found."
-    exit ERROR_OUTPUT_NOT_FOUND
-  end
-end
-
-
-if options[:play]
-  filename = options[:play]
-  require 'mtk/midi/file'
-  timelines = MTK::MIDI_File(filename).to_timelines
-  output(timelines, "Timeline for #{filename}")
-end
-
-
-if options.has_key? :interpret
-  mtk_syntax = options[:interpret]
-  if mtk_syntax.nil?
-    puts "TODO: interactive interpreter"
-  else
-    convert(mtk_syntax)
-  end
-end
-
-
-if options[:convert]
-  mtk_syntax_file = options[:convert]
-  mtk_syntax = IO.read(mtk_syntax_file)
-  convert(mtk_syntax)
-end
-
-
-if options.has_key? :tutorial
-  puts "TODO: tutorial"
-end
 
 if options[:input]
   setup_io
@@ -196,9 +167,49 @@ if options[:input]
   end
 end
 
-if options[:file]
-  puts "TODO: file output"
+if options[:output]
+  setup_io
+  output_name = options[:output]
+  @output = MTK::MIDI::Output.find_by_name /#{output_name}/
+  if @output
+    puts "Using output '#{@output.name}'"
+  else
+    STDERR.puts "Output '#{output_name}' not found."
+    exit ERROR_OUTPUT_NOT_FOUND
+  end
 end
 
+file = options[:file]
+@file = file if file
+
+if options[:play]
+  filename = options[:play]
+  require 'mtk/midi/file'
+  timelines = MTK::MIDI_File(filename).to_timelines
+  output(timelines, "Timeline for #{filename}")
+end
+
+if options.has_key? :eval
+  mtk_syntax = options[:eval]
+  if mtk_syntax.nil?
+    puts "Starting the interactive interpreter."
+    loop do
+      puts "Enter MTK syntax. Press Ctrl+C to exit."
+      convert(gets)
+    end
+  else
+    convert(mtk_syntax)
+  end
+end
+
+if options[:convert]
+  mtk_syntax_file = options[:convert]
+  mtk_syntax = IO.read(mtk_syntax_file)
+  convert(mtk_syntax)
+end
+
+#if options.has_key? :tutorial
+#  puts "TODO: tutorial"
+#end
 
 record if @input
