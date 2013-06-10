@@ -116,11 +116,13 @@ module MTK
     end
 
     def to_s
-      @value.to_s
+      value = @value.to_s
+      value = sprintf '%.2f', @value if value.length > 6 # threshold is 6 for no particular reason...
+      "#{value} #{@value.abs > 1 || @value==0 ? 'beats' : 'beat'}"
     end
 
     def inspect
-      "#{self.class}<#{to_s} #{@value > 1 ? 'beats' : 'beat'}>"
+      "#<#{self.class}:#{object_id} @value=#{@value}>"
     end
 
     def ==( other )

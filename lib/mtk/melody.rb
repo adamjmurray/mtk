@@ -78,7 +78,7 @@ module MTK
     end
 
     def to_s
-      @pitches.inspect
+      '[' + @pitches.map{|pitch| pitch.to_s}.join(', ') + ']'
     end
 
   end

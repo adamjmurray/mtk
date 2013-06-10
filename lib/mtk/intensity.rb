@@ -78,12 +78,16 @@ module MTK
       (to_f * 127).round
     end
 
+    def to_percent
+      (@value * 100).round
+    end
+
     def to_s
-      @value.to_s
+      "#{to_percent}% intensity"
     end
 
     def inspect
-      "#{self.class}<#{to_s}>"
+      "#<#{self.class}:#{object_id} @value=#{@value}>"
     end
 
     def ==( other )

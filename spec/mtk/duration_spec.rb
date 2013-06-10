@@ -194,9 +194,46 @@ describe MTK::Duration do
   end
 
   describe '#to_s' do
-    it "should be value.to_s" do
-      for value in [1, Rational(1,2), 0.25]
-        Duration.new(value).to_s.should == value.to_s
+    it "is value.to_s suffixed with 'beats' for beat values > 1" do
+      for value in [2, Rational(3,2), 3.25]
+        Duration.new(value).to_s.should == value.to_s + ' beats'
+      end
+    end
+
+    it "is value.to_s suffixed with 'beats' for positive, non-zero beat values < 1" do
+      for value in [Rational(1,2), 0.25]
+        Duration.new(value).to_s.should == value.to_s + ' beat'
+      end
+    end
+
+    it "is value.to_s suffixed with 'beats' for a value of 0" do
+      for value in [0, 0.0, Rational(0,2)]
+        Duration.new(value).to_s.should == value.to_s + ' beats'
+      end
+    end
+
+    it "is value.to_s suffixed with 'beats' for beat values < -1" do
+      for value in [-2, -Rational(3,2), -3.25]
+        Duration.new(value).to_s.should == value.to_s + ' beats'
+      end
+    end
+
+    it "is value.to_s suffixed with 'beat' for negative, non-zero beat values > -1" do
+      for value in [-Rational(1,2), -0.25]
+        Duration.new(value).to_s.should == value.to_s + ' beat'
+      end
+    end
+    
+    it "rounds to 2 decimal places when value.to_s is overly long" do
+      Duration.new(Math.sqrt 2).to_s.should == '1.41 beats'
+    end
+  end
+
+  describe '#inspect' do
+    it 'is "#<MTK::Duration:{object_id} @value={value}>"' do
+      for value in [0, 60, 60.5, 127]
+        duration = Duration.new(value)
+        duration.inspect.should == "#<MTK::Duration:#{duration.object_id} @value=#{value}>"
       end
     end
   end

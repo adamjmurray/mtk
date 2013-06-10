@@ -141,6 +141,15 @@ describe MTK::Pitch do
     end
   end
 
+  describe '#inspect' do
+    it 'is "#<MTK::Pitch:{object_id} @value={value}>"' do
+      for value in [0, 60, 60.5, 127]
+        pitch = Pitch.from_f(value)
+        pitch.inspect.should == "#<MTK::Pitch:#{pitch.object_id} @value=#{value}>"
+      end
+    end
+  end
+
   describe '#+' do
     it 'adds the integer value of the argument and #to_i' do
       (middle_c + 2).should == Pitch.from_i(62)

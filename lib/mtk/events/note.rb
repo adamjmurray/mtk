@@ -58,11 +58,11 @@ module MTK
       end
 
       def to_s
-        "Note(#@number, #{sprintf '%.2f',@duration}, #{sprintf '%.2f',@value})"
+        "Note(#{@number}, #{@duration}, #{@value.to_percent}%)"
       end
 
       def inspect
-        "MTK::Note<#{@number.inspect}, #{@duration.inspect}, #{@value.inspect}>"
+        "#<#{self.class}:#{object_id} @pitch=#{@number.inspect}, @duration=#{@duration.inspect}, @intensity=#{@value.inspect}>"
       end
 
     end

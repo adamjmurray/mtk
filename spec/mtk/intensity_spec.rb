@@ -128,10 +128,29 @@ describe MTK::Intensity do
     end
   end
 
+  describe '#to_percentage' do
+    it 'is the value*100 rounded to the nearest integer' do
+      Intensity.new(0).to_percent.should == 0
+      Intensity.new(0.5).to_percent.should == 50
+      Intensity.new(1).to_percent.should == 100
+      Intensity.new(2).to_percent.should == 200
+    end
+  end
+
   describe '#to_s' do
-    it "should be value.to_s" do
-      for value in [1, Rational(1,2), 0.25]
-        Intensity.new(value).to_s.should == value.to_s
+    it "is to_percentage suffixed with '% intensity'" do
+      Intensity.new(0).to_s.should == '0% intensity'
+      Intensity.new(0.5).to_s.should == '50% intensity'
+      Intensity.new(1).to_s.should == '100% intensity'
+      Intensity.new(2).to_s.should == '200% intensity'
+    end
+  end
+
+  describe '#inspect' do
+    it 'is "#<MTK::Intensity:{object_id} @value={value}>"' do
+      for value in [0, 60, 60.5, 127]
+        intensity = Intensity.new(value)
+        intensity.inspect.should == "#<MTK::Intensity:#{intensity.object_id} @value=#{value}>"
       end
     end
   end

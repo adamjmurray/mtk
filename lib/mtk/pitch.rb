@@ -92,7 +92,7 @@ module MTK
     end
 
     def inspect
-      "#{@pitch_class}#{@octave}" + (@offset.zero? ? '' : "+#{offset_in_cents}cents")
+      "#<#{self.class}:#{object_id} @value=#{@value}>"
     end
 
     def ==( other )

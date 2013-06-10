@@ -119,15 +119,16 @@ describe MTK::Events::Note do
 
   describe "#to_s" do
     it "includes the #pitch, #intensity to 2 decimal places, and #duration to 2 decimal places" do
-      NOTE.new(C4, 1/3.0, 1/3.0).to_s.should == "Note(C4, 0.33, 0.33)"
+      NOTE.new(C4, Duration(1/3.0), Intensity(1/3.0)).to_s.should == "Note(C4, 0.33 beat, 33%)"
     end
   end
 
   describe "#inspect" do
-    it "includes the #pitch.inspect, #duration.inspect, #intensity.inspect" do
+    it 'is "#<MTK::Events::Note:{object_id} @pitch={pitch.inspect}, @duration={duration.inspect}, @intensity={intensity.inspect}>"' do
       duration = MTK::Duration(1/8.0)
       intensity = MTK::Intensity(1/8.0)
-      NOTE.new(C4, duration, intensity).inspect.should == "MTK::Note<#{C4.inspect}, #{duration.inspect}, #{intensity.inspect}>"
+      note = NOTE.new(C4, duration, intensity)
+      note.inspect.should == "#<MTK::Events::Note:#{note.object_id} @pitch=#{C4.inspect}, @duration=#{duration.inspect}, @intensity=#{intensity.inspect}>"
     end
   end
 
