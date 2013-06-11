@@ -19,8 +19,6 @@ Features
 Getting Started
 ---------------
 
-# NOTE: This project is not ready yet, these instructions will not work! Please check back in a little while once I have mtk version 0.0.3 released to rubygems.org.
-
 MTK works with Ruby 1.9, Ruby 2.0, and JRuby
 
 0. Install
