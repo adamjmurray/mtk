@@ -1,8 +1,7 @@
 require 'mtk'
-require 'mtk/helpers/output_selector'
-include MTK
-include Lang::Pitches
+require 'mtk/io/output_selector'
+include MTK::Lang::Pitches
 
-output = Helpers::OutputSelector.ensure_output ARGV[0]
+output = MTK::IO::OutputSelector.ensure_output ARGV[0]
 
-output.play Note(C4,1,2)
+output.play MTK.Note(C4,1,2)

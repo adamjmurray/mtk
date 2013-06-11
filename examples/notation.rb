@@ -1,5 +1,5 @@
 require 'mtk'
-require 'mtk/helpers/lilypond'
+require 'mtk/io/notation'
 include MTK
 
 def arg_error(error)
@@ -18,5 +18,5 @@ arg_error "The output_file must end in '.png', '.pdf', or '.ps'" unless file
 
 sequencer = MTK::Lang::Parser.parse(syntax)
 timeline = sequencer.to_timeline
-# Helpers::Lilypond.open(file).write(timeline)
-Helpers::Lilypond.open(file, dpi:300).write(timeline) # higher resolution PNG
+# MTK::IO::Notation.open(file).write(timeline)
+MTK::IO::Notation.open(file, dpi:300).write(timeline) # higher resolution PNG

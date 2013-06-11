@@ -1,7 +1,7 @@
 require 'mtk/midi/output'
 
 module MTK
-  module Helpers
+  module IO
 
     # Optional class for loading the preferred platform-specific implementation of an output,
     # and methods to assist with selecting an output.

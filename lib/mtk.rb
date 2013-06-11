@@ -3,10 +3,6 @@
 # The top level module for this library
 module MTK
 
-  # Internal helper classes used to avoid duplicating code in this library.
-  module Helpers
-  end
-
   # Musical events, such as {Events::Note}s and {Events::Parameter} changes, that are arranged in time via a {Timeline}.
   module Events
   end

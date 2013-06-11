@@ -8,9 +8,9 @@ end
 
 require 'mtk'
 require 'mtk/midi/file'
-require 'mtk/helpers/output_selector'
+require 'mtk/io/output_selector'
 
-output = MTK::Helpers::OutputSelector.ensure_output(output_name)
+output = MTK::IO::OutputSelector.ensure_output(output_name)
 
 timeline = MTK.MIDI_File(file).to_timelines
 

@@ -3,14 +3,14 @@ require 'tmpdir'
 require 'fileutils'
 
 module MTK
-  module Helpers
+  module IO
 
     # Uses {Timeline}s to generates music notation graphics with {http://lilypond.org/ Lilypond}.
-    # @note This class is optional and only available if you require 'mtk/helpers/lilypond'.
+    # @note This class is optional and only available if you require 'mtk/io/lilypond'.
     # @note To make notation graphics, {http://lilypond.org/download.html Lilypond} must be installed
     #       and you must follow the "Running on the command-line" instructions (found on the download page for
     #       your operating system). If the lilypond command is not on your PATH, set the environment variable LILYPOND_PATH
-    class Lilypond
+    class Notation
 
       LILYPOND_PATH = ENV['LILYPOND_PATH'] || 'lilypond'
 
