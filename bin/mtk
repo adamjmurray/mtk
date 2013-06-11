@@ -23,13 +23,12 @@ option_parser = OptionParser.new do |opts|
 
   opts.on('-e [syntax]', '--eval [syntax]', 'Convert the given MTK syntax String to MIDI',
           'or start an interactive interpreter when [syntax] is omitted',
-          'if a --file is given, write the MIDI to a file',
-          'if an --output is given, play the MIDI',
-          'otherwise print the MIDI') {|syntax| options[:eval] = syntax }
+          'Behaves like --convert when a --file or --output is given') {|syntax| options[:eval] = syntax }
 
   opts.separator ''
 
-  opts.on('-f FILE', '--file FILE', 'Write the output of --convert, --eval, or --input to a file') {|file| options[:file] = file }
+  opts.on('-f FILE', '--file FILE', 'Write the output of --convert, --eval, --input, or --watch to a file'
+         ) {|file| options[:file] = file }
 
   opts.separator ''
 
@@ -62,6 +61,9 @@ option_parser = OptionParser.new do |opts|
   #opts.on('-t', '--tutorial', 'Start an interactive tutorial for the MTK syntax') { options[:tutorial] = true }
   #
   #opts.separator ''
+
+  opts.on('-w FILE', '--watch FILE', 'Watch an MTK syntax file for changes and automatically convert to MIDI',
+          'Behaves like --convert when a --file or --output is given') {|file| options[:watch] = file }
 
 end
 
@@ -136,6 +138,14 @@ def record
 end
 
 
+def watch_file_updated?
+  mtime = File.stat(@watch_file).mtime
+  updated = @watch_file_mtime.nil? || @watch_file_mtime < mtime
+  @watch_file_mtime = mtime
+  updated
+end
+
+
 #######################################################################
 
 if options[:list]
@@ -206,6 +216,22 @@ if options[:convert]
   mtk_syntax_file = options[:convert]
   mtk_syntax = IO.read(mtk_syntax_file)
   convert(mtk_syntax)
+end
+
+if options[:watch]
+  @watch_file = options[:watch]
+  puts "Watching #{@watch_file}. Press Ctrl+C to exit."
+  watch_file_updated? # prime the watcher
+  loop do
+    mtk_syntax = IO.read(@watch_file)
+    begin
+      convert(mtk_syntax)
+    rescue Citrus::ParseError
+      STDERR.puts $!
+    end
+    Kernel.sleep(0.5) until watch_file_updated?
+    puts "#{Time.new}: #{@watch_file} updated"
+  end
 end
 
 #if options.has_key? :tutorial
