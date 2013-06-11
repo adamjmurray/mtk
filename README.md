@@ -37,7 +37,7 @@ MTK works with Ruby 1.9, Ruby 2.0, and JRuby
 
 0. Check out examples: https://github.com/adamjmurray/mtk/tree/master/examples
 
-0. Read the [MTK Ruby library documentation](http://rdoc.info/gems/mtk/0.0.3.1/frames)
+0. Read the [MTK Ruby library documentation](http://rubydoc.info/github/adamjmurray/mtk/master/frames)
 
 
 About this project

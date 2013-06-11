@@ -81,10 +81,11 @@ You shouldn't need to worry about the dependencies too much. A Gemfile is provid
 Documentation
 -------------
 
-Gem 0.0.3.1: http://rdoc.info/gems/mtk/0.0.3.1/frames
+Generate with:
 
-Latest for source: http://rubydoc.info/github/adamjmurray/mtk/master/frames
+     bundle exec rake doc
 
+Or view online @ http://rubydoc.info/github/adamjmurray/mtk/master/frames
 
 
 Development Notes
