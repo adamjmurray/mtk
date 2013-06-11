@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'mtk/numeric_extensions'
+require 'mtk/lang/numeric_extensions'
 
 describe Numeric do
 
