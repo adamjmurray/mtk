@@ -132,7 +132,7 @@ module MTK
       private
 
       def write_to_disk(sequence)
-        puts "Writing file #{@file}"
+        puts "Writing file #{@file}" unless $__RUNNING_RSPEC_TESTS__
         ::File.open(@file, 'wb') { |f| sequence.write f }
       end
 
