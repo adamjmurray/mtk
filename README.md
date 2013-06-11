@@ -35,15 +35,11 @@ MTK works with Ruby 1.9, Ruby 2.0, and JRuby
 
         mtk --help
 
-0. Learn the MTK syntax:
+0. Learn the MTK syntax: TODO... documentation forthcoming. In the meantime, see the unit tests @ https://github.com/adamjmurray/mtk/blob/master/spec/mtk/lang/grammar_spec.rb
 
-        mtk --tutorial
+0. Check out examples: https://github.com/adamjmurray/mtk/tree/master/examples
 
-0. Check out examples: ... TODO
-
-0. Read the [MTK Ruby library documentation](http://rubydoc.info/github/adamjmurray/mtk/master/frames) (TODO: update this 0.0.3 gem version when ready)
-
-TODO: explain how to hear output on different platforms (maybe in the mtk command line help?)
+0. Read the [MTK Ruby library documentation](http://rdoc.info/gems/mtk/0.0.3.1/frames)
 
 
 About this project
