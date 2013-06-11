@@ -1,6 +1,6 @@
 Gem::Specification.new do |gem|
   gem.name        = 'mtk'
-  gem.version     = '0.0.3.1'
+  gem.version     = '0.0.3.2'
 
   gem.summary     = 'Music Tool Kit for Ruby'
   gem.description = 'A music library and domain-specific language for generating music via MIDI.'

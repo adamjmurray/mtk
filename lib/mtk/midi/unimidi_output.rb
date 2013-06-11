@@ -66,56 +66,70 @@ end
 # MONKEY PATCHING for https://github.com/arirusso/ffi-coremidi/pull/2
 # This can be removed once that pull request is released.
 
-# @private
-module CoreMIDI
-  class Device
-    def initialize(id, device_pointer, options = {})
-      include_if_offline = options[:include_offline] || false
-      @id = id
-      @resource = device_pointer
-      @entities = []
+if RbConfig::CONFIG['host_os'] =~ /darwin/
+  # We're running on OS X
 
-      prop = Map::CF.CFStringCreateWithCString( nil, "name", 0 )
-      begin
-        name_ptr = FFI::MemoryPointer.new(:pointer)
-        Map::MIDIObjectGetStringProperty(@resource, prop, name_ptr)
-        name = name_ptr.read_pointer
-        len = Map::CF.CFStringGetMaximumSizeForEncoding(Map::CF.CFStringGetLength(name), :kCFStringEncodingUTF8)
-        bytes = FFI::MemoryPointer.new(len + 1)
-        raise RuntimeError.new("CFStringGetCString") unless Map::CF.CFStringGetCString(name, bytes, len, :kCFStringEncodingUTF8)
-        @name = bytes.read_string
-      ensure
-        Map::CF.CFRelease(name) unless name.nil? || name.null?
-        Map::CF.CFRelease(prop) unless prop.null?
-      end
-      populate_entities(:include_offline => include_if_offline)
-    end
-
+  begin
+    ffi_coremidi_exists = !CoreMIDI::Map::CF.nil?
+  rescue NameError
+    ffi_coremidi_exists = false
   end
 
-  module Map
-    module CF
+  if ffi_coremidi_exists
 
-      extend FFI::Library
-      ffi_lib '/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation'
+    # @private
+    module CoreMIDI
+      class Device
+        def initialize(id, device_pointer, options = {})
+          include_if_offline = options[:include_offline] || false
+          @id = id
+          @resource = device_pointer
+          @entities = []
 
-      typedef :pointer, :CFStringRef
-      typedef :long, :CFIndex
-      enum :CFStringEncoding, [ :kCFStringEncodingUTF8, 0x08000100 ]
+          prop = Map::CF.CFStringCreateWithCString( nil, "name", 0 )
+          begin
+            name_ptr = FFI::MemoryPointer.new(:pointer)
+            Map::MIDIObjectGetStringProperty(@resource, prop, name_ptr)
+            name = name_ptr.read_pointer
+            len = Map::CF.CFStringGetMaximumSizeForEncoding(Map::CF.CFStringGetLength(name), :kCFStringEncodingUTF8)
+            bytes = FFI::MemoryPointer.new(len + 1)
+            raise RuntimeError.new("CFStringGetCString") unless Map::CF.CFStringGetCString(name, bytes, len, :kCFStringEncodingUTF8)
+            @name = bytes.read_string
+          ensure
+            Map::CF.CFRelease(name) unless name.nil? || name.null?
+            Map::CF.CFRelease(prop) unless prop.null?
+          end
+          populate_entities(:include_offline => include_if_offline)
+        end
 
-      # CFString* CFStringCreateWithCString( ?, CString, encoding)
-      attach_function :CFStringCreateWithCString, [:pointer, :string, :int], :pointer
-      # CString* CFStringGetCStringPtr(CFString*, encoding)
-      attach_function :CFStringGetCStringPtr, [:pointer, :int], :pointer
+      end
 
-      attach_function :CFStringGetLength, [ :CFStringRef ], :CFIndex
+      module Map
+        module CF
 
-      attach_function :CFStringGetMaximumSizeForEncoding, [ :CFIndex, :CFStringEncoding ], :long
+          extend FFI::Library
+          ffi_lib '/System/Library/Frameworks/CoreFoundation.framework/Versions/Current/CoreFoundation'
 
-      attach_function :CFStringGetCString, [ :CFStringRef, :pointer, :CFIndex, :CFStringEncoding ], :bool
+          typedef :pointer, :CFStringRef
+          typedef :long, :CFIndex
+          enum :CFStringEncoding, [ :kCFStringEncodingUTF8, 0x08000100 ]
 
-      attach_function :CFRelease, [ :pointer ], :void
+          # CFString* CFStringCreateWithCString( ?, CString, encoding)
+          attach_function :CFStringCreateWithCString, [:pointer, :string, :int], :pointer
+          # CString* CFStringGetCStringPtr(CFString*, encoding)
+          attach_function :CFStringGetCStringPtr, [:pointer, :int], :pointer
 
+          attach_function :CFStringGetLength, [ :CFStringRef ], :CFIndex
+
+          attach_function :CFStringGetMaximumSizeForEncoding, [ :CFIndex, :CFStringEncoding ], :long
+
+          attach_function :CFStringGetCString, [ :CFStringRef, :pointer, :CFIndex, :CFStringEncoding ], :bool
+
+          attach_function :CFRelease, [ :pointer ], :void
+
+        end
+      end
     end
+
   end
 end
