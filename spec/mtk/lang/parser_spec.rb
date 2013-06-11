@@ -33,6 +33,13 @@ describe MTK::Lang::Parser do
 
 
   describe ".parse" do
+    it "can parse a single pitch class and play it" do
+      sequencer = MTK::Lang::Parser.parse('c')
+      puts sequencer.inspect
+      timeline = sequencer.to_timeline
+      timeline.should == MTK::Timeline.from_hash({0 => MTK.Note(C4)})
+    end
+
     context "default (root rule) behavior" do
       it "parses a bare_sequencer" do
         sequencer = parse('C:q:mp D4:ff A i:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp')

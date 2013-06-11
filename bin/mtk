@@ -102,8 +102,12 @@ end
 
 def convert(mtk_syntax)
   sequencer = MTK::Lang::Parser.parse(mtk_syntax)
-  timeline = sequencer.to_timeline
-  output(timeline)
+  if sequencer
+    timeline = sequencer.to_timeline
+    output(timeline)
+  end
+rescue Citrus::ParseError
+  STDERR.puts $!
 end
 
 
@@ -203,9 +207,13 @@ if options.has_key? :eval
   mtk_syntax = options[:eval]
   if mtk_syntax.nil?
     puts "Starting the interactive interpreter."
-    loop do
-      puts "Enter MTK syntax. Press Ctrl+C to exit."
-      convert(gets)
+    begin
+      loop do
+        puts "Enter MTK syntax. Press Ctrl+C to exit."
+        convert(gets)
+      end
+    rescue SystemExit,Interrupt
+      Kernel.exit
     end
   else
     convert(mtk_syntax)
@@ -222,15 +230,15 @@ if options[:watch]
   @watch_file = options[:watch]
   puts "Watching #{@watch_file}. Press Ctrl+C to exit."
   watch_file_updated? # prime the watcher
-  loop do
-    mtk_syntax = IO.read(@watch_file)
-    begin
+  begin
+    loop do
+      mtk_syntax = IO.read(@watch_file)
       convert(mtk_syntax)
-    rescue Citrus::ParseError
-      STDERR.puts $!
+      Kernel.sleep(0.5) until watch_file_updated?
+      puts "#{Time.new}: #{@watch_file} updated"
     end
-    Kernel.sleep(0.5) until watch_file_updated?
-    puts "#{Time.new}: #{@watch_file} updated"
+  rescue SystemExit,Interrupt
+    Kernel.exit
   end
 end
 
