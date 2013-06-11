@@ -89,7 +89,7 @@ module MTK
   # @see #MTK::Groups::Melody
   # @see #MTK::Groups::Chord
   def Melody(*anything)
-    MTK::Groups::Melody.new Helpers::Convert.to_pitches(*anything)
+    MTK::Groups::Melody.new MTK::Groups.to_pitches(*anything)
   end
   module_function :Melody
 

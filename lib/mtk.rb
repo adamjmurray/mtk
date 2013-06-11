@@ -50,8 +50,6 @@ require 'mtk/groups/melody'
 require 'mtk/groups/chord'
 
 require 'mtk/helpers/pseudo_constants'
-require 'mtk/helpers/convert'
-
 
 require 'mtk/events/event'
 require 'mtk/events/note'

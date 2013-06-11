@@ -156,7 +156,7 @@ module MTK
   # Construct a {PitchClassSet}
   # @see PitchClassSet#initialize
   def PitchClassSet(*anything)
-    MTK::Groups::PitchClassSet.new Helpers::Convert.to_pitch_classes(*anything)
+    MTK::Groups::PitchClassSet.new MTK::Groups.to_pitch_classes(*anything)
   end
   module_function :PitchClassSet
 
