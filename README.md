@@ -33,7 +33,7 @@ MTK works with Ruby 1.9, Ruby 2.0, and JRuby
 
         mtk --help
 
-0. Learn the MTK syntax: TODO... documentation forthcoming. In the meantime, see the unit tests @ https://github.com/adamjmurray/mtk/blob/master/spec/mtk/lang/grammar_spec.rb
+0. Learn the MTK syntax: TODO... documentation forthcoming. In the meantime, see the unit tests @ https://github.com/adamjmurray/mtk/blob/master/spec/mtk/lang/parser_spec.rb
 
 0. Check out examples: https://github.com/adamjmurray/mtk/tree/master/examples
 
