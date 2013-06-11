@@ -3,7 +3,7 @@
 # NOTE: this blindly overwrites any existing MTK-syntax_to_midi.mid file, unless a second argument is provided
 
 require 'mtk'
-require 'mtk/midi/file'
+require 'mtk/io/file'
 
 input = ARGV[0]
 if input.nil?

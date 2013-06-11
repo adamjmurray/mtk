@@ -3,7 +3,7 @@
 # NOTE: this blindly overwrites any existing MTK-random_tone_row.mid file, unless an argument is provided
 
 require 'mtk'
-require 'mtk/midi/file'
+require 'mtk/io/file'
 include MTK
 
 file = ARGV[0] || 'MTK-random_tone_row.mid'

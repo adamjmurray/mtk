@@ -30,7 +30,7 @@ module MTK
 
           sequence.each do |track|
             track_idx += 1
-            timeline = Timeline.new
+            timeline =  MTK::Events::Timeline.new
             note_ons = {}
             #puts "TRACK #{track_idx}"
 
@@ -66,7 +66,7 @@ module MTK
 
       def write(anything)
         case anything
-          when Timeline then write_timeline(anything)
+          when  MTK::Events::Timeline then write_timeline(anything)
           when Enumerable then write_timelines(anything)
           else raise "#{self.class}#write doesn't understand #{anything.class}"
         end

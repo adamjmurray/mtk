@@ -3,15 +3,15 @@
 # The top level module for this library
 module MTK
 
-  # Musical events, such as {Events::Note}s and {Events::Parameter} changes, that are arranged in time via a {Timeline}.
+  # Musical events, such as {MTK::Events::Note}s and {MTK::Events::Parameter} changes, that are arranged in time via a {MTK::Events::Timeline}.
   module Events
   end
 
-  # Classes that emit elements one at a time. Used by {MTK::Sequencers::Sequencer}s to construct {Timeline}s.
+  # Classes that emit elements one at a time. Used by {MTK::Sequencers::Sequencer}s to construct {MTK::Events::Timeline}s.
   module Patterns
   end
 
-  # Classes that assemble {Patterns::Pattern}s into {Timeline}s.
+  # Classes that assemble {MTK::Patterns::Pattern}s into {MTK::Events::Timeline}s.
   module Sequencers
   end
 
@@ -23,7 +23,7 @@ module MTK
   module Groups
   end
 
-  # Optional classes for MIDI {IO::File} and realtime MIDI {Input} and {Output}.
+  # Optional classes for MIDI {MTK::IO::File} and realtime MIDI {MTK::IO::Input} and {MTK::IO::Output}.
   module IO
   end
 
@@ -53,8 +53,7 @@ require 'mtk/groups/chord'
 require 'mtk/events/event'
 require 'mtk/events/note'
 require 'mtk/events/parameter'
-
-require 'mtk/timeline'
+require 'mtk/events/timeline'
 
 require 'mtk/patterns/pattern'
 require 'mtk/patterns/sequence'

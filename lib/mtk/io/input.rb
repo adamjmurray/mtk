@@ -90,8 +90,8 @@ end
 
 unless $__RUNNING_RSPEC_TESTS__ # I can't get this working on Travis-CI, problem installing native dependencies
   if RUBY_PLATFORM == 'java'
-    require 'mtk/midi/jsound_input'
+    require 'mtk/io/jsound_input'
   else
-    require 'mtk/midi/unimidi_input'
+    require 'mtk/io/unimidi_input'
   end
 end

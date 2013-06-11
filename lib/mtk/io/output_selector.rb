@@ -1,4 +1,4 @@
-require 'mtk/midi/output'
+require 'mtk/io/output'
 
 module MTK
   module IO

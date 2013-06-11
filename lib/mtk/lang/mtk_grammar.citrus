@@ -22,7 +22,7 @@ grammar MTK_Grammar
 
   rule timeline
     ( left_curly timepoint pattern (space timepoint pattern)* right_curly ) {
-      MTK::Timeline.from_a values_of(:timepoint).zip(values_of :pattern)
+       MTK::Events::Timeline.from_a values_of(:timepoint).zip(values_of :pattern)
     }
   end
 

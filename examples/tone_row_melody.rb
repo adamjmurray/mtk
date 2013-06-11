@@ -3,7 +3,7 @@
 # NOTE: this blindly overwrites any existing MTK-tone_row_melody.mid file, unless an argument is provided
 
 require 'mtk'
-require 'mtk/midi/file'
+require 'mtk/io/file'
 include MTK
 include MTK::Lang::PitchClasses
 include MTK::Lang::Durations
@@ -14,7 +14,9 @@ row = PitchClassSet Db, G, Ab, F, Eb, E, D, C, B, Gb, A, Bb
 pitch_pattern = Patterns.Cycle *row
 rhythm_pattern = Patterns.Choice s, i, i+s, q # choose between sixteenth, eighth, dotted eighth, and quarter
 
-sequencer = Sequencers.LegatoSequencer pitch_pattern, rhythm_pattern, max_steps: 36
+chain = Patterns.Chain pitch_pattern, rhythm_pattern, min_elements: 36, max_elements: 36
+
+sequencer = Sequencers.LegatoSequencer chain
 timeline = sequencer.to_timeline
 
 MIDI_File(file).write timeline

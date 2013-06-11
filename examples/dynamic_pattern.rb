@@ -3,7 +3,7 @@
 # NOTE: this blindly overwrites any existing MTK-dynamic_pattern.mid file, unless an argument is provided
 
 require 'mtk'
-require 'mtk/midi/file'
+require 'mtk/io/file'
 include MTK
 include MTK::Lang::Pitches
 include MTK::Lang::Intensities

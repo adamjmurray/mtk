@@ -7,7 +7,7 @@ unless file
 end
 
 require 'mtk'
-require 'mtk/midi/file'
+require 'mtk/io/file'
 require 'mtk/io/output_selector'
 
 output = MTK::IO::OutputSelector.ensure_output(output_name)

@@ -24,7 +24,7 @@ describe MTK::IO::Output do
 
   def timeline_with_param_event(event_type, event_options={})
     event = MTK::Events::Parameter.new event_type, event_options
-    MTK::Timeline.from_hash 0 => event
+     MTK::Events::Timeline.from_hash 0 => event
   end
 
   def should_be_scheduled timed_data
@@ -51,7 +51,7 @@ describe MTK::IO::Output do
     it "handles note events" do
       should_be_scheduled 0 => [:note_on,  60, 127, 0],
                           1 => [:note_off, 60, 127, 0]
-      subject.play MTK::Timeline.from_hash( 0 => Note(C4,fff,1) )
+      subject.play  MTK::Events::Timeline.from_hash( 0 => Note(C4,fff,1) )
     end
 
     it "handles control events" do
@@ -94,7 +94,7 @@ describe MTK::IO::Output do
                            1 => [:note_off, 60, 127, 0],
                            2 => [:note_on,  67, 127, 0],
                            3 => [:note_off, 67, 127, 0]
-      subject.play [MTK::Timeline.from_hash( 0 => Note(C4,fff,1) ), MTK::Timeline.from_hash( 2 => Note(G4,fff,1) )]
+      subject.play [ MTK::Events::Timeline.from_hash( 0 => Note(C4,fff,1) ),  MTK::Events::Timeline.from_hash( 2 => Note(G4,fff,1) )]
     end
 
   end

@@ -81,7 +81,7 @@ ERROR_INPUT_NOT_FOUND  = 4
 
 # Immediately trying to play output while Ruby is still "warming up" can cause timing issues with
 # the first couple notes. So we play this "empty" Timeline containing a rest to address that issue.
-WARMUP = MTK::Timeline.from_hash( {0 => MTK::Events::Note.new(MTK::Pitch(60), MTK::Duration(-1))} )
+WARMUP = MTK::Events::Timeline.from_hash( {0 => MTK::Events::Note.new(MTK::Pitch(60), MTK::Duration(-1))} )
 
 #######################################################################
 
@@ -90,13 +90,14 @@ begin
 rescue OptionParser::MissingArgument, OptionParser::InvalidOption
   puts "Invalid command, #{$!}"
   puts "For command line help: #{$0} --help"
+  puts "For command line help: #{$0} --help"
   exit ERROR_INVALID_COMMAND
 end
 
 
 def setup_io
-  require 'mtk/midi/input'
-  require 'mtk/midi/output'
+  require 'mtk/io/input'
+  require 'mtk/io/output'
 end
 
 
@@ -117,7 +118,7 @@ def output(timelines, print_header='Timeline')
     @output.play WARMUP
     @output.play timelines.first # TODO: support multiple timelines
   elsif @file
-    require 'mtk/midi/file'
+    require 'mtk/io/file'
     MTK::MIDI_File(@file).write timelines
   else
     puts print_header, timelines
@@ -172,7 +173,7 @@ end
 if options[:input]
   setup_io
   input_name = options[:input]
-  @input = MTK::MIDI::Input.find_by_name /#{input_name}/
+  @input = MTK::IO::Input.find_by_name /#{input_name}/
   if @input
     puts "Using input '#{@input.name}'"
   else
@@ -184,7 +185,7 @@ end
 if options[:output]
   setup_io
   output_name = options[:output]
-  @output = MTK::MIDI::Output.find_by_name /#{output_name}/
+  @output = MTK::IO::Output.find_by_name /#{output_name}/
   if @output
     puts "Using output '#{@output.name}'"
   else
@@ -198,7 +199,7 @@ file = options[:file]
 
 if options[:play]
   filename = options[:play]
-  require 'mtk/midi/file'
+  require 'mtk/io/file'
   timelines = MTK::MIDI_File(filename).to_timelines
   output(timelines, "Timeline for #{filename}")
 end

@@ -44,7 +44,7 @@ describe MTK::IO::File do
   describe "#write_timeline" do
     it 'writes monophonic Notes in a Timeline to a MIDI file' do
       MIDI_File(tempfile).write_timeline(
-        Timeline.from_hash({
+        MTK::Events::Timeline.from_hash({
           0 => Note(C4, q, 0.7),
           1 => Note(G4, q, 0.8),
           2 => Note(C5, q, 0.9)
@@ -84,7 +84,7 @@ describe MTK::IO::File do
 
     it 'writes polyphonic (simultaneous) Notes in a Timeline to a MIDI file' do
       MIDI_File(tempfile).write_timeline(
-        Timeline.from_hash({
+        MTK::Events::Timeline.from_hash({
           0 => [Note(C4,q,0.5), Note(E4,q,0.5)],
           2.0 => [Note(G4,h,1), Note(B4,h,1), Note(D5,h,1)]
         })
@@ -135,7 +135,7 @@ describe MTK::IO::File do
 
     it 'ignores rests (events with negative duration)' do
       MIDI_File(tempfile).write_timeline(
-        Timeline.from_hash({
+        MTK::Events::Timeline.from_hash({
           0 => Note(C4, q, 0.7),
           1 => Note(G4, -q, 0.8), # this is a rest because it has a negative duration
           2 => Note(C5, q, 0.9)
@@ -171,11 +171,11 @@ describe MTK::IO::File do
   describe "#write_timelines" do
     it "writes a multitrack MIDI file" do
       MIDI_File(tempfile).write_timelines([
-        Timeline.from_hash({
+        MTK::Events::Timeline.from_hash({
           0 => Note(C4, q, 0.7),
           1.0 => Note(G4, q, 0.8),
         }),
-        Timeline.from_hash({
+        MTK::Events::Timeline.from_hash({
           1 => Note(C5, h, 0.9),
           2 => Note(D5, h, 1),
         }),
@@ -227,14 +227,14 @@ describe MTK::IO::File do
   describe "#write" do
     it "calls write_timeline when given a Timeline" do
       midi_file = MIDI_File(nil)
-      timeline = Timeline.new
+      timeline =  MTK::Events::Timeline.new
       midi_file.should_receive(:write_timeline).with(timeline)
       midi_file.write(timeline)
     end
 
     it "calls write_timelines when given an Array" do
       midi_file = MIDI_File(nil)
-      timelines = [Timeline.new]
+      timelines = [MTK::Events::Timeline.new]
       midi_file.should_receive(:write_timelines).with(timelines)
       midi_file.write(timelines)
     end

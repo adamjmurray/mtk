@@ -47,8 +47,6 @@ describe MTK do
 
   describe '#Chord' do
 
-    CHORD = MTK::Groups::Chord
-    
     it "acts like new for a single Array argument" do
       Chord([C4,D4]).should == CHORD.new([C4,D4])
     end

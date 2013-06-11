@@ -296,8 +296,6 @@ end
 
 describe MTK do
 
-  PITCH_CLASS_SET = MTK::Groups::PitchClassSet
-  
   describe '#PitchClassSet' do
 
     it "constructs a PitchClassSet" do

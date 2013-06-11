@@ -48,7 +48,7 @@ module MTK
       # Produce a {Timeline} from the {Patterns::Pattern}s in this Sequencer.
       def to_timeline
         rewind
-        timeline = Timeline.new
+        timeline =  MTK::Events::Timeline.new
         loop do
           events = self.next
           if events

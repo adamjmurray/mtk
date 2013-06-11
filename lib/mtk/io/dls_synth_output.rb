@@ -1,4 +1,4 @@
-require 'mtk/midi/dls_synth_device'
+require 'mtk/io/dls_synth_device'
 
 module MTK
   module IO

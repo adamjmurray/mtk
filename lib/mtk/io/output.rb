@@ -80,9 +80,9 @@ module MTK
 
       def play(anything, options={})
         timeline = case anything
-          when MTK::Timeline then anything
-          when Hash then MTK::Timeline.from_hash anything
-          when Enumerable,MTK::Events::Event then MTK::Timeline.from_hash(0 => anything)
+          when MTK::Events::Timeline then anything
+          when Hash then  MTK::Events::Timeline.from_hash anything
+          when Enumerable,MTK::Events::Event then  MTK::Events::Timeline.from_hash(0 => anything)
           else raise "#{self.class}.play() doesn't understand #{anything} (#{anything.class})"
         end
         timeline = timeline.flatten
@@ -184,12 +184,12 @@ end
 unless $__RUNNING_RSPEC_TESTS__ # I can't get this working on Travis-CI, problem installing native dependencies
   if RbConfig::CONFIG['host_os'] =~ /darwin/
     # We're running on OS X
-    require 'mtk/midi/dls_synth_output'
+    require 'mtk/io/dls_synth_output'
   end
 
   if RUBY_PLATFORM == 'java'
-    require 'mtk/midi/jsound_output'
+    require 'mtk/io/jsound_output'
   else
-    require 'mtk/midi/unimidi_output'
+    require 'mtk/io/unimidi_output'
   end
 end
