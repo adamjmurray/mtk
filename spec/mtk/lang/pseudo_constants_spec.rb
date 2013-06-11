@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe MTK::Helpers::PseudoConstants do
+describe MTK::Lang::PseudoConstants do
 
   module MockConstants
-    extend MTK::Helpers::PseudoConstants
+    extend MTK::Lang::PseudoConstants
     define_constant 'constant', :value
   end
 

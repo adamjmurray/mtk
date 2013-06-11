@@ -5,7 +5,7 @@ module MTK
 
     include Comparable
 
-    # The names of the base intensities. See {}MTK::Constants::Intensities} for more info.
+    # The names of the base intensities. See {}MTK::Lang::Intensities} for more info.
     NAMES = %w[ppp pp p mp mf o ff fff].freeze
 
     VALUES_BY_NAME = {

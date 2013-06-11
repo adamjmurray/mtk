@@ -1,5 +1,5 @@
 module MTK
-  module Constants
+  module Lang
 
     # Defines a constant for each {PitchClass} in the Western chromatic scale.
     module PitchClasses

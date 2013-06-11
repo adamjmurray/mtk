@@ -33,7 +33,7 @@ module MTK
       end
 
       def self.from_midi(pitch, velocity, duration_in_beats, channel=0)
-        new( MTK::Constants::Pitches::PITCHES[pitch.to_i], MTK::Duration[duration_in_beats], MTK::Intensity[velocity/127.0], channel )
+        new( MTK::Lang::Pitches::PITCHES[pitch.to_i], MTK::Duration[duration_in_beats], MTK::Intensity[velocity/127.0], channel )
       end
 
       def midi_pitch

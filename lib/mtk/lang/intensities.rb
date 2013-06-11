@@ -1,5 +1,5 @@
 module MTK
-  module Constants
+  module Lang
 
     # Defines intensity constants using standard dynamic symbols.
     #
@@ -17,7 +17,7 @@ module MTK
     #
     # @see Note
     module Intensities
-      extend Helpers::PseudoConstants
+      extend MTK::Lang::PseudoConstants
 
       # NOTE: the yard doc macros here only fill in [$2] with the actual value when generating docs under Ruby 1.9+
 

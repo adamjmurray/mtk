@@ -6,7 +6,7 @@ module MTK
 
     include Comparable
 
-    # The names of the base durations. See {MTK::Constants::Durations} for more info.
+    # The names of the base durations. See {MTK::Lang::Durations} for more info.
     NAMES = %w[w h q i s r x].freeze
 
     VALUES_BY_NAME = {

@@ -1,8 +1,8 @@
 require 'mtk'
 require 'mtk/midi/file'
 include MTK
-include Constants::Pitches
-include Constants::Intensities
+include Lang::Pitches
+include Lang::Intensities
 
 file = ARGV[0] || "MTK-#{File.basename(__FILE__,'.rb')}.mid"
 

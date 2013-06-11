@@ -1,7 +1,7 @@
 require 'mtk'
 require 'mtk/helpers/output_selector'
 include MTK
-include Constants::Pitches
+include Lang::Pitches
 
 output = Helpers::OutputSelector.ensure_output ARGV[0]
 

@@ -1,5 +1,5 @@
 module MTK
-  module Helpers
+  module Lang
 
     # Extension for modules that want to define pseudo-constants (constant-like values with lower-case names)
     module PseudoConstants

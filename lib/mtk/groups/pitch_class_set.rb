@@ -15,11 +15,11 @@ module MTK
       attr_reader :pitch_classes
 
       def self.random_row
-        new(Constants::PitchClasses::PITCH_CLASSES.shuffle)
+        new(MTK::Lang::PitchClasses::PITCH_CLASSES.shuffle)
       end
 
       def self.all
-        @all ||= new(Constants::PitchClasses::PITCH_CLASSES)
+        @all ||= new(MTK::Lang::PitchClasses::PITCH_CLASSES)
       end
 
       # @param pitch_classes [#to_a] the collection of pitch classes

@@ -4,9 +4,9 @@ module MTK
     # A special pattern that takes a list of event properties and/or patterns and emits lists of {Events::Event}s
     class EventBuilder
 
-      DEFAULT_PITCH = ::MTK::Constants::Pitches::C4
-      DEFAULT_DURATION = ::MTK::Constants::Durations::q
-      DEFAULT_INTENSITY = ::MTK::Constants::Intensities::o
+      DEFAULT_PITCH = MTK::Pitch(60)
+      DEFAULT_DURATION = MTK::Duration(1)
+      DEFAULT_INTENSITY = MTK::Intensity(0.75)
 
       def initialize(patterns, options={})
         @patterns = patterns

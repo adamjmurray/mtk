@@ -165,7 +165,7 @@ describe MTK do
     end
 
     it '' do
-      Note(MTK::Constants::Pitches::C4, MTK::Constants::Intensities::o, 5.25).should == Note(C4, 5.25, 0.75)
+      Note(MTK::Lang::Pitches::C4, MTK::Lang::Intensities::o, 5.25).should == Note(C4, 5.25, 0.75)
     end
 
   end

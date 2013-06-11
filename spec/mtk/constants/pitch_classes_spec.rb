@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MTK::Constants::PitchClasses do
+describe MTK::Lang::PitchClasses do
   let(:cases) {
     [
         [PitchClass['C'],  'C',   0],

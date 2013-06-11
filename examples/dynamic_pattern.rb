@@ -5,9 +5,9 @@
 require 'mtk'
 require 'mtk/midi/file'
 include MTK
-include MTK::Constants::Pitches
-include MTK::Constants::Intensities
-include MTK::Constants::Intervals
+include MTK::Lang::Pitches
+include MTK::Lang::Intensities
+include MTK::Lang::Intervals
 
 file = ARGV[0] || "MTK-#{File.basename __FILE__,'.rb'}.mid"
 

@@ -1,5 +1,5 @@
 module MTK
-  module Constants
+  module Lang
 
     # Defines a constants for each {Pitch} in the standard MIDI range using scientific pitch notation.
     #

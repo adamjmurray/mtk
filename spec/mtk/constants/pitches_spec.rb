@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MTK::Constants::Pitches do
+describe MTK::Lang::Pitches do
 
   it "defines constants for the 128 notes in MIDI" do
     Pitches.constants.length.should == 130 # there's also the PITCHES and PITCH_NAMES constants

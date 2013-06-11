@@ -3,10 +3,6 @@
 # The top level module for this library
 module MTK
 
-  # Constants for modeling frequency, intensity, and duration.
-  module Constants
-  end
-
   # Internal helper classes used to avoid duplicating code in this library.
   module Helpers
   end
@@ -43,25 +39,26 @@ require 'mtk/duration'
 require 'mtk/intensity'
 require 'mtk/interval'
 
+require 'mtk/lang/pseudo_constants'
+require 'mtk/lang/pitch_classes'
+require 'mtk/lang/pitches'
+require 'mtk/lang/intervals'
+require 'mtk/lang/intensities'
+require 'mtk/lang/durations'
+require 'mtk/lang/variable'
+require 'mtk/lang/parser'
+
 require 'mtk/groups/collection'
 require 'mtk/groups/pitch_collection'
 require 'mtk/groups/pitch_class_set'
 require 'mtk/groups/melody'
 require 'mtk/groups/chord'
 
-require 'mtk/helpers/pseudo_constants'
-
 require 'mtk/events/event'
 require 'mtk/events/note'
 require 'mtk/events/parameter'
 
 require 'mtk/timeline'
-
-require 'mtk/constants/pitch_classes'
-require 'mtk/constants/pitches'
-require 'mtk/constants/intervals'
-require 'mtk/constants/intensities'
-require 'mtk/constants/durations'
 
 require 'mtk/patterns/pattern'
 require 'mtk/patterns/sequence'
@@ -78,6 +75,3 @@ require 'mtk/sequencers/sequencer'
 require 'mtk/sequencers/step_sequencer'
 require 'mtk/sequencers/rhythmic_sequencer'
 require 'mtk/sequencers/legato_sequencer'
-
-require 'mtk/lang/variable'
-require 'mtk/lang/parser'
