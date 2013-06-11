@@ -23,7 +23,7 @@ describe MTK::Lang::Parser do
   end
 
   def var(name)
-    ::MTK::Variable.new(name)
+    ::MTK::Lang::Variable.new(name)
   end
 
 

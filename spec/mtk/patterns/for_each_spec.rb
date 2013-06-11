@@ -5,7 +5,7 @@ describe MTK::Patterns::ForEach do
   FOREACH = ::MTK::Patterns::ForEach
 
   def var(name)
-    ::MTK::Variable.new(name)
+    ::MTK::Lang::Variable.new(name)
   end
 
   def seq(*args)

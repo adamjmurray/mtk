@@ -1,4 +1,4 @@
-module MTK
+module MTK::Lang
 
   # A placeholder element for a variable value, for use within a {Patterns::Pattern} such as a {Patterns::ForEach} pattern.
   # Will be evaluated to an actual value by the Pattern or Sequencer

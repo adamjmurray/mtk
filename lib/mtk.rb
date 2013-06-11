@@ -37,10 +37,7 @@ require 'mtk/pitch_class'
 require 'mtk/pitch'
 require 'mtk/duration'
 require 'mtk/intensity'
-
 require 'mtk/interval'
-
-require 'mtk/variable'
 
 require 'mtk/helpers/collection'
 require 'mtk/helpers/pitch_collection'
@@ -79,4 +76,5 @@ require 'mtk/sequencers/step_sequencer'
 require 'mtk/sequencers/rhythmic_sequencer'
 require 'mtk/sequencers/legato_sequencer'
 
+require 'mtk/lang/variable'
 require 'mtk/lang/parser'

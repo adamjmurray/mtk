@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe MTK::Variable do
+describe MTK::Lang::Variable do
 
   def var(*args)
-    ::MTK::Variable.new(*args)
+    ::MTK::Lang::Variable.new(*args)
   end
 
   describe '#name' do
@@ -41,11 +41,11 @@ describe MTK::Variable do
 
   describe '#to_s' do
     it "includes just the variable name when there's no value" do
-      var('$').to_s.should == 'MTK::Variable<$>'
+      var('$').to_s.should == 'MTK::Lang::Variable<$>'
     end
 
     it "includes just the variable name and value when there's a value" do
-      var('x',1).to_s.should == 'MTK::Variable<x=1>'
+      var('x',1).to_s.should == 'MTK::Lang::Variable<x=1>'
     end
   end
 

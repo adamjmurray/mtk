@@ -158,7 +158,7 @@ grammar MTK_Grammar
 
   rule variable
     ( '$'+ ) {
-      MTK::Variable.new(to_s)
+      MTK::Lang::Variable.new(to_s)
     }
   end
 
