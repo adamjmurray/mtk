@@ -122,7 +122,7 @@ grammar MTK_Grammar
 
 #  rule chord
 #    ( left_bracket pitch (space pitch)* right_bracket ) {
-#      MTK::Chord *values_of(:pitch)
+#      MTK::Groups::Chord *values_of(:pitch)
 #    }
 #  end
 

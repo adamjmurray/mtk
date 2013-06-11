@@ -35,8 +35,8 @@ module MTK
             case element
               when ::MTK::Pitch         then pitches << element
               when ::MTK::PitchClass    then pitches += pitches_for_pitch_classes([element], @previous_pitch)
-              when ::MTK::PitchClassSet then pitches += pitches_for_pitch_classes(element, @previous_pitch)
-              when ::MTK::Helpers::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
+              when ::MTK::Groups::PitchClassSet then pitches += pitches_for_pitch_classes(element, @previous_pitch)
+              when ::MTK::Groups::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
 
               when ::MTK::Duration
                 duration ||= 0

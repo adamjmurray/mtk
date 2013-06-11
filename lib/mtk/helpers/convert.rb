@@ -9,8 +9,8 @@ module MTK
           anything.to_pitch_classes
         else
           case anything
-            when Enumerable then anything.map{|item| PitchClass(item) }
-            else [PitchClass(anything)]
+            when ::Enumerable then anything.map{|item| MTK::PitchClass(item) }
+            else [MTK::PitchClass(anything)]
           end
         end
       end
@@ -23,8 +23,8 @@ module MTK
           anything.to_pitches
         else
           case anything
-            when Enumerable then anything.map{|item| Pitch(item) }
-            else [Pitch(anything)]
+            when ::Enumerable then anything.map{|item| MTK::Pitch(item) }
+            else [MTK::Pitch(anything)]
           end
         end
       end

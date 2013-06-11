@@ -1,5 +1,5 @@
 module MTK
-  module Helpers
+  module Groups
 
     # An extension to {Collection}, which provides additional transformations for pitch-like collections.
     #

@@ -1,5 +1,5 @@
 module MTK
-  module Helpers
+  module Groups
 
      # Given a method #elements, which returns an Array of elements in the collection,
      # including this module will make the class Enumerable and provide various methods you'd expect from an Array.

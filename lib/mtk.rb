@@ -27,6 +27,10 @@ module MTK
   module Lang
   end
 
+  # Collections of Core objects
+  module Groups
+  end
+
   # Optional classes for MIDI input and {Output}.
   module MIDI
   end
@@ -39,14 +43,15 @@ require 'mtk/duration'
 require 'mtk/intensity'
 require 'mtk/interval'
 
-require 'mtk/helpers/collection'
-require 'mtk/helpers/pitch_collection'
+require 'mtk/groups/collection'
+require 'mtk/groups/pitch_collection'
+require 'mtk/groups/pitch_class_set'
+require 'mtk/groups/melody'
+require 'mtk/groups/chord'
+
 require 'mtk/helpers/pseudo_constants'
 require 'mtk/helpers/convert'
 
-require 'mtk/pitch_class_set'
-require 'mtk/melody'
-require 'mtk/chord'
 
 require 'mtk/events/event'
 require 'mtk/events/note'
