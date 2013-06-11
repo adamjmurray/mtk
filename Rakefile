@@ -6,7 +6,7 @@ ENV['JRUBY_OPTS'] = '--1.9'
 
 task :default => :test
 
-CLEAN.include('html','doc','coverage.data','coverage') # clean and clobber do the same thing for now
+CLEAN.include('html','doc','coverage.data','coverage', '*.gem') # clean and clobber do the same thing for now
 
 desc "Run RSpec tests with full output"
 RSpec::Core::RakeTask.new('test') do |spec|
@@ -22,7 +22,7 @@ task :spec => :test
 
 namespace :gem do
   desc "Install gems for supported versions of Ruby: #{SUPPORTED_RUBIES.join ', '}"
-  task :install do
+  task :install_dependencies do
     fail unless system("rvm #{SUPPORTED_RUBIES.join ','} do bundle install")
   end
 end
