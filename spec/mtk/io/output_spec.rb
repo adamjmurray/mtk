@@ -1,9 +1,9 @@
 require 'spec_helper'
-require 'mtk/midi/output'
+require 'mtk/io/output'
 
-describe MTK::MIDI::Output do
+describe MTK::IO::Output do
 
-  class MockOuput < MTK::MIDI::Output
+  class MockOuput < MTK::IO::Output
     public_class_method :new
   end
 

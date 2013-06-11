@@ -2,7 +2,7 @@ require 'unimidi'
 require 'ostruct'
 
 module MTK
-  module MIDI
+  module IO
 
     # Provides realtime MIDI input for MRI/YARV Ruby via the unimidi gem.
     # @note This class is optional and only available if you require 'mtk/midi/unimidi_input'.

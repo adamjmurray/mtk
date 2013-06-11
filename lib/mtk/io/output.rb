@@ -2,7 +2,7 @@ require 'rbconfig'
 require 'gamelan'
 
 module MTK
-  module MIDI
+  module IO
 
     # Provides a scheduler and common behavior for realtime MIDI output, using the gamelan gem for scheduling.
     #

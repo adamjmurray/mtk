@@ -1,7 +1,7 @@
 require 'unimidi'
 
 module MTK
-  module MIDI
+  module IO
 
     # Provides realtime MIDI output for "standard" Ruby (MRI) via the unimidi and gamelan gems.
     # @note This class is optional and only available if you require 'mtk/midi/unimidi_output'.

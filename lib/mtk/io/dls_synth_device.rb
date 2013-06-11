@@ -1,7 +1,7 @@
 require 'ffi'
 
 module MTK
-  module MIDI
+  module IO
 
     # An output device for Apple's built-in "DLS" synthesizer on OS X
     class DLSSynthDevice

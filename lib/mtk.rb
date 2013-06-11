@@ -27,8 +27,8 @@ module MTK
   module Groups
   end
 
-  # Optional classes for MIDI input and {Output}.
-  module MIDI
+  # Optional classes for MIDI {IO::File} and realtime MIDI {Input} and {Output}.
+  module IO
   end
 
 end

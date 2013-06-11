@@ -1,7 +1,7 @@
 require 'midilib'
 
 module MTK
-  module MIDI
+  module IO
 
     # MIDI file I/O: reads MIDI files into {Timeline}s and writes {Timeline}s to MIDI files.
     # @note This class is optional and only available if you require 'mtk/midi/file'.
@@ -201,7 +201,7 @@ module MTK
   # Shortcut for MTK::MIDI::File.new
   # @note Only available if you require 'mtk/midi/file'
   def MIDI_File(f)
-    MIDI::File.new(f)
+    ::MTK::IO::File.new(f)
   end
   module_function :MIDI_File
 

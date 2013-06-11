@@ -1,5 +1,5 @@
 module MTK
-  module MIDI
+  module IO
 
     # Common behavior for realtime MIDI input.
     #

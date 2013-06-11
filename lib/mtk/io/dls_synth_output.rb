@@ -1,7 +1,7 @@
 require 'mtk/midi/dls_synth_device'
 
 module MTK
-  module MIDI
+  module IO
 
     # Provides realtime MIDI output on OS X to the built-in "DLS" Synthesizer
     # @note This class is optional and only available if you require 'mtk/midi/dls_synth_output'.

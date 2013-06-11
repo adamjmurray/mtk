@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'mtk/midi/file'
+require 'mtk/io/file'
 require 'tempfile'
 
-describe MTK::MIDI::File do
+describe MTK::IO::File do
 
   let(:test_mid) { File.join(File.dirname(__FILE__), '..', '..', 'test.mid') }
 
