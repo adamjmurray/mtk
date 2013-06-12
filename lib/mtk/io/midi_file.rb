@@ -3,7 +3,7 @@ require 'midilib'
 module MTK
   module IO
 
-    # MIDI file I/O: reads MIDI files into {Timeline}s and writes {Timeline}s to MIDI files.
+    # MIDI file I/O: reads MIDI files into {Events::Timeline}s and writes {Events::Timeline}s to MIDI files.
     # @note This class is optional and only available if you require 'mtk/midi/file'.
     #       It depends on the 'midilib' gem.
     class MIDIFile
@@ -15,7 +15,7 @@ module MTK
         end
       end
 
-      # Read a MIDI file into an Array of {Timeline}s
+      # Read a MIDI file into an Array of {Events::Timeline}s
       #
       # @return [Timeline]
       #

@@ -2,7 +2,7 @@ module MTK
   module Sequencers
 
     # A Sequencer which uses the longest duration of the events at each step to determine
-    # the delta times between entries in the {Timeline}.
+    # the delta times between entries in the {Events::Timeline}.
     class LegatoSequencer < Sequencer
 
       # (see Sequencer#next)

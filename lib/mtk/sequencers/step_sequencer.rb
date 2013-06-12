@@ -1,10 +1,10 @@
 module MTK
   module Sequencers
 
-    # A Sequencer which has a constant {#step_size} time between {Timeline} entries.
+    # A Sequencer which has a constant {#step_size} time between {Events::Timeline} entries.
     class StepSequencer < Sequencer
 
-      # The time between entries in the {Timeline}.
+      # The time between entries in the {Events::Timeline}.
       attr_accessor :step_size
 
       def initialize(patterns, options={})

@@ -6,11 +6,13 @@ module MTK
     # An output device for Apple's built-in "DLS" synthesizer on OS X
     class DLSSynthDevice
 
+      # @private
       module AudioToolbox
         extend FFI::Library
         ffi_lib '/System/Library/Frameworks/AudioToolbox.framework/Versions/Current/AudioToolbox'
         ffi_lib '/System/Library/Frameworks/AudioUnit.framework/Versions/Current/AudioUnit'
 
+        # @private
         class ComponentDescription < FFI::Struct
           layout :componentType, :int,
                  :componentSubType, :int,

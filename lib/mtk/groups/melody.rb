@@ -6,7 +6,7 @@ module MTK
     # The "horizontal" (sequential) pitch collection.
     #
     # Unlike the strict definition of melody, this class is fairly abstract and only models a succession of pitches.
-    # To create a true, playable melody one must combine an MTK::Melody and rhythms into a {Timeline}.
+    # To create a true, playable melody one must combine an MTK::Melody and rhythms into a {Events::Timeline}.
     #
     # @see Chord
     #

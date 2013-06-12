@@ -79,6 +79,8 @@ if RbConfig::CONFIG['host_os'] =~ /darwin/
 
     # @private
     module CoreMIDI
+
+      # @private
       class Device
         def initialize(id, device_pointer, options = {})
           include_if_offline = options[:include_offline] || false
@@ -104,7 +106,10 @@ if RbConfig::CONFIG['host_os'] =~ /darwin/
 
       end
 
+      # @private
       module Map
+
+        # @private
         module CF
 
           extend FFI::Library

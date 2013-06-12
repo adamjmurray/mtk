@@ -1,7 +1,7 @@
 module MTK
   module Sequencers
 
-    # A Sequencer which uses a :rhythm type {Patterns::Pattern} to determine the delta times between entries in the {Timeline}.
+    # A Sequencer which uses a :rhythm type {Patterns::Pattern} to determine the delta times between entries in the {Events::Timeline}.
     class RhythmicSequencer < Sequencer
 
       def initialize(patterns, options={})

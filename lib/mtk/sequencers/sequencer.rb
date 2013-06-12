@@ -1,24 +1,24 @@
 module MTK
   module Sequencers
 
-    # A Sequencer produces {Timeline}s from a collection of {Patterns::Pattern}s.
+    # A Sequencer produces {Events::Timeline}s from a collection of {Patterns::Pattern}s.
     #
     # @abstract Subclass and override {#advance} to implement a Sequencer.
     #
     class Sequencer
 
-      # The maximum number of [time,event_list] entries that will be generated for the {Timeline}.
+      # The maximum number of [time,event_list] entries that will be generated for the {Events::Timeline}.
       # nil means no maximum (be careful of infinite loops!)
       attr_accessor :max_steps
 
-      # The maximum time (key) that will be generated for the {Timeline}.
+      # The maximum time (key) that will be generated for the {Events::Timeline}.
       # nil means no maximum (be careful of infinite loops!)
       attr_accessor :max_time
 
       # Used by {#to_timeline} to builds event lists from the results of {Patterns::Pattern#next} for the {Patterns::Pattern}s in this Sequencer.
       attr_reader :event_builder
 
-      # The current time offset for the sequencer. Used for the {Timeline} times.
+      # The current time offset for the sequencer. Used for the {Events::Timeline} times.
       attr_reader :time
 
       # The current sequencer step index (the number of times-1 that {#next} has been called), or -1 if the sequencer has not yet started.
@@ -26,7 +26,7 @@ module MTK
 
       attr_reader :patterns
 
-      # @param patterns [Array] the list of patterns to be sequenced into a {Timeline}
+      # @param patterns [Array] the list of patterns to be sequenced into a {Events::Timeline}
       # @param  options [Hash] the options to create a message with.
       # @option options [String] :max_steps set {#max_steps}
       # @option options [String] :max_time set {#max_time}
@@ -45,7 +45,7 @@ module MTK
       end
 
 
-      # Produce a {Timeline} from the {Patterns::Pattern}s in this Sequencer.
+      # Produce a {Events::Timeline} from the {Patterns::Pattern}s in this Sequencer.
       def to_timeline
         rewind
         timeline =  MTK::Events::Timeline.new
@@ -89,7 +89,7 @@ module MTK
       ########################
       protected
 
-      # Advance @time to the next time for the {Timeline} being produced by {#to_timeline}
+      # Advance @time to the next time for the {Events::Timeline} being produced by {#to_timeline}
       def advance
         @time += 1 # default behavior simply advances one beat at a time
       end

@@ -153,8 +153,8 @@ module MTK
     end
   end
 
-  # Construct a {PitchClassSet}
-  # @see PitchClassSet#initialize
+  # Construct a {Groups::PitchClassSet}
+  # @see Groups::PitchClassSet#initialize
   def PitchClassSet(*anything)
     MTK::Groups::PitchClassSet.new MTK::Groups.to_pitch_classes(*anything)
   end

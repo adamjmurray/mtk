@@ -5,7 +5,7 @@ module MTK
     #
     # Patterns can be reset to the beginning via {#rewind}.
     #
-    # @abstract Subclass and override {#advance} and {#current} to implement a Pattern.
+    # @abstract Subclass and override {#advance} to implement a Pattern.
     #
     class Pattern
       include MTK::Groups::Collection
@@ -24,7 +24,7 @@ module MTK
 
       # The maximum number of elements this Pattern will emit before a StopIteration exception
       # A nil value means infinite elements.
-      # @note {max_cycles} may cause this Pattern to end before max_elements are emitted.
+      # @note {#max_cycles} may cause this Pattern to end before max_elements are emitted.
       #       If this is undesirable then use min_elements to override max_cycles.
       attr_reader :max_elements
 

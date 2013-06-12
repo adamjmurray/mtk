@@ -48,7 +48,7 @@ module MTK
     # each '.' multiplies by 3/2, and each 't' multiplies by 2/3.
     # You may use the prefix '-' to negate the duration (which turns it into a rest of the same length).
     # You may also prefix (after the '-' if present) the base duration name with an integer, float, or rational number
-    # to multiply the base duration value. Rationals are in the form "#{{numerator_integer}}/#{{denominator_integer}}".
+    # to multiply the base duration value. Rationals are in the form "#!{numerator_integer}/#!{denominator_integer}".
     # @example lookup value of 'q.', which is 1.5 times a quarter note (1.5 beats):
     #          MTK::Duration.from_s('q.')
     # @example lookup the value of 3/4w, which three-quarters of a whole note (3 beats):

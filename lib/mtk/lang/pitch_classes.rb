@@ -15,7 +15,7 @@ module MTK
       # Lookup the value of an pitch class constant by name.
       # @example lookup value of 'C'
       #         MTK::PitchClasses['C']
-      # @see PitchClass.[]
+      # @see Groups::PitchClass.[]
       def self.[](name)
         begin
           const_get name

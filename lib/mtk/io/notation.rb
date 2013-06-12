@@ -5,7 +5,7 @@ require 'fileutils'
 module MTK
   module IO
 
-    # Uses {Timeline}s to generates music notation graphics with {http://lilypond.org/ Lilypond}.
+    # Uses {Events::Timeline}s to generates music notation graphics with {http://lilypond.org/ Lilypond}.
     # @note This class is optional and only available if you require 'mtk/io/lilypond'.
     # @note To make notation graphics, {http://lilypond.org/download.html Lilypond} must be installed
     #       and you must follow the "Running on the command-line" instructions (found on the download page for

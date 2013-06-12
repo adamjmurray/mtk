@@ -6,7 +6,7 @@ module MTK
     # The "vertical" (simultaneous) pitch collection.
     #
     # @see Melody
-    # @see PitchClassSet
+    # @see Groups::PitchClassSet
     #
     class Chord < Melody
 
