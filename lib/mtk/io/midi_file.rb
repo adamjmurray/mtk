@@ -46,7 +46,7 @@ module MTK
                   on_time,on_event = note_ons.delete(event.note)
                   if on_event
                     duration = time - on_time
-                    note = MTK::Events::Note.from_midi(event.note, on_event.velocity, duration)
+                    note = MTK::Events::Note.from_midi(event.note, on_event.velocity, duration, event.channel)
                     timeline.add on_time, note
                   end
 
@@ -92,7 +92,7 @@ module MTK
           events.each do |event|
             next if event.rest?
 
-            channel = event.channel || 0
+            channel = (event.channel || 1) - 1 # midilib seems to count channels from 0, hence the -1
 
             case event.type
               when :note
