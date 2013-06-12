@@ -3,7 +3,7 @@
 # NOTE: this blindly overwrites any existing MTK-dynamic_pattern.mid file, unless an argument is provided
 
 require 'mtk'
-require 'mtk/io/file'
+require 'mtk/io/midi_file'
 include MTK
 include MTK::Lang::Pitches
 include MTK::Lang::Intensities
@@ -33,4 +33,4 @@ intensities = Patterns.Choice( mp,mf,o,ff,fff, weights: [1,2,3,2,1], max_cycles:
 
 sequencer = Sequencers.StepSequencer( pitches,intensities, step_size: 0.5, max_interval: 17 )
 
-MIDI_File(file).write( sequencer.to_timeline )
+MIDIFile(file).write( sequencer.to_timeline )

@@ -7,11 +7,11 @@ unless file
 end
 
 require 'mtk'
-require 'mtk/io/file'
+require 'mtk/io/midi_file'
 require 'mtk/io/output_selector'
 
 output = MTK::IO::OutputSelector.ensure_output(output_name)
 
-timeline = MTK.MIDI_File(file).to_timelines
+timeline = MTK.MIDIFile(file).to_timelines
 
 output.play(timeline)

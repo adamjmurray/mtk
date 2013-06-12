@@ -6,7 +6,7 @@ module MTK
     # MIDI file I/O: reads MIDI files into {Timeline}s and writes {Timeline}s to MIDI files.
     # @note This class is optional and only available if you require 'mtk/midi/file'.
     #       It depends on the 'midilib' gem.
-    class File
+    class MIDIFile
       def initialize file
         if file.respond_to? :path
           @file = file.path
@@ -198,12 +198,12 @@ module MTK
     end
   end
 
-  # Shortcut for MTK::MIDI::File.new
+  # Shortcut for MTK::IO::MIDIFile.new
   # @note Only available if you require 'mtk/midi/file'
-  def MIDI_File(f)
-    ::MTK::IO::File.new(f)
+  def MIDIFile(f)
+    ::MTK::IO::MIDIFile.new(f)
   end
-  module_function :MIDI_File
+  module_function :MIDIFile
 
 end
 

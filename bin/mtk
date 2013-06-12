@@ -96,8 +96,8 @@ end
 
 
 def setup_io
-  require 'mtk/io/input'
-  require 'mtk/io/output'
+  require 'mtk/io/midi_input'
+  require 'mtk/io/midi_output'
 end
 
 
@@ -118,8 +118,8 @@ def output(timelines, print_header='Timeline')
     @output.play WARMUP
     @output.play timelines.first # TODO: support multiple timelines
   elsif @file
-    require 'mtk/io/file'
-    MTK::MIDI_File(@file).write timelines
+    require 'mtk/io/midi_file'
+    MTK::MIDIFile(@file).write timelines
   else
     puts print_header, timelines
     puts
@@ -155,8 +155,8 @@ end
 
 if options[:list]
   setup_io
-  input_names  = MTK::MIDI::Input.devices_by_name.keys
-  output_names = MTK::MIDI::Output.devices_by_name.keys
+  input_names  = MTK::IO::MIDIInput.devices_by_name.keys
+  output_names = MTK::IO::MIDIOutput.devices_by_name.keys
   puts
   puts (['INPUTS:'] + input_names).join("\n * ")
   puts
@@ -173,7 +173,7 @@ end
 if options[:input]
   setup_io
   input_name = options[:input]
-  @input = MTK::IO::Input.find_by_name /#{input_name}/
+  @input = MTK::IO::MIDIInput.find_by_name /#{input_name}/
   if @input
     puts "Using input '#{@input.name}'"
   else
@@ -185,7 +185,7 @@ end
 if options[:output]
   setup_io
   output_name = options[:output]
-  @output = MTK::IO::Output.find_by_name /#{output_name}/
+  @output = MTK::IO::MIDIOutput.find_by_name /#{output_name}/
   if @output
     puts "Using output '#{@output.name}'"
   else
@@ -199,8 +199,8 @@ file = options[:file]
 
 if options[:play]
   filename = options[:play]
-  require 'mtk/io/file'
-  timelines = MTK::MIDI_File(filename).to_timelines
+  require 'mtk/io/midi_file'
+  timelines = MTK::MIDIFile(filename).to_timelines
   output(timelines, "Timeline for #{filename}")
 end
 

@@ -7,7 +7,7 @@ module MTK
     # Provides realtime MIDI input for MRI/YARV Ruby via the unimidi gem.
     # @note This class is optional and only available if you require 'mtk/midi/unimidi_input'.
     #       It depends on the 'unimidi' gem.
-    class UniMIDIInput < Input
+    class UniMIDIInput < MIDIInput
 
       public_class_method :new
 

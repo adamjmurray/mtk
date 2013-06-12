@@ -4,4 +4,4 @@ include MTK::Lang::Pitches
 
 output = MTK::IO::OutputSelector.ensure_output ARGV[0]
 
-output.play MTK.Note(C4,1,2)
+output.play MTK.Note(C4,2,1)

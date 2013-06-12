@@ -3,7 +3,7 @@ module MTK
 
     # Common behavior for realtime MIDI input.
     #
-    class Input
+    class MIDIInput
 
       class << self
 

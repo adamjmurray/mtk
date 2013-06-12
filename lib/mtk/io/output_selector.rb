@@ -1,4 +1,4 @@
-require 'mtk/io/output'
+require 'mtk/io/midi_output'
 
 module MTK
   module IO
@@ -10,7 +10,7 @@ module MTK
       class << self
 
         def output
-          MTK::MIDI::Output
+          MTK::IO::MIDIOutput
         end
 
         # Look for an output by name using case insensitive matching,

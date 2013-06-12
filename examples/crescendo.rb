@@ -3,7 +3,7 @@
 # NOTE: this blindly overwrites any existing MTK-crescendo.mid file, unless an argument is provided
 
 require 'mtk'
-require 'mtk/io/file'
+require 'mtk/io/midi_file'
 include MTK
 include Lang::Pitches
 include Lang::Intensities
@@ -16,5 +16,5 @@ crescendo = Patterns.Lines pp, [fff, scale.length-1] # step from pp to fff over 
 sequencer = Sequencers.StepSequencer scale, crescendo
 timeline = sequencer.to_timeline
 
-MIDI_File(file).write timeline
+MIDIFile(file).write timeline
 

@@ -3,7 +3,7 @@
 # NOTE: this blindly overwrites any existing MTK-tone_row_melody.mid file, unless an argument is provided
 
 require 'mtk'
-require 'mtk/io/file'
+require 'mtk/io/midi_file'
 include MTK
 include MTK::Lang::PitchClasses
 include MTK::Lang::Durations
@@ -19,5 +19,5 @@ chain = Patterns.Chain pitch_pattern, rhythm_pattern, min_elements: 36, max_elem
 sequencer = Sequencers.LegatoSequencer chain
 timeline = sequencer.to_timeline
 
-MIDI_File(file).write timeline
+MIDIFile(file).write timeline
 

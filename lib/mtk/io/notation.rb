@@ -150,7 +150,7 @@ module MTK
 
       def syntax_for_duration(duration)
         # TODO: handle dots, triplets, and ties of arbitrary durations
-        duration = MTK::Timeline.quantize_time(duration.to_f.abs, QUANTIZATION_INTERVAL)
+        duration = MTK::Events::Timeline.quantize_time(duration.to_f.abs, QUANTIZATION_INTERVAL)
         syntax = (4.0/duration).round
         syntax = 1 if syntax < 1
         syntax.to_s

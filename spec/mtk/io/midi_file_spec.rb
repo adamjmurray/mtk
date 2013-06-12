@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'mtk/io/file'
+require 'mtk/io/midi_file'
 require 'tempfile'
 
-describe MTK::IO::File do
+describe MTK::IO::MIDIFile do
 
   let(:test_mid) { File.join(File.dirname(__FILE__), '..', '..', 'test.mid') }
 
@@ -28,11 +28,11 @@ describe MTK::IO::File do
 
   describe "#to_timelines" do
     it "converts a single-track MIDI file to an Array containing one Timeline" do
-      MIDI_File(test_mid).to_timelines.length.should == 1 # one track
+      MIDIFile(test_mid).to_timelines.length.should == 1 # one track
     end
 
     it "converts note on/off messages to Note events" do
-      MIDI_File(test_mid).to_timelines.first.should == {
+      MIDIFile(test_mid).to_timelines.first.should == {
         0.0 => [Note(C4,  0.25, 126/127.0)],
         1.0 => [Note(Db4, 0.5,   99/127.0)],
         2.0 => [Note(D4,  0.75,  72/127.0)],
@@ -43,7 +43,7 @@ describe MTK::IO::File do
 
   describe "#write_timeline" do
     it 'writes monophonic Notes in a Timeline to a MIDI file' do
-      MIDI_File(tempfile).write_timeline(
+      MIDIFile(tempfile).write_timeline(
         MTK::Events::Timeline.from_hash({
           0 => Note(C4, q, 0.7),
           1 => Note(G4, q, 0.8),
@@ -83,7 +83,7 @@ describe MTK::IO::File do
     end
 
     it 'writes polyphonic (simultaneous) Notes in a Timeline to a MIDI file' do
-      MIDI_File(tempfile).write_timeline(
+      MIDIFile(tempfile).write_timeline(
         MTK::Events::Timeline.from_hash({
           0 => [Note(C4,q,0.5), Note(E4,q,0.5)],
           2.0 => [Note(G4,h,1), Note(B4,h,1), Note(D5,h,1)]
@@ -134,7 +134,7 @@ describe MTK::IO::File do
     end
 
     it 'ignores rests (events with negative duration)' do
-      MIDI_File(tempfile).write_timeline(
+      MIDIFile(tempfile).write_timeline(
         MTK::Events::Timeline.from_hash({
           0 => Note(C4, q, 0.7),
           1 => Note(G4, -q, 0.8), # this is a rest because it has a negative duration
@@ -170,7 +170,7 @@ describe MTK::IO::File do
 
   describe "#write_timelines" do
     it "writes a multitrack MIDI file" do
-      MIDI_File(tempfile).write_timelines([
+      MIDIFile(tempfile).write_timelines([
         MTK::Events::Timeline.from_hash({
           0 => Note(C4, q, 0.7),
           1.0 => Note(G4, q, 0.8),
@@ -226,14 +226,14 @@ describe MTK::IO::File do
 
   describe "#write" do
     it "calls write_timeline when given a Timeline" do
-      midi_file = MIDI_File(nil)
+      midi_file = MIDIFile(nil)
       timeline =  MTK::Events::Timeline.new
       midi_file.should_receive(:write_timeline).with(timeline)
       midi_file.write(timeline)
     end
 
     it "calls write_timelines when given an Array" do
-      midi_file = MIDI_File(nil)
+      midi_file = MIDIFile(nil)
       timelines = [MTK::Events::Timeline.new]
       midi_file.should_receive(:write_timelines).with(timelines)
       midi_file.write(timelines)

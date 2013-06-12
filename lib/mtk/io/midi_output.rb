@@ -8,7 +8,7 @@ module MTK
     #
     # @abstract Subclasses must provide {.devices}, {.devices_by_name}, {#note_on}, {#note_off}, {#control}, {#channel_pressure}, {#poly_pressure}, {#bend}, and {#program} to implement a MIDI output.
     #
-    class Output
+    class MIDIOutput
 
       class << self
 

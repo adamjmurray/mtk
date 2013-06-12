@@ -6,7 +6,7 @@ module MTK
     # Provides realtime MIDI output for JRuby via the jsound and gamelan gems.
     # @note This class is optional and only available if you require 'mtk/midi/jsound_output'.
     #       It depends on the 'jsound' and 'gamelan' gems.
-    class JSoundOutput < Output
+    class JSoundOutput < MIDIOutput
 
       public_class_method :new
 
@@ -41,37 +41,37 @@ module MTK
       ######################
       protected
 
-      # (see Output#note_on)
+      # (see MIDIOutput#note_on)
       def note_on(pitch, velocity, channel)
         @generator.note_on(pitch, velocity, channel)
       end
 
-      # (see Output#note_off)
+      # (see MIDIOutput#note_off)
       def note_off(pitch, velocity, channel)
         @generator.note_off(pitch, velocity, channel)
       end
 
-      # (see Output#control)
+      # (see MIDIOutput#control)
       def control(number, midi_value, channel)
         @generator.control_change(number, midi_value, channel)
       end
 
-      # (see Output#channel_pressure)
+      # (see MIDIOutput#channel_pressure)
       def channel_pressure(midi_value, channel)
         @generator.channel_pressure(midi_value, channel)
       end
 
-      # (see Output#poly_pressure)
+      # (see MIDIOutput#poly_pressure)
       def poly_pressure(pitch, midi_value, channel)
         @generator.poly_pressure(pitch, midi_value, channel)
       end
 
-      # (see Output#bend)
+      # (see MIDIOutput#bend)
       def bend(midi_value, channel)
         @generator.pitch_bend(midi_value, channel)
       end
 
-      # (see Output#program)
+      # (see MIDIOutput#program)
       def program(number, channel)
         @generator.program_change(number, channel)
       end

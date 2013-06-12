@@ -3,7 +3,7 @@
 # NOTE: this blindly overwrites any existing MTK-syntax_to_midi.mid file, unless a second argument is provided
 
 require 'mtk'
-require 'mtk/io/file'
+require 'mtk/io/midi_file'
 
 input = ARGV[0]
 if input.nil?
@@ -24,5 +24,5 @@ syntax = IO.read(input)
 sequencer = MTK::Lang::Parser.parse(syntax)
 timeline = sequencer.to_timeline
 
-MTK::MIDI_File(output).write timeline
+MTK::MIDIFile(output).write timeline
 

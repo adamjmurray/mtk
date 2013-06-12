@@ -7,7 +7,7 @@ unless file
 end
 
 require 'mtk'
-require 'mtk/io/file'
+require 'mtk/io/midi_file'
 include MTK
 
-puts MIDI_File(file).to_timelines
+puts MIDIFile(file).to_timelines

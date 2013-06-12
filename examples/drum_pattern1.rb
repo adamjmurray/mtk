@@ -1,5 +1,5 @@
 require 'mtk'
-require 'mtk/io/file'
+require 'mtk/io/midi_file'
 include MTK
 include Lang::Pitches
 include Lang::Intensities
@@ -14,10 +14,10 @@ pattern = {# 0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
   D2  =>  [  _, mp,  _, mp,  _, mp,  _, mf,  _, mp,  _, mp,  _, pp,  _, mf]  # hat
 }
 
-timeline = Timeline.new
+timeline = Events::Timeline.new
 for pitch,intensities in pattern
   track = Sequencers::StepSequencer( Patterns.Sequence(intensities), default_pitch: pitch )
   timeline.merge track.to_timeline
 end
 
-MIDI_File(file).write timeline
+MIDIFile(file).write timeline
