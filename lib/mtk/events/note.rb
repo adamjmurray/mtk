@@ -24,11 +24,11 @@ module MTK
         super :note, number:pitch, duration:duration, value:intensity, channel:channel
       end
 
-      def self.from_hash(hash)
+      def self.from_h(hash)
         new(hash[:pitch]||hash[:number], hash[:duration], hash[:intensity]||hash[:value], hash[:channel])
       end
 
-      def to_hash
+      def to_h
         super.merge({ pitch: @number, intensity: @value })
       end
 

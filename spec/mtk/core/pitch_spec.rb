@@ -83,9 +83,9 @@ describe MTK::Core::Pitch do
     end
   end
 
-  describe ".from_hash" do
+  describe ".from_h" do
     it "constructs a Pitch from a hash of pitch attributes" do
-      Pitch.from_hash({:pitch_class => C, :octave => 4, :offset => 0.5}).should == middle_c_and_50_cents
+      Pitch.from_h({:pitch_class => C, :octave => 4, :offset => 0.5}).should == middle_c_and_50_cents
     end
   end
 
@@ -105,9 +105,9 @@ describe MTK::Core::Pitch do
     end
   end
 
-  describe "#to_hash" do
+  describe "#to_h" do
     it "converts to a Hash" do
-      middle_c_and_50_cents.to_hash.should == {:pitch_class => C, :octave => 4, :offset => 0.5}
+      middle_c_and_50_cents.to_h.should == {:pitch_class => C, :octave => 4, :offset => 0.5}
     end
   end
 

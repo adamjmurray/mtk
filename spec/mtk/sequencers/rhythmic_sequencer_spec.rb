@@ -27,7 +27,7 @@ describe MTK::Sequencers::RhythmicSequencer do
     end
 
     it "contains notes assembled from the given patterns, with Timeline time deltas from the :rhythm type pattern" do
-      rhythmic_sequencer.to_timeline.should ==  MTK::Events::Timeline.from_hash({
+      rhythmic_sequencer.to_timeline.should ==  MTK::Events::Timeline.from_h({
         0 =>   Note(C4,1,0.3),
         0.5 => Note(D4,1,0.6),
         2.0 => Note(E4,2,0.9),
@@ -38,7 +38,7 @@ describe MTK::Sequencers::RhythmicSequencer do
 
     it "uses the absolute value of any negative durations in the rhythm pattern" do
       timeline = RHYTHMIC_SEQUENCER.new( [pitches, intensities, durations], rhythm: Patterns.RhythmSequence(-0.5, 1.5, -4) ).to_timeline
-      timeline.should ==  MTK::Events::Timeline.from_hash({
+      timeline.should ==  MTK::Events::Timeline.from_h({
         0 =>   Note(C4,1,0.3),
         0.5 => Note(D4,1,0.6),
         2.0 => Note(E4,2,0.9),
@@ -50,7 +50,7 @@ describe MTK::Sequencers::RhythmicSequencer do
   describe "#max_steps" do
     it "controls the maximum number of times in the generated timeline" do
       rhythmic_sequencer.max_steps = 2
-      rhythmic_sequencer.to_timeline.should ==  MTK::Events::Timeline.from_hash({
+      rhythmic_sequencer.to_timeline.should ==  MTK::Events::Timeline.from_h({
         0   => Note(C4,1,0.3),
         0.5 => Note(D4,1,0.6)
       })

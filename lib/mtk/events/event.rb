@@ -46,11 +46,11 @@ module MTK
         @channel = options[:channel]
       end
 
-      def self.from_hash(hash)
+      def self.from_h(hash)
         new(hash[:type], hash)
       end
 
-      def to_hash
+      def to_h
         hash = {:type => @type}
         hash[:value] = @value unless @value.nil?
         hash[:duration] = @duration unless @duration.nil?

@@ -81,7 +81,7 @@ ERROR_INPUT_NOT_FOUND  = 4
 
 # Immediately trying to play output while Ruby is still "warming up" can cause timing issues with
 # the first couple notes. So we play this "empty" Timeline containing a rest to address that issue.
-WARMUP = MTK::Events::Timeline.from_hash( {0 => MTK.Note(60,-1)} )
+WARMUP = MTK::Events::Timeline.from_h( {0 => MTK.Note(60,-1)} )
 
 #######################################################################
 

@@ -81,8 +81,8 @@ module MTK
       def play(anything, options={})
         timeline = case anything
           when MTK::Events::Timeline then anything
-          when Hash then  MTK::Events::Timeline.from_hash anything
-          when Enumerable,MTK::Events::Event then  MTK::Events::Timeline.from_hash(0 => anything)
+          when Hash then  MTK::Events::Timeline.from_h anything
+          when Enumerable,MTK::Events::Event then  MTK::Events::Timeline.from_h(0 => anything)
           else raise "#{self.class}.play() doesn't understand #{anything} (#{anything.class})"
         end
         timeline = timeline.flatten

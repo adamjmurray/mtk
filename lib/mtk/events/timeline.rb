@@ -18,7 +18,7 @@ module MTK
         def from_a(enumerable)
           new.merge enumerable
         end
-        alias from_hash from_a
+        alias from_h from_a
       end
 
       def merge enumerable
@@ -33,12 +33,12 @@ module MTK
         self
       end
 
-      def to_hash
+      def to_h
         @timeline
       end
 
       def == other
-        other = other.to_hash unless other.is_a? Hash
+        other = other.to_h unless other.is_a? Hash
         @timeline == other
       end
 
@@ -138,7 +138,7 @@ module MTK
       end
 
       def clone
-        self.class.from_hash(to_hash)
+        self.class.from_h(to_h)
       end
 
       def compact!

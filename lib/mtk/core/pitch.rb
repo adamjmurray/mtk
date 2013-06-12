@@ -61,7 +61,7 @@ module MTK
         end
       end
 
-      def self.from_hash(hash)
+      def self.from_h(hash)
         new hash[:pitch_class], hash[:octave], hash.fetch(:offset,0)
       end
 
@@ -84,7 +84,7 @@ module MTK
         @offset * 100
       end
 
-      def to_hash
+      def to_h
         {:pitch_class => @pitch_class, :octave => @octave, :offset => @offset}
       end
 
@@ -127,7 +127,7 @@ module MTK
       end
 
       def clone_with(hash)
-        self.class.from_hash(to_hash.merge hash)
+        self.class.from_h(to_h.merge hash)
       end
 
     end

@@ -44,7 +44,7 @@ describe MTK::IO::MIDIFile do
   describe "#write_timeline" do
     it 'writes monophonic Notes in a Timeline to a MIDI file' do
       MIDIFile(tempfile).write_timeline(
-        MTK::Events::Timeline.from_hash({
+        MTK::Events::Timeline.from_h({
           0 => Note(C4, q, 0.7),
           1 => Note(G4, q, 0.8),
           2 => Note(C5, q, 0.9)
@@ -84,7 +84,7 @@ describe MTK::IO::MIDIFile do
 
     it 'writes polyphonic (simultaneous) Notes in a Timeline to a MIDI file' do
       MIDIFile(tempfile).write_timeline(
-        MTK::Events::Timeline.from_hash({
+        MTK::Events::Timeline.from_h({
           0 => [Note(C4,q,0.5), Note(E4,q,0.5)],
           2.0 => [Note(G4,h,1), Note(B4,h,1), Note(D5,h,1)]
         })
@@ -135,7 +135,7 @@ describe MTK::IO::MIDIFile do
 
     it 'ignores rests (events with negative duration)' do
       MIDIFile(tempfile).write_timeline(
-        MTK::Events::Timeline.from_hash({
+        MTK::Events::Timeline.from_h({
           0 => Note(C4, q, 0.7),
           1 => Note(G4, -q, 0.8), # this is a rest because it has a negative duration
           2 => Note(C5, q, 0.9)
@@ -171,11 +171,11 @@ describe MTK::IO::MIDIFile do
   describe "#write_timelines" do
     it "writes a multitrack MIDI file" do
       MIDIFile(tempfile).write_timelines([
-        MTK::Events::Timeline.from_hash({
+        MTK::Events::Timeline.from_h({
           0 => Note(C4, q, 0.7),
           1.0 => Note(G4, q, 0.8),
         }),
-        MTK::Events::Timeline.from_hash({
+        MTK::Events::Timeline.from_h({
           1 => Note(C5, h, 0.9),
           2 => Note(D5, h, 1),
         }),

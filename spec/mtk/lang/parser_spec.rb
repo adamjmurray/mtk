@@ -36,7 +36,7 @@ describe MTK::Lang::Parser do
     it "can parse a single pitch class and play it" do
       sequencer = MTK::Lang::Parser.parse('c')
       timeline = sequencer.to_timeline
-      timeline.should ==  MTK::Events::Timeline.from_hash({0 => MTK.Note(C4)})
+      timeline.should ==  MTK::Events::Timeline.from_h({0 => MTK.Note(C4)})
     end
 
     context "default (root rule) behavior" do
@@ -58,7 +58,7 @@ describe MTK::Lang::Parser do
             0 => C4:mp:q
             1 => D4:o:h
           }
-        ").should ==  MTK::Events::Timeline.from_hash({0 => chain(C4,mp,q), 1 => chain(D4,o,h)})
+        ").should ==  MTK::Events::Timeline.from_h({0 => chain(C4,mp,q), 1 => chain(D4,o,h)})
       end
 
       it "parses a chain of sequences" do
@@ -152,7 +152,7 @@ describe MTK::Lang::Parser do
 
     context "timeline rule" do
       it "parses a very simple Timeline" do
-        parse("{0 => C}", :timeline).should ==  MTK::Events::Timeline.from_hash({0 => seq(C)})
+        parse("{0 => C}", :timeline).should ==  MTK::Events::Timeline.from_h({0 => seq(C)})
       end
 
       it "parses a Timeline with one entry" do
@@ -160,7 +160,7 @@ describe MTK::Lang::Parser do
           {
             0 => C4:mp:q
           }
-        ", :timeline).should ==  MTK::Events::Timeline.from_hash({0 => chain(C4,mp,q)})
+        ", :timeline).should ==  MTK::Events::Timeline.from_h({0 => chain(C4,mp,q)})
       end
 
       it "parses a Timeline with multiple entries" do
@@ -169,7 +169,7 @@ describe MTK::Lang::Parser do
             0 => C4:mp:q
             1 => D4:o:h
           }
-        ", :timeline).should ==  MTK::Events::Timeline.from_hash({0 => chain(C4,mp,q), 1 => chain(D4,o,h)})
+        ", :timeline).should ==  MTK::Events::Timeline.from_h({0 => chain(C4,mp,q), 1 => chain(D4,o,h)})
       end
 
       #it "parses a Timeline containing a chord" do
@@ -177,7 +177,7 @@ describe MTK::Lang::Parser do
       #    {
       #      0 => [C4 E4 G4]:fff:w
       #    }
-      #  ", :timeline).should == Timeline.from_hash({0 => chain(Chord(C4,E4,G4),fff,w)})
+      #  ", :timeline).should == Timeline.from_h({0 => chain(Chord(C4,E4,G4),fff,w)})
       #end
     end
 

@@ -166,15 +166,15 @@ describe MTK::Events::Event do
     end
   end
 
-  describe "from_hash" do
+  describe "from_h" do
     it "constructs an Event using a hash" do
-      EVENT.from_hash(hash).should == event
+      EVENT.from_h(hash).should == event
     end
   end
 
-  describe "#to_hash" do
+  describe "#to_h" do
     it "is a hash containing all the attributes of the Event" do
-      event.to_hash.should == hash
+      event.to_h.should == hash
     end
   end
 

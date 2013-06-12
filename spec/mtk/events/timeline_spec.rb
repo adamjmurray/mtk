@@ -6,10 +6,10 @@ describe MTK::Events::Timeline do
   let(:note2) { Note(G4, o, 2) }
   let(:timeline_raw_data) { { 0.0 => note1, 1.0 => [note1, note2] } }
   let(:timeline_hash) { { 0.0 => [note1], 1.0 => [note1, note2] } }
-  let(:timeline) { MTK::Events::Timeline.from_hash(timeline_raw_data) }
+  let(:timeline) { MTK::Events::Timeline.from_h(timeline_raw_data) }
 
   let(:unquantized_data) { { 0.0 => [note1], 0.7 => [note1], 1.1 => [note2], 1.24 => [note1], 1.25 => [note1] } }
-  let(:unquantized_timeline) { MTK::Events::Timeline.from_hash(unquantized_data) }
+  let(:unquantized_timeline) { MTK::Events::Timeline.from_h(unquantized_data) }
   let(:quantization_interval) { 0.5 }
   let(:quantized_data) { { 0.0 => [note1], 0.5 => [note1], 1.0 => [note2, note1], 1.5 => [note1] } }
 
@@ -22,22 +22,22 @@ describe MTK::Events::Timeline do
   end
 
   it "wraps lone values in arrays" do
-    MTK::Events::Timeline.from_hash(timeline_raw_data).should == MTK::Events::Timeline.from_hash(timeline_hash)
+    MTK::Events::Timeline.from_h(timeline_raw_data).should == MTK::Events::Timeline.from_h(timeline_hash)
   end
 
-  describe "from_hash" do
+  describe "from_h" do
     it "creates an empty timeline when the hash is empty" do
-      MTK::Events::Timeline.from_hash({}).should be_empty
+      MTK::Events::Timeline.from_h({}).should be_empty
     end
 
     it "builds a Timeline from a map of times to single events" do
-      t = MTK::Events::Timeline.from_hash({ 0 => note1, 1 => note2 })
+      t = MTK::Events::Timeline.from_h({ 0 => note1, 1 => note2 })
       t[0].should == [note1]
       t[1].should == [note2]
     end
 
     it "builds a Timeline from a map of times to event lists" do
-      t = MTK::Events::Timeline.from_hash({ 0 => [note1, note2], 1 => [note2] })
+      t = MTK::Events::Timeline.from_h({ 0 => [note1, note2], 1 => [note2] })
       t[0].should == [note1, note2]
       t[1].should == [note2]
     end
@@ -49,9 +49,9 @@ describe MTK::Events::Timeline do
     end
   end
 
-  describe "#to_hash" do
+  describe "#to_h" do
     it "returns the underlying Hash" do
-      timeline.to_hash.should == timeline_hash
+      timeline.to_h.should == timeline_hash
     end
   end
 
@@ -63,7 +63,7 @@ describe MTK::Events::Timeline do
 
   describe "#merge" do
     it "merges all the time,event pairs in the given Enumerable into this Timeline" do
-      timeline.merge({ 3 => note2 }).should == MTK::Events::Timeline.from_hash( timeline_raw_data.merge({ 3 => note2 }) )
+      timeline.merge({ 3 => note2 }).should == MTK::Events::Timeline.from_h( timeline_raw_data.merge({ 3 => note2 }) )
     end
   end
 
@@ -191,10 +191,10 @@ describe MTK::Events::Timeline do
 
   describe "#==" do
     it "is true when the underlying Hashes are equal" do
-      timeline.should ==  MTK::Events::Timeline.from_hash(timeline_hash)
+      timeline.should ==  MTK::Events::Timeline.from_h(timeline_hash)
     end
     it "is false when the underlying Hashes are not equal" do
-      timeline.should_not ==  MTK::Events::Timeline.from_hash( {0 => [note2], 1 => [note1, note2]} )
+      timeline.should_not ==  MTK::Events::Timeline.from_h( {0 => [note2], 1 => [note1, note2]} )
     end
     it "allows for direct comparison to hashes" do
       timeline.should == timeline_hash
@@ -222,7 +222,7 @@ describe MTK::Events::Timeline do
     end
 
     it "handle events from different times being mapped to the same time" do
-      timeline = MTK::Events::Timeline.from_hash({ 0.0 => [note1], 1.0 => [note1], 2.0 => [note2] })
+      timeline = MTK::Events::Timeline.from_h({ 0.0 => [note1], 1.0 => [note1], 2.0 => [note2] })
       mapped = timeline.map do |time,events|
         if events == [note1]
           [1.0, events]
@@ -329,8 +329,8 @@ describe MTK::Events::Timeline do
 
   describe "#shift_to" do
     it "shifts so the start is at the given time" do
-       MTK::Events::Timeline.from_hash(shifted_data).shift_to(0).should == timeline
-       MTK::Events::Timeline.from_hash(reverse_shifted_data).shift_to(0).should == timeline
+       MTK::Events::Timeline.from_h(shifted_data).shift_to(0).should == timeline
+       MTK::Events::Timeline.from_h(reverse_shifted_data).shift_to(0).should == timeline
     end
 
     it "returns an instance of the same type" do
@@ -344,8 +344,8 @@ describe MTK::Events::Timeline do
 
   describe "#shift_to!" do
     it "shifts so the start is at the given time" do
-       MTK::Events::Timeline.from_hash(shifted_data).shift_to!(0).should == timeline
-       MTK::Events::Timeline.from_hash(reverse_shifted_data).shift_to!(0).should == timeline
+       MTK::Events::Timeline.from_h(shifted_data).shift_to!(0).should == timeline
+       MTK::Events::Timeline.from_h(reverse_shifted_data).shift_to!(0).should == timeline
     end
 
     it "modifies the timeline in place" do
@@ -355,18 +355,18 @@ describe MTK::Events::Timeline do
 
   describe "#flatten" do
     it "flattens nested timelines so that all nested subtimes are converted to absolute times in a single timeline" do
-      timeline[10] =  MTK::Events::Timeline.from_hash({ 0 => note2, 1 => note1 })
+      timeline[10] =  MTK::Events::Timeline.from_h({ 0 => note2, 1 => note1 })
       timeline.flatten.should == timeline_hash.merge({ 10.0 => [note2], 11.0 => [note1] })
     end
     
     it "handles nested timelines which have nested timelines inside of them" do
-      nested =  MTK::Events::Timeline.from_hash({ 0 => note1 })
-      timeline[10] =  MTK::Events::Timeline.from_hash({ 100 => nested })
+      nested =  MTK::Events::Timeline.from_h({ 0 => note1 })
+      timeline[10] =  MTK::Events::Timeline.from_h({ 100 => nested })
       timeline.flatten.should == timeline_hash.merge({ 110.0 => [note1] })
     end
 
     it "handles multiple nested timeslines at the same time point" do
-      timeline[10] = [ MTK::Events::Timeline.from_hash({ 0 => note2, 1 => note1 }),  MTK::Events::Timeline.from_hash({ 2 => note1, 3 => note2 })]
+      timeline[10] = [ MTK::Events::Timeline.from_h({ 0 => note2, 1 => note1 }),  MTK::Events::Timeline.from_h({ 2 => note1, 3 => note2 })]
       timeline.flatten.should == timeline_hash.merge({ 10.0 => [note2], 11.0 => [note1], 12.0 => [note1], 13.0 => [note2] })
     end
     

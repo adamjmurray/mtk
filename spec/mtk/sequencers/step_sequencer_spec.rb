@@ -37,7 +37,7 @@ describe MTK::Sequencers::StepSequencer do
 
     it "contains notes assembled from the given patterns" do
       timeline = step_sequencer.to_timeline
-      timeline.should ==  MTK::Events::Timeline.from_hash({
+      timeline.should ==  MTK::Events::Timeline.from_h({
         0 => Note(C4,1,0.3),
         1 => Note(D4,1,0.7),
         2 => Note(E4,2,1.0)
@@ -46,7 +46,7 @@ describe MTK::Sequencers::StepSequencer do
 
     it "treats negative durations as rests" do
       timeline = STEP_SEQUENCER.new( [pitches, intensities, Patterns.DurationSequence(1, -1, 2)] ).to_timeline
-      timeline.should ==  MTK::Events::Timeline.from_hash({
+      timeline.should ==  MTK::Events::Timeline.from_h({
         0 => Note(C4,1,0.3),
         2 => Note(E4,2,1.0)
       })
@@ -57,7 +57,7 @@ describe MTK::Sequencers::StepSequencer do
     it "controls the delta between each time in the generated timeline" do
       step_sequencer.step_size = 2
       timeline = step_sequencer.to_timeline
-      timeline.should ==  MTK::Events::Timeline.from_hash({
+      timeline.should ==  MTK::Events::Timeline.from_h({
         0 => Note(C4,1,0.3),
         2 => Note(D4,1,0.7),
         4 => Note(E4,2,1.0)
@@ -69,7 +69,7 @@ describe MTK::Sequencers::StepSequencer do
     it "controls the maximum number of times in the generated timeline" do
       step_sequencer.max_steps = 2
       timeline = step_sequencer.to_timeline
-      timeline.should ==  MTK::Events::Timeline.from_hash({
+      timeline.should ==  MTK::Events::Timeline.from_h({
         0 => Note(C4,1,0.3),
         1 => Note(D4,1,0.7)
       })

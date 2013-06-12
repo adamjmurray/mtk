@@ -52,9 +52,9 @@ describe MTK::Events::Note do
     end
   end
 
-  describe ".from_hash" do
+  describe ".from_h" do
     it "constructs a Note using a hash" do
-      NOTE.from_hash({ :pitch => pitch, :intensity => intensity, :duration => duration }).should == note
+      NOTE.from_h({ :pitch => pitch, :intensity => intensity, :duration => duration }).should == note
     end
   end
 
@@ -64,9 +64,9 @@ describe MTK::Events::Note do
     end
   end
 
-  describe "#to_hash" do
+  describe "#to_h" do
     it "is a hash containing all the attributes of the Note" do
-      hash = note.to_hash
+      hash = note.to_h
       # hash includes some extra "baggage" for compatibility with AbstractEvent,
       # so we'll just check the fields we care about:
       hash[:pitch].should == pitch
