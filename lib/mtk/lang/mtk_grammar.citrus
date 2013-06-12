@@ -128,31 +128,31 @@ grammar MTK_Grammar
 
   rule pitch
     ( pitch_class int ) {
-      MTK::Pitch[pitch_class.value, int.value]
+      MTK::Core::Pitch[pitch_class.value, int.value]
     }
   end
 
   rule pitch_class
     ( [A-Ga-g] [#b]*2 ) {
-      MTK::PitchClass[to_s]
+      MTK::Core::PitchClass[to_s]
     }
   end
 
   rule interval
     ( [Pp] [1458] | ('maj'|'min'|[Mm]) [2367] | 'TT' | 'tt' ) {
-      MTK::Interval.from_s(to_s)
+      MTK::Core::Interval.from_s(to_s)
     }
   end
 
   rule intensity
     ( ('p'1*3 | 'mp' | 'mf' | 'o' | 'f'2*3) ('+'|'-')? ) {
-      MTK::Intensity.from_s(to_s)
+      MTK::Core::Intensity.from_s(to_s)
     }
   end
 
   rule duration
     ( rest:'-'? multiplier:number? [whqisrx] ('.'|'t')* ) {
-      MTK::Duration.from_s(to_s)
+      MTK::Core::Duration.from_s(to_s)
     }
   end
 

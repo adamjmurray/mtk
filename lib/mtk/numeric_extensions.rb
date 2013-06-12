@@ -5,7 +5,7 @@
 class Numeric
 
   def beats
-    MTK::Duration(self)
+    MTK::Core::Duration(self)
   end
   alias beat beats
 

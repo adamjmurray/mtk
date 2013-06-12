@@ -1,7 +1,7 @@
 module MTK
   module Lang
 
-    # Defines a constants for each {Pitch} in the standard MIDI range using scientific pitch notation.
+    # Defines a constants for each {Core::Pitch} in the standard MIDI range using scientific pitch notation.
     #
     # See http://en.wikipedia.org/wiki/Scientific_pitch_notation
     #
@@ -18,7 +18,7 @@ module MTK
       PITCH_NAMES = []
 
       128.times do |note_number|
-        pitch = Pitch.from_i( note_number )
+        pitch = MTK::Core::Pitch.from_i( note_number )
         PITCHES << pitch
 
         octave_str = pitch.octave.to_s.sub(/-/,'_') # '_1' for -1
@@ -35,10 +35,10 @@ module MTK
 
       # Lookup the value of an pitch constant by name.
       # @example lookup value of 'C3'
-      #         MTK::Pitches['C3']
-      # @see Pitch.from_s
-      # @note Unlike {Pitch.from_s} this method will accept either '_' (underscore) or '-' (minus) and treat it like '-' (minus)
-      # @note Unlike {Pitch.from_s} this method only accepts the accidental 'b'
+      #         MTK::Core::Pitches['C3']
+      # @see Core::Pitch.from_s
+      # @note Unlike {Core::Pitch.from_s} this method will accept either '_' (underscore) or '-' (minus) and treat it like '-' (minus)
+      # @note Unlike {Core::Pitch.from_s} this method only accepts the accidental 'b'
       def self.[](name)
         begin
           const_get name.sub('-','_')

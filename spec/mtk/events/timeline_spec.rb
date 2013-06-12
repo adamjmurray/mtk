@@ -174,7 +174,7 @@ describe MTK::Events::Timeline do
   describe "length" do
     it "is the lastest time + the longest duration of events at that time" do
       len = timeline.length
-      len.should be_a ::MTK::Duration
+      len.should be_a ::MTK::Core::Duration
       len.should == ::MTK.Duration(3)
     end
   end

@@ -9,7 +9,7 @@ module MTK
     #
     # These can be thought of like constants, but they
     # use lower-case names and therefore define them as "pseudo constant" methods.
-    # The methods are available either through the module (MTK::Durations::e) or via mixin (include MTK::Durations; q)
+    # The methods are available either through the module (MTK::Core::Durations::e) or via mixin (include MTK::Core::Durations; q)
     #
     # These values assume the quarter note is one beat (1.0), so they work best with 4/4 and other */4 time signatures.
     #
@@ -26,31 +26,31 @@ module MTK
       # @macro [attach] durations.define_constant
       #   @attribute [r]
       #   @return [$2] number of beats for $1
-      define_constant 'w', MTK::Duration[4]
+      define_constant 'w', MTK::Core::Duration[4]
 
       # half note
-      define_constant 'h', MTK::Duration[2]
+      define_constant 'h', MTK::Core::Duration[2]
 
       # quarter note
-      define_constant 'q', MTK::Duration[1]
+      define_constant 'q', MTK::Core::Duration[1]
 
       # eight note
-      define_constant 'i', MTK::Duration[Rational(1,2)]
+      define_constant 'i', MTK::Core::Duration[Rational(1,2)]
 
       # sixteenth note
-      define_constant 's', MTK::Duration[Rational(1,4)]
+      define_constant 's', MTK::Core::Duration[Rational(1,4)]
 
       # thirty-second note
-      define_constant 'r', MTK::Duration[Rational(1,8)]
+      define_constant 'r', MTK::Core::Duration[Rational(1,8)]
 
       # sixty-fourth note
-      define_constant 'x', MTK::Duration[Rational(1,16)]
+      define_constant 'x', MTK::Core::Duration[Rational(1,16)]
 
       # The values of all "psuedo constants" defined in this module
       DURATIONS = [w, h, q, i, s, r, x].freeze
 
       # The names of all "psuedo constants" defined in this module
-      DURATION_NAMES = MTK::Duration::NAMES
+      DURATION_NAMES = MTK::Core::Duration::NAMES
 
     end
   end

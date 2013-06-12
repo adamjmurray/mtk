@@ -4,16 +4,16 @@ module MTK
     # A special pattern that takes a list of event properties and/or patterns and emits lists of {Events::Event}s
     class EventBuilder
 
-      DEFAULT_PITCH = MTK::Pitch(60)
-      DEFAULT_DURATION = MTK::Duration(1)
-      DEFAULT_INTENSITY = MTK::Intensity(0.75)
+      DEFAULT_PITCH     = MTK.Pitch(60)
+      DEFAULT_DURATION  = MTK.Duration(1)
+      DEFAULT_INTENSITY = MTK.Intensity(0.75)
 
       def initialize(patterns, options={})
         @patterns = patterns
         @options = options
-        @default_pitch     = if options.has_key? :default_pitch     then MTK::Pitch(    options[:default_pitch])     else DEFAULT_PITCH     end
-        @default_duration  = if options.has_key? :default_duration  then MTK::Duration( options[:default_duration])  else DEFAULT_DURATION  end
-        @default_intensity = if options.has_key? :default_intensity then MTK::Intensity(options[:default_intensity]) else DEFAULT_INTENSITY end
+        @default_pitch     = if options.has_key? :default_pitch     then MTK.Pitch(    options[:default_pitch])     else DEFAULT_PITCH     end
+        @default_duration  = if options.has_key? :default_duration  then MTK.Duration( options[:default_duration])  else DEFAULT_DURATION  end
+        @default_intensity = if options.has_key? :default_intensity then MTK.Intensity(options[:default_intensity]) else DEFAULT_INTENSITY end
         @channel = options[:channel]
         @max_interval = options.fetch(:max_interval, 127)
         rewind
@@ -34,19 +34,19 @@ module MTK
             return nil if element.nil? or element == :skip
 
             case element
-              when ::MTK::Pitch         then pitches << element
-              when ::MTK::PitchClass    then pitches += pitches_for_pitch_classes([element], @previous_pitch)
+              when ::MTK::Core::Pitch         then pitches << element
+              when ::MTK::Core::PitchClass    then pitches += pitches_for_pitch_classes([element], @previous_pitch)
               when ::MTK::Groups::PitchClassSet then pitches += pitches_for_pitch_classes(element, @previous_pitch)
               when ::MTK::Groups::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
 
-              when ::MTK::Duration
+              when ::MTK::Core::Duration
                 duration ||= 0
                 duration += element
 
-              when ::MTK::Intensity
+              when ::MTK::Core::Intensity
                 intensities << element
 
-              when ::MTK::Interval
+              when ::MTK::Core::Interval
                 if @previous_pitches
                   pitches += @previous_pitches.map{|pitch| pitch + element }
                 else
@@ -67,7 +67,7 @@ module MTK
         if intensities.empty?
           intensity = @previous_intensity
         else
-          intensity = MTK::Intensity[intensities.map{|i| i.to_f }.inject(:+)/intensities.length] # average the intensities
+          intensity = MTK::Core::Intensity[intensities.map{|i| i.to_f }.inject(:+)/intensities.length] # average the intensities
         end
 
         # Not using this yet, maybe later...

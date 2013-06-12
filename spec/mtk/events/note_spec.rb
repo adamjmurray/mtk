@@ -125,8 +125,8 @@ describe MTK::Events::Note do
 
   describe "#inspect" do
     it 'is "#<MTK::Events::Note:{object_id} @pitch={pitch.inspect}, @duration={duration.inspect}, @intensity={intensity.inspect}>"' do
-      duration = MTK::Duration(1/8.0)
-      intensity = MTK::Intensity(1/8.0)
+      duration = MTK.Duration(1/8.0)
+      intensity = MTK.Intensity(1/8.0)
       note = NOTE.new(C4, duration, intensity)
       note.inspect.should == "#<MTK::Events::Note:#{note.object_id} @pitch=#{C4.inspect}, @duration=#{duration.inspect}, @intensity=#{intensity.inspect}>"
     end
@@ -161,7 +161,7 @@ describe MTK do
     end
 
     it "fills in a missing duration type from an number" do
-      Note(C4,mf,5.25).should == NOTE.new(C4,MTK::Duration(5.25),mf)
+      Note(C4,mf,5.25).should == NOTE.new(C4,MTK.Duration(5.25),mf)
     end
 
     it '' do

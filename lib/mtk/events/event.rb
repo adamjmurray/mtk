@@ -29,7 +29,7 @@ module MTK
 
       def duration= duration
         @duration = duration
-        @duration = ::MTK::Duration[@duration || 0] unless @duration.is_a? ::MTK::Duration
+        @duration = ::MTK::Core::Duration[@duration || 0] unless @duration.is_a? ::MTK::Core::Duration
         @duration
       end
 
@@ -42,7 +42,7 @@ module MTK
         @value = options[:value]
         @number = options[:number]
         @duration = options.fetch(:duration, 0)
-        @duration = ::MTK::Duration[@duration] unless @duration.is_a? ::MTK::Duration
+        @duration = ::MTK::Core::Duration[@duration] unless @duration.is_a? ::MTK::Core::Duration
         @channel = options[:channel]
       end
 

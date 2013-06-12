@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MTK::Interval do
+describe MTK::Core::Interval do
 
   let(:minor_second)  { Interval[1] }
 

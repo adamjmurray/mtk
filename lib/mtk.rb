@@ -3,8 +3,24 @@
 # The top level module for this library
 module MTK
 
+  # Core data types
+  module Core
+  end
+
   # Musical events, such as {MTK::Events::Note}s and {MTK::Events::Parameter} changes, that are arranged in time via a {MTK::Events::Timeline}.
   module Events
+  end
+
+  # Collections of {MTK::Core} objects
+  module Groups
+  end
+
+  # Optional classes for MIDI {MTK::IO::File} and realtime MIDI {MTK::IO::Input} and {MTK::IO::Output}.
+  module IO
+  end
+
+  # Optional classes for the "MTK language", which let's you compose music via MTK without writing any Ruby code
+  module Lang
   end
 
   # Classes that emit elements one at a time. Used by {MTK::Sequencers::Sequencer}s to construct {MTK::Events::Timeline}s.
@@ -15,25 +31,13 @@ module MTK
   module Sequencers
   end
 
-  # Optional classes for the "MTK language", which let's you compose music via MTK without writing any Ruby code
-  module Lang
-  end
-
-  # Collections of Core objects
-  module Groups
-  end
-
-  # Optional classes for MIDI {MTK::IO::File} and realtime MIDI {MTK::IO::Input} and {MTK::IO::Output}.
-  module IO
-  end
-
 end
 
-require 'mtk/pitch_class'
-require 'mtk/pitch'
-require 'mtk/duration'
-require 'mtk/intensity'
-require 'mtk/interval'
+require 'mtk/core/pitch_class'
+require 'mtk/core/pitch'
+require 'mtk/core/duration'
+require 'mtk/core/intensity'
+require 'mtk/core/interval'
 
 require 'mtk/lang/pseudo_constants'
 require 'mtk/lang/pitch_classes'

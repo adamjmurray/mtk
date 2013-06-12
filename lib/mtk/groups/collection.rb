@@ -171,8 +171,8 @@ module MTK
          anything.to_pitch_classes
        else
          case anything
-           when ::Enumerable then anything.map{|item| MTK::PitchClass(item) }
-           else [MTK::PitchClass(anything)]
+           when ::Enumerable then anything.map{|item| MTK.PitchClass(item) }
+           else [MTK.PitchClass(anything)]
          end
        end
      end
@@ -185,8 +185,8 @@ module MTK
          anything.to_pitches
        else
          case anything
-           when ::Enumerable then anything.map{|item| MTK::Pitch(item) }
-           else [MTK::Pitch(anything)]
+           when ::Enumerable then anything.map{|item| MTK.Pitch(item) }
+           else [MTK.Pitch(anything)]
          end
        end
      end

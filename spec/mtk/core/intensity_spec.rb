@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MTK::Intensity do
+describe MTK::Core::Intensity do
 
   let(:half_intensity)  { Intensity[0.5] }
 
@@ -147,10 +147,10 @@ describe MTK::Intensity do
   end
 
   describe '#inspect' do
-    it 'is "#<MTK::Intensity:{object_id} @value={value}>"' do
+    it 'is "#<MTK::Core::Intensity:{object_id} @value={value}>"' do
       for value in [0, 60, 60.5, 127]
         intensity = Intensity.new(value)
-        intensity.inspect.should == "#<MTK::Intensity:#{intensity.object_id} @value=#{value}>"
+        intensity.inspect.should == "#<MTK::Core::Intensity:#{intensity.object_id} @value=#{value}>"
       end
     end
   end

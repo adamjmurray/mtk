@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MTK::Pitch do
+describe MTK::Core::Pitch do
 
   let(:middle_c) { Pitch.new(C, 4) }
   let(:lowest) { Pitch.new(C, -1) }
@@ -16,7 +16,7 @@ describe MTK::Pitch do
       Pitch.new(C,4).should_not be_equal Pitch[C,4]
     end
 
-    it "can handle any type for the first argument that's supported by MTK::PitchClass()" do
+    it "can handle any type for the first argument that's supported by MTK::Core::PitchClass()" do
       Pitch['C',4].should == Pitch[0, 4]
     end
   end
@@ -142,10 +142,10 @@ describe MTK::Pitch do
   end
 
   describe '#inspect' do
-    it 'is "#<MTK::Pitch:{object_id} @value={value}>"' do
+    it 'is "#<MTK::Core::Pitch:{object_id} @value={value}>"' do
       for value in [0, 60, 60.5, 127]
         pitch = Pitch.from_f(value)
-        pitch.inspect.should == "#<MTK::Pitch:#{pitch.object_id} @value=#{value}>"
+        pitch.inspect.should == "#<MTK::Core::Pitch:#{pitch.object_id} @value=#{value}>"
       end
     end
   end

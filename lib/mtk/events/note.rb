@@ -5,8 +5,8 @@ module MTK
     # A musical {Event} defined by a {Pitch}, intensity, and duration
     class Note < Event
 
-      DEFAULT_DURATION  = MTK::Duration[1]
-      DEFAULT_INTENSITY = MTK::Intensity[0.75]
+      DEFAULT_DURATION  = MTK::Core::Duration[1]
+      DEFAULT_INTENSITY = MTK::Core::Intensity[0.75]
 
       # Frequency of the note as a {Pitch}.
       alias :pitch :number
@@ -33,7 +33,7 @@ module MTK
       end
 
       def self.from_midi(pitch, velocity, duration_in_beats, channel=0)
-        new( MTK::Lang::Pitches::PITCHES[pitch.to_i], MTK::Duration[duration_in_beats], MTK::Intensity[velocity/127.0], channel )
+        new( MTK::Lang::Pitches::PITCHES[pitch.to_i], MTK::Core::Duration[duration_in_beats], MTK::Core::Intensity[velocity/127.0], channel )
       end
 
       def midi_pitch
@@ -74,7 +74,7 @@ module MTK
     case anything
       when MTK::Events::Note then anything
 
-      when MTK::Pitch then MTK::Events::Note.new(anything)
+      when MTK::Core::Pitch then MTK::Events::Note.new(anything)
 
       when Array
         pitch = nil
@@ -84,18 +84,18 @@ module MTK
         unknowns = []
         anything.each do |item|
           case item
-            when MTK::Pitch then pitch = item
-            when MTK::Duration then duration = item
-            when MTK::Intensity then intensity = item
+            when MTK::Core::Pitch then pitch = item
+            when MTK::Core::Duration then duration = item
+            when MTK::Core::Intensity then intensity = item
             else unknowns << item
           end
         end
 
-        pitch = MTK::Pitch(unknowns.shift) if pitch.nil? and not unknowns.empty?
+        pitch = MTK.Pitch(unknowns.shift) if pitch.nil? and not unknowns.empty?
         raise "MTK::Note() couldn't find a pitch in arguments: #{anything.inspect}" if pitch.nil?
 
-        duration  = MTK::Duration(unknowns.shift)  if duration.nil?  and not unknowns.empty?
-        intensity = MTK::Intensity(unknowns.shift) if intensity.nil? and not unknowns.empty?
+        duration  = MTK.Duration(unknowns.shift)  if duration.nil?  and not unknowns.empty?
+        intensity = MTK.Intensity(unknowns.shift) if intensity.nil? and not unknowns.empty?
         channel = unknowns.shift.to_i if channel.nil? and not unknowns.empty?
 
         duration  ||= MTK::Events::Note::DEFAULT_DURATION

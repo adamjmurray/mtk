@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MTK::PitchClass do
+describe MTK::Core::PitchClass do
 
   let(:enharmonic_spellings_grouped_by_value) {
     # not sure how to test this without re-coding these names here

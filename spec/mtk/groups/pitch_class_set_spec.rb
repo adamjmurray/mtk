@@ -24,7 +24,7 @@ describe MTK::Groups::PitchClassSet do
 
   describe ".all" do
     it "is the set of all 12 pitch classes" do
-      PITCH_CLASS_SET.all.should == MTK::PitchClassSet(PitchClasses::PITCH_CLASSES)
+      PITCH_CLASS_SET.all.should == MTK.PitchClassSet(PitchClasses::PITCH_CLASSES)
     end
   end
 
@@ -117,23 +117,23 @@ describe MTK::Groups::PitchClassSet do
 
   describe '#transpose' do
     it 'transposes by the given semitones' do
-      (pitch_class_set.transpose 4).should == MTK::PitchClassSet(E, Ab, B)
+      (pitch_class_set.transpose 4).should == MTK.PitchClassSet(E, Ab, B)
     end
   end
 
   describe "#invert" do
     it 'inverts all pitch_classes around the given center pitch' do
-      pitch_class_set.invert(G).should == MTK::PitchClassSet(D,Bb,G)
+      pitch_class_set.invert(G).should == MTK.PitchClassSet(D,Bb,G)
     end
 
     it 'inverts all pitches around the first pitch, when no center pitch is given' do
-      pitch_class_set.invert.should == MTK::PitchClassSet(C,Ab,F)
+      pitch_class_set.invert.should == MTK.PitchClassSet(C,Ab,F)
     end
   end
 
   describe "#reverse" do
     it "produces a PITCH_CLASS_SET with pitch classes in reverse order" do
-      pitch_class_set.reverse.should == MTK::PitchClassSet(G,E,C)
+      pitch_class_set.reverse.should == MTK.PitchClassSet(G,E,C)
     end
   end
 
@@ -145,38 +145,38 @@ describe MTK::Groups::PitchClassSet do
 
   describe "#intersection" do
     it "produces a PITCH_CLASS_SET containing the common pitch classes from self and the argument" do
-      pitch_class_set.intersection(MTK::PitchClassSet(E,G,B)).should == MTK::PitchClassSet(E,G)
+      pitch_class_set.intersection(MTK.PitchClassSet(E,G,B)).should == MTK.PitchClassSet(E,G)
     end
   end
 
   describe "#union" do
     it "produces a PITCH_CLASS_SET containing the all pitch classes from either self or the argument" do
-      pitch_class_set.union(MTK::PitchClassSet(E,G,B)).should == MTK::PitchClassSet(C,E,G,B)
+      pitch_class_set.union(MTK.PitchClassSet(E,G,B)).should == MTK.PitchClassSet(C,E,G,B)
     end
   end
 
   describe "#difference" do
     it "produces a PITCH_CLASS_SET with the pitch classes from the argument removed" do
-      pitch_class_set.difference(MTK::PitchClassSet(E)).should == MTK::PitchClassSet(C,G)
+      pitch_class_set.difference(MTK.PitchClassSet(E)).should == MTK.PitchClassSet(C,G)
     end
   end
 
   describe "#symmetric_difference" do
     it "produces a PITCH_CLASS_SET containing the pitch classes only in self or only in the argument" do
-      pitch_class_set.symmetric_difference(MTK::PitchClassSet(E,G,B)).should == MTK::PitchClassSet(C,B)
+      pitch_class_set.symmetric_difference(MTK.PitchClassSet(E,G,B)).should == MTK.PitchClassSet(C,B)
     end
   end
 
   describe "#complement" do
     it "produces the set of all PitchClasses not in the current set" do
-      pitch_class_set.complement.should =~ MTK::PitchClassSet(Db,D,Eb,F,Gb,Ab,A,Bb,B)
+      pitch_class_set.complement.should =~ MTK.PitchClassSet(Db,D,Eb,F,Gb,Ab,A,Bb,B)
     end
   end
 
   describe "#rotate" do
     it "produces a PITCH_CLASS_SET that is rotated by the given offset" do
-      pitch_class_set.rotate(2).should == MTK::PitchClassSet(G,C,E)
-      pitch_class_set.rotate(-2).should == MTK::PitchClassSet(E,G,C)
+      pitch_class_set.rotate(2).should == MTK.PitchClassSet(G,C,E)
+      pitch_class_set.rotate(-2).should == MTK.PitchClassSet(E,G,C)
     end
 
     it "rotates by 1 if no argument is given" do
@@ -186,7 +186,7 @@ describe MTK::Groups::PitchClassSet do
 
   describe "#permute" do
     it "randomly rearranges the PITCH_CLASS_SET order (NOTE: very slight expected chance of test failure, if this fails run it again!)" do
-      all_pcs = MTK::PitchClassSet(PitchClasses::PITCH_CLASSES)
+      all_pcs = MTK.PitchClassSet(PitchClasses::PITCH_CLASSES)
       permuted = all_pcs.permute
       permuted.should =~ all_pcs
       permuted.should_not == all_pcs # there's a 1/479_001_600 chance this will fail...
@@ -195,7 +195,7 @@ describe MTK::Groups::PitchClassSet do
 
   describe "#shuffle" do
     it "behaves like permute (NOTE: very slight expected chance of test failure, if this fails run it again!)" do
-      all_pcs = MTK::PitchClassSet(PitchClasses::PITCH_CLASSES)
+      all_pcs = MTK.PitchClassSet(PitchClasses::PITCH_CLASSES)
       shuffled = all_pcs.shuffle
       shuffled.should =~ all_pcs
       shuffled.should_not == all_pcs # there's a 1/479_001_600 chance this will fail...
@@ -204,7 +204,7 @@ describe MTK::Groups::PitchClassSet do
 
   describe "#concat" do
     it "appends the pitch classes from the other set" do
-      pitch_class_set.concat(MTK::PitchClassSet(D,E,F)).should == MTK::PitchClassSet(C,E,G,D,E,F)
+      pitch_class_set.concat(MTK.PitchClassSet(D,E,F)).should == MTK.PitchClassSet(C,E,G,D,E,F)
     end
   end
 
@@ -240,11 +240,11 @@ describe MTK::Groups::PitchClassSet do
 
   describe "#==" do
     it "is true if two pitch class sets contain the same set in the same order" do
-      pitch_class_set.should == MTK::PitchClassSet(C,E,G)
+      pitch_class_set.should == MTK.PitchClassSet(C,E,G)
     end
 
     it "is false if two pitch class sets are not in the same order" do
-      pitch_class_set.should_not == MTK::PitchClassSet(C,G,E)
+      pitch_class_set.should_not == MTK.PitchClassSet(C,G,E)
     end
 
     it "is false when if otherwise equal pitch class sets don't contain the same number of duplicates" do
@@ -252,7 +252,7 @@ describe MTK::Groups::PitchClassSet do
     end
 
     it "is false if two pitch class sets do not contain the same pitch classes" do
-      pitch_class_set.should_not == MTK::PitchClassSet(C,E)
+      pitch_class_set.should_not == MTK.PitchClassSet(C,E)
     end
 
     it "allows for direct comparison with Arrays" do
@@ -262,7 +262,7 @@ describe MTK::Groups::PitchClassSet do
 
   describe "#=~" do
     it "is true if two pitch class sets contain the same set in the same order" do
-      pitch_class_set.should =~ MTK::PitchClassSet(C,E,G)
+      pitch_class_set.should =~ MTK.PitchClassSet(C,E,G)
     end
 
     it "is true when all the pitch classes are equal, even with different numbers of duplicates" do
@@ -270,11 +270,11 @@ describe MTK::Groups::PitchClassSet do
     end
 
     it "is true if two pitch class sets are not in the same order" do
-      pitch_class_set.should =~ MTK::PitchClassSet(C,G,E)
+      pitch_class_set.should =~ MTK.PitchClassSet(C,G,E)
     end
 
     it "is false if two pitch class sets do not contain the same pitch classes" do
-      pitch_class_set.should_not =~ MTK::PitchClassSet(C,E)
+      pitch_class_set.should_not =~ MTK.PitchClassSet(C,E)
     end
 
     it "allows for direct comparison with Arrays" do

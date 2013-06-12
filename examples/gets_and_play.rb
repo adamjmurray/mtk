@@ -3,6 +3,7 @@
 require 'mtk'
 require_relative 'helpers/output_selector'
 include MTK
+include MTK::Core
 
 output = OutputSelector.ensure_output ARGV[0]
 

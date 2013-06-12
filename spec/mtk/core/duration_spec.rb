@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MTK::Duration do
+describe MTK::Core::Duration do
 
   let(:one_beat)  { Duration[1] }
   let(:two_beats) { Duration[2] }
@@ -230,10 +230,10 @@ describe MTK::Duration do
   end
 
   describe '#inspect' do
-    it 'is "#<MTK::Duration:{object_id} @value={value}>"' do
+    it 'is "#<MTK::Core::Duration:{object_id} @value={value}>"' do
       for value in [0, 60, 60.5, 127]
         duration = Duration.new(value)
-        duration.inspect.should == "#<MTK::Duration:#{duration.object_id} @value=#{value}>"
+        duration.inspect.should == "#<MTK::Core::Duration:#{duration.object_id} @value=#{value}>"
       end
     end
   end
