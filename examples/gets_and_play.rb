@@ -1,10 +1,10 @@
 # Enter space-separated pitch classes (A,B,C,D,E,F,G) at the prompt and hear them play.
 
 require 'mtk'
-require 'mtk/io/output_selector'
+require_relative 'helpers/output_selector'
 include MTK
 
-output = MTK::IO::OutputSelector.ensure_output ARGV[0]
+output = OutputSelector.ensure_output ARGV[0]
 
 def get_pitch_classes
   puts "Enter pitch classes:"

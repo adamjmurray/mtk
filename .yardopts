@@ -4,7 +4,7 @@
 --protected
 --no-private
 lib/**/*.rb
-- *.md
-- examples/*
+- INTRO.md
 - lib/**/*.citrus
 - LICENSE.txt
+- examples/**/*.rb
