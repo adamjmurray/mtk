@@ -8,4 +8,7 @@ coverage.data
 *.gem
 Gemfile.lock
 .bundle
+*.gemspec
+*.mtk
 *.mid
+*.png
