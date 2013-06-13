@@ -1,6 +1,8 @@
 require 'rspec/core/rake_task'
 require 'rake/clean'
 
+GEM_VERSION = '0.0.3.3'
+
 SUPPORTED_RUBIES = %w[ 1.9.3  2.0  jruby-1.7.4 ]
 ENV['JRUBY_OPTS'] = '--1.9'
 
@@ -24,6 +26,40 @@ namespace :gem do
   desc "Install gems for supported versions of Ruby: #{SUPPORTED_RUBIES.join ', '}"
   task :install_dependencies do
     fail unless system("rvm #{SUPPORTED_RUBIES.join ','} do bundle install")
+  end
+
+  desc "Build the CRuby and JRuby gems for distribution"
+  task :build do
+    gem_version = GEM_VERSION
+
+    gem_name = 'mtk'
+    platform_specific_depedencies = {unimidi:'~> 0.3'}
+    additional_gem_specifications = {}
+    generate_gemspec(binding)
+
+    gem_name = 'jmtk'
+    platform_specific_depedencies = {jsound:'~> 0.1'}
+    additional_gem_specifications = {platform:'java'}
+    generate_gemspec(binding)
+  end
+
+  def generate_gemspec(erb_bindings)
+    gem_name = erb_bindings.eval('gem_name')
+
+    erb = ERB.new(IO.read 'mtk.gemspec.erb')
+    gemspec = erb.result(erb_bindings)
+
+    gemspec_filename = "#{gem_name}.gemspec"
+    puts "Generating #{gemspec_filename}"
+    IO.write(gemspec_filename, gemspec)
+
+    if gem_name == 'jmtk'
+      `cp bin/mtk bin/jmtk` # jmtk gem uses this as the binary
+    end
+    puts "Building gem"
+    puts `gem build #{gemspec_filename}`
+  ensure
+    `rm bin/jmtk`
   end
 end
 

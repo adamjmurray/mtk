@@ -113,3 +113,23 @@ or, to automatically refresh the documentation as you work:
 
      bundle exec yard server -r
      open http://localhost:8808
+
+
+### Release the gems ###
+
+To better handle the differing depdencies between CRuby and JRuby, there are two gems, mtk and jmtk.
+You can build both gems with:
+
+     bundle exec gem:build
+
+Do a local sanity check by installing
+
+     # Using CRuby 1.9 or 2.0:
+     gem install mtk-0.x.x.gem
+     ... test mtk command ...
+
+     rvm use jruby
+     jgem install jmtk-0.x.x-java.gem
+     ... test jmtk command ...
+
+And then authorized users can push gems to rubygems.org.

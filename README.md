@@ -25,13 +25,17 @@ MTK works with Ruby 1.9, Ruby 2.0, and JRuby
 
         gem install mtk
 
-    or if using JRuby:
+    Or for JRuby:
 
-        jgem install mtk
+        jgem install jmtk
 
 0. Learn the command-line interface:
 
         mtk --help
+
+    Or for JRuby:
+
+        jmtk --help
 
 0. Learn the MTK syntax: TODO... documentation forthcoming. In the meantime, see the unit tests @ https://github.com/adamjmurray/mtk/blob/master/spec/mtk/lang/parser_spec.rb
 

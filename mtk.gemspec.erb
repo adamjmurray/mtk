@@ -1,6 +1,6 @@
 Gem::Specification.new do |gem|
-  gem.name        = 'mtk'
-  gem.version     = '0.0.3.3'
+  gem.name        = '<%= gem_name %>'
+  gem.version     = '<%= gem_version%>'
 
   gem.summary     = 'Music Tool Kit for Ruby'
   gem.description = 'A music library and domain-specific language for generating music via MIDI.'
@@ -10,14 +10,16 @@ Gem::Specification.new do |gem|
 
   gem.files       = Dir['Rakefile', '*.md', 'LICENSE.txt', '.yardopts', 'bin/*', 'examples/*', 'lib/**/*', 'spec/**/*']
   gem.bindir      = 'bin'
-  gem.executables = ['mtk']
+  gem.executables = ['<%= gem_name %>']
 
   gem.add_dependency 'citrus', '~> 2.4'
   gem.add_dependency 'midilib', '~> 2.0'
   gem.add_dependency 'gamelan', '~> 0.3'
-  
-    gem.add_dependency 'unimidi', '~> 0.3'
-  
+  <% for gem,version in platform_specific_depedencies %>
+    gem.add_dependency '<%= gem %>', '<%= version %>'
+  <% end %>
 
-  
+  <% for spec,value in additional_gem_specifications %>
+    gem.<%= spec %> = '<%= value %>'
+  <% end %>
 end
