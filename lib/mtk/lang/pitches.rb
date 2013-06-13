@@ -9,6 +9,8 @@ module MTK
     #     the "black key" pitches are all named as flats with 'b' (for example, Gb3 or Cb4)
     # @note Because the character '-' (minus) cannot be used in the name of a constant,
     #     the low pitches use '_' (underscore) in place of '-' (minus) (for example C_1).
+    #
+    # @see Events::Note
     module Pitches
 
       # The values of all constants defined in this module

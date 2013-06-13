@@ -3,19 +3,18 @@ module MTK
 
     # Defines intensity constants using standard dynamic symbols.
     #
-    # These can be thought of like constants, but in order to distinguish 'f' (forte) from the {PitchClass} 'F'
-    # it was necessary to use lower-case names and therefore define them as "pseudo constant" methods.
-    # The methods are available either through the module (MTK::Intensities::f) or via mixin (include MTK::Intensities;  f)
+    # In order to avoid conflict with pitch class 'f', the constant for forte is 'o'
+    #
+    # These can be thought of like constants, but they
+    # use lower-case names and therefore define them as "pseudo constant" methods.
+    # The methods are available either through the module (MTK::Core::Intensities::ff) or via mixin (include MTK::Core::Intensities; ff)
     #
     # These values are intensities in the range 0.125 - 1.0 (in increments of 1/8), so they can be easily scaled (unlike MIDI velocities).
-    #
-    # It is also possible to retrieve values in increments of 1/24 by using the '+' and '-' suffix when looking
-    # up values via the {.[]} method.
     #
     # @note Including this module shadows Ruby's built-in p() method.
     #   If you include this module, you can access the built-in p() method via Kernel.p()
     #
-    # @see Note
+    # @see Events::Note
     module Intensities
       extend MTK::Lang::PseudoConstants
 

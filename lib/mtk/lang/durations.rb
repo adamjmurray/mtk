@@ -16,7 +16,7 @@ module MTK
     # @note Including this module defines a bunch of single-character variables, which may shadow existing variable names.
     #       Just be mindful of what is defined in this module when including it.
     #
-    # @see Note
+    # @see Events::Note
     module Durations
       extend MTK::Lang::PseudoConstants
 

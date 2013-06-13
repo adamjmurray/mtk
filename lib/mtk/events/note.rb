@@ -2,7 +2,7 @@ module MTK
 
   module Events
 
-    # A musical {Event} defined by a {Pitch}, intensity, and duration
+    # A musical {Event} defined by a {Core::Pitch}, {Core::Intensity}, and {Core::Duration}
     class Note < Event
 
       DEFAULT_DURATION  = MTK::Core::Duration[1]
