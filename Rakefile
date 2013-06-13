@@ -8,7 +8,7 @@ ENV['JRUBY_OPTS'] = '--1.9'
 
 task :default => :test
 
-CLEAN.include('html','doc','coverage.data','coverage', '*.gem') # clean and clobber do the same thing for now
+CLEAN.include('html','doc','coverage.data','coverage', '*.gemspec', '*.gem') # clean and clobber do the same thing for now
 
 desc "Run RSpec tests with full output"
 RSpec::Core::RakeTask.new('test') do |spec|
