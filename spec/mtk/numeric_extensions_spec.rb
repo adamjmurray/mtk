@@ -3,99 +3,79 @@ require 'mtk/numeric_extensions'
 
 describe Numeric do
 
+  describe "#to_pitch" do
+    it "acts like Pitch.from_f applied to the Numeric value" do
+      12.3.to_pitch.should == MTK::Core::Pitch.from_f(12.3)
+    end
+  end
+
+
+  describe "#to_pitch_class" do
+    it "acts like PitchClass.from_f applied to the Numeric value" do
+      6.to_pitch_class.should == MTK::Core::PitchClass.from_f(6)
+    end
+  end
+
+
+  describe "#to_duration" do
+    it "acts like Duration.from_f applied to the Numeric value" do
+      1.5.to_duration.should == MTK::Core::Duration.from_f(1.5)
+    end
+  end
+
+  describe "#beat" do
+    it "acts like #to_duration" do
+      1.beat.should == 1.to_duration
+    end
+  end
+
+  describe "#beats" do
+    it "acts like #to_duration" do
+      2.beats.should == 2.to_duration
+    end
+  end
+
+
+  describe "#to_intensity" do
+    it "acts like Intensity.from_f applied to the Numeric value" do
+      0.75.to_intensity.should == MTK::Core::Intensity.from_f(0.75)
+    end
+  end
+
+  describe "#percent_intensity" do
+    it "acts like Intensity.from_f applied to 1/100 of the Numeric value" do
+      75.percent_intensity.should == MTK::Core::Intensity.from_f(0.75)
+    end
+  end
+
+
+  describe "#to_interval" do
+    it "acts like Interval.from_f applied to the Numeric value" do
+      3.5.to_interval.should == MTK::Core::Interval.from_f(3.5)
+    end
+  end
+
+  describe '#semitone' do
+    it "acts like #to_interval" do
+      1.semitone.should == 1.to_interval
+    end
+  end
+
   describe '#semitones' do
-    it "is the Numeric value" do
-      100.semitones.should == 100
+    it "acts like #to_interval" do
+      2.semitones.should == 2.to_interval
     end
   end
 
   describe "#cents" do
-    it "is the Numeric / 100.0" do
-      100.cents.should == 1
-    end
-  end
-
-  describe "#minor_seconds" do
-    it "is the Numeric value" do
-      2.minor_seconds.should == 2
-    end
-  end
-
-  describe "#major_seconds" do
-    it "is the Numeric * 2" do
-      2.major_seconds.should == 4
-    end
-  end
-
-  describe "#minor_thirds" do
-    it "is the Numeric * 3" do
-      2.minor_thirds.should == 6
-    end
-  end
-
-  describe "#major_thirds" do
-    it "is the Numeric * 4" do
-      2.major_thirds.should == 8
-    end
-  end
-
-  describe "#perfect_fourths" do
-    it "is the Numeric * 5" do
-      2.perfect_fourths.should == 10
-    end
-  end
-
-  describe "#tritones" do
-    it "is the Numeric * 6" do
-      2.tritones.should == 12
-    end
-  end
-
-  describe "#augmented_fourths" do
-    it "is the Numeric * 6" do
-      2.augmented_fourths.should == 12
-    end
-  end
-
-  describe "#diminshed_fifths" do
-    it "is the Numeric * 6" do
-      2.diminshed_fifths.should == 12
-    end
-  end
-
-  describe "#perfect_fifths" do
-    it "is the Numeric * 7" do
-      2.perfect_fifths.should == 14
-    end
-  end
-
-  describe "#minor_sixths" do
-    it "is the Numeric * 8" do
-      2.minor_sixths.should == 16
-    end
-  end
-
-  describe "#major_sixths" do
-    it "is the Numeric * 9" do
-      2.major_sixths.should == 18
-    end
-  end
-
-  describe "#minor_sevenths" do
-    it "is the Numeric * 10" do
-      2.minor_sevenths.should == 20
-    end
-  end
-
-  describe "#major_sevenths" do
-    it "is the Numeric * 11" do
-      2.major_sevenths.should == 22
+    it "acts like Interval.from_f applied to 1/100 of the Numeric value" do
+      50.cents.should == MTK::Core::Interval.from_f(0.5)
     end
   end
 
   describe "#octaves" do
-    it "is the Numeric * 12" do
-      2.octaves.should == 24
+    it "acts like Interval.from_f applied to 12 times the Numeric value" do
+      2.octaves.should == MTK::Core::Interval.from_f(24)
     end
   end
 

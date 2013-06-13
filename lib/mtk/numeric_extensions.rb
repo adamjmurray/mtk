@@ -1,73 +1,66 @@
-# Optional Numeric methods for converting a number to common intervals.
+# Optional Numeric methods for converting to {MTK::Core} objects.
 #
 # @note you must require 'mtk/numeric_extensions' to use these methods.
 #
 class Numeric
 
-  def beats
-    MTK::Core::Duration(self)
-  end
-  alias beat beats
-
-
-  # TODO: these should all return intervals
-
-  def semitones
-    self
+  # Convert a Numeric to a {MTK::Core::Pitch}
+  # @example 60.to_pitch => C4
+  def to_pitch
+    MTK::Core::Pitch.from_f(self)
   end
 
+
+  # Convert a Numeric to a {MTK::Core::PitchClass}
+  # @example 2.to_pitch_class => D
+  def to_pitch_class
+    MTK::Core::PitchClass.from_f(self)
+  end
+
+
+  # Convert a Numeric to a {MTK::Core::Duration}
+  # @example 3.5.to_duration + 1.beat + 2.beats
+  def to_duration
+    MTK::Core::Duration.from_f(self)
+  end
+  alias beats to_duration
+  alias beat to_duration
+
+
+  # Convert a Numeric to a {MTK::Core::Intensity}
+  # @note The standard range of intensity values is from 0.0 - 1.0
+  # @example 1.to_pitch => fff
+  def to_intensity
+    MTK::Core::Intensity.from_f(self)
+  end
+
+  # Convert a Numeric percentage to a {MTK::Core::Intensity}
+  # @note The standard range of intensity percentages is from 0 - 100
+  # @example 100.percent_intensity => fff
+  def percent_intensity
+    MTK::Core::Intensity.from_f(self/100.0)
+  end
+
+  # Convert a Numeric to a {MTK::Core::Interval}
+  # @example 3.5.to_interval + 1.semitone + 2.semitones
+  def to_interval
+    MTK::Core::Interval.from_f(self)
+  end
+  alias semitones to_interval
+  alias semitone to_interval
+
+  # Convert a Numeric cents value to a {MTK::Core::Interval}
+  # @example 100.cents => 1.semitone
   def cents
-    self/100.0
+    MTK::Core::Interval.from_f(self/100.0)
   end
+  alias cent cents
 
-  def minor_seconds
-    self
-  end
-
-  def major_seconds
-    self * 2
-  end
-
-  def minor_thirds
-    self * 3
-  end
-
-  def major_thirds
-    self * 4
-  end
-
-  def perfect_fourths
-    self * 5
-  end
-
-  def tritones
-    self * 6
-  end
-  alias augmented_fourths tritones
-  alias diminshed_fifths tritones
-
-  def perfect_fifths
-    self * 7
-  end
-
-  def minor_sixths
-    self * 8
-  end
-
-  def major_sixths
-    self * 9
-  end
-
-  def minor_sevenths
-    self * 10
-  end
-
-  def major_sevenths
-    self * 11
-  end
-
+  # Convert a Numeric octaves value to a {MTK::Core::Interval}
+  # @example 1.octave => 12.semitones
   def octaves
-    self * 12
+    MTK::Core::Interval.from_f(self * 12)
   end
+  alias octave octaves
 
 end
