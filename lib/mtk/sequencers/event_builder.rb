@@ -29,15 +29,31 @@ module MTK
         @patterns.each do |pattern|
           pattern_value = pattern.next
 
-          elements = pattern_value.is_a?(Enumerable) ? pattern_value : [pattern_value]
+          elements = if pattern_value.is_a? Enumerable and not pattern_value.is_a? MTK::Groups::PitchCollection then
+            pattern_value
+          else
+            [pattern_value]
+          end
+
           elements.each do |element|
             return nil if element.nil? or element == :skip
 
             case element
-              when ::MTK::Core::Pitch         then pitches << element
-              when ::MTK::Core::PitchClass    then pitches += pitches_for_pitch_classes([element], @previous_pitch)
-              when ::MTK::Groups::PitchClassSet then pitches += pitches_for_pitch_classes(element, @previous_pitch)
-              when ::MTK::Groups::PitchCollection then pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
+              when ::MTK::Core::Pitch
+                pitches << element
+                @previous_pitch = element
+
+              when ::MTK::Core::PitchClass
+                pitches += pitches_for_pitch_classes([element], @previous_pitch)
+                @previous_pitch = pitches.last
+
+              when ::MTK::Groups::PitchClassSet
+                pitches += pitches_for_pitch_classes(element, @previous_pitch)
+                @previous_pitch = pitches.last
+
+              when ::MTK::Groups::PitchCollection
+                pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
+                @previous_pitch = pitches.last
 
               when ::MTK::Core::Duration
                 duration ||= 0
@@ -52,6 +68,7 @@ module MTK
                 else
                   pitches << (@previous_pitch + element)
                 end
+                @previous_pitch = pitches.last
 
               # TODO? String/Symbols for special behaviors like :skip, or :break (something like StopIteration for the current Pattern?)
 
@@ -98,7 +115,7 @@ module MTK
       private
 
       def pitches_for_pitch_classes(pitch_classes, previous_pitch)
-        pitch_classes.map{|pitch_class| previous_pitch.nearest(pitch_class) }
+        pitch_classes.to_a.map{|pitch_class| previous_pitch.nearest(pitch_class) }
       end
 
       def constrain_pitch(pitches)

@@ -71,6 +71,12 @@ describe MTK::Sequencers::EventBuilder do
       event_builder.next.should == [Note(E4, p, 1)]
     end
 
+    it "builds notes from pitch class sets, selecting the first pitches nearest to the default pitch" do
+      pitch_class_sequence = MTK::Patterns::Sequence.new([PitchClassSet(C,G)])
+      event_builder = EVENT_BUILDER.new [pitch_class_sequence], :default_pitch => D3
+      event_builder.next.should == notes(C3,G3)
+    end
+
     it "builds notes from pitch class sets, selecting the nearest pitch classes to the previous/default pitch" do
       pitch_class_sequence = MTK::Patterns::Sequence.new([PitchClassSet(C,G),PitchClassSet(B,Eb),PitchClassSet(D,C)])
       event_builder = EVENT_BUILDER.new [pitch_class_sequence], :default_pitch => D3
@@ -229,6 +235,11 @@ describe MTK::Sequencers::EventBuilder do
       notes = []
       4.times{ notes += event_builder.next }
       notes.should == [Note(C4,ppp,h), Note(D4,mp,h), Note(E4,ff,s), Note(F4,mf,s)]
+    end
+
+    it "uses the previous pitch class in the chain to determine the octave of the current pitch class" do
+      event_builder = EVENT_BUILDER.new([Patterns.Chain(C4,E,G)])
+      event_builder.next.should == [Note(C4),Note(E4),Note(G4)]
     end
   end
 
