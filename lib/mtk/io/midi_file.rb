@@ -182,7 +182,8 @@ module MTK
 
       def add_track sequence, opts={}
         track = ::MIDI::Track.new(sequence)
-        track.name = opts.fetch :name, ''
+        track_name = opts[:name]
+        track.name = track_name if track_name
         sequence.tracks << track
         track
       end
@@ -207,3 +208,19 @@ module MTK
 
 end
 
+
+####################################################################################
+# MONKEY PATCHING to prevent blank instrument name meta events from being generated
+# This can be removed if my pull request https://github.com/jimm/midilib/pull/5
+# is merged into midilib and a new gem is released with these changes.
+
+module MIDI
+  module IO
+    class SeqWriter
+      alias original_write_instrument write_instrument
+      def write_instrument(instrument)
+        original_write_instrument(instrument) unless instrument.nil?
+      end
+    end
+  end
+end
