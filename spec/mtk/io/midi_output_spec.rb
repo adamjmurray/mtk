@@ -18,6 +18,7 @@ describe MTK::IO::MIDIOutput do
   let(:scheduler) do
     scheduler = mock(:scheduler)
     Gamelan::Scheduler.stub(:new).and_return scheduler
+    scheduler.stub(:stop).and_return :stop_scheduler
     scheduler
   end
 
@@ -28,13 +29,15 @@ describe MTK::IO::MIDIOutput do
   end
 
   def should_be_scheduled timed_data
+    explicitly_expected_stop_scheduler = false
     timed_data.each do |time,data|
+      explicitly_expected_stop_scheduler = true if data == :stop_scheduler
       scheduler.should_receive(:at) do |scheduled_time,&callback|
         scheduled_time.should == time
         callback.yield.should == data
       end
     end
-    scheduler.should_receive(:at) # end time, don't care about this here...
+    scheduler.should_receive(:at) unless explicitly_expected_stop_scheduler # auto-handle stop_schedulerer if needed
     scheduler.should_receive(:run).and_return mock(:thread,:join=>nil)
   end
 
@@ -95,6 +98,27 @@ describe MTK::IO::MIDIOutput do
                            2 => [:note_on,  67, 127, 0],
                            3 => [:note_off, 67, 127, 0]
       subject.play [ MTK::Events::Timeline.from_h( 0 => Note(C4,fff,1) ),  MTK::Events::Timeline.from_h( 2 => Note(G4,fff,1) )]
+    end
+
+
+    it "stops the scheduler 2 beats after the last event" do
+      should_be_scheduled  0 => [:note_on,  60, 127, 0],
+                           1 => [:note_off, 60, 127, 0],
+                           3 => :stop_scheduler
+      subject.play MTK::Events::Timeline.from_h( 0 => Note(C4,fff,1) )
+    end
+
+    it "stops the scheduler 2 beats after the longest of simultaneous final events" do
+      should_be_scheduled  [
+        [0,  [:note_on,  60, 127, 0]],
+        [1,  [:note_off, 60, 127, 0]],
+        [0,  [:note_on,  62, 127, 0]],
+        [3.5,[:note_off, 62, 127, 0]],
+        [0,  [:note_on,  64, 127, 0]],
+        [2,  [:note_off, 64, 127, 0]],
+        [5.5, :stop_scheduler]
+      ]
+      subject.play MTK::Events::Timeline.from_h( 0 => [Note(C4,fff,1), Note(D4,fff,3.5), Note(E4,fff,2)] )
     end
 
   end

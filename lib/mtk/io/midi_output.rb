@@ -127,7 +127,10 @@ module MTK
           end
         end
 
-        end_time = timeline.times.last + trailing_buffer
+        end_time = timeline.times.last
+        final_events = timeline[end_time]
+        max_length = final_events.inject(0) {|max,event| len = event.length; max > len ? max : len } || 0
+        end_time += max_length + trailing_buffer
         @scheduler.at(end_time) { @scheduler.stop }
 
         thread = @scheduler.run
