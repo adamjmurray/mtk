@@ -42,7 +42,7 @@ describe MTK::IO::MIDIFile do
   end
 
   describe "#write_timeline" do
-    it 'writes monophonic Notes in a Timeline to a MIDI file' do
+    it 'writes monophonic Notes in a Timeline to a MIDI format 0 file' do
       MIDIFile(tempfile).write_timeline(
         MTK::Events::Timeline.from_h({
           0 => Note(C4, q, 0.7),
@@ -56,6 +56,7 @@ describe MTK::IO::MIDIFile do
         seq = MIDI::Sequence.new
         seq.read(file)
         seq.tracks.size.should == 1
+        seq.format.should == 0
 
         track = seq.tracks[0]
         note_ons, note_offs = note_ons_and_offs(track)
@@ -169,7 +170,7 @@ describe MTK::IO::MIDIFile do
   end
 
   describe "#write_timelines" do
-    it "writes a multitrack MIDI file" do
+    it "writes a multitrack format 1 MIDI file" do
       MIDIFile(tempfile).write_timelines([
         MTK::Events::Timeline.from_h({
           0 => Note(C4, q, 0.7),
@@ -186,6 +187,7 @@ describe MTK::IO::MIDIFile do
         seq = MIDI::Sequence.new
         seq.read(file)
         seq.tracks.size.should == 2
+        seq.format.should == 1
 
         track = seq.tracks[0]
         note_ons, note_offs = note_ons_and_offs(track)

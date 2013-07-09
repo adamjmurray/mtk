@@ -185,6 +185,7 @@ module MTK
         track_name = opts[:name]
         track.name = track_name if track_name
         sequence.tracks << track
+        sequence.format = if sequence.tracks.length > 1 then 1 else 0 end
         track
       end
 
@@ -220,6 +221,15 @@ module MIDI
       alias original_write_instrument write_instrument
       def write_instrument(instrument)
         original_write_instrument(instrument) unless instrument.nil?
+      end
+
+      # Also monkey patching write_header to support alternate MIDI file formats
+      def write_header
+        @io.print 'MThd'
+        write32(6)
+        write16(@seq.format || 1)
+        write16(@seq.tracks.length)
+        write16(@seq.ppqn)
       end
     end
   end
