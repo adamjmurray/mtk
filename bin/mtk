@@ -58,9 +58,9 @@ option_parser = OptionParser.new do |opts|
 
   opts.separator ''
 
-  #opts.on('-t', '--tutorial', 'Start an interactive tutorial for the MTK syntax') { options[:tutorial] = true }
-  #
-  #opts.separator ''
+  opts.on('-t', '--tutorial', 'Start an interactive tutorial for the MTK syntax') { options[:tutorial] = true }
+
+  opts.separator ''
 
   opts.on('-w FILE', '--watch FILE', 'Watch an MTK syntax file for changes and automatically convert to MIDI',
           'Behaves like --convert when a --file or --output is given') {|file| options[:watch] = file }
@@ -185,7 +185,7 @@ end
 if options[:output]
   setup_io
   output_name = options[:output]
-  @output = MTK::IO::MIDIOutput.find_by_name /#{output_name}/
+  @output = MTK::IO::MIDIOutput.find_by_name /#{output_name}/i
   if @output
     puts "Using output '#{@output.name}'"
   else
@@ -243,8 +243,9 @@ if options[:watch]
   end
 end
 
-#if options.has_key? :tutorial
-#  puts "TODO: tutorial"
-#end
+if options.has_key? :tutorial
+  require 'mtk/lang/tutorial'
+  MTK::Lang::Tutorial.new(@output).run
+end
 
 record if @input

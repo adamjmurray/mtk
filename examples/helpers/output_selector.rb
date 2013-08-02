@@ -31,6 +31,7 @@ class OutputSelector
       device = nil
       loop do
         begin
+          # TODO: I think invalid input will just turn into 0?
           number = STDIN.gets.to_i
           name = names_by_number[number]
           device = devices_by_name[name]
