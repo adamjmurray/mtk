@@ -52,7 +52,7 @@ module MTK
             MTK::Lang::Parser.parse(input, @validation)
             true
           else # Assume Regexp
-            (input =~ /^[A-G]$/i) != nil
+            (input =~ @validation) != nil and MTK::Lang::Parser.parse(input)
         end
       rescue Citrus::ParseError
         false

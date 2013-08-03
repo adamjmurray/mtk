@@ -46,38 +46,52 @@ module MTK
             validation: :pitch_class,
           },
           {
-              title: 'Pitches',
-              description: "
-                To play a pitch, enter a (chromatic) pitch class immediately following by an
-                octave number.
+            title: 'Pitches',
+            description: "
+              To play a pitch, enter a (chromatic) pitch class immediately following by an
+              octave number.
 
-                There is no universal standard numbering scheme for octaves in music.
-                This library uses \"scientific pitch notation\", which defines
-                C4 as \"Middle C\" and A4 as the standard tuning pitch A440.
+              There is no universal standard numbering scheme for octaves in music.
+              This library uses \"scientific pitch notation\", which defines
+              C4 as \"Middle C\" and A4 as the standard tuning pitch A440.
 
-                In this library, C-1 is the lowest note available and G9 is the highest,
-                corresponding to MIDI pitch values 0 and 127. If you try to play a pitch
-                outside this range, it will be mapped to the closest available pitch.
+              In this library, C-1 is the lowest note available and G9 is the highest,
+              corresponding to MIDI pitch values 0 and 127. If you try to play a pitch
+              outside this range, it will be mapped to the closest available pitch.
 
-                Here are some examples, try entering #{'one'.bold.underline} of the following:
+              Here are some examples, try entering #{'one'.bold.underline} of the following:
 
-                G3 eb4 F#5 B-1 C##9 dbb6
-                ",
-              validation: :pitch,
+              G3 eb4 F#5 B-1 C##9 dbb6
+              ",
+            validation: :pitch,
           },
           {
-              title: 'Sequences',
-              description: "
-                To play a sequence of pitches or pitch classes, enter them with spaces in
-                between. Pitches and pitch classes may be interchanged in a given sequence.
-                Any pitch class will output a pitch closest to the previous pitch (starting
-                from C4 at the beginning of the sequence).
+            title: 'Sequences',
+            description: "
+              To play a sequence of pitches or pitch classes, enter them with spaces in
+              between. Pitches and pitch classes may be interchanged in a given sequence.
+              Any pitch class will output a pitch closest to the previous pitch (starting
+              from C4 at the beginning of the sequence).
 
-                Here is an example (Note, unlike previous lessons, enter the #{'entire line'.bold.underline}):
+              Here is an example (Note, unlike previous lessons, enter the #{'entire line'.bold.underline}):
 
-                c5 c g5 g a a g
-                ",
-              validation: :bare_sequence,
+              c5 c g5 g a a g
+              ",
+            validation: :bare_sequence,
+          },
+          {
+            title: 'Repetition',
+            description: "
+              To repeat a note, suffix a pitch or pitch class with *N, where N is the
+              number of repetitions. You can also wrap a subsequence of notes with
+              parentheses and repeat them. Here is an example sequence with repetition:
+
+              (e d c)*2 e*3 d c
+
+              You can also nest repetitions:
+              (c (e g)*2 )*2
+              ",
+            validation: /\*/,
           },
 
         ].map{|lesson_options| TutorialLesson.new(lesson_options) }
