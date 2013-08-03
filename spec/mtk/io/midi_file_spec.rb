@@ -83,6 +83,15 @@ describe MTK::IO::MIDIFile do
       end
     end
 
+    it 'writes a timeline that can be read in as an identical Timeline' do
+      timeline = MTK::Events::Timeline.from_h({
+        0 => Note(C4, q, 1)
+      })
+      MIDIFile(tempfile).write_timeline(timeline)
+      read_timeline = MIDIFile(tempfile).to_timelines.first
+      read_timeline.should == timeline
+    end
+
     it 'writes polyphonic (simultaneous) Notes in a Timeline to a MIDI file' do
       MIDIFile(tempfile).write_timeline(
         MTK::Events::Timeline.from_h({

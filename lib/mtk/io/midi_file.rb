@@ -41,6 +41,10 @@ module MTK
               case event
                 when ::MIDI::NoteOn
                   note_ons[event.note] = [time,event]
+                  # TODO: handle note ons with velocity 0 as a note off (use output from Logic Pro as a test case)
+                  # This isn't actually necessary right now as midilibs seqreader#note_on automatically
+                  # converts note ons with velocity 0 to note offs. In the future, for full off velocity support,
+                  # I'll need to monkey patch midilib and update the code here
 
                 when ::MIDI::NoteOff
                   on_time,on_event = note_ons.delete(event.note)
@@ -99,7 +103,11 @@ module MTK
                 pitch, velocity = event.midi_pitch, event.velocity
                 add_event track, time => note_on(channel, pitch, velocity)
                 duration = event.duration_in_pulses(clock_rate)
-                add_event track, time+duration => note_off(channel, pitch, velocity)
+                # TODO: use note_off events when supporting off velocities
+                # add_event track, time+duration => note_off(channel, pitch, velocity)
+                # NOTE: cannot test the following line of code properly right now, because midilib automatically converts
+                # note ons with velocity 0 to note offs when reading files. See comments in #to_timelines in this file
+                add_event track, time+duration => note_on(channel, pitch, 0) # we use note ons with velocity 0 to indicate no off velocity
 
               when :control
                 add_event track, time => cc(channel, event.number, event.midi_value)
