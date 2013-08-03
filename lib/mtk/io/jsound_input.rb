@@ -50,7 +50,7 @@ module MTK
       def to_timeline(options={})
         bpm = options.fetch :bmp, 120
         beats_per_second = bpm.to_f/60
-        timeline = Timeline.new
+        timeline = MTK::Events::Timeline.new
         note_ons = {}
         start = nil
 

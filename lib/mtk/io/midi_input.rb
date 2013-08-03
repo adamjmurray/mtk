@@ -80,7 +80,7 @@ module MTK
       end
 
       def to_timeline
-        Timeline.new
+        MTK::Events::Timeline.new
       end
 
     end
