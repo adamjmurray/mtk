@@ -97,7 +97,11 @@ module MTK
         @previous_intensity = intensity
         @previous_duration = duration
 
-        pitches.map{|pitch| MTK::Events::Note.new(pitch,duration,intensity,@channel) }
+        if duration.rest?
+          [MTK::Events::Rest.new(duration,@channel)]
+        else
+          pitches.map{|pitch| MTK::Events::Note.new(pitch,duration,intensity,@channel) }
+        end
       end
 
       # Reset the EventBuilder to its initial state

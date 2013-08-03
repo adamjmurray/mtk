@@ -241,6 +241,11 @@ describe MTK::Sequencers::EventBuilder do
       event_builder = EVENT_BUILDER.new([Patterns.Chain(C4,E,G)])
       event_builder.next.should == [Note(C4),Note(E4),Note(G4)]
     end
+
+    it "returns a Rest event when the duration is negative" do
+      event_builder = EVENT_BUILDER.new([Patterns.Chain(C4,-q)])
+      event_builder.next.should == [MTK.Rest(q)]
+    end
   end
 
   describe "#rewind" do
