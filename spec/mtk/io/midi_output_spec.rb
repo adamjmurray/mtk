@@ -53,7 +53,8 @@ describe MTK::IO::MIDIOutput do
 
     it "handles note events" do
       should_be_scheduled 0 => [:note_on,  60, 127, 0],
-                          1 => [:note_off, 60, 127, 0]
+                          1 => [:note_on,  60,   0, 0]
+                          # 1 => [:note_off, 60, 127, 0] # for when we have proper note off support
       subject.play  MTK::Events::Timeline.from_h( 0 => Note(C4,fff,1) )
     end
 
@@ -85,25 +86,30 @@ describe MTK::IO::MIDIOutput do
     it "handles simultaneous events" do
       should_be_scheduled [
         [0, [:note_on,  60, 127, 0]],
-        [1, [:note_off, 60, 127, 0]],
+        [1, [:note_on,  60,   0, 0]],
+        # [1, [:note_off, 60, 127, 0]], # for when we have proper note off support
         [0, [:note_on,  67, 127, 0]],
-        [1, [:note_off, 67, 127, 0]]
+        [1, [:note_on,  67,   0, 0]],
+        # [1, [:note_off, 67, 127, 0]] # for when we have proper note off support
       ]
       subject.play [Note(C4,fff,1),Note(G4,fff,1)]
     end
 
     it "handles a list of timelines" do
       should_be_scheduled  0 => [:note_on,  60, 127, 0],
-                           1 => [:note_off, 60, 127, 0],
+                           1 => [:note_on,  60,   0, 0],
+                           #1 => [:note_off, 60, 127, 0], # for when we have proper note off support
                            2 => [:note_on,  67, 127, 0],
-                           3 => [:note_off, 67, 127, 0]
+                           3 => [:note_on,  67,   0, 0]
+                           #3 => [:note_off, 67, 127, 0] # for when we have proper note off support
       subject.play [ MTK::Events::Timeline.from_h( 0 => Note(C4,fff,1) ),  MTK::Events::Timeline.from_h( 2 => Note(G4,fff,1) )]
     end
 
 
     it "stops the scheduler 2 beats after the last event" do
       should_be_scheduled  0 => [:note_on,  60, 127, 0],
-                           1 => [:note_off, 60, 127, 0],
+                           1 => [:note_on,  60,   0, 0],
+                           #1 => [:note_off, 60, 127, 0], # for when we have proper note off support
                            3 => :stop_scheduler
       subject.play MTK::Events::Timeline.from_h( 0 => Note(C4,fff,1) )
     end
@@ -111,11 +117,14 @@ describe MTK::IO::MIDIOutput do
     it "stops the scheduler 2 beats after the longest of simultaneous final events" do
       should_be_scheduled  [
         [0,  [:note_on,  60, 127, 0]],
-        [1,  [:note_off, 60, 127, 0]],
+        [1,  [:note_on,  60,   0, 0]],
+        #[1,  [:note_off, 60, 127, 0]], # for when we have proper note off support
         [0,  [:note_on,  62, 127, 0]],
-        [3.5,[:note_off, 62, 127, 0]],
+        [3.5,[:note_on,  62,   0, 0]],
+        #[3.5,[:note_off, 62, 127, 0]], # for when we have proper note off support
         [0,  [:note_on,  64, 127, 0]],
-        [2,  [:note_off, 64, 127, 0]],
+        [2,  [:note_on,  64,   0, 0]],
+        #[2,  [:note_off, 64, 127, 0]], # for when we have proper note off support
         [5.5, :stop_scheduler]
       ]
       subject.play MTK::Events::Timeline.from_h( 0 => [Note(C4,fff,1), Note(D4,fff,3.5), Note(E4,fff,2)] )

@@ -106,7 +106,9 @@ module MTK
                 velocity = event.velocity
                 duration = event.duration.to_f
                 @scheduler.at(time) { note_on(pitch,velocity,channel) }
-                @scheduler.at(time + duration) { note_off(pitch,velocity,channel) }
+                @scheduler.at(time + duration) { note_on(pitch,0,channel) }
+                # TODO: use a proper note off message whenever we support off velocities
+                #@scheduler.at(time + duration) { note_off(pitch,velocity,channel) }
 
               when :control
                 @scheduler.at(time) { control(event.number, event.midi_value, channel) }
