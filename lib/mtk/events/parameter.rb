@@ -2,6 +2,7 @@ module MTK
 
   module Events
 
+    # A non-note event such as pitch bend, pressure (aftertouch), or control change (CC)
     class Parameter < Event
 
       def self.from_midi(status, data1, data2)

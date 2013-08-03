@@ -12,7 +12,7 @@ describe MTK::Events::Event do
 
 
   describe "#type" do
-    it "is the first argument passed to AbstractEvent.new" do
+    it "is the first argument passed to Event.new" do
       event.type.should == type
     end
 
@@ -22,7 +22,7 @@ describe MTK::Events::Event do
   end
 
   describe "#value" do
-    it "is the value of the :value key in the options hash passed to AbstractEvent.new" do
+    it "is the value of the :value key in the options hash passed to Event.new" do
       event.value.should == options[:value]
     end
 
@@ -39,7 +39,7 @@ describe MTK::Events::Event do
   end
 
   describe "#duration" do
-    it "is the value of the :duration key in the options hash passed to AbstractEvent.new" do
+    it "is the value of the :duration key in the options hash passed to Event.new" do
       event.duration.should == options[:duration]
     end
 
@@ -56,7 +56,7 @@ describe MTK::Events::Event do
   end
 
   describe "#number" do
-    it "is the value of the :number key in the options hash passed to AbstractEvent.new" do
+    it "is the value of the :number key in the options hash passed to Event.new" do
       event.number.should == options[:number]
     end
 
@@ -73,7 +73,7 @@ describe MTK::Events::Event do
   end
 
   describe "#channel" do
-    it "is the value of the :channel key in the options hash passed to AbstractEvent.new" do
+    it "is the value of the :channel key in the options hash passed to Event.new" do
       event.channel.should == options[:channel]
     end
 
@@ -155,17 +155,6 @@ describe MTK::Events::Event do
     end
   end
 
-  describe "#duration_in_pulses" do
-    it "multiplies the #length times the argument and rounds to the nearest integer" do
-      event.duration_in_pulses(111).should == (event.length * 111).round
-    end
-
-    it "is 0 when the #duration is nil" do
-      event.duration = nil
-      event.duration_in_pulses(111).should == 0
-    end
-  end
-
   describe "from_h" do
     it "constructs an Event using a hash" do
       EVENT.from_h(hash).should == event
@@ -185,6 +174,11 @@ describe MTK::Events::Event do
 
     it "rounds to the nearest pulse" do
       EVENT.new(type, :duration => 1.5).duration_in_pulses(59).should == 89
+    end
+
+    it "is 0 when the #duration is nil" do
+      event.duration = nil
+      event.duration_in_pulses(111).should == 0
     end
 
     it "is always positive (uses absolute value of the duration used to construct the Event)" do

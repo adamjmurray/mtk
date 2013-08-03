@@ -56,6 +56,7 @@ require 'mtk/groups/chord'
 
 require 'mtk/events/event'
 require 'mtk/events/note'
+require 'mtk/events/rest'
 require 'mtk/events/parameter'
 require 'mtk/events/timeline'
 

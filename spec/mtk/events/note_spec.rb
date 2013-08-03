@@ -160,11 +160,11 @@ describe MTK do
       Note(q,mf,C4).should == NOTE.new(C4,q,mf)
     end
 
-    it "fills in a missing duration type from an number" do
+    it "fills in a missing duration argument from an number" do
       Note(C4,mf,5.25).should == NOTE.new(C4,MTK.Duration(5.25),mf)
     end
 
-    it '' do
+    it 'fills in a missing intensity and duration arguments from numbers' do
       Note(MTK::Lang::Pitches::C4, MTK::Lang::Intensities::o, 5.25).should == Note(C4, 5.25, 0.75)
     end
 

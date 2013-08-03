@@ -51,7 +51,7 @@ module MTK
       end
 
       def to_h
-        hash = {:type => @type}
+        hash = {type: @type}
         hash[:value] = @value unless @value.nil?
         hash[:duration] = @duration unless @duration.nil?
         hash[:number] = @number unless @number.nil?
@@ -82,6 +82,7 @@ module MTK
         @duration.length
       end
 
+      # True if this event represents a rest, false otherwise.
       # By convention, any events with negative durations are a rest
       def rest?
         @duration.rest?
