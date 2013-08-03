@@ -105,7 +105,9 @@ module MTK
                 pitch = event.midi_pitch
                 velocity = event.velocity
                 duration = event.duration.to_f
-                @scheduler.at(time) { note_on(pitch,velocity,channel) }
+                # Set a lower priority (via level:1) for note-ons, so legato notes at the same pitch don't
+                # prematurely chop off the next note, by ensuring all note-offs at the same timepoint occur first.
+                @scheduler.at(time, level: 1) { note_on(pitch,velocity,channel) }
                 @scheduler.at(time + duration) { note_on(pitch,0,channel) }
                 # TODO: use a proper note off message whenever we support off velocities
                 #@scheduler.at(time + duration) { note_off(pitch,velocity,channel) }
@@ -196,5 +198,89 @@ unless $__RUNNING_RSPEC_TESTS__ # I can't get this working on Travis-CI, problem
     require 'mtk/io/jsound_output'
   else
     require 'mtk/io/unimidi_output'
+  end
+end
+
+
+
+####################################################################################
+# MONKEY PATCHING gamelan to ensure note-offs come before note-ons
+# when they occur at the same scheduler time.
+# This patch applies https://github.com/jvoorhis/gamelan/commit/20d93f4e5d86517bd5c6f9212a0dcdbf371d1ea1
+# to provide the priority/level feature for the scheduler (see @scheduler.at() calls for notes above).
+# This patch should not be necessary when gamelan gem > 0.3 is released
+
+# @private
+module Gamelan
+
+  DEFAULT_PRIORITY = 0
+  NOTEON_PRIORITY  = 0
+  CC_PRIORITY      = -1
+  PC_PRIORITY      = -2
+  NOTEOFF_PRIORITY = -3
+
+  class Priority < Struct.new(:time, :level)
+    include Comparable
+    def <=>(prio)
+      self.to_a <=> prio.to_a
+    end
+  end
+
+  if defined?(JRUBY_VERSION)
+
+    class Queue
+      def initialize(scheduler)
+        @scheduler = scheduler
+        @queue     = PriorityQueue.new(10000) { |a,b|
+          a.priority <=> b.priority
+        }
+      end
+
+      def ready?
+        if top = @queue.peek
+          top.delay < @scheduler.phase
+        else
+          false
+        end
+      end
+    end
+
+  else
+
+    class Queue
+      def push(task)
+        @queue.push(task, task.priority)
+      end
+      alias << push
+
+      def ready?
+        if top = @queue.min
+          top[1].time < @scheduler.phase
+        else
+          false
+        end
+      end
+    end
+
+  end
+
+  class Scheduler < Timer
+    def at(delay, options = {}, &task)
+      options = { :delay => delay, :scheduler => self }.merge(options)
+      @queue << Task.new(options, &task)
+    end
+  end
+
+  class Task
+    attr_reader :level, :priority
+
+    def initialize(options, &block)
+      @scheduler = options[:scheduler]
+      @delay     = options[:delay].to_f
+      @level     = options[:level] || DEFAULT_PRIORITY
+      @priority  = Priority.new(@delay, @level)
+      @proc      = block
+      @args      = options[:args] || []
+    end
   end
 end

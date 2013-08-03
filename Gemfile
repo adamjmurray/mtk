@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # Gems required by mtk code
 
 gem "midilib", "~> 2.0"
-gem "gamelan", "~> 0.3"
+gem "gamelan", "= 0.3" # TODO remove the monkey patch in midi_output.rb and upgrade when a new version is available
 gem "citrus",  "~> 2.4"
 
 platforms :jruby do

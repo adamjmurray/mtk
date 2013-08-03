@@ -223,6 +223,7 @@ end
 # This can be removed if my pull request https://github.com/jimm/midilib/pull/5
 # is merged into midilib and a new gem is released with these changes.
 
+# @private
 module MIDI
   module IO
     class SeqWriter
