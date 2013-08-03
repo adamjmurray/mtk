@@ -425,6 +425,10 @@ describe MTK::Events::Timeline do
         (line =~ /=>/).should == arrow_position
       end
     end
+
+    it "returns empty string for empty timelines" do
+      MTK::Events::Timeline.new.to_s.should == ''
+    end
   end
 end
 
