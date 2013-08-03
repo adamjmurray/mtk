@@ -23,7 +23,7 @@ module MTK
 
               C D E F G A B   c d e f g a b
               ",
-            validation: /^[A-G]$/i,
+            validation: :diatonic_pitch_class,
           },
           {
             title: 'Pitch Classes (chromatic)',
@@ -83,11 +83,15 @@ module MTK
       def run(output)
         puts
         puts TutorialStep::SEPARATOR
-        puts "Welcome to the MTK syntax tutorial"
+        puts "Welcome to the MTK syntax tutorial!"
+        puts
+        puts "MTK is the Music Tool Kit for Ruby."
+        puts "It has a custom syntax for generating musical patterns."
+        puts "This tutorial will teach you the basics."
         puts
         puts "Warning! This tutorial assumes familiarity with music theory."
         puts "This is a work in progress. Check back in future versions for more tutorials."
-        puts
+
         output = ensure_output(output)
         loop{ select_step.run(output) }
 
@@ -146,7 +150,7 @@ module MTK
 
       def ensure_output(output)
         if output
-          puts "Using \"#{output.name}\" for output."
+          #puts "Using \"#{output.name}\" for output."
         else
           puts "ERROR: --output option must be given when launching the tutorial."
           exit 1

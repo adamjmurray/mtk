@@ -133,7 +133,13 @@ grammar MTK_Grammar
   end
 
   rule pitch_class
-    ( [A-Ga-g] [#b]*2 ) {
+    ( diatonic_pitch_class ('##' | '#' | 'bb' | 'b')? ) {
+      MTK::Core::PitchClass[to_s]
+    }
+  end
+
+  rule diatonic_pitch_class
+    ( [A-Ga-g] ) {
       MTK::Core::PitchClass[to_s]
     }
   end

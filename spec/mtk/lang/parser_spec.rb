@@ -456,6 +456,36 @@ describe MTK::Lang::Parser do
           parse(pitch_class_name, :pitch_class).should == PitchClass[pitch_class_name]
         end
       end
+
+      it "allows for lower case diatonic pitch class names" do
+        for pitch_class_name in PitchClass::VALID_NAMES
+          parse(pitch_class_name.downcase, :pitch_class).should == PitchClass[pitch_class_name]
+        end
+      end
+
+      it "doesn't allow a sharp and flat to be applied to the same diatoonic pitch class" do
+        for pitch_class_name in %w(A B C D E F G)
+          lambda{ parse(pitch_class_name + '#b', :pitch_class) }.should raise_error
+          lambda{ parse(pitch_class_name + 'b#', :pitch_class) }.should raise_error
+          lambda{ parse(pitch_class_name.downcase + '#b', :pitch_class) }.should raise_error
+          lambda{ parse(pitch_class_name.downcase + '#b', :pitch_class) }.should raise_error
+        end
+      end
+    end
+
+
+    context 'diatonic_pitch_class rule' do
+      it "parses upper case diatonic pitch classes" do
+        for diatonic_pitch_class_name in %w(A B C D E F G)
+          parse(diatonic_pitch_class_name, :diatonic_pitch_class).should == PitchClass[diatonic_pitch_class_name]
+        end
+      end
+
+      it "parses upper case diatonic pitch classes" do
+        for diatonic_pitch_class_name in %w(a b c d e f g)
+          parse(diatonic_pitch_class_name, :diatonic_pitch_class).should == PitchClass[diatonic_pitch_class_name]
+        end
+      end
     end
 
 
