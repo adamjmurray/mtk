@@ -4,10 +4,7 @@ module MTK
     # @private
     class TutorialLesson
 
-      SEPARATOR = "================================================================================\n\n"
-
-
-      # Every TutorialStep requires the options at construction title:
+      # Every TutorialLesson requires the options at construction title:
       #   title - The short summary displayed in the tutorial's table of contents.
       #   description - The full description displayed when entering the tutorial step.
       #   validate(input) - Validate user input entered after the description is displayed.
@@ -21,25 +18,27 @@ module MTK
 
 
       def run(output)
-        puts SEPARATOR
-        puts "Lesson: #{@title}"
+        puts
+        puts Tutorial::SEPARATOR
+        puts
+        puts "Lesson: #{@title}".bold.yellow
         puts @description
         puts
-        print "Try it now: "
+        print "Try it now: ".blue
 
         did_it_once = false
         input = gets.strip
         until did_it_once and input.empty?
           until validate(input)
             failure(input)
-            print "Try again: "
+            print "Try again: ".blue
             input = gets.strip
           end
 
           success(input, output)
           did_it_once = true
           puts
-          puts "Good! Try again, or hit enter to exit this tutorial:"
+          puts "Good! ".bold.green + "Try again, or press enter to exit this lesson:".blue
           input = gets.strip
         end
       end
@@ -74,7 +73,7 @@ module MTK
 
       def failure(input)
         puts
-        puts "Invalid entry \"#{input}\""
+        puts "Invalid entry \"#{input}\"".bold.red
       end
 
 

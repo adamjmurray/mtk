@@ -10,7 +10,7 @@ options = {}
 
 option_parser = OptionParser.new do |opts|
 
-  opts.banner = "Usage: #{$0} [options]"
+  opts.banner = "\nMTK: Music Tool Kit for Ruby\n\nUsage: #{$0} [options]"
   opts.separator ''
   opts.separator 'Options:'
 
@@ -58,7 +58,10 @@ option_parser = OptionParser.new do |opts|
 
   opts.separator ''
 
-  opts.on('-t', '--tutorial', 'Interactive tutorial for MTK syntax') { options[:tutorial] = true }
+  opts.on('-t [color]', '--tutorial [color]', 'Interactive tutorial for MTK syntax',
+          'Use on/off for the color option to enable',
+          'or disable colors. Colors are on by default',
+          'except on Windows (try Ansicon on Windows)') {|color| options[:tutorial] = true; options[:color] = color }
 
   opts.separator ''
 
@@ -245,6 +248,27 @@ if options[:watch]
 end
 
 if options.has_key? :tutorial
+  color = options[:color]
+  if color
+    case color.strip.downcase
+      when /^(on|yes|true|y|t|color)$/ then $tutorial_color = true
+      when /^(off|no|false|n|f)$/ then $tutorial_color = false
+      else
+        STDERR.puts "Invalid tutorial color setting '#{color}'. Try 'on' or 'off'."
+        exit ERROR_INVALID_COMMAND
+    end
+  else
+    require 'rbconfig'
+    os = RbConfig::CONFIG['host_os'].downcase
+    if os =~ /win/ and os !~ /darwin/ and os !~ /cygwin/
+      $tutorial_color = false
+    else
+      puts "It looks like your system supports terminal colors."
+      $tutorial_color = true
+    end
+  end
+  puts "Color is #{if $tutorial_color then 'enabled' else 'disabled' end}."
+
   require 'mtk/lang/tutorial'
   tutorial = MTK::Lang::Tutorial.new
   tutorial.run(@output)

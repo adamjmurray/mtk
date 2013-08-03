@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'mtk/io/midi_output'
 require 'mtk/lang/tutorial_lesson'
 
@@ -18,7 +20,7 @@ module MTK
               The diatonic pitch classes are the 7 white keys on a piano in a given octave.
               They can be used to play, for example, the C major or A natural minor scales.
 
-              To play a diatonic pitch class, enter one of the following letters
+              To play a diatonic pitch class, enter #{'one'.bold.underline} of the following letters
               (upper or lower case is allowed):
 
               C D E F G A B   c d e f g a b
@@ -33,10 +35,11 @@ module MTK
 
               To play a chromatic pitch class, enter any of the 7 diatonic pitch classes
               immediately followed by 0, 1, or 2 flats (b) or sharps (#). Each flat (b)
-              lowers the pitch by a semitone and each sharp (#) raises by a semitone.
+              lowers the pitch by a half step and each sharp (#) raises by a half step.
 
-              Here are some examples (Note, upper or lower case is allowed for the diatonic
-              pitch class but flats must be lower case):
+              Here are some examples, try entering #{'one'.bold.underline} of the following
+              (Note, upper or lower case is allowed for the diatonic pitch class but flats
+              must be lower case):
 
               C# Eb F Gbb A## B   c# eb f gbb a## b
               ",
@@ -45,7 +48,7 @@ module MTK
           {
               title: 'Pitches',
               description: "
-                To play a pitch, enter a (chromatic) pitch class immediate following by an
+                To play a pitch, enter a (chromatic) pitch class immediately following by an
                 octave number.
 
                 There is no universal standard numbering scheme for octaves in music.
@@ -56,7 +59,7 @@ module MTK
                 corresponding to MIDI pitch values 0 and 127. If you try to play a pitch
                 outside this range, it will be mapped to the closest available pitch.
 
-                Here are some examples:
+                Here are some examples, try entering #{'one'.bold.underline} of the following:
 
                 G3 eb4 F#5 B-1 C##9 dbb6
                 ",
@@ -65,11 +68,12 @@ module MTK
           {
               title: 'Sequences',
               description: "
-                To play a sequence of pitches or pitch classes, simply list them with spaces in between.
-                Pitches and pitch classes may be interchanged in a given sequence. Any pitch class will
-                output a pitch closest to the previous pitch (starting from C4 at the beginning of the sequence).
+                To play a sequence of pitches or pitch classes, enter them with spaces in
+                between. Pitches and pitch classes may be interchanged in a given sequence.
+                Any pitch class will output a pitch closest to the previous pitch (starting
+                from C4 at the beginning of the sequence).
 
-                Here is an example (Note, unlike previous tutorials, enter the entire line):
+                Here is an example (Note, unlike previous lessons, enter the #{'entire line'.bold.underline}):
 
                 c5 c g5 g a a g
                 ",
@@ -81,16 +85,16 @@ module MTK
 
 
       def run(output)
+        puts SEPARATOR
         puts
-        puts TutorialLesson::SEPARATOR
-        puts "Welcome to the MTK syntax tutorial!"
+        puts "Welcome to the MTK syntax tutorial!".bold.yellow
         puts
         puts "MTK is the Music Tool Kit for Ruby."
         puts "It has a custom syntax for generating musical patterns."
-        puts "This tutorial will teach you the basics."
+        puts "This tutorial will teach you the basics of the syntax."
         puts
-        puts "Warning! This tutorial assumes familiarity with music theory."
-        puts "This is a work in progress. Check back in future versions for more lessons."
+        puts "#{'Warning!'.bold} This tutorial assumes familiarity with music theory."
+        puts "This is a work in progress. Check back in the future versions for more lessons."
 
         output = ensure_output(output)
         loop{ select_lesson.run(output) }
@@ -106,16 +110,17 @@ module MTK
       # table of contents
       def toc
         @lessons.map.with_index do |lesson,index|
-          "#{'=> ' if @current_lesson_index == index}#{index+1}: #{lesson}"
+          "#{'» '.yellow if @current_lesson_index == index}#{index+1}: #{lesson}"
         end.join("\n")
       end
 
 
       def select_lesson
         puts
-        puts TutorialLesson::SEPARATOR
-        puts "Lessons"
-        puts "-------"
+        puts SEPARATOR
+        puts
+        puts "Lessons".bold.yellow
+        puts
 
         all_done = @current_lesson_index >= @lessons.length
         lesson = nil
@@ -123,9 +128,14 @@ module MTK
           puts toc
           puts
           puts "You've completed the last lesson!\n\n" if all_done
-          puts "Press Ctrl+C to exit at any time."
-          print "Select a lesson number, or hit enter to "
-          puts (if all_done then "exit:" else "go to the next one (indicated by =>):" end)
+          puts "Press Ctrl+C to exit at any time.".bold
+          puts
+          print "Select a lesson number, or press enter to ".blue
+          if all_done
+            puts "exit:".blue
+          else
+            puts "go to the next one ".blue + "(indicated by " + '»'.yellow + "):"
+          end
 
           input = gets.strip
           lesson_index = case input
@@ -165,6 +175,45 @@ module MTK
         output
       end
 
+    end
+  end
+end
+
+
+####################################################################################################
+# Patch String to support terminal colors
+
+# @private
+class String
+  {
+      bold: 1,
+      underline: 4,
+      red: 31,
+      green: 32,
+      yellow: 33,
+      blue: 36 # really this cyan but the standard blue is too dark IMO
+  }.each do |effect,code|
+    if $tutorial_color
+      define_method effect do
+        "\e[#{code}m#{self}\e[0m"
+      end
+    else
+      define_method effect do
+        self
+      end
+    end
+  end
+
+end
+
+
+####################################################################################################
+# And now that we've got some colors we can define colored constants
+module MTK
+  module Lang
+    # @private
+    class Tutorial
+      SEPARATOR = "================================================================================".bold.yellow
     end
   end
 end
