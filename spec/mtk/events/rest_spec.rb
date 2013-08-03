@@ -162,6 +162,14 @@ describe MTK do
       MTK::Rest(event).should == REST.new(5,3)
     end
 
+    it "handles a single Numeric argument" do
+      MTK::Rest(4).should == REST.new(4)
+    end
+
+    it "handles a single Duration argument" do
+      MTK.Rest(MTK.Duration(4)).should == REST.new(4)
+    end
+
     it "raises an error for types it doesn't understand" do
       lambda{ MTK::Rest({:not => :compatible}) }.should raise_error
     end

@@ -57,6 +57,7 @@ module MTK
       when MTK::Events::Rest then anything
       when MTK::Events::Event then MTK::Events::Rest.new(anything.duration, anything.channel)
       when Numeric then MTK::Events::Rest.new(anything)
+      when Duration then MTK::Events::Rest.new(anything)
 
       when Array
         duration = nil
