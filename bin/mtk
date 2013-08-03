@@ -174,7 +174,7 @@ end
 if options[:input]
   setup_io
   input_name = options[:input]
-  @input = MTK::IO::MIDIInput.find_by_name /#{input_name}/
+  @input = MTK::IO::MIDIInput.find_by_name /#{input_name}/i
   if @input
     puts "Using input '#{@input.name}'"
   else
