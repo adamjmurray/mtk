@@ -1,5 +1,5 @@
 require 'mtk/io/midi_output'
-require 'mtk/lang/tutorial_step'
+require 'mtk/lang/tutorial_lesson'
 
 module MTK
   module Lang
@@ -8,9 +8,9 @@ module MTK
     class Tutorial
 
       def initialize
-        @current_step_index = 0
+        @current_lesson_index = 0
 
-        @steps = [
+        @lessons = [
               ###################### 80 character width for description ######################
           {
             title: 'Pitch Classes (diatonic)',
@@ -76,13 +76,13 @@ module MTK
               validation: :bare_sequence,
           },
 
-        ].map{|step_options| TutorialStep.new(step_options) }
+        ].map{|lesson_options| TutorialLesson.new(lesson_options) }
       end
 
 
       def run(output)
         puts
-        puts TutorialStep::SEPARATOR
+        puts TutorialLesson::SEPARATOR
         puts "Welcome to the MTK syntax tutorial!"
         puts
         puts "MTK is the Music Tool Kit for Ruby."
@@ -90,10 +90,10 @@ module MTK
         puts "This tutorial will teach you the basics."
         puts
         puts "Warning! This tutorial assumes familiarity with music theory."
-        puts "This is a work in progress. Check back in future versions for more tutorials."
+        puts "This is a work in progress. Check back in future versions for more lessons."
 
         output = ensure_output(output)
-        loop{ select_step.run(output) }
+        loop{ select_lesson.run(output) }
 
       rescue SystemExit, Interrupt
         puts
@@ -105,43 +105,45 @@ module MTK
 
       # table of contents
       def toc
-        @steps.map.with_index{|step,index| "#{'=> ' if @current_step_index == index}#{index+1}: #{step}"}.join("\n")
+        @lessons.map.with_index do |lesson,index|
+          "#{'=> ' if @current_lesson_index == index}#{index+1}: #{lesson}"
+        end.join("\n")
       end
 
 
-      def select_step
+      def select_lesson
         puts
-        puts TutorialStep::SEPARATOR
-        puts "Tutorials"
-        puts "---------"
+        puts TutorialLesson::SEPARATOR
+        puts "Lessons"
+        puts "-------"
 
-        all_done = @current_step_index >= @steps.length
-        step = nil
-        while step == nil
+        all_done = @current_lesson_index >= @lessons.length
+        lesson = nil
+        while lesson == nil
           puts toc
           puts
-          puts "You've completed the last tutorial!\n\n" if all_done
+          puts "You've completed the last lesson!\n\n" if all_done
           puts "Press Ctrl+C to exit at any time."
-          print "Select a tutorial number, or hit enter to "
+          print "Select a lesson number, or hit enter to "
           puts (if all_done then "exit:" else "go to the next one (indicated by =>):" end)
 
           input = gets.strip
-          step_index = case input
+          lesson_index = case input
             when /^\d+$/
               input.to_i - 1
             when ''
-              if all_done then raise SystemExit.new else @current_step_index end
+              if all_done then raise SystemExit.new else @current_lesson_index end
             else
               nil
           end
 
-          step = @steps[step_index] if step_index and step_index >= 0
+          lesson = @lessons[lesson_index] if lesson_index and lesson_index >= 0
 
-          puts "Invalid tutorial: #{input}\n\n" if step.nil?
+          puts "Invalid lesson number: #{input}\n\n" if lesson.nil?
         end
 
-        @current_step_index = step_index + 1
-        step
+        @current_lesson_index = lesson_index + 1
+        lesson
       end
 
 

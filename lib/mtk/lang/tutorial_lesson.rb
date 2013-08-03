@@ -2,7 +2,7 @@ module MTK
   module Lang
 
     # @private
-    class TutorialStep
+    class TutorialLesson
 
       SEPARATOR = "================================================================================\n\n"
 
@@ -22,7 +22,7 @@ module MTK
 
       def run(output)
         puts SEPARATOR
-        puts "Tutorial: #{@title}"
+        puts "Lesson: #{@title}"
         puts @description
         puts
         print "Try it now: "
