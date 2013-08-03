@@ -245,7 +245,8 @@ end
 
 if options.has_key? :tutorial
   require 'mtk/lang/tutorial'
-  MTK::Lang::Tutorial.new(@output).run
+  tutorial = MTK::Lang::Tutorial.new
+  tutorial.run(@output)
 end
 
 record if @input
