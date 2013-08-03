@@ -59,7 +59,13 @@ module MTK
           time -= start
           time /= beats_per_second
 
-          case message.type
+          message_type = message.type
+          message_type = :note_off if message_type == :note_on and message.velocity == 0
+          # TODO: this will need to be made more robust when we support off velocities
+
+          next if message_type == :unknown # Ignore garbage messages
+
+          case message_type
             when :note_on
               note_ons[message.pitch] = [message,time]
 
@@ -71,7 +77,7 @@ module MTK
                 timeline.add time,note
               end
 
-            else timeline.add time, MTK::Events::Parameter.from_midi([message.type, message.channel], message.data1, message.data2)
+            else timeline.add time, MTK::Events::Parameter.from_midi([message_type, message.channel], message.data1, message.data2)
           end
         end
 

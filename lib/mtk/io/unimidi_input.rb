@@ -69,9 +69,13 @@ module MTK
           time /= beats_per_second
 
           if message.is_a? MTK::Events::Event
-            timeline.add time,message
+            timeline.add time,message unless message.type == :unknown
           else
-            case message.type
+            message_type = message.type
+            message_type = :note_off if message_type == :note_on and message.velocity == 0
+            # TODO: this will need to be made more robust when we support off velocities
+
+            case message_type
             when :note_on
               pitch = message.pitch
               note_ons[pitch] = [message,time]
