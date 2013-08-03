@@ -10,13 +10,13 @@ describe MTK::IO::MIDIOutput do
   let(:subject) { MockOuput.new(mock_device) }
 
   let(:mock_device) do
-    mock_device = mock(:device)
+    mock_device = double(:device)
     mock_device.stub(:open)
     mock_device
   end
 
   let(:scheduler) do
-    scheduler = mock(:scheduler)
+    scheduler = double(:scheduler)
     Gamelan::Scheduler.stub(:new).and_return scheduler
     scheduler.stub(:stop).and_return :stop_scheduler
     scheduler
@@ -38,7 +38,7 @@ describe MTK::IO::MIDIOutput do
       end
     end
     scheduler.should_receive(:at) unless explicitly_expected_stop_scheduler # auto-handle stop_schedulerer if needed
-    scheduler.should_receive(:run).and_return mock(:thread,:join=>nil)
+    scheduler.should_receive(:run).and_return double(:thread,:join=>nil)
   end
 
 

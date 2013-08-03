@@ -100,7 +100,7 @@ describe MTK::Patterns::Chain do
       chain = CHAIN.new [C,q]
       chain.next
       chain.rewind
-      lambda{ chain.next }.should_not raise_error StopIteration
+      lambda{ chain.next }.should_not raise_error
       lambda{ chain.next }.should raise_error StopIteration
     end
   end
