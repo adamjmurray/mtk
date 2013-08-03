@@ -14,34 +14,34 @@ option_parser = OptionParser.new do |opts|
   opts.separator ''
   opts.separator 'Options:'
 
-   opts.on('-c FILE', '--convert FILE', 'Convert a file containing MTK syntax to MIDI',
-          'if a --file is given, write the MIDI to a file',
-          'if an --output is given, play the MIDI',
+   opts.on('-c FILE', '--convert FILE', 'Convert file containing MTK syntax to MIDI',
+          'if --file is given, write the MIDI to file',
+          'if --output is given, play the MIDI',
           'otherwise print the MIDI') {|file| options[:convert] = file }
 
   opts.separator ''
 
-  opts.on('-e [syntax]', '--eval [syntax]', 'Convert the given MTK syntax String to MIDI',
-          'or start an interactive interpreter when [syntax] is omitted',
-          'Behaves like --convert when a --file or --output is given') {|syntax| options[:eval] = syntax }
+  opts.on('-e [syntax]', '--eval [syntax]', 'Convert the given MTK syntax to MIDI or',
+          'interactive interpreter when no [syntax]',
+          'Behaves like --convert for --file/--output') {|syntax| options[:eval] = syntax }
 
   opts.separator ''
 
-  opts.on('-f FILE', '--file FILE', 'Write the output of --convert, --eval, --input, or --watch to a file'
-         ) {|file| options[:file] = file }
+  opts.on('-f FILE', '--file FILE', 'Write output of --convert, --eval, --input,',
+          'or --watch to a file') {|file| options[:file] = file }
 
   opts.separator ''
 
-  opts.on('-h', '--help', 'Show this message') { puts opts; exit }
+  opts.on('-h', '--help', 'Show these usage instructions') { puts opts; exit }
 
   opts.separator ''
 
   opts.on('-i INPUT', '--input INPUT', 'Set MIDI input for recording',
-          'if no --file is specified, prints the recorded MIDI') {|input| options[:input] = input }
+          'if no --file given, prints recorded MIDI') {|input| options[:input] = input }
 
   opts.separator ''
 
-  opts.on('-l', '--list', 'List available MIDI devices for --input and --output') { options[:list] = true }
+  opts.on('-l', '--list', 'List MIDI devices for --input and --output') { options[:list] = true }
 
   opts.separator ''
 
@@ -53,17 +53,18 @@ option_parser = OptionParser.new do |opts|
 
   opts.separator ''
 
-  opts.on('-p FILE', '--play FILE', 'Play or print the contents of a MIDI file',
-          'if no --output is specified, print the MIDI file') {|file| options[:play] = file }
+  opts.on('-p FILE', '--play FILE', 'Play or print a MIDI file',
+          'if no --output given, print the MIDI') {|file| options[:play] = file }
 
   opts.separator ''
 
-  opts.on('-t', '--tutorial', 'Start an interactive tutorial for the MTK syntax') { options[:tutorial] = true }
+  opts.on('-t', '--tutorial', 'Interactive tutorial for MTK syntax') { options[:tutorial] = true }
 
   opts.separator ''
 
-  opts.on('-w FILE', '--watch FILE', 'Watch an MTK syntax file for changes and automatically convert to MIDI',
-          'Behaves like --convert when a --file or --output is given') {|file| options[:watch] = file }
+  opts.on('-w FILE', '--watch FILE', 'Watch an MTK syntax file for changes and',
+          'automatically convert to MIDI',
+          'Behaves like --convert for --file/--output') {|file| options[:watch] = file }
 
 end
 

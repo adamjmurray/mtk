@@ -83,8 +83,9 @@ module MTK
       def run(output)
         puts
         puts TutorialStep::SEPARATOR
-        puts "Welcome to the MTK tutorial"
+        puts "Welcome to the MTK syntax tutorial"
         puts
+        puts "Warning! This tutorial assumes familiarity with music theory."
         puts "This is a work in progress. Check back in future versions for more tutorials."
         puts
         output = ensure_output(output)
