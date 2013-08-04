@@ -41,15 +41,15 @@ describe MTK::Lang::Parser do
 
     context "default (root rule) behavior" do
       it "parses a bare_sequencer" do
-        sequencer = parse('C:q:mp D4:ff A i:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp')
+        sequencer = parse('C:q:mp D4:ff A e:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp')
         sequencer.should be_a Sequencers::Sequencer
-        sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(i,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
+        sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(e,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
       end
 
       it "parses a sequencer" do
-        sequencer = parse('( C:q:mp D4:ff A i:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp  )')
+        sequencer = parse('( C:q:mp D4:ff A e:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp  )')
         sequencer.should be_a Sequencers::Sequencer
-        sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(i,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
+        sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(e,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
       end
 
       it "parses a timeline" do
@@ -68,13 +68,13 @@ describe MTK::Lang::Parser do
       end
 
       it "parses a chain of choices" do
-        sequencer = parse("<i|s>:<C|D|E>")
-        sequencer.patterns.should == [ chain( choice(i,s), choice(C,D,E) ) ]
+        sequencer = parse("<e|s>:<C|D|E>")
+        sequencer.patterns.should == [ chain( choice(e,s), choice(C,D,E) ) ]
       end
 
       it "parses a chain of choices" do
-        sequencer = parse("(<i|s>:<C|D|E>)&8")
-        sequencer.patterns.should == [ seq( chain( choice(i,s), choice(C,D,E) ), min_elements:8, max_elements:8 ) ]
+        sequencer = parse("(<e|s>:<C|D|E>)&8")
+        sequencer.patterns.should == [ seq( chain( choice(e,s), choice(C,D,E) ), min_elements:8, max_elements:8 ) ]
       end
 
       it "parses the repetition of a basic note property" do
@@ -104,15 +104,15 @@ describe MTK::Lang::Parser do
       end
 
       it "parses pitchclass:duration chains" do
-        sequencer = parse('C:q D:q E:i F:i G:h', :bare_sequencer)
+        sequencer = parse('C:q D:q E:e F:e G:h', :bare_sequencer)
         sequencer.should be_a Sequencers::Sequencer
-        sequencer.patterns.should == [seq(chain(C,q), chain(D,q), chain(E,i), chain(F,i), chain(G,h))]
+        sequencer.patterns.should == [seq(chain(C,q), chain(D,q), chain(E,e), chain(F,e), chain(G,h))]
       end
 
       it "parses a mix of chained and unchained pitches, pitch classes, durations, and intensities" do
-        sequencer = parse('C:q:mp D4:ff A i:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp', :bare_sequencer)
+        sequencer = parse('C:q:mp D4:ff A e:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp', :bare_sequencer)
         sequencer.should be_a Sequencers::Sequencer
-        sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(i,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
+        sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(e,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
       end
     end
 
@@ -137,15 +137,15 @@ describe MTK::Lang::Parser do
       end
 
       it "parses pitchclass:duration chains" do
-        sequencer = parse('{  C:q D:q E:i F:i G:h }', :sequencer)
+        sequencer = parse('{  C:q D:q E:e F:e G:h }', :sequencer)
         sequencer.should be_a Sequencers::Sequencer
-        sequencer.patterns.should == [seq(chain(C,q), chain(D,q), chain(E,i), chain(F,i), chain(G,h))]
+        sequencer.patterns.should == [seq(chain(C,q), chain(D,q), chain(E,e), chain(F,e), chain(G,h))]
       end
 
       it "parses a mix of chained and unchained pitches, pitch classes, durations, and intensities" do
-        sequencer = parse('{ C:q:mp D4:ff A i:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp   }', :sequencer)
+        sequencer = parse('{ C:q:mp D4:ff A e:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp   }', :sequencer)
         sequencer.should be_a Sequencers::Sequencer
-        sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(i,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
+        sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(e,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
       end
     end
 
@@ -317,7 +317,7 @@ describe MTK::Lang::Parser do
       end
 
       it "parses duration sequences" do
-        parse("q i q. ht", :bare_sequence).should == seq(q, i, q*Rational(1.5), h*Rational(2,3))
+        parse("q e q. ht", :bare_sequence).should == seq(q, e, q*Rational(1.5), h*Rational(2,3))
       end
     end
 
@@ -344,7 +344,7 @@ describe MTK::Lang::Parser do
       end
 
       it "parses duration sequences" do
-        parse("(q i q. ht)", :sequence).should == seq(q, i, q*Rational(1.5), h*Rational(2,3))
+        parse("(q e q. ht)", :sequence).should == seq(q, e, q*Rational(1.5), h*Rational(2,3))
       end
 
       it "parses sequences with a max_cycles modifier" do

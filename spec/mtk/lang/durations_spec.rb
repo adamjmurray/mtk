@@ -29,12 +29,12 @@ describe MTK::Lang::Durations do
     end
   end
 
-  describe 'i' do
+  describe 'e' do
     it 'is 1/2 of a beat' do
-      i.value.should == 1.0/2
+      e.value.should == 1.0/2
     end
     it 'is available via a module property and via mixin' do
-      Durations::i.should == i
+      Durations::e.should == e
     end
   end
 
@@ -67,7 +67,7 @@ describe MTK::Lang::Durations do
 
   describe "DURATIONS" do
     it "contains all Durations pseudo-constants" do
-      Durations::DURATIONS.should =~ [w, h, q, i, s, r, x]
+      Durations::DURATIONS.should =~ [w, h, q, e, s, r, x]
     end
 
     it "is immutable" do
@@ -77,7 +77,7 @@ describe MTK::Lang::Durations do
 
   describe "DURATION_NAMES" do
     it "contains all Durations pseudo-constants names as strings" do
-      Durations::DURATION_NAMES.should =~ ['w', 'h', 'q', 'i', 's', 'r', 'x']
+      Durations::DURATION_NAMES.should =~ ['w', 'h', 'q', 'e', 's', 'r', 'x']
     end
 
     it "is immutable" do

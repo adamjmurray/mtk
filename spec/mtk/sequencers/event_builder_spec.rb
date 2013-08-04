@@ -210,8 +210,8 @@ describe MTK::Sequencers::EventBuilder do
     end
 
     it "adds chained durations together" do
-      event_builder = EVENT_BUILDER.new( [Patterns.Chain(h,q,i,s)] )
-      event_builder.next[0].duration.should == h+q+i+s
+      event_builder = EVENT_BUILDER.new( [Patterns.Chain(h,q,e,s)] )
+      event_builder.next[0].duration.should == h+q+e+s
     end
 
     it "averages chained intensities together" do
@@ -221,11 +221,11 @@ describe MTK::Sequencers::EventBuilder do
 
     it "defaults the intensity to the previous intensity" do
       event_builder = EVENT_BUILDER.new(
-        [Patterns.Sequence(Patterns.Chain(C4,ppp,q), Patterns.Chain(D4,i), Patterns.Chain(E4,ff,h), Patterns.Chain(F4,i))]
+        [Patterns.Sequence(Patterns.Chain(C4,ppp,q), Patterns.Chain(D4,e), Patterns.Chain(E4,ff,h), Patterns.Chain(F4,e))]
       )
       notes = []
       4.times{ notes += event_builder.next }
-      notes.should == [Note(C4,ppp,q), Note(D4,ppp,i), Note(E4,ff,h), Note(F4,ff,i)]
+      notes.should == [Note(C4,ppp,q), Note(D4,ppp,e), Note(E4,ff,h), Note(F4,ff,e)]
     end
 
     it "defaults the duration to the previous duration" do

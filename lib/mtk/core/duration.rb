@@ -8,13 +8,13 @@ module MTK
       include Comparable
 
       # The names of the base durations. See {MTK::Lang::Durations} for more info.
-      NAMES = %w[w h q i s r x].freeze
+      NAMES = %w[w h q e s r x].freeze
 
       VALUES_BY_NAME = {
         'w' => 4,
         'h' => 2,
         'q' => 1,
-        'i' => Rational(1,2),
+        'e' => Rational(1,2),
         's' => Rational(1,4),
         'r' => Rational(1,8),
         'x' => Rational(1,16)
@@ -55,7 +55,7 @@ module MTK
       # @example lookup the value of 3/4w, which three-quarters of a whole note (3 beats):
       #          MTK::Core::Duration.from_s('3/4w')
       def self.from_s(s)
-        if s =~ /^(-)?(\d+([\.\/]\d+)?)?([whqisrx])((\.|t)*)$/i
+        if s =~ /^(-)?(\d+([\.\/]\d+)?)?([whqesrx])((\.|t)*)$/i
           name = $4.downcase
           modifier = $5.downcase
           modifier << $1 if $1 # negation

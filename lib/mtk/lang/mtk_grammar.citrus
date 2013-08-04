@@ -161,7 +161,7 @@ grammar MTK_Grammar
   end
 
   rule duration
-    ( rest:'-'? multiplier:number? [whqisrx] ('.'|'t')* ) {
+    ( rest:'-'? multiplier:number? [whqesrx] ('.'|'t')* ) {
       MTK::Core::Duration.from_s(to_s)
     }
   end

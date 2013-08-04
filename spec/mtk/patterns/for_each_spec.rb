@@ -83,11 +83,11 @@ describe MTK::Patterns::ForEach do
 
     it "evaluates nested variables" do
       # (C4 Bb Ab G)@( (C D C $):(q i i)*4:(mp mf) )
-      foreach = FOREACH.new( [seq(G,A), chain(seq(C,D,var('$')),seq(q,i,s))] )
+      foreach = FOREACH.new( [seq(G,A), chain(seq(C,D,var('$')),seq(q,e,s))] )
       vals = []
       6.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
-      vals.should == [[C,q],[D,i],[G,s],[C,q],[D,i],[A,s]]
+      vals.should == [[C,q],[D,e],[G,s],[C,q],[D,e],[A,s]]
     end
 
   end

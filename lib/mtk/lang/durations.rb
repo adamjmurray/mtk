@@ -5,8 +5,6 @@ module MTK
 
     # Defines duration constants using abbreviations for standard rhythm values ('w' for whole note, 'h' for half note, etc).
     #
-    # In order to avoid conflict with pitch class 'e', the constant for eighth note is 'i'
-    #
     # These can be thought of like constants, but they
     # use lower-case names and therefore define them as "pseudo constant" methods.
     # The methods are available either through the module (MTK::Core::Durations::e) or via mixin (include MTK::Core::Durations; q)
@@ -33,7 +31,7 @@ module MTK
       define_constant 'q', MTK::Core::Duration[1]
 
       # eight note
-      define_constant 'i', MTK::Core::Duration[Rational(1,2)]
+      define_constant 'e', MTK::Core::Duration[Rational(1,2)]
 
       # sixteenth note
       define_constant 's', MTK::Core::Duration[Rational(1,4)]
@@ -45,7 +43,7 @@ module MTK
       define_constant 'x', MTK::Core::Duration[Rational(1,16)]
 
       # The values of all "psuedo constants" defined in this module
-      DURATIONS = [w, h, q, i, s, r, x].freeze
+      DURATIONS = [w, h, q, e, s, r, x].freeze
 
       # The names of all "psuedo constants" defined in this module
       DURATION_NAMES = MTK::Core::Duration::NAMES

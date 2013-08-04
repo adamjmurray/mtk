@@ -8,7 +8,7 @@ describe MTK::Core::Duration do
 
   describe 'NAMES' do
     it "is the list of base duration names available" do
-      Duration::NAMES.should =~ %w( w h q i s r x )
+      Duration::NAMES.should =~ %w( w h q e s r x )
     end
 
     it "is immutable" do

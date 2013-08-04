@@ -43,11 +43,11 @@ describe MTK::Patterns::Chain do
     end
 
     it 'combines 2 patterns, and returns #next until the last StopIteration of a nested Pattern occurs' do
-      chain = CHAIN.new [Patterns.Sequence(C,D,E), Patterns.Sequence(w,h,q,i)]
+      chain = CHAIN.new [Patterns.Sequence(C,D,E), Patterns.Sequence(w,h,q,e)]
       chain.next.should == [C,w]
       chain.next.should == [D,h]
       chain.next.should == [E,q]
-      chain.next.should == [C,i]
+      chain.next.should == [C,e]
       lambda{ chain.next }.should raise_error StopIteration
     end
 
@@ -56,18 +56,18 @@ describe MTK::Patterns::Chain do
 
 
     it 'combines Choice patterns with max_cycles' do
-      chain = CHAIN.new [Patterns.Choice(i,s), Patterns.Choice(C,D,E)], max_cycles:100
+      chain = CHAIN.new [Patterns.Choice(e,s), Patterns.Choice(C,D,E)], max_cycles:100
       100.times do |time|
         attrs = chain.next
         attrs.length.should == 2
-        (attrs[0]==i or attrs[0]==s).should be_true
+        (attrs[0]==e or attrs[0]==s).should be_true
         (attrs[1]==C or attrs[1]==D or attrs[1]==E).should be_true
       end
       lambda{ chain.next }.should raise_error StopIteration
     end
 
     it 'combines Choice patterns and emits a only single combination of attributes by default' do
-      chain = CHAIN.new [Patterns.Choice(i,s), Patterns.Choice(C,D,E)]
+      chain = CHAIN.new [Patterns.Choice(e,s), Patterns.Choice(C,D,E)]
       chain.next
       lambda{ chain.next }.should raise_error StopIteration
     end
@@ -78,7 +78,7 @@ describe MTK::Patterns::Chain do
     end
 
     it 'throws StopIteration when any subpattern throws StopIteration with max_elements_exceeded' do
-      chain = CHAIN.new [Patterns.Sequence(C,D,E,F,G), Patterns.Sequence(w,h,q,i,  max_elements:3)]
+      chain = CHAIN.new [Patterns.Sequence(C,D,E,F,G), Patterns.Sequence(w,h,q,e,  max_elements:3)]
       chain.next.should == [C,w]
       chain.next.should == [D,h]
       chain.next.should == [E,q]
