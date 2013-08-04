@@ -13,7 +13,7 @@ module MTK
         @current_lesson_index = 0
 
         @lessons = [
-              ###################### 80 character width for description ######################
+              ###################### 79 character width for description #####################
           {
             title: 'Pitch Classes (diatonic)',
             description: "
@@ -89,7 +89,7 @@ module MTK
               (e d c)*2 e*3 d c
 
               You can also nest repetitions:
-              (c (e g)*2 )*2
+              ( c (e g)*2 )*2
               ",
             validation: /\*/,
           },
@@ -124,7 +124,7 @@ module MTK
       # table of contents
       def toc
         @lessons.map.with_index do |lesson,index|
-          "#{'» '.yellow if @current_lesson_index == index}#{index+1}: #{lesson}"
+          "#{'> '.bold.yellow if @current_lesson_index == index}#{index+1}: #{lesson}"
         end.join("\n")
       end
 
@@ -148,7 +148,7 @@ module MTK
           if all_done
             puts "exit:".blue
           else
-            puts "go to the next one ".blue + "(indicated by " + '»'.yellow + "):"
+            puts "go to the next one ".blue + "(indicated by " + '>'.bold.yellow + "):"
           end
 
           input = gets.strip
@@ -227,7 +227,7 @@ module MTK
   module Lang
     # @private
     class Tutorial
-      SEPARATOR = "================================================================================".bold.yellow
+      SEPARATOR = "===============================================================================".bold.yellow
     end
   end
 end

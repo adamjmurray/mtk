@@ -27,7 +27,7 @@ option_parser = OptionParser.new do |opts|
 
   opts.separator ''
 
-  opts.on('-f FILE', '--file FILE', 'Write output of --convert, --eval, --input,',
+  opts.on('-f FILE', '--file FILE', 'Write output of --convert, --eval, --input',
           'or --watch to a file') {|file| options[:file] = file }
 
   opts.separator ''
@@ -60,8 +60,8 @@ option_parser = OptionParser.new do |opts|
 
   opts.on('-t [color]', '--tutorial [color]', 'Interactive tutorial for MTK syntax',
           'Use on/off for the color option to enable',
-          'or disable colors. Colors are on by default',
-          'except on Windows (try Ansicon on Windows)') {|color| options[:tutorial] = true; options[:color] = color }
+          'or disable colors. Colors on by default',
+          'except on Windows (try Cygwin or Ansicon)') {|color| options[:tutorial] = true; options[:color] = color }
 
   opts.separator ''
 
@@ -260,7 +260,7 @@ if options.has_key? :tutorial
   else
     require 'rbconfig'
     os = RbConfig::CONFIG['host_os'].downcase
-    if os =~ /win/ and os !~ /darwin/ and os !~ /cygwin/
+    if os =~ /win/ and os !~ /darwin/
       $tutorial_color = false
     else
       puts "It looks like your system supports terminal colors."
