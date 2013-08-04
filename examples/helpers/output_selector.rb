@@ -3,6 +3,9 @@ require 'mtk/io/midi_output'
 # Assists with selecting an output.
 class OutputSelector
 
+  # Empty timeline used to prime the realtime output
+  WARMUP = MTK::Events::Timeline.from_h( {0 => MTK.Note(60,-1)} )
+
   class << self
 
     def output
@@ -31,7 +34,7 @@ class OutputSelector
       device = nil
       loop do
         begin
-          # TODO: I think invalid input will just turn into 0?
+          # NOTE: invalid input will turn into 0, but that's ok because we index from 1 so it will be caught as invalid
           number = STDIN.gets.to_i
           name = names_by_number[number]
           device = devices_by_name[name]
@@ -54,7 +57,13 @@ class OutputSelector
         output = search name
         puts "Output '#{name}' not found." unless output
       end
-      output || prompt_for_output
+      output ||= prompt_for_output
+
+      # Immediately trying to play output while Ruby is still "warming up" can cause timing issues with
+      # the first couple notes. So we play this "empty" Timeline containing a rest to address that issue.
+      output.play WARMUP
+
+      output
     end
 
   end

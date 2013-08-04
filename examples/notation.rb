@@ -1,3 +1,7 @@
+# NOTE: experimental example!
+# This requires Lilypond to be installed, see http://lilypond.org/
+# The lilypond command must be on your PATH or specificed via the LILYPOND_PATH environment variable.
+
 require 'mtk'
 require 'mtk/io/notation'
 include MTK
@@ -13,7 +17,7 @@ arg_error "MTK syntax string not provided" unless syntax
 
 
 file = ARGV[1]
-arg_error "The output_file must end in '.png', '.pdf', or '.ps'" unless file
+arg_error "The output_file must end in '.png', '.pdf', or '.ps'" unless file =~ /\.(png|pdf|ps)$/
 
 
 sequencer = MTK::Lang::Parser.parse(syntax)

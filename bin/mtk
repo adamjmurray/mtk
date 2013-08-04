@@ -117,6 +117,7 @@ def output(timelines, print_header='Timeline')
   if @output
     # Immediately trying to play output while Ruby is still "warming up" can cause timing issues with
     # the first couple notes. So we play this "empty" Timeline containing a rest to address that issue.
+    # TODO? move this into the output class and do it automatically when playing for the first time? (warmup code is also in output_selector))
     @output.play WARMUP
     @output.play timelines.first # TODO: support multiple timelines
   elsif @file

@@ -29,7 +29,7 @@ end
 pitches = Patterns.Function( interval_generator, max_elements: 24 )
 
 # we'll also use a weighted choice to generate the intensities
-intensities = Patterns.Choice( mp,mf,o,ff,fff, weights: [1,2,3,2,1], max_cycles: 24 )
+intensities = Patterns.Choice( mp,mf,f,ff,fff, weights: [1,2,3,2,1], max_cycles: 24 )
 
 sequencer = Sequencers.StepSequencer( pitches,intensities, step_size: 0.5, max_interval: 17 )
 

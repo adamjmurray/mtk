@@ -12,7 +12,7 @@ file = ARGV[0] || 'MTK-tone_row_melody.mid'
 
 row = PitchClassSet Db, G, Ab, F, Eb, E, D, C, B, Gb, A, Bb
 pitch_pattern = Patterns.Cycle *row
-rhythm_pattern = Patterns.Choice s, i, i+s, q # choose between sixteenth, eighth, dotted eighth, and quarter
+rhythm_pattern = Patterns.Choice s, e, e+s, q # choose between sixteenth, eighth, dotted eighth, and quarter
 
 chain = Patterns.Chain pitch_pattern, rhythm_pattern, min_elements: 36, max_elements: 36
 
