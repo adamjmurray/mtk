@@ -38,19 +38,4 @@ describe MTK::Lang::Pitches do
     end
   end
 
-  describe ".[]" do
-    it "acts like Pitch.from_s for the names in PITCH_NAMES, and also treats '_' like '-'" do
-      for name in Pitches::PITCH_NAMES
-        Pitches[name].should == Pitch.from_s(name.sub('_','-')) # the constant names need to use underscores, but Pitch.from_s doesn't understand that
-        if name =~ /_/
-          Pitches[name.sub('_','-')].should == Pitch.from_s(name.sub('_','-')) # make sure '-' works too
-        end
-      end
-    end
-
-    it "returns nil for arguments it doesn't understand" do
-      Pitches[:invalid].should be_nil
-    end
-  end
-
 end
