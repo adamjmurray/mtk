@@ -14,7 +14,7 @@ option_parser = OptionParser.new do |opts|
   opts.separator ''
   opts.separator 'Options:'
 
-   opts.on('-c FILE', '--convert FILE', 'Convert file containing MTK syntax to MIDI',
+  opts.on('-c FILE', '--convert FILE', 'Convert file containing MTK syntax to MIDI',
           'if --file is given, write the MIDI to file',
           'if --output is given, play the MIDI',
           'otherwise print the MIDI') {|file| options[:convert] = file }
@@ -59,9 +59,7 @@ option_parser = OptionParser.new do |opts|
   opts.separator ''
 
   opts.on('-t [color]', '--tutorial [color]', 'Interactive tutorial for MTK syntax',
-          'Use on/off for the color option to enable',
-          'or disable colors. Colors on by default',
-          'except on Windows (try Cygwin or Ansicon)') {|color| options[:tutorial] = true; options[:color] = color }
+          'Text color can be set on/off') {|color| options[:tutorial] = true; options[:color] = color }
 
   opts.separator ''
 
@@ -75,17 +73,15 @@ end
 #######################################################################
 
 puts option_parser and exit if ARGV.length == 0
-#p ARGV
-#p options
 
 ERROR_INVALID_COMMAND  = 1
 ERROR_FILE_NOT_FOUND   = 2
 ERROR_OUTPUT_NOT_FOUND = 3
 ERROR_INPUT_NOT_FOUND  = 4
 
-# Immediately trying to play output while Ruby is still "warming up" can cause timing issues with
-# the first couple notes. So we play this "empty" Timeline containing a rest to address that issue.
+# Empty timeline used to prime the realtime output
 WARMUP = MTK::Events::Timeline.from_h( {0 => MTK.Note(60,-1)} )
+
 
 #######################################################################
 
@@ -119,6 +115,8 @@ end
 def output(timelines, print_header='Timeline')
   timelines = [timelines] unless timelines.is_a? Array
   if @output
+    # Immediately trying to play output while Ruby is still "warming up" can cause timing issues with
+    # the first couple notes. So we play this "empty" Timeline containing a rest to address that issue.
     @output.play WARMUP
     @output.play timelines.first # TODO: support multiple timelines
   elsif @file
@@ -155,6 +153,33 @@ def watch_file_updated?
 end
 
 
+def set_tutorial_color(color_option)
+  if color_option
+    case color_option.strip.downcase
+      when /^(on|yes|true|y|t|color)$/ then $tutorial_color = true
+      when /^(off|no|false|n|f)$/ then $tutorial_color = false
+      else
+        STDERR.puts "Invalid tutorial color setting '#{color}'. Try 'on' or 'off'."
+        exit ERROR_INVALID_COMMAND
+    end
+  else
+    require 'rbconfig'
+    os = RbConfig::CONFIG['host_os'].downcase
+    if os =~ /win/ and os !~ /darwin/
+      puts
+      puts "Windows command line text color is off by default."
+      puts "If you want color, use ANSI terminal software like Cygwin or Ansicon and "
+      puts "run #{$0} with the color option \"--tutorial on\""
+      $tutorial_color = false
+    else
+      $tutorial_color = true
+    end
+  end
+  puts "Tutorial color is #{if $tutorial_color then 'enabled' else 'disabled' end}."
+  puts
+end
+
+
 #######################################################################
 
 if options[:list]
@@ -172,7 +197,9 @@ if options[:list]
   exit
 end
 
+
 @monitor = true if options[:monitor]
+
 
 if options[:input]
   setup_io
@@ -186,6 +213,7 @@ if options[:input]
   end
 end
 
+
 if options[:output]
   setup_io
   output_name = options[:output]
@@ -198,8 +226,9 @@ if options[:output]
   end
 end
 
-file = options[:file]
-@file = file if file
+
+@file = options[:file]
+
 
 if options[:play]
   filename = options[:play]
@@ -207,6 +236,7 @@ if options[:play]
   timelines = MTK.MIDIFile(filename).to_timelines
   output(timelines, "Timeline for #{filename}")
 end
+
 
 if options.has_key? :eval
   mtk_syntax = options[:eval]
@@ -225,11 +255,13 @@ if options.has_key? :eval
   end
 end
 
+
 if options[:convert]
   mtk_syntax_file = options[:convert]
   mtk_syntax = IO.read(mtk_syntax_file)
   convert(mtk_syntax)
 end
+
 
 if options[:watch]
   @watch_file = options[:watch]
@@ -247,31 +279,13 @@ if options[:watch]
   end
 end
 
-if options.has_key? :tutorial
-  color = options[:color]
-  if color
-    case color.strip.downcase
-      when /^(on|yes|true|y|t|color)$/ then $tutorial_color = true
-      when /^(off|no|false|n|f)$/ then $tutorial_color = false
-      else
-        STDERR.puts "Invalid tutorial color setting '#{color}'. Try 'on' or 'off'."
-        exit ERROR_INVALID_COMMAND
-    end
-  else
-    require 'rbconfig'
-    os = RbConfig::CONFIG['host_os'].downcase
-    if os =~ /win/ and os !~ /darwin/
-      $tutorial_color = false
-    else
-      puts "It looks like your system supports terminal colors."
-      $tutorial_color = true
-    end
-  end
-  puts "Color is #{if $tutorial_color then 'enabled' else 'disabled' end}."
 
+if options.has_key? :tutorial
+  set_tutorial_color(options[:color])
   require 'mtk/lang/tutorial'
   tutorial = MTK::Lang::Tutorial.new
   tutorial.run(@output)
 end
+
 
 record if @input

@@ -89,6 +89,7 @@ module MTK
               (e d c)*2 e*3 d c
 
               You can also nest repetitions:
+
               ( c (e g)*2 )*2
               ",
             validation: /\*/,
@@ -141,7 +142,11 @@ module MTK
         while lesson == nil
           puts toc
           puts
-          puts "You've completed the last lesson!\n\n" if all_done
+          if all_done
+            puts "You've completed the last lesson!"
+            puts "To explore more, try running #{$0} with the --eval option."
+            puts
+          end
           puts "Press Ctrl+C to exit at any time.".bold
           puts
           print "Select a lesson number, or press enter to ".blue
