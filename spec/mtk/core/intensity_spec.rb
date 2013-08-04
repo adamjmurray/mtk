@@ -7,7 +7,7 @@ describe MTK::Core::Intensity do
 
   describe 'NAMES' do
     it "is the list of base intensity names available" do
-      Intensity::NAMES.should =~ %w( ppp pp p mp mf o ff fff )
+      Intensity::NAMES.should =~ %w( ppp pp p mp mf f ff fff )
     end
 
     it "is immutable" do

@@ -145,7 +145,7 @@ grammar MTK_Grammar
   end
 
   rule accidental
-    ('##' | '#' | 'bb' | 'b')
+    ('#'1*2 | 'b'1*2)
   end
 
   rule interval
@@ -155,7 +155,7 @@ grammar MTK_Grammar
   end
 
   rule intensity
-    ( ('p'1*3 | 'mp' | 'mf' | 'o' | 'f'2*3) ('+'|'-')? ) {
+    ( ('p'1*3 | 'mp' | 'mf' | 'f'1*3) ('+'|'-')? ) {
       MTK::Core::Intensity.from_s(to_s)
     }
   end

@@ -20,8 +20,6 @@ module MTK
     module Durations
       extend MTK::Lang::PseudoConstants
 
-      # NOTE: the yard doc macros here only fill in [$2] with the actual value when generating docs under Ruby 1.9+
-
       # whole note
       # @macro [attach] durations.define_constant
       #   @attribute [r]

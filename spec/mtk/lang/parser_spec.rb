@@ -56,9 +56,9 @@ describe MTK::Lang::Parser do
         parse("
           {
             0 => C4:mp:q
-            1 => D4:o:h
+            1 => D4:f:h
           }
-        ").should ==  MTK::Events::Timeline.from_h({0 => chain(C4,mp,q), 1 => chain(D4,o,h)})
+        ").should ==  MTK::Events::Timeline.from_h({0 => chain(C4,mp,q), 1 => chain(D4,f,h)})
       end
 
       it "parses a chain of sequences" do
@@ -167,9 +167,9 @@ describe MTK::Lang::Parser do
         parse("
           {
             0 => C4:mp:q
-            1 => D4:o:h
+            1 => D4:f:h
           }
-        ", :timeline).should ==  MTK::Events::Timeline.from_h({0 => chain(C4,mp,q), 1 => chain(D4,o,h)})
+        ", :timeline).should ==  MTK::Events::Timeline.from_h({0 => chain(C4,mp,q), 1 => chain(D4,f,h)})
       end
 
       #it "parses a Timeline containing a chord" do

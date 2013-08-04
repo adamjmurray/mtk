@@ -57,17 +57,17 @@ describe MTK::Sequencers::EventBuilder do
       event_builder.next.should == notes(C4)
     end
 
-    it "defaults to intensity 'o' when no intensities are given" do
+    it "defaults to intensity 'f' when no intensities are given" do
       event_builder = EVENT_BUILDER.new [Patterns.PitchSequence(C4, D4, E4), Patterns.DurationCycle(2)]
-      event_builder.next.should == [Note(C4, o, 2)]
-      event_builder.next.should == [Note(D4, o, 2)]
-      event_builder.next.should == [Note(E4, o, 2)]
+      event_builder.next.should == [Note(C4, f, 2)]
+      event_builder.next.should == [Note(D4, f, 2)]
+      event_builder.next.should == [Note(E4, f, 2)]
     end
 
     it "defaults to duration 1 when no durations are given" do
-      event_builder =  EVENT_BUILDER.new [Patterns.PitchSequence(C4, D4, E4), Patterns.IntensityCycle(p,o)]
+      event_builder =  EVENT_BUILDER.new [Patterns.PitchSequence(C4, D4, E4), Patterns.IntensityCycle(p,f)]
       event_builder.next.should == [Note(C4, p, 1)]
-      event_builder.next.should == [Note(D4, o, 1)]
+      event_builder.next.should == [Note(D4, f, 1)]
       event_builder.next.should == [Note(E4, p, 1)]
     end
 
@@ -114,17 +114,17 @@ describe MTK::Sequencers::EventBuilder do
     end
 
     it "iterates through the pitch, intensity, and duration list in parallel to emit Notes" do
-      event_builder = EVENT_BUILDER.new [Patterns.PitchCycle(C4, D4, E4), Patterns.IntensityCycle(p, o), Patterns.DurationCycle(1,2,3,4)]
+      event_builder = EVENT_BUILDER.new [Patterns.PitchCycle(C4, D4, E4), Patterns.IntensityCycle(p, f), Patterns.DurationCycle(1,2,3,4)]
       event_builder.next.should == [Note(C4, p, 1)]
-      event_builder.next.should == [Note(D4, o, 2)]
+      event_builder.next.should == [Note(D4, f, 2)]
       event_builder.next.should == [Note(E4, p, 3)]
-      event_builder.next.should == [Note(C4, o, 4)]
+      event_builder.next.should == [Note(C4, f, 4)]
       event_builder.next.should == [Note(D4, p, 1)]
-      event_builder.next.should == [Note(E4, o, 2)]
+      event_builder.next.should == [Note(E4, f, 2)]
     end
 
     it "returns nil (for a rest) when it encounters a nil value" do
-      event_builder = EVENT_BUILDER.new [Patterns.PitchCycle(C4, D4, E4, F4, nil), Patterns.IntensityCycle(mp, mf, o, nil), Patterns.DurationCycle(1, 2, nil)]
+      event_builder = EVENT_BUILDER.new [Patterns.PitchCycle(C4, D4, E4, F4, nil), Patterns.IntensityCycle(mp, mf, f, nil), Patterns.DurationCycle(1, 2, nil)]
       event_builder.next.should == [Note(C4, mp, 1)]
       event_builder.next.should == [Note(D4, mf, 2)]
       event_builder.next.should be_nil
@@ -172,10 +172,10 @@ describe MTK::Sequencers::EventBuilder do
     end
 
     it "uses the default_pitch when no pitch pattern is provided" do
-      event_builder = EVENT_BUILDER.new [Patterns.Cycle( mp, mf, o )], :default_pitch => G3
+      event_builder = EVENT_BUILDER.new [Patterns.Cycle( mp, mf, f )], :default_pitch => G3
       event_builder.next.should == [Note(G3,mp,1)]
       event_builder.next.should == [Note(G3,mf,1)]
-      event_builder.next.should == [Note(G3,o,1)]
+      event_builder.next.should == [Note(G3,f,1)]
     end
 
     it "handles chains of sequences" do

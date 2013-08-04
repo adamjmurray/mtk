@@ -7,7 +7,7 @@ module MTK
       include Comparable
 
       # The names of the base intensities. See {MTK::Lang::Intensities} for more info.
-      NAMES = %w[ppp pp p mp mf o ff fff].freeze
+      NAMES = %w[ppp pp p mp mf f ff fff].freeze
 
       VALUES_BY_NAME = {
         'ppp' => 0.125,
@@ -15,7 +15,7 @@ module MTK
         'p' => 0.375,
         'mp' => 0.5,
         'mf' => 0.625,
-        'o' => 0.75,
+        'f' => 0.75,
         'ff' => 0.875,
         'fff' => 1.0
       }

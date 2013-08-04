@@ -3,8 +3,6 @@ module MTK
 
     # Defines intensity constants using standard dynamic symbols.
     #
-    # In order to avoid conflict with pitch class 'f', the constant for forte is 'o'
-    #
     # These can be thought of like constants, but they
     # use lower-case names and therefore define them as "pseudo constant" methods.
     # The methods are available either through the module (MTK::Core::Intensities::ff) or via mixin (include MTK::Core::Intensities; ff)
@@ -17,8 +15,6 @@ module MTK
     # @see Events::Note
     module Intensities
       extend MTK::Lang::PseudoConstants
-
-      # NOTE: the yard doc macros here only fill in [$2] with the actual value when generating docs under Ruby 1.9+
 
       # pianississimo
       # @macro [attach] intensities.define_constant
@@ -41,7 +37,7 @@ module MTK
       define_constant 'mf', MTK::Core::Intensity[0.625]
 
       # forte
-      define_constant 'o', MTK::Core::Intensity[0.75]
+      define_constant 'f', MTK::Core::Intensity[0.75]
 
       # fortissimo
       define_constant 'ff', MTK::Core::Intensity[0.875]
@@ -50,7 +46,7 @@ module MTK
       define_constant 'fff', MTK::Core::Intensity[1.0]
 
       # The values of all "psuedo constants" defined in this module
-      INTENSITIES = [ppp, pp, p, mp, mf, o, ff, fff].freeze
+      INTENSITIES = [ppp, pp, p, mp, mf, f, ff, fff].freeze
 
       # The names of all "psuedo constants" defined in this module
       INTENSITY_NAMES = MTK::Core::Intensity::NAMES

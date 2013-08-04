@@ -165,7 +165,7 @@ describe MTK do
     end
 
     it 'fills in a missing intensity and duration arguments from numbers' do
-      Note(MTK::Lang::Pitches::C4, MTK::Lang::Intensities::o, 5.25).should == Note(C4, 5.25, 0.75)
+      Note(MTK::Lang::Pitches::C4, MTK::Lang::Intensities::f, 5.25).should == Note(C4, 5.25, 0.75)
     end
 
   end

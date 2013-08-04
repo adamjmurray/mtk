@@ -15,8 +15,6 @@ module MTK
     module Intervals
       extend MTK::Lang::PseudoConstants
 
-      # NOTE: the yard doc macros here only fill in [$2] with the actual value when generating docs under Ruby 1.9+
-
       # perfect unison
       # @macro [attach] interval.define_constant
       #   @attribute [r]
