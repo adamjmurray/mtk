@@ -7,13 +7,14 @@ module MTK
     #
     # These can be thought of like constants, but they
     # use lower-case names and therefore define them as "pseudo constant" methods.
-    # The methods are available either through the module (MTK::Core::Durations::e) or via mixin (include MTK::Core::Durations; q)
+    # The methods are available either through the module (MTK::Lang::Durations::e) or via mixin (include MTK::Lang::Durations; q)
     #
     # These values assume the quarter note is one beat (1.0), so they work best with 4/4 and other */4 time signatures.
     #
     # @note Including this module defines a bunch of single-character variables, which may shadow existing variable names.
     #       Just be mindful of what is defined in this module when including it.
     #
+    # @see Core::Duration
     # @see Events::Note
     module Durations
       extend MTK::Lang::PseudoConstants
@@ -21,7 +22,7 @@ module MTK
       # whole note
       # @macro [attach] durations.define_constant
       #   @attribute [r]
-      #   @return [$2] number of beats for $1
+      #   @return [$2] duration for $1
       define_constant 'w', MTK::Core::Duration[4]
 
       # half note
@@ -46,6 +47,7 @@ module MTK
       DURATIONS = [w, h, q, e, s, r, x].freeze
 
       # The names of all "psuedo constants" defined in this module
+      # @see MTK::Core::Duration::NAMES
       DURATION_NAMES = MTK::Core::Duration::NAMES
 
     end

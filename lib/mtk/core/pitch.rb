@@ -2,6 +2,8 @@ module MTK
   module Core
 
     # A frequency represented by a {PitchClass}, an integer octave, and an offset in semitones.
+    #
+    # @see Lang::Pitches
     class Pitch
 
       include Comparable

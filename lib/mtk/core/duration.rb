@@ -3,6 +3,8 @@ module MTK
 
     # A measure of time in musical beats.
     # May be negative to indicate a rest, which uses the absolute value for the effective duration.
+    #
+    # @see Lang::Durations
     class Duration
 
       include Comparable

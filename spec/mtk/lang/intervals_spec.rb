@@ -122,7 +122,7 @@ describe MTK::Lang::Intervals do
 
   describe "INTERVALS" do
     it "contains all intervals constants/pseudo-constants" do
-      Intervals::INTERVALS.should =~ [P1, m2, M2, m3, M3, P4, TT, P5, m6, M6, m7, M7, P8]
+      Intervals::INTERVALS.should =~ MTK::Core::Interval::ALL_NAMES.map{|name| MTK::Core::Interval.from_name(name) }
     end
 
     it "is immutable" do
@@ -132,7 +132,7 @@ describe MTK::Lang::Intervals do
 
   describe "INTERVAL_NAMES" do
     it "contains all intervals constants/pseudo-constant names" do
-      Intervals::INTERVAL_NAMES.should =~ ['P1', 'm2', 'M2', 'm3', 'M3', 'P4', 'TT', 'P5', 'm6', 'M6', 'm7', 'M7', 'P8']
+      Intervals::INTERVAL_NAMES.should =~ MTK::Core::Interval::ALL_NAMES
     end
 
     it "is immutable" do

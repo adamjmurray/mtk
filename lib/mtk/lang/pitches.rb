@@ -10,6 +10,7 @@ module MTK
     # @note Because the character '-' (minus) cannot be used in the name of a constant,
     #     the low pitches use '_' (underscore) in place of '-' (minus) (for example C_1).
     #
+    # @see Core::Pitch
     # @see Events::Note
     module Pitches
 

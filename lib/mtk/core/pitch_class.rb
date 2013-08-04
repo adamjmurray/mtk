@@ -4,10 +4,10 @@ module MTK
     # A set of all pitches that are an integer number of octaves apart.
     # A {Pitch} has the same PitchClass as the pitches one or more octaves away.
     # @see https://en.wikipedia.org/wiki/Pitch_class
-    #
+    # @see Lang::PitchClasses
     class PitchClass
 
-      # The normalized names of the 12 pitch classes in the chromatic scale.
+      # The preferred names of the 12 pitch classes in the chromatic scale.
       # The index of each {#name} is the pitch class's numeric {#value}.
       NAMES = %w( C Db D Eb E F Gb G Ab A Bb B ).freeze
 
@@ -15,7 +15,7 @@ module MTK
       # organized such that each index contains the allowed names of the pitch class with a {#value} equal to that index.
       # @see VALID_NAMES
       VALID_NAMES_BY_VALUE =
-      [ # (valid names ), # value # normalized name
+      [ # (valid names ), # value # preferred name
         %w( B#  C  Dbb ), #   0   #   C
         %w( B## C# Db  ), #   1   #   Db
         %w( C## D  Ebb ), #   2   #   D

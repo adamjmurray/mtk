@@ -2,6 +2,8 @@ module MTK
   module Core
 
     # A measure of intensity, using an underlying value in the range 0.0-1.0
+    #
+    # @see Lang::Intensities
     class Intensity
 
       include Comparable

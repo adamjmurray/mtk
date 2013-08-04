@@ -2,29 +2,35 @@ module MTK
   module Core
 
     # A measure of intensity, using an underlying value in the range 0.0-1.0
+    #
+    # @see Lang::Intervals
     class Interval
 
       include Comparable
 
       # The preferred names of all pre-defined intervals
+      # @see ALL_NAMES
       NAMES = %w[P1 m2 M2 m3 M3 P4 TT P5 m6 M6 m7 M7 P8].freeze
 
       # All valid names of pre-defined intervals, indexed by their value.
+      # @see ALL_NAMES
+      # @see NAMES
+      # @see http://en.wikipedia.org/wiki/Interval_(music)#Main_intervals
       NAMES_BY_VALUE =
-        [ #   names   # value # description
-          %w( P1 ),   #   0   #  unison
-          %w( m2 ),   #   1   #  minor second
-          %w( M2 ),   #   2   #  major second
-          %w( m3 ),   #   3   #  minor third
-          %w( M3 ),   #   4   #  major third
-          %w( P4 ),   #   5   #  perfect fourth
-          %w( TT ),   #   6   #  tritone (AKA augmented fourth, diminished fifth)
-          %w( P5 ),   #   7   #  perfect fifth
-          %w( m6 ),   #   8   #  minor sixth
-          %w( M6 ),   #   9   #  major sixth
-          %w( m7 ),   #  10   #  minor seventh
-          %w( M7 ),   #  11   #  major seventh
-          %w( P8 )    #  12   #  octave
+        [ #   names      # value # description     # enharmonic equivalents
+          %w( P1 d2 ),   #   0   #  unison         #  diminished second
+          %w( m2 a1 ),   #   1   #  minor second   #  augmented unison
+          %w( M2 d3 ),   #   2   #  major second   #  diminished third
+          %w( m3 a2 ),   #   3   #  minor third    #  augmented second
+          %w( M3 d4 ),   #   4   #  major third    #  diminished fourth
+          %w( P4 a3 ),   #   5   #  perfect fourth #  augmented third
+          %w( TT a4 d5 ),#   6   #  tritone        #  augmented fourth, diminished fifth
+          %w( P5 d6 ),   #   7   #  perfect fifth  #  diminished sixth
+          %w( m6 a5 ),   #   8   #  minor sixth    #  augmented fifth
+          %w( M6 d7 ),   #   9   #  major sixth    #  diminished seventh
+          %w( m7 a6 ),   #  10   #  minor seventh  #  augmented sixth
+          %w( M7 d8 ),   #  11   #  major seventh  #  diminished octave
+          %w( P8 a7 )    #  12   #  octave         #  augmented seventh
         ].freeze
 
       # A mapping from intervals names to their value
@@ -35,6 +41,7 @@ module MTK
       ].freeze
 
       # All valid interval names
+      # @see NAMES_BY_VALUE
       ALL_NAMES = NAMES_BY_VALUE.flatten.freeze
 
 
