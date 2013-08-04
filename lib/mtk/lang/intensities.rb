@@ -3,50 +3,52 @@ module MTK
 
     # Defines intensity constants using standard dynamic symbols.
     #
-    # These can be thought of like constants, but they
-    # use lower-case names and therefore define them as "pseudo constant" methods.
-    # The methods are available either through the module (MTK::Lang::Intensities::ff) or via mixin (include MTK::Lang::Intensities; ff)
+    # These can be thought of like constants, but in order to support the lower case names,
+    # it was necessary to define them as "pseudo constant" methods.
+    # Like constants, these methods are available either through the module (MTK::Lang::Intensities::f) or
+    # via mixin (include MTK::Lang::Intensities; f). They are listed under the "Instance Attribute Summary" of this page.
     #
     # These values are intensities in the range 0.125 - 1.0 (in increments of 1/8), so they can be easily scaled (unlike MIDI velocities).
     #
     # @note Including this module shadows Ruby's built-in p() method.
-    #   If you include this module, you can access the built-in p() method via Kernel.p()
+    #       If you include this module, you can access the built-in p() method via Kernel.p()
+    #       Also be aware you might shadow existing variable names, like f.
     #
     # @see Core::Intensity
     # @see Events::Note
     module Intensities
       extend MTK::Lang::PseudoConstants
 
-      # pianississimo
-      # @macro [attach] intensities.define_constant
-      #   @attribute [r]
-      #   @return [$2] intensity for $1
-      define_constant 'ppp', MTK::Core::Intensity[0.125]
+      # @private
+      # @!macro [attach] define_intensity
+      #   $3: $4% intensity
+      #   @!attribute [r]
+      #   @return [MTK::Core::Interval] intensity of $4%
+      def self.define_intensity name, value, description, percentage_intensity
+        define_constant name, value
+      end
 
-      # pianissimo
-      define_constant 'pp', MTK::Core::Intensity[0.25]
 
-      # piano
+      define_intensity 'ppp', MTK::Core::Intensity[0.125], 'pianississimo', '12.5'
+
+      define_intensity 'pp', MTK::Core::Intensity[0.25], 'pianissimo', 25
+
       # @note Including this module shadows Ruby's built-in p() method.
       #   If you include this module, you can access the built-in p() method via Kernel.p()
-      define_constant 'p', MTK::Core::Intensity[0.375]
+      define_intensity 'p', MTK::Core::Intensity[0.375], 'piano', '37.5'
 
-      # mezzo-piano
-      define_constant 'mp', MTK::Core::Intensity[0.5]
+      define_intensity 'mp', MTK::Core::Intensity[0.5], 'mezzo-piano', 50
 
-      # mezzo-forte
-      define_constant 'mf', MTK::Core::Intensity[0.625]
+      define_intensity 'mf', MTK::Core::Intensity[0.625], 'mezzo-forte', '62.5'
 
-      # forte
-      define_constant 'f', MTK::Core::Intensity[0.75]
+      define_intensity 'f', MTK::Core::Intensity[0.75], 'forte', 75
 
-      # fortissimo
-      define_constant 'ff', MTK::Core::Intensity[0.875]
+      define_intensity 'ff', MTK::Core::Intensity[0.875], 'fortissimo', '87.5'
 
-      # fortississimo
-      define_constant 'fff', MTK::Core::Intensity[1.0]
+      define_intensity 'fff', MTK::Core::Intensity[1.0], 'fortississimo', 100
 
-      # The values of all "psuedo constants" defined in this module
+
+      # All "psuedo constants" defined in this module
       INTENSITIES = [ppp, pp, p, mp, mf, f, ff, fff].freeze
 
       # The names of all "psuedo constants" defined in this module

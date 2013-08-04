@@ -48,15 +48,4 @@ describe MTK::Lang::PitchClasses do
     end
   end
 
-  describe ".[]" do
-    it "acts like PitchClass.[]" do
-      for name in PitchClasses::PITCH_CLASS_NAMES
-        PitchClasses[name].should == PitchClass[name]
-      end
-    end
-
-    it "returns nil for arguments it doesn't understand" do
-      PitchClasses[:invalid].should be_nil
-    end
-  end
 end

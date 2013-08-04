@@ -48,6 +48,9 @@ module MTK
 
       # The value of this pitch class.
       # An integer from 0..11 that indexes this pitch class in {PITCH_CLASSES} and the {#name} in {NAMES}.
+      #
+      # This value is fairly arbitrary and just used for sorting purposes and mod 12 arithmetic when composing
+      # directly with pitch classes.
       attr_reader :value
 
 

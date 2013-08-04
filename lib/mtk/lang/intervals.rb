@@ -11,8 +11,8 @@ module MTK
     #   a#: augmented interval
     #   d#: diminished interval
     #
-    # These can be thought of like constants, but in order to support things like 'm2' (minor) as well as 'M2' (major),
-    # it was necessary to use lower-case names for some of the values and therefore define them as "pseudo constant" methods.
+    # These can be thought of like constants, but in order to support the lower case names,
+    # it was necessary to define them as "pseudo constant" methods.
     # Like constants, these methods are available either through the module (MTK::Lang::Intervals::m2) or
     # via mixin (include MTK::Lang::Intervals; m2). They are listed under the "Instance Attribute Summary" of this page.
     #
@@ -23,7 +23,7 @@ module MTK
 
       # @private
       # @!macro [attach] define_interval
-      #   $3 ($4 semitones)
+      #   $3: $4 semitones
       #   @!attribute [r]
       #   @return [MTK::Core::Interval] interval of $4 semitones
       def self.define_interval name, value, description, semitones
@@ -128,7 +128,7 @@ module MTK
       define_interval 'a7', MTK::Core::Interval[12], 'augmented seventh', 12
 
 
-      # The values of all "psuedo constants" defined in this module
+      # All "psuedo constants" defined in this module
       INTERVALS = [P1, d2, m2, a1, M2, d3, m3, a2, M3, d4, P4, a3, TT, a4, d5, P5, d6, m6, a5, M6, d7, m7, a6, M7, d8, P8, a7].freeze
 
       # The names of all "psuedo constants" defined in this module
