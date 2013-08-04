@@ -149,7 +149,7 @@ grammar MTK_Grammar
   end
 
   rule interval
-    ( [Pp] [1458] | ('maj'|'min'|[Mm]) [2367] | 'TT' | 'tt' ) {
+    ( 'P' [1458] | [Mm] [2367] | 'TT' ) {
       MTK::Core::Interval.from_s(to_s)
     }
   end

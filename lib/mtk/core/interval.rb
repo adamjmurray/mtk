@@ -11,20 +11,20 @@ module MTK
 
       # All valid names of pre-defined intervals, indexed by their value.
       NAMES_BY_VALUE =
-        [ #   names      # value # description
-          %w( P1 p1 ),   #   0   #  unison
-          %w( m2 min2 ), #   1   #  minor second
-          %w( M2 maj2 ), #   2   #  major second
-          %w( m3 min3 ), #   3   #  minor third
-          %w( M3 maj3 ), #   4   #  major third
-          %w( P4 p4 ),   #   5   #  perfect fourth
-          %w( TT tt ),   #   6   #  tritone (AKA augmented fourth, diminished fifth)
-          %w( P5 p5 ),   #   7   #  perfect fifth
-          %w( m6 min6 ), #   8   #  minor sixth
-          %w( M6 maj6 ), #   9   #  major sixth
-          %w( m7 min7 ), #  10   #  minor seventh
-          %w( M7 maj7 ),  #  11   #  major seventh
-          %w( P8 p8 )    #  12   #  octave
+        [ #   names   # value # description
+          %w( P1 ),   #   0   #  unison
+          %w( m2 ),   #   1   #  minor second
+          %w( M2 ),   #   2   #  major second
+          %w( m3 ),   #   3   #  minor third
+          %w( M3 ),   #   4   #  major third
+          %w( P4 ),   #   5   #  perfect fourth
+          %w( TT ),   #   6   #  tritone (AKA augmented fourth, diminished fifth)
+          %w( P5 ),   #   7   #  perfect fifth
+          %w( m6 ),   #   8   #  minor sixth
+          %w( M6 ),   #   9   #  major sixth
+          %w( m7 ),   #  10   #  minor seventh
+          %w( M7 ),   #  11   #  major seventh
+          %w( P8 )    #  12   #  octave
         ].freeze
 
       # A mapping from intervals names to their value
