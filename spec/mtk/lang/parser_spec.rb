@@ -34,7 +34,7 @@ describe MTK::Lang::Parser do
 
   describe ".parse" do
     it "can parse a single pitch class and play it" do
-      sequencer = MTK::Lang::Parser.parse('c')
+      sequencer = MTK::Lang::Parser.parse('C')
       timeline = sequencer.to_timeline
       timeline.should ==  MTK::Events::Timeline.from_h({0 => MTK.Note(C4)})
     end
@@ -68,17 +68,17 @@ describe MTK::Lang::Parser do
       end
 
       it "parses a chain of choices" do
-        sequencer = parse("<i|s>:<c|d|e>")
+        sequencer = parse("<i|s>:<C|D|E>")
         sequencer.patterns.should == [ chain( choice(i,s), choice(C,D,E) ) ]
       end
 
       it "parses a chain of choices" do
-        sequencer = parse("(<i|s>:<c|d|e>)&8")
+        sequencer = parse("(<i|s>:<C|D|E>)&8")
         sequencer.patterns.should == [ seq( chain( choice(i,s), choice(C,D,E) ), min_elements:8, max_elements:8 ) ]
       end
 
       it "parses the repetition of a basic note property" do
-        sequencer = parse("c*4")
+        sequencer = parse("C*4")
         sequencer.patterns.should == [ seq(C, max_cycles:4) ]
       end
     end
@@ -424,7 +424,7 @@ describe MTK::Lang::Parser do
 
     context 'element rule' do
       it "parses the repetition of a basic note property as a sequence with a max_cycles option" do
-        sequence = parse("c*4", :element)
+        sequence = parse("C*4", :element)
         sequence.elements.should == [ C ]
         sequence.max_cycles.should == 4
       end
@@ -457,18 +457,10 @@ describe MTK::Lang::Parser do
         end
       end
 
-      it "allows for lower case diatonic pitch class names" do
-        for pitch_class_name in PitchClass::VALID_NAMES
-          parse(pitch_class_name.downcase, :pitch_class).should == PitchClass[pitch_class_name]
-        end
-      end
-
-      it "doesn't allow a sharp and flat to be applied to the same diatoonic pitch class" do
+      it "doesn't allow a sharp and flat to be applied to the same diatonic pitch class" do
         for pitch_class_name in %w(A B C D E F G)
           lambda{ parse(pitch_class_name + '#b', :pitch_class) }.should raise_error
           lambda{ parse(pitch_class_name + 'b#', :pitch_class) }.should raise_error
-          lambda{ parse(pitch_class_name.downcase + '#b', :pitch_class) }.should raise_error
-          lambda{ parse(pitch_class_name.downcase + '#b', :pitch_class) }.should raise_error
         end
       end
     end
@@ -477,12 +469,6 @@ describe MTK::Lang::Parser do
     context 'diatonic_pitch_class rule' do
       it "parses upper case diatonic pitch classes" do
         for diatonic_pitch_class_name in %w(A B C D E F G)
-          parse(diatonic_pitch_class_name, :diatonic_pitch_class).should == PitchClass[diatonic_pitch_class_name]
-        end
-      end
-
-      it "parses upper case diatonic pitch classes" do
-        for diatonic_pitch_class_name in %w(a b c d e f g)
           parse(diatonic_pitch_class_name, :diatonic_pitch_class).should == PitchClass[diatonic_pitch_class_name]
         end
       end

@@ -18,9 +18,9 @@ module MTK
       def self.parse(syntax, root=:root, dump=false)
         syntax = syntax.to_s.strip
         return nil if syntax.empty?
-        matcher = ::MTK_Grammar.parse(syntax, :root => root)
-        puts matcher.dump if dump
-        matcher.value
+        match = ::MTK_Grammar.parse(syntax, root: root)
+        puts match.dump if dump
+        match.value
       end
 
     end

@@ -133,15 +133,19 @@ grammar MTK_Grammar
   end
 
   rule pitch_class
-    ( diatonic_pitch_class ('##' | '#' | 'bb' | 'b')? ) {
+    ( diatonic_pitch_class accidental? ) {
       MTK::Core::PitchClass[to_s]
     }
   end
 
   rule diatonic_pitch_class
-    ( [A-Ga-g] ) {
+    ( [A-G] ) {
       MTK::Core::PitchClass[to_s]
     }
+  end
+
+  rule accidental
+    ('##' | '#' | 'bb' | 'b')
   end
 
   rule interval

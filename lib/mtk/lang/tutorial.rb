@@ -20,10 +20,9 @@ module MTK
               The diatonic pitch classes are the 7 white keys on a piano in a given octave.
               They can be used to play, for example, the C major or A natural minor scales.
 
-              To play a diatonic pitch class, enter #{'one'.bold.underline} of the following letters
-              (upper or lower case is allowed):
+              To play a diatonic pitch class, enter #{'one'.bold.underline} of the following letters:
 
-              C D E F G A B   c d e f g a b
+              C D E F G A B
               ",
             validation: :diatonic_pitch_class,
           },
@@ -37,11 +36,9 @@ module MTK
               immediately followed by 0, 1, or 2 flats (b) or sharps (#). Each flat (b)
               lowers the pitch by a half step and each sharp (#) raises by a half step.
 
-              Here are some examples, try entering #{'one'.bold.underline} of the following
-              (Note, upper or lower case is allowed for the diatonic pitch class but flats
-              must be lower case):
+              Here are some examples, try entering #{'one'.bold.underline} of the following:
 
-              C# Eb F Gbb A## B   c# eb f gbb a## b
+              C# Bb A## Ebb F
               ",
             validation: :pitch_class,
           },
@@ -61,7 +58,7 @@ module MTK
 
               Here are some examples, try entering #{'one'.bold.underline} of the following:
 
-              G3 eb4 F#5 B-1 C##9 dbb6
+              G3 Eb4 F#5 B-1 C##9 Dbb6
               ",
             validation: :pitch,
           },
@@ -75,7 +72,7 @@ module MTK
 
               Here is an example (Note, unlike previous lessons, enter the #{'entire line'.bold.underline}):
 
-              c5 c g5 g a a g
+              C5 C G5 G A A G
               ",
             validation: :bare_sequence,
           },
@@ -86,11 +83,11 @@ module MTK
               number of repetitions. You can also wrap a subsequence of notes with
               parentheses and repeat them. Here is an example sequence with repetition:
 
-              (e d c)*2 e*3 d c
+              C*3 D (E D)*2 C
 
-              You can also nest repetitions:
+              You can also nest repetitions (optional whitespace added for readability):
 
-              ( c (e g)*2 )*2
+              ( C5 (E G)*2 )*2
               ",
             validation: /\*/,
           },
@@ -104,12 +101,13 @@ module MTK
         puts
         puts "Welcome to the MTK syntax tutorial!".bold.yellow
         puts
-        puts "MTK is the Music Tool Kit for Ruby."
-        puts "It has a custom syntax for generating musical patterns."
-        puts "This tutorial will teach you the basics of the syntax."
+        puts "MTK is the Music Tool Kit for Ruby, which includes a custom syntax for"
+        puts "generating musical patterns. This tutorial has a variety of lessons to teach"
+        puts "you the syntax. It assumes familiarity with music theory."
         puts
-        puts "#{'Warning!'.bold} This tutorial assumes familiarity with music theory."
-        puts "This is a work in progress. Check back in the future versions for more lessons."
+        puts "This is a work in progress. Check back in future versions for more lessons."
+        puts
+        puts "#{'NOTE:'.bold} MTK syntax is case-sensitive. Upper vs lower-case matters."
 
         output = ensure_output(output)
         loop{ select_lesson.run(output) }
