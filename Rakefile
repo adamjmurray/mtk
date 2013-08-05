@@ -1,7 +1,6 @@
 require 'rspec/core/rake_task'
 require 'rake/clean'
 require 'erb'
-hist
 
 GEM_VERSION = '0.4'
 
