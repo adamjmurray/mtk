@@ -103,11 +103,14 @@ module MTK
         puts
         puts "MTK is the Music Tool Kit for Ruby, which includes a custom syntax for"
         puts "generating musical patterns. This tutorial has a variety of lessons to teach"
-        puts "you the syntax. It assumes familiarity with music theory."
+        puts "you the syntax. It assumes basic familiarity with music theory."
+        puts
+        puts "Make sure your speakers are on and the volume is turned up."
         puts
         puts "This is a work in progress. Check back in future versions for more lessons."
         puts
         puts "#{'NOTE:'.bold} MTK syntax is case-sensitive. Upper vs lower-case matters."
+        puts
 
         output = ensure_output(output)
         loop{ select_lesson.run(output) }
@@ -178,16 +181,55 @@ module MTK
       private
 
       def ensure_output(output)
-        if output
-          #puts "Using \"#{output.name}\" for output."
-        else
-          puts "ERROR: --output option must be given when launching the tutorial."
-          exit 1
-          # TODO: select an output, explain --output option...
-          # Or auto-select?
-          #if defined? MTK::IO::DLSSynthDevice
-          #  puts "It looks like you are on OS X so we'll try using the built-in 'DLS' synthesizer"
-          #end
+        unless output
+          puts SEPARATOR
+          puts
+          puts "Select an output".bold.yellow
+          puts
+          puts "You need to select a MIDI output device before you can hear sound."
+          puts
+
+          require 'rbconfig'
+          case RbConfig::CONFIG['host_os'].downcase
+            when /darwin/
+              puts "You appear to be on OS X."
+              puts "You can use the \"Apple DLS Synthesizer\" to hear sound with no extra setup."
+              puts "It's recommended you use this unless you have a good reason to do otherwise."
+            when /win/
+              puts "You appear to be on Windows"
+              puts "You can use the \"Microsoft Synthesizer\" to hear sound with no extra setup."
+              puts "It's recommended you use this unless you have a good reason to do otherwise."
+          end
+
+          until output
+            puts
+            puts "Available MIDI outputs:".bold.yellow
+            MTK::IO::MIDIOutput.devices.each.with_index do |device,index|
+              name = device.name
+              name += " (#{device.id})" if device.respond_to? :id
+              puts "#{index+1}: #{name}"
+            end
+
+            puts "Select an output number:".blue
+
+            input = STDIN.gets.strip
+            if input =~ /^\d+$/
+              number = input.to_i
+              if number > 0
+                device = MTK::IO::MIDIOutput.devices[number-1]
+                output = MTK::IO::MIDIOutput.open(device) if device
+              end
+            end
+
+            puts "Invalid selection.".red unless device
+          end
+
+          puts
+          puts "OK! Using output '#{output.name}'".bold.green
+          puts "#{'NOTE:'.bold} You can skip the output selection step in the future by running "
+          puts "#{$0} with the --output option."
+          puts "Press enter to continue".blue
+          gets
         end
         output
       end
@@ -203,12 +245,12 @@ end
 # @private
 class String
   {
-      bold: 1,
-      underline: 4,
-      red: 31,
-      green: 32,
-      yellow: 33,
-      blue: 36 # really this cyan but the standard blue is too dark IMO
+    bold: 1,
+    underline: 4,
+    red: 31,
+    green: 32,
+    yellow: 33,
+    blue: 36 # really this cyan but the standard blue is too dark IMO
   }.each do |effect,code|
     if $tutorial_color
       define_method effect do
