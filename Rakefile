@@ -1,7 +1,9 @@
 require 'rspec/core/rake_task'
 require 'rake/clean'
+require 'erb'
+hist
 
-GEM_VERSION = '0.0.3.3'
+GEM_VERSION = '0.4'
 
 SUPPORTED_RUBIES = %w[ 1.9.3  2.0  jruby-1.7.4 ]
 

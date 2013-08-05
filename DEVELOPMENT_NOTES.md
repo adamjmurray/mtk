@@ -133,3 +133,8 @@ Do a local sanity check by installing
      ... test jmtk command ...
 
 And then authorized users can push gems to rubygems.org.
+
+After pushing, tag the release as follows
+
+     git tag -a {version} -m {version}
+     git push --tags
