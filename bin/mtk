@@ -192,8 +192,9 @@ if options[:list]
   puts
   puts (['OUTPUTS:']+output_names).join("\n * ")
   puts
-  puts 'When specifying --input INPUT or --output OUTPUT, the first substring match will be used.'
-  puts "For example: --output IAC will use 'Apple Inc. IAC Driver' if it's the first OUTPUT containing 'IAC'"
+  puts 'When specifying --input INPUT or --output OUTPUT, the first substring match'
+  puts '(case-insensitive) will be used. For example: "--output iac" will use'
+  puts '"Apple Inc. IAC Driver" if it\'s the first OUTPUT containing "IAC".'
   puts
   exit
 end
