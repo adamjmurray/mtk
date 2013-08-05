@@ -46,16 +46,6 @@ Events are organized in time via the Timeline
 
 
 <br/>
-### Creating Core data types and Events
-
-The Core types as well as Note events have "convenience constructors" under the top-level MTK module.
-
-You can construct objects from almost any arguments by using the methods such as MTK.Pitch() and MTK.Note().
-These methods do their best to guess what you want from the arguments and even handle out-of-order arguments
-in most cases. See the unit tests for ideas...
-
-
-<br/>
 ### Collections
 
 The collection classes need some work... The interface is likely to change so it's best to not rely on them too much
@@ -92,6 +82,16 @@ So far the options are:
 * LegatoSequencer - the end of each event is the start of the next event
 * RhythmSequencer - requires a special rhythm-type patter to determine the inter-event time intervals
 * StepSequencer - uses a constant amount of time between all events. In other words, works like a drum sequencer/
+
+
+<br/>
+### Creating object conveniently
+
+The Core types as well as Patterns and Note events have "convenience constructors" under the top-level MTK module.
+
+You can construct objects from almost any arguments by using the methods such as MTK.Pitch() and MTK.Note().
+These methods do their best to guess what you want from the arguments and even handle out-of-order arguments
+in most cases. See the unit tests for ideas...
 
 
 <br/>
