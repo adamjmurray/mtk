@@ -244,7 +244,23 @@ describe MTK::Sequencers::EventBuilder do
 
     it "returns a Rest event when the duration is negative" do
       event_builder = EVENT_BUILDER.new([Patterns.Chain(C4,-q)])
-      event_builder.next.should == [MTK.Rest(q)]
+      event_builder.next.should == [Rest(q)]
+    end
+
+    it "doesn't uses the absolute value of the previous rest when generating the next event" do
+      event_builder = EVENT_BUILDER.new([Patterns.Sequence(Patterns.Chain(C4,q), -q, D4)])
+      event_builder.next.should == [Note(C4,q)]
+      event_builder.next.should == [Rest(q)]
+      event_builder.next.should == [Note(D4,q)]
+    end
+
+    it "makes all event chained to a rest be a rest" do
+      event_builder = EVENT_BUILDER.new(
+        [Patterns.Sequence(Patterns.Chain(C4,q), Patterns.Chain(-q, Patterns.Sequence(D4,E4)))]
+      )
+      event_builder.next.should == [Note(C4,q)]
+      event_builder.next.should == [Rest(q)]
+      event_builder.next.should == [Rest(q)]
     end
   end
 

@@ -97,6 +97,7 @@ module MTK
       # The magnitude (absolute value) of the duration.
       # This is the actual duration for rests.
       # @see #rest?
+      # @see #abs
       def length
         @value < 0 ? -@value : @value
       end
@@ -106,6 +107,18 @@ module MTK
       # @see #-@
       def rest?
         @value < 0
+      end
+
+      # Force resets to be non-rests, otherwise don't change the duration.
+      # @see #-@
+      # @see #length
+      # @see #rest?
+      def abs
+        if @value < 0
+          -self
+        else
+          self
+        end
       end
 
       # The number of beats as a floating point number

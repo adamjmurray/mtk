@@ -79,7 +79,7 @@ module MTK
         end
 
         pitches     << @previous_pitch if pitches.empty?
-        duration   ||= @previous_duration
+        duration   ||= @previous_duration.abs
 
         if intensities.empty?
           intensity = @previous_intensity

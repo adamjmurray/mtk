@@ -176,6 +176,19 @@ describe MTK::Core::Duration do
   end
 
 
+  describe '#abs' do
+    it 'returns the Duration is the value is positive' do
+      d = MTK.Duration(2)
+      d.abs.should be d
+    end
+
+    it 'returns the negation of the Duration is the value is negative' do
+      d = MTK.Duration(-2)
+      d.abs.should == -d
+    end
+  end
+
+
   describe '#to_f' do
     it "is the value as a floating point number" do
       f = Duration.new(Rational(1,2)).to_f
