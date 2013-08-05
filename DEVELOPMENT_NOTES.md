@@ -97,7 +97,7 @@ Test with current version of Ruby:
 
      bundle exec rake test
 
-Test with all supported versions of Ruby (requires [rvm](https://rvm.beginrescueend.com/), YARV 1.9.3, and JRuby 1.6.7):
+Test with all supported versions of Ruby (requires [rvm](https://rvm.beginrescueend.com/), MRI 1.9.3, MRI 2.0.0 and JRuby 1.7.4):
 
      bundle exec rake test:all
 

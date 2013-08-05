@@ -39,7 +39,13 @@ JRuby is recommended for Windows users.
 
         jmtk --help
 
-0. Learn the MTK syntax: TODO... documentation forthcoming. In the meantime, see the unit tests @ https://github.com/adamjmurray/mtk/blob/master/spec/mtk/lang/parser_spec.rb
+0. Learn the MTK syntax with the interactive tutorial by running
+
+        mtk -t
+
+    Or for JRuby
+
+        jmtk -t
 
 0. Check out examples: https://github.com/adamjmurray/mtk/tree/master/examples
 
