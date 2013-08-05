@@ -475,6 +475,30 @@ describe MTK::Lang::Parser do
     end
 
 
+    context 'accidental rule' do
+      it "parses a single flat 'b'" do
+        lambda{ parse('b', :accidental) }.should_not raise_error
+      end
+
+      it "parses a double flat 'bb'" do
+        lambda{ parse('bb', :accidental) }.should_not raise_error
+      end
+
+      it "parses a single sharp '#'" do
+        lambda{ parse('#', :accidental) }.should_not raise_error
+      end
+
+      it "parses a double sharp '##'" do
+        lambda{ parse('##', :accidental) }.should_not raise_error
+      end
+
+      it "doesn't parse trip flats or sharps" do
+        lambda{ parse('bbb', :accidental) }.should raise_error
+        lambda{ parse('###', :accidental) }.should raise_error
+      end
+    end
+
+
     context 'interval rule' do
       it "parses intervals" do
         for interval_name in Interval::ALL_NAMES
