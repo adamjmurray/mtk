@@ -20,7 +20,8 @@ module MTK
               The diatonic pitch classes are the 7 white keys on a piano in a given octave.
               They can be used to play, for example, the C major or A natural minor scales.
 
-              To play a diatonic pitch class, enter #{'one'.bold.underline} of the following letters:
+              To play a diatonic pitch class, enter #{'one'.bold.underline} of the following letters
+              (must be upper-case):
 
               C D E F G A B
               ",
