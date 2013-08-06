@@ -85,13 +85,10 @@ describe MTK::Groups::PitchGroup do
       pitch_group.to_pitch_class_set.should be_a MTK::Groups::PitchClassSet
     end
 
-    it "contains all the distinct pitch_classes in this PITCH_GROUP by default" do
+    it "contains only the distinct pitch_classes in this PitchGroup" do
       pitch_group.to_pitch_class_set.pitch_classes.should == pitch_group.pitch_classes.uniq
     end
 
-    it "contains all the pitch_classes (including duplicates) when the argument is false" do
-      pitch_group.to_pitch_class_set(false).pitch_classes.should == pitch_group.pitch_classes
-    end
   end
 
 

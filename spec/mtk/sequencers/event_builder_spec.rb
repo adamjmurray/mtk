@@ -77,8 +77,8 @@ describe MTK::Sequencers::EventBuilder do
       event_builder.next.should == notes(C3,G3)
     end
 
-    it "builds notes from pitch class sets, selecting the nearest pitch classes to the previous/default pitch" do
-      pitch_class_sequence = MTK::Patterns::Sequence.new([PitchClassSet(C,G),PitchClassSet(B,Eb),PitchClassSet(D,C)])
+    it "builds notes from pitch class groups, selecting the nearest pitch classes to the previous/default pitch" do
+      pitch_class_sequence = MTK::Patterns::Sequence.new([PitchClassGroup(C,G),PitchClassGroup(B,Eb),PitchClassGroup(D,C)])
       event_builder = EVENT_BUILDER.new [pitch_class_sequence], :default_pitch => D3
       event_builder.next.should == notes(C3,G3)
       event_builder.next.should == notes(B3,Eb3)

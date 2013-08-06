@@ -3,12 +3,14 @@ module MTK
 
     # An ordered collection of {Pitch}es.
     #
-    # @see Chord
+    # @see PitchClassGroup
     #
     class PitchGroup < Group
 
       alias pitches elements
 
+      # Given an optional starting pitch and max distance from that pitch, construct a PitchGroup from a
+      # list of {PitchClass}es.
       def self.from_pitch_classes(pitch_classes, start=MTK::Lang::Pitches::C4, max_distance=12)
         pitch = start
         pitches = []
@@ -24,12 +26,18 @@ module MTK
       # Convert to an Array of pitches.
       alias to_pitches to_a
 
-      def to_pitch_class_set(remove_duplicates=true)
-        PitchClassSet.new(remove_duplicates ? pitch_classes.uniq : pitch_classes)
-      end
-
       def pitch_classes
         @pitch_classes ||= @elements.map{|p| p.pitch_class }
+      end
+
+      # Convert this PitchGroup to a {PitchClassGroup} using the {PitchClass} of each {Pitch} in this collection.
+      def to_pitch_class_group
+        PitchClassGroup.new(pitch_classes)
+      end
+
+      # Convert this PitchGroup to a {PitchClassSet} using the {PitchClass} of each {Pitch} in this collection.
+      def to_pitch_class_set
+        PitchClassSet.new(pitch_classes)
       end
 
       # Transpose all elements upward by the given interval

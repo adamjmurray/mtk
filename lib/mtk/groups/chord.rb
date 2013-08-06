@@ -1,17 +1,16 @@
 module MTK
   module Groups
 
-    # An unordered of distinct {Pitch}es.
+    # An unordered collection of distinct {Pitch}es.
     #
     # Represents a "vertical" (simultaneous) pitch collection.
     # This is unordered in the sense that the order provided is ignored. The pitches are sorted to normalize the chord.
     #
-    # @see PitchGroup
-    #
     class Chord < PitchGroup
 
-      # @param pitches [#to_a] the collection of pitches
-      # @note duplicate pitches will be removed. See #{Melody} if you want to maintain duplicates.
+      # @param pitches [#to_a] the collection of {Pitch}es
+      # @note duplicate pitches will be removed and the collection will be sorted.
+      #       See #{PitchGroup} if you want to maintain the original pitches.
       #
       def initialize(pitches)
         super pitches.to_a.uniq.sort
@@ -44,7 +43,6 @@ module MTK
 
   # Construct an ordered {MTK::Groups::Chord} with no duplicates.
   # @see #MTK::Groups::Chord
-  # @see #MTK::Groups::Melody
   def Chord(*anything)
     MTK::Groups::Chord.new MTK::Groups.to_pitches(*anything)
   end

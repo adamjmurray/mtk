@@ -11,16 +11,6 @@ describe MTK::Groups::PitchClassSet do
     pitch_class_set.should be_a Enumerable
   end
 
-  describe ".random_row" do
-    it "generates a 12-tone row" do
-      PITCH_CLASS_SET.random_row.should =~ PitchClasses::PITCH_CLASSES
-    end
-
-    it "generates a random 12-tone row (NOTE: very slight expected chance of test failure, if this fails run it again!)" do
-      # there's a 1/479_001_600 chance this will fail... whaddyagonnado??
-      PITCH_CLASS_SET.random_row.should_not == PITCH_CLASS_SET.random_row
-    end
-  end
 
   describe ".all" do
     it "is the set of all 12 pitch classes" do
@@ -29,8 +19,12 @@ describe MTK::Groups::PitchClassSet do
   end
 
   describe ".new" do
-    it "maintains the pitch class collection exactly (preserves order and keeps duplicates)" do
-      PITCH_CLASS_SET.new([C, E, G, E, B, C]).pitch_classes.should == [C, E, G, E, B, C]
+    it "removes duplicate pitch classes" do
+      PITCH_CLASS_SET.new([C, E, G, E, B, C]).pitch_classes.should == [C, E, G, B]
+    end
+
+    it "sorts the pitch classes" do
+      PITCH_CLASS_SET.new([B, F, G, C]).pitch_classes.should == [C, F, G, B]
     end
   end
 
@@ -185,20 +179,16 @@ describe MTK::Groups::PitchClassSet do
   end
 
   describe "#permute" do
-    it "randomly rearranges the PITCH_CLASS_SET order (NOTE: very slight expected chance of test failure, if this fails run it again!)" do
+    it "has no effect" do
       all_pcs = MTK.PitchClassSet(PitchClasses::PITCH_CLASSES)
-      permuted = all_pcs.permute
-      permuted.should =~ all_pcs
-      permuted.should_not == all_pcs # there's a 1/479_001_600 chance this will fail...
+      all_pcs.permute.should == all_pcs
     end
   end
 
   describe "#shuffle" do
-    it "behaves like permute (NOTE: very slight expected chance of test failure, if this fails run it again!)" do
+    it "has no effect" do
       all_pcs = MTK.PitchClassSet(PitchClasses::PITCH_CLASSES)
-      shuffled = all_pcs.shuffle
-      shuffled.should =~ all_pcs
-      shuffled.should_not == all_pcs # there's a 1/479_001_600 chance this will fail...
+      all_pcs.shuffle.should == all_pcs
     end
   end
 
@@ -243,12 +233,12 @@ describe MTK::Groups::PitchClassSet do
       pitch_class_set.should == MTK.PitchClassSet(C,E,G)
     end
 
-    it "is false if two pitch class sets are not in the same order" do
-      pitch_class_set.should_not == MTK.PitchClassSet(C,G,E)
+    it "is true even if 2 pitch class sets are constructed in the same order" do
+      pitch_class_set.should == MTK.PitchClassSet(C,G,E)
     end
 
-    it "is false when if otherwise equal pitch class sets don't contain the same number of duplicates" do
-      PITCH_CLASS_SET.new([C, E, G]).should_not == PITCH_CLASS_SET.new([C, C, E, G])
+    it "is true even if one of the pitch class was constructed with duplicates" do
+      PITCH_CLASS_SET.new([C, E, G]).should == PITCH_CLASS_SET.new([C, C, E, G])
     end
 
     it "is false if two pitch class sets do not contain the same pitch classes" do
@@ -310,19 +300,19 @@ describe MTK do
       PitchClassSet(C,D).should == PITCH_CLASS_SET.new([C,D])
     end
 
-    it "handles an Array with elements that can be converted to Pitches" do
+    it "handles an Array with elements that can be converted to PitchClasses" do
       PitchClassSet(['C','D']).should == PITCH_CLASS_SET.new([C,D])
     end
 
-    it "handles multiple arguments that can be converted to a Pitch" do
+    it "handles multiple arguments that can be converted to a PitchClass" do
       PitchClassSet(:C,:D).should == PITCH_CLASS_SET.new([C,D])
     end
 
-    it "handles a single Pitch" do
+    it "handles a single PitchClass" do
       PitchClassSet(C).should == PITCH_CLASS_SET.new([C])
     end
 
-    it "handles single elements that can be converted to a Pitch" do
+    it "handles single elements that can be converted to a PitchClass" do
       PitchClassSet('C').should == PITCH_CLASS_SET.new([C])
     end
 

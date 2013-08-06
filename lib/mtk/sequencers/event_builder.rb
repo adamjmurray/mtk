@@ -47,7 +47,7 @@ module MTK
                 pitches += pitches_for_pitch_classes([element], @previous_pitch)
                 @previous_pitch = pitches.last
 
-              when ::MTK::Groups::PitchClassSet
+              when ::MTK::Groups::PitchClassGroup
                 pitches += pitches_for_pitch_classes(element, @previous_pitch)
                 @previous_pitch = pitches.last
 

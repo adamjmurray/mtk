@@ -2,40 +2,28 @@ module MTK
 
   module Groups
 
-    # An ordered collection of {PitchClass}es.
+    # An unordered collection of distinct {PitchClass}es.
     #
-    # Unlike a mathematical Set, a PitchClassSet is ordered and may contain duplicates.
+    # This is unordered in the sense that the given order is ignored.
+    # The pitch classes are sorted to create a canonical form for the collection.
+    # Note: that musical set theory provides different forms of "normalization" besides this canonical sorted form,
+    # including {#normal_order} and {#normal_form}
     #
-    # @see MTK::Groups::Melody
-    # @see MTK::Groups::Chord
-    #
-    class PitchClassSet < Group
-
-      alias pitch_classes elements
-
-      def self.random_row
-        new(MTK::Lang::PitchClasses::PITCH_CLASSES.shuffle)
-      end
+    class PitchClassSet < PitchClassGroup
 
       def self.all
         @all ||= new(MTK::Lang::PitchClasses::PITCH_CLASSES)
       end
 
 
-      # Convert to an Array of pitch_classes.
-      alias to_pitch_classes to_a
-
-      # Transpose all elements upward by the given interval
-      # @param interval_in_semitones [Numeric] an interval in semitones
-      def transpose(interval_in_semitones)
-        map{|elem| elem + interval_in_semitones }
+      # @param pitch_classes [#to_a] the collection of {PitchClass}es
+      # @note duplicate pitches will be removed and the collection will be sorted.
+      #       See #{PitchGroup} if you want to maintain the original pitches.
+      #
+      def initialize(pitch_classes)
+        super pitch_classes.to_a.uniq.sort
       end
 
-      # Invert all elements around the given inversion point
-      # @param inversion_point [Numeric] the value around which all elements will be inverted (defaults to the first element in the collection)
-      def invert(inversion_point=first)
-        map{|elem| elem.invert(inversion_point) }
-      end
 
       def normal_order
         ordering = Array.new(@elements.uniq.sort)
@@ -109,36 +97,6 @@ module MTK
         self.class.all.difference(self)
       end
 
-      # @param other [#pitch_classes, #to_a, Array]
-      def == other
-        if other.respond_to? :pitch_classes
-          @elements == other.pitch_classes
-        elsif other.respond_to? :to_a
-          @elements == other.to_a
-        else
-          @elements == other
-        end
-      end
-
-      # Compare for equality, ignoring order and duplicates
-      # @param other [#pitch_classes, Array, #to_a]
-      def =~ other
-        @normalized_pitch_classes ||= @elements.uniq.sort
-        @normalized_pitch_classes == case
-          when other.respond_to?(:pitch_classes) then other.pitch_classes.uniq.sort
-          when (other.is_a? Array and other.frozen?) then other
-          when other.respond_to?(:to_a) then other.to_a.uniq.sort
-          else other
-        end
-      end
-
-      def to_s
-        @elements.join(' ')
-      end
-
-      def inspect
-        @elements.inspect
-      end
 
       def self.span_between(pc1, pc2)
         (pc2.to_i - pc1.to_i) % 12
@@ -147,10 +105,9 @@ module MTK
     end
   end
 
-  # Construct a {Groups::PitchClassSet}
-  # @see Groups::PitchClassSet#initialize
+  # Construct a {Groups::PitchClassSet} from any supported type.
   def PitchClassSet(*anything)
-    MTK::Groups::PitchClassSet.new MTK::Groups.to_pitch_classes(*anything)
+    MTK::Groups::PitchClassSet.new(MTK::Groups.to_pitch_classes *anything)
   end
   module_function :PitchClassSet
 
