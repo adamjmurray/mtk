@@ -29,6 +29,48 @@ describe MTK::Lang::Variable do
     end
   end
 
+  describe '#implicit?' do
+    it 'is true when the variable name is $' do
+      var('$').implicit?.should be_true
+    end
+
+    it 'is true when the variable name is any number of $ characters' do
+      10.times{|i| var('$'*(i+1)).implicit?.should be_true }
+    end
+
+    it 'is false otherwise' do
+      var('x').implicit?.should be_false
+      var('$x').implicit?.should be_false
+      var('$1').implicit?.should be_false
+    end
+  end
+
+  describe '#scale_step?' do
+    it 'is true when the variable name is $N where N is a natural number' do
+      var('$1').scale_step?.should be_true
+      var('$1023456987').scale_step?.should be_true
+    end
+
+    it 'is false otherwise' do
+      var('x').scale_step?.should be_false
+      var('$x').scale_step?.should be_false
+      var('$').scale_step?.should be_false
+      var('$$').scale_step?.should be_false
+    end
+  end
+
+  describe '#value' do
+    it 'is the value the variable was constructed with' do
+      var(:name, :value).value.should == :value
+    end
+
+    it 'can be changed after the variable is created' do
+      v = var(:name, :value)
+      v.value = 'foo'
+      v.value.should == 'foo'
+    end
+  end
+
   describe '#==' do
     it "is true when two variables' names are equal" do
       var('$').should == var('$')

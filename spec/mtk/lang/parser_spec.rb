@@ -425,6 +425,7 @@ describe MTK::Lang::Parser do
     context 'element rule' do
       it "parses the repetition of a basic note property as a sequence with a max_cycles option" do
         sequence = parse("C*4", :element)
+        sequence.should be_a MTK::Patterns::Sequence
         sequence.elements.should == [ C ]
         sequence.max_cycles.should == 4
       end
@@ -436,6 +437,42 @@ describe MTK::Lang::Parser do
     #    parse("[C4 E4 G4]", :chord).should == Chord(C4,E4,G4)
     #  end
     #end
+
+
+    context 'scale rule' do
+      it "parse a scale" do
+        scale = parse("$[C D E F G A B]", :scale)
+        scale.should be_a MTK::Groups::Scale
+        scale.steps.should == [C,D,E,F,G,A,B]
+      end
+    end
+
+
+    context 'scale_step rule' do
+      it "parses $N (N is a natural number) patterns as a Variable with scale_step? true" do
+        variable = parse("$1", :scale_step)
+        variable.should be_a MTK::Lang::Variable
+        variable.scale_step?.should be_true
+      end
+
+      it "parses $1 with value 1" do
+        variable = parse("$1", :scale_step)
+        variable.value.should == 1
+      end
+
+      it "parses $1234567890 with value 1234567890" do # unrealistic step number, just checking the parsing
+        variable = parse("$1234567890", :scale_step)
+        variable.value.should == 1234567890
+      end
+
+      it "doesn't parse $0" do
+        -> { variable = parse("$0", :scale_step) }.should raise_error Citrus::ParseError
+      end
+
+      it "doesn't parse $-1" do
+        -> { variable = parse("$-1", :scale_step) }.should raise_error Citrus::ParseError
+      end
+    end
 
 
     context 'pitch rule' do
