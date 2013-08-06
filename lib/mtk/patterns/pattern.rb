@@ -8,7 +8,7 @@ module MTK
     # @abstract Subclass and override {#advance} to implement a Pattern.
     #
     class Pattern
-      include MTK::Groups::Collection
+      include MTK::Groups::Group
 
       # The elements in the pattern
       attr_reader :elements

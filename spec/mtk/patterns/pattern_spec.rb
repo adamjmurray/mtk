@@ -28,7 +28,7 @@ describe MTK::Patterns::Pattern do
       lambda{ pattern.next }.should raise_error StopIteration
     end
 
-    it "is maintained when applying Collection operations" do
+    it "is maintained when applying Group operations" do
       PATTERN.new(elements, min_elements: 2).reverse.min_elements.should == 2
     end
   end
@@ -73,7 +73,7 @@ describe MTK::Patterns::Pattern do
       lambda{ pattern.next }.should raise_error StopIteration
     end
 
-    it "is maintained when applying Collection operations" do
+    it "is maintained when applying Group operations" do
       PATTERN.new(elements, max_elements: 2).reverse.max_elements.should == 2
     end
   end
@@ -102,7 +102,7 @@ describe MTK::Patterns::Pattern do
       PATTERN.new([]).max_cycles.should == 1
     end
 
-    it "is maintained when applying Collection operations" do
+    it "is maintained when applying Group operations" do
       PATTERN.new(elements, max_cycles: 2).reverse.max_cycles.should == 2
     end
   end

@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-describe MTK::Groups::Collection do
+describe MTK::Groups::Group do
 
-  class MockCollection
-    include MTK::Groups::Collection
+  class MockGroup
+    include MTK::Groups::Group
     attr_reader :elements
     def initialize(elements); @elements = elements end
     def self.from_a(elements); new(elements) end
   end
 
-  class MockCollectionWithOptions
-    include MTK::Groups::Collection
+  class MockGroupWithOptions
+    include MTK::Groups::Group
     attr_reader :elements, :options
     def initialize(elements, options={})
       @elements = elements
@@ -22,10 +22,10 @@ describe MTK::Groups::Collection do
   end
 
   let(:elements) { [1,2,3,4,5] }
-  let(:collection) { MockCollection.new elements }
+  let(:collection) { MockGroup.new elements }
 
   let(:options) { {:opt1 => :val1, :opt2 => :val2} }
-  let(:collection_with_options) { MockCollectionWithOptions.new(elements, options) }
+  let(:collection_with_options) { MockGroupWithOptions.new(elements, options) }
 
   it "is Enumerable" do
     collection.should be_a Enumerable
@@ -51,15 +51,15 @@ describe MTK::Groups::Collection do
 
   describe "#empty?" do
     it "is true when elements is nil" do
-      MockCollection.new(nil).empty?.should be_true
+      MockGroup.new(nil).empty?.should be_true
     end
 
     it "is true when elements is empty" do
-      MockCollection.new([]).empty?.should be_true
+      MockGroup.new([]).empty?.should be_true
     end
 
     it "is false when elements is not empty" do
-      MockCollection.new([1]).empty?.should be_false
+      MockGroup.new([1]).empty?.should be_false
     end
   end
 
@@ -74,7 +74,7 @@ describe MTK::Groups::Collection do
   end
 
   describe "#map" do
-    it "returns a Collection with each item replaced with the results of the block" do
+    it "returns a Group with each item replaced with the results of the block" do
       collection.map{|item| item + 10}.should == [11, 12, 13, 14, 15]
     end
 
@@ -154,7 +154,7 @@ describe MTK::Groups::Collection do
   describe "#permute" do
     it "randomly rearranges the order of elements" do
       elements = (0..1000).to_a
-      permuted = MockCollection.new(elements).permute
+      permuted = MockGroup.new(elements).permute
       permuted.should_not == elements
       permuted.sort.should == elements
     end
@@ -175,7 +175,7 @@ describe MTK::Groups::Collection do
   describe "#shuffle" do
     it "behaves like #permute" do
       elements = (0..1000).to_a
-      shuffled = MockCollection.new(elements).shuffle
+      shuffled = MockGroup.new(elements).shuffle
       shuffled.should_not == elements
       shuffled.sort.should == elements
     end
@@ -194,11 +194,11 @@ describe MTK::Groups::Collection do
   end
 
   describe "#rotate" do
-    it "produces a Collection that is rotated right by the given positive offset" do
+    it "produces a Group that is rotated right by the given positive offset" do
       collection.rotate(2).should == [3,4,5,1,2]
     end
 
-    it "produces a Collection that is rotated left by the given negative offset" do
+    it "produces a Group that is rotated left by the given negative offset" do
       collection.rotate(-2).should == [4,5,1,2,3]
     end
 
@@ -239,7 +239,7 @@ describe MTK::Groups::Collection do
     it "ignored any options from the argument collection" do
       # I considered merging the options, but it seems potentially too confusing, so
       # we'll go with this simpler behavior until a use-case appears where this is inappropriate.
-      arg = MockCollectionWithOptions.new(elements, :opt1 => :another_val, :opt3 => :val3)
+      arg = MockGroupWithOptions.new(elements, :opt1 => :another_val, :opt3 => :val3)
       collection_with_options.concat(arg).options.should == options
     end
   end
@@ -268,9 +268,9 @@ describe MTK::Groups::Collection do
     context "Numeric argument" do
       it "partitions the elements into groups of the size, plus whatever's left over as the last element" do
         collection.partition(2).should == [
-          MockCollection.new([1,2]),
-          MockCollection.new([3,4]),
-          MockCollection.new([5])
+          MockGroup.new([1,2]),
+          MockGroup.new([3,4]),
+          MockGroup.new([5])
         ]
       end
     end
@@ -278,23 +278,23 @@ describe MTK::Groups::Collection do
     context "Array argument" do
       it "partitions the elements into groups of the size of the argument elements" do
         collection.partition([1,2,2]).should == [
-          MockCollection.new([1]),
-          MockCollection.new([2,3]),
-          MockCollection.new([4,5])
+          MockGroup.new([1]),
+          MockGroup.new([2,3]),
+          MockGroup.new([4,5])
         ]
       end
 
       it "does not include leftover elements" do
         collection.partition([1,3]).should == [
-          MockCollection.new([1]),
-          MockCollection.new([2,3,4])
+          MockGroup.new([1]),
+          MockGroup.new([2,3,4])
         ]
       end
 
       it "does not include extra elements" do
         collection.partition([1,5]).should == [
-          MockCollection.new([1]),
-          MockCollection.new([2,3,4,5])
+          MockGroup.new([1]),
+          MockGroup.new([2,3,4,5])
         ]
       end
     end
@@ -302,17 +302,17 @@ describe MTK::Groups::Collection do
     context "no argument, block given" do
       it "partitions the elements into groups with the same block return value" do
         collection.partition{|item| item % 3 }.should =~ [
-          MockCollection.new([1,4]),
-          MockCollection.new([2,5]),
-          MockCollection.new([3])
+          MockGroup.new([1,4]),
+          MockGroup.new([2,5]),
+          MockGroup.new([3])
         ]
       end
 
       it "optionally passes the item index into the block" do
         collection.partition{|item,index| (item*index) % 3 }.should =~ [
           # 1*0, 2*1, 3*2, 4*3, 5*4 => (0, 2, 6, 12, 20) % 3 => 0, 2, 0, 0, 2
-          MockCollection.new([1,3,4]),
-          MockCollection.new([2,5]),
+          MockGroup.new([1,3,4]),
+          MockGroup.new([2,5]),
         ]
       end
     end
@@ -326,16 +326,16 @@ describe MTK::Groups::Collection do
   end
 
   describe "#==" do
-    it "is true when the elements in 2 Collections are equal" do
-      collection.should == MockCollection.new(elements)
+    it "is true when the elements in 2 Groups are equal" do
+      collection.should == MockGroup.new(elements)
     end
 
     it "is true when the elements equal the argument" do
       collection.should == elements
     end
 
-    it "is false when the elements in 2 Collections are not equal" do
-      collection.should_not == MockCollection.new(elements + [1,2])
+    it "is false when the elements in 2 Groups are not equal" do
+      collection.should_not == MockGroup.new(elements + [1,2])
     end
 
     it "is false when the elements do not equal the argument" do

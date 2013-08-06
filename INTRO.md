@@ -46,10 +46,12 @@ Events are organized in time via the Timeline
 
 
 <br/>
-### Collections
+### Groups
 
-The collection classes need some work... The interface is likely to change so it's best to not rely on them too much
+The groups/collection classes need some work... The interface is likely to change so it's best to not rely on them too much
 right now.
+
+TODO...
 
 
 <br/>
@@ -85,7 +87,7 @@ So far the options are:
 
 
 <br/>
-### Creating object conveniently
+### Creating objects conveniently
 
 The Core types as well as Patterns and Note events have "convenience constructors" under the top-level MTK module.
 

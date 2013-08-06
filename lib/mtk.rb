@@ -48,11 +48,11 @@ require 'mtk/lang/durations'
 require 'mtk/lang/variable'
 require 'mtk/lang/parser'
 
-require 'mtk/groups/collection'
-require 'mtk/groups/pitch_collection'
+require 'mtk/groups/group'
 require 'mtk/groups/pitch_class_set'
 require 'mtk/groups/melody'
 require 'mtk/groups/chord'
+require 'mtk/groups/scale'
 
 require 'mtk/events/event'
 require 'mtk/events/note'

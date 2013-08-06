@@ -29,7 +29,7 @@ module MTK
         @patterns.each do |pattern|
           pattern_value = pattern.next
 
-          elements = if pattern_value.is_a? Enumerable and not pattern_value.is_a? MTK::Groups::PitchCollection then
+          elements = if pattern_value.is_a? Enumerable and not pattern_value.is_a? MTK::Groups::Group then
             pattern_value
           else
             [pattern_value]
@@ -51,7 +51,7 @@ module MTK
                 pitches += pitches_for_pitch_classes(element, @previous_pitch)
                 @previous_pitch = pitches.last
 
-              when ::MTK::Groups::PitchCollection
+              when ::MTK::Groups::Chord, ::MTK::Groups::Melody
                 pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
                 @previous_pitch = pitches.last
 

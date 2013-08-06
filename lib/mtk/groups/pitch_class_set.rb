@@ -10,7 +10,7 @@ module MTK
     # @see MTK::Groups::Chord
     #
     class PitchClassSet
-      include PitchCollection
+      include Group
 
       attr_reader :pitch_classes
 
@@ -30,17 +30,28 @@ module MTK
         @pitch_classes = pitch_classes.to_a.clone.freeze
       end
 
-      # @see Helper::Collection
+      # @see Groups::Group
       def elements
         @pitch_classes
       end
 
       # Convert to an Array of pitch_classes.
-      # @note this returns a mutable copy the underlying @pitch_classes attribute, which is otherwise unmutable
       alias :to_pitch_classes :to_a
 
       def self.from_a enumerable
         new enumerable
+      end
+
+      # Transpose all elements upward by the given interval
+      # @param interval_in_semitones [Numeric] an interval in semitones
+      def transpose(interval_in_semitones)
+        map{|elem| elem + interval_in_semitones }
+      end
+
+      # Invert all elements around the given inversion point
+      # @param inversion_point [Numeric] the value around which all elements will be inverted (defaults to the first element in the collection)
+      def invert(inversion_point=first)
+        map{|elem| elem.invert(inversion_point) }
       end
 
       def normal_order
