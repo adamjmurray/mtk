@@ -8,6 +8,13 @@ describe MTK::Groups::Scale do
   let(:scale) { SCALE.new(scale_steps) }
 
 
+  describe 'CHROMATIC' do
+    it 'is the chromatic scale (all 12 pitch classes)' do
+      SCALE::CHROMATIC.should == SCALE.new([C,Db,D,Eb,E,F,Gb,G,Ab,A,Bb,B])
+    end
+  end
+
+
   describe '#steps' do
     it 'is the #elements' do
       scale.steps.should == scale.elements

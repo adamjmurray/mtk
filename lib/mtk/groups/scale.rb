@@ -10,6 +10,9 @@ module MTK
     #
     class Scale < PitchClassGroup
 
+      CHROMATIC = new(MTK::Lang::PitchClasses::PITCH_CLASSES)
+
+
       alias steps elements
 
       # The root (first) note of the scale
