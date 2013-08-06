@@ -1,29 +1,41 @@
 module MTK
   module Groups
 
-     # Given a method #elements, which returns an Array of elements in the collection,
-     # including this module will make the class Enumerable and provide various methods you'd expect from an Array.
-     module Group
+     # An immutable collection of {Core} objects.
+     class Group
+
        include Enumerable
 
-       # A mutable array of elements in this collection
-       def to_a
-         Array.new(elements) # we construct a new array since some including classes make elements be immutable
+       # The frozen list of elements in this Group
+       attr_reader :elements
+
+       # @param elements [#to_a] the objects in this group
+       def initialize(elements)
+         @elements = elements.to_a.clone.freeze
        end
 
-       # The number of elements in this collection
+       def self.from_a(enumerable)
+         new(enumerable)
+       end
+
+       # A mutable array copy of the elements in this Group
+       def to_a
+         Array.new(@elements) # we construct a new array since some including classes make elements be immutable
+       end
+
+       # The number of @elements in this collection
        def size
-         elements.size
+         @elements.size
        end
        alias length size
 
        def empty?
-         elements.nil? or elements.size == 0
+         @elements.nil? or @elements.size == 0
        end
 
        # The each iterator for providing Enumerable functionality
        def each &block
-         elements.each(&block)
+         @elements.each(&block)
        end
 
        # the original Enumerable#map implementation, which returns an Array
@@ -36,42 +48,42 @@ module MTK
 
        # The first element
        def first(n=nil)
-         n ? elements.first(n) : elements.first
+         n ? @elements.first(n) : @elements.first
        end
 
        # The last element
        def last(n=nil)
-         n ? elements.last(n) : elements.last
+         n ? @elements.last(n) : @elements.last
        end
 
        # The element with the given index
        def [](index)
-         elements[index]
+         @elements[index]
        end
 
        def repeat(times=2)
          full_repetitions, fractional_repetitions = times.floor, times%1  # split into int and fractional part
-         repeated = elements * full_repetitions
-         repeated += elements[0...elements.size*fractional_repetitions]
+         repeated = @elements * full_repetitions
+         repeated += @elements[0...@elements.size*fractional_repetitions]
          clone_with repeated
        end
 
        def permute
-         clone_with elements.shuffle
+         clone_with @elements.shuffle
        end
        alias shuffle permute
 
        def rotate(offset=1)
-         clone_with elements.rotate(offset)
+         clone_with @elements.rotate(offset)
        end
 
        def concat(other)
          other_elements = (other.respond_to? :elements) ? other.elements : other
-         clone_with(elements + other_elements)
+         clone_with(@elements + other_elements)
        end
 
        def reverse
-         clone_with elements.reverse
+         clone_with @elements.reverse
        end
        alias retrograde reverse
 
@@ -130,12 +142,12 @@ module MTK
        def ==(other)
          if other.respond_to? :elements
            if other.respond_to? :options
-             elements == other.elements and @options == other.options
+             @elements == other.elements and @options == other.options
            else
-             elements == other.elements
+             @elements == other.elements
            end
          else
-           elements == other
+           @elements == other
          end
        end
 

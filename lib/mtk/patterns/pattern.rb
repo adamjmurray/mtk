@@ -7,11 +7,7 @@ module MTK
     #
     # @abstract Subclass and override {#advance} to implement a Pattern.
     #
-    class Pattern
-      include MTK::Groups::Group
-
-      # The elements in the pattern
-      attr_reader :elements
+    class Pattern < MTK::Groups::Group
 
       attr_reader :options
 
@@ -32,7 +28,7 @@ module MTK
       attr_reader :cycle_count
 
       # The maximum number of cycles this Pattern will emit before a StopIteration exception.
-      # A nil value means inifinite cycles.
+      # A nil value means infinite cycles.
       attr_reader :max_cycles
 
       # @param elements [Enumerable] the list of elements in the pattern
@@ -40,8 +36,7 @@ module MTK
       # @option options [Fixnum] :max_elements the {#max_elements} (default is nil, which means unlimited)
       # @option options [Fixnum] :max_cycles the {#max_cycles} (default is 1)
       def initialize(elements, options={})
-        elements = elements.to_a if elements.is_a? Enumerable
-        @elements = elements
+        super elements
         @options = options
         @min_elements = options[:min_elements]
         @max_elements = options[:max_elements]

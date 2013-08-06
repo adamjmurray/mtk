@@ -9,10 +9,9 @@ module MTK
     # @see MTK::Groups::Melody
     # @see MTK::Groups::Chord
     #
-    class PitchClassSet
-      include Group
+    class PitchClassSet < Group
 
-      attr_reader :pitch_classes
+      alias pitch_classes elements
 
       def self.random_row
         new(MTK::Lang::PitchClasses::PITCH_CLASSES.shuffle)
@@ -22,25 +21,9 @@ module MTK
         @all ||= new(MTK::Lang::PitchClasses::PITCH_CLASSES)
       end
 
-      # @param pitch_classes [#to_a] the collection of pitch classes
-      #
-      # @see MTK#PitchClassSet
-      #
-      def initialize(pitch_classes)
-        @pitch_classes = pitch_classes.to_a.clone.freeze
-      end
-
-      # @see Groups::Group
-      def elements
-        @pitch_classes
-      end
 
       # Convert to an Array of pitch_classes.
-      alias :to_pitch_classes :to_a
-
-      def self.from_a enumerable
-        new enumerable
-      end
+      alias to_pitch_classes to_a
 
       # Transpose all elements upward by the given interval
       # @param interval_in_semitones [Numeric] an interval in semitones
@@ -55,7 +38,7 @@ module MTK
       end
 
       def normal_order
-        ordering = Array.new(@pitch_classes.uniq.sort)
+        ordering = Array.new(@elements.uniq.sort)
         min_span, start_index_for_normal_order = nil, nil
 
         # check every rotation for the minimal span:
@@ -129,18 +112,18 @@ module MTK
       # @param other [#pitch_classes, #to_a, Array]
       def == other
         if other.respond_to? :pitch_classes
-          @pitch_classes == other.pitch_classes
+          @elements == other.pitch_classes
         elsif other.respond_to? :to_a
-          @pitch_classes == other.to_a
+          @elements == other.to_a
         else
-          @pitch_classes == other
+          @elements == other
         end
       end
 
       # Compare for equality, ignoring order and duplicates
       # @param other [#pitch_classes, Array, #to_a]
       def =~ other
-        @normalized_pitch_classes ||= @pitch_classes.uniq.sort
+        @normalized_pitch_classes ||= @elements.uniq.sort
         @normalized_pitch_classes == case
           when other.respond_to?(:pitch_classes) then other.pitch_classes.uniq.sort
           when (other.is_a? Array and other.frozen?) then other
@@ -150,11 +133,11 @@ module MTK
       end
 
       def to_s
-        @pitch_classes.join(' ')
+        @elements.join(' ')
       end
 
       def inspect
-        @pitch_classes.inspect
+        @elements.inspect
       end
 
       def self.span_between(pc1, pc2)

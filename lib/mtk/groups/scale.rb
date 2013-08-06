@@ -2,19 +2,10 @@ module MTK
   module Groups
 
     # A collection of distinct {PitchClass}es
-    class Scale
-      include Group
+    class Scale < Group
 
-      def initialize(pitch_classes)
-        @pitch_classes = pitch_classes
-      end
-
-      attr_reader :pitch_classes
-      alias scale_steps pitch_classes
-
-      def elements
-        @pitch_classes
-      end
+      alias pitch_classes elements
+      alias scale_steps elements
 
       # Transpose all elements upward by the given interval
       # @param interval_in_semitones [Numeric] an interval in semitones

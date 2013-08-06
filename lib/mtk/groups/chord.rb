@@ -14,16 +14,13 @@ module MTK
       # @note duplicate pitches will be removed. See #{Melody} if you want to maintain duplicates.
       #
       def initialize(pitches)
-        pitches = pitches.to_a.clone
-        pitches.uniq!
-        pitches.sort!
-        @pitches = pitches.freeze
+        super pitches.to_a.uniq.sort
       end
 
       # Generate a chord inversion (positive numbers move the lowest notes up an octave, negative moves the highest notes down)
       def inversion(number)
         number = number.to_i
-        pitch_set = Array.new(@pitches.uniq.sort)
+        pitch_set = Array.new(@elements.uniq.sort)
         if number > 0
           number.times do |count|
             index = count % pitch_set.length
@@ -40,7 +37,7 @@ module MTK
 
       # Transpose the chord so that it's lowest pitch is the given pitch class.
       def nearest(pitch_class)
-        self.transpose @pitches.first.pitch_class.distance_to(pitch_class)
+        self.transpose @elements.first.pitch_class.distance_to(pitch_class)
       end
     end
   end

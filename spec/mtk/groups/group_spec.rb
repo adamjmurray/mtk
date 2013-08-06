@@ -2,16 +2,10 @@ require 'spec_helper'
 
 describe MTK::Groups::Group do
 
-  class MockGroup
-    include MTK::Groups::Group
-    attr_reader :elements
-    def initialize(elements); @elements = elements end
-    def self.from_a(elements); new(elements) end
-  end
-
-  class MockGroupWithOptions
-    include MTK::Groups::Group
-    attr_reader :elements, :options
+  GROUP = MTK::Groups::Group
+  
+  class GroupWithOptions < MTK::Groups::Group
+    attr_reader :options
     def initialize(elements, options={})
       @elements = elements
       @options = options
@@ -22,10 +16,10 @@ describe MTK::Groups::Group do
   end
 
   let(:elements) { [1,2,3,4,5] }
-  let(:collection) { MockGroup.new elements }
+  let(:collection) { GROUP.new elements }
 
   let(:options) { {:opt1 => :val1, :opt2 => :val2} }
-  let(:collection_with_options) { MockGroupWithOptions.new(elements, options) }
+  let(:collection_with_options) { GroupWithOptions.new(elements, options) }
 
   it "is Enumerable" do
     collection.should be_a Enumerable
@@ -51,15 +45,15 @@ describe MTK::Groups::Group do
 
   describe "#empty?" do
     it "is true when elements is nil" do
-      MockGroup.new(nil).empty?.should be_true
+      GROUP.new(nil).empty?.should be_true
     end
 
     it "is true when elements is empty" do
-      MockGroup.new([]).empty?.should be_true
+      GROUP.new([]).empty?.should be_true
     end
 
     it "is false when elements is not empty" do
-      MockGroup.new([1]).empty?.should be_false
+      GROUP.new([1]).empty?.should be_false
     end
   end
 
@@ -154,7 +148,7 @@ describe MTK::Groups::Group do
   describe "#permute" do
     it "randomly rearranges the order of elements" do
       elements = (0..1000).to_a
-      permuted = MockGroup.new(elements).permute
+      permuted = GROUP.new(elements).permute
       permuted.should_not == elements
       permuted.sort.should == elements
     end
@@ -175,7 +169,7 @@ describe MTK::Groups::Group do
   describe "#shuffle" do
     it "behaves like #permute" do
       elements = (0..1000).to_a
-      shuffled = MockGroup.new(elements).shuffle
+      shuffled = GROUP.new(elements).shuffle
       shuffled.should_not == elements
       shuffled.sort.should == elements
     end
@@ -239,7 +233,7 @@ describe MTK::Groups::Group do
     it "ignored any options from the argument collection" do
       # I considered merging the options, but it seems potentially too confusing, so
       # we'll go with this simpler behavior until a use-case appears where this is inappropriate.
-      arg = MockGroupWithOptions.new(elements, :opt1 => :another_val, :opt3 => :val3)
+      arg = GroupWithOptions.new(elements, :opt1 => :another_val, :opt3 => :val3)
       collection_with_options.concat(arg).options.should == options
     end
   end
@@ -268,9 +262,9 @@ describe MTK::Groups::Group do
     context "Numeric argument" do
       it "partitions the elements into groups of the size, plus whatever's left over as the last element" do
         collection.partition(2).should == [
-          MockGroup.new([1,2]),
-          MockGroup.new([3,4]),
-          MockGroup.new([5])
+          GROUP.new([1,2]),
+          GROUP.new([3,4]),
+          GROUP.new([5])
         ]
       end
     end
@@ -278,23 +272,23 @@ describe MTK::Groups::Group do
     context "Array argument" do
       it "partitions the elements into groups of the size of the argument elements" do
         collection.partition([1,2,2]).should == [
-          MockGroup.new([1]),
-          MockGroup.new([2,3]),
-          MockGroup.new([4,5])
+          GROUP.new([1]),
+          GROUP.new([2,3]),
+          GROUP.new([4,5])
         ]
       end
 
       it "does not include leftover elements" do
         collection.partition([1,3]).should == [
-          MockGroup.new([1]),
-          MockGroup.new([2,3,4])
+          GROUP.new([1]),
+          GROUP.new([2,3,4])
         ]
       end
 
       it "does not include extra elements" do
         collection.partition([1,5]).should == [
-          MockGroup.new([1]),
-          MockGroup.new([2,3,4,5])
+          GROUP.new([1]),
+          GROUP.new([2,3,4,5])
         ]
       end
     end
@@ -302,17 +296,17 @@ describe MTK::Groups::Group do
     context "no argument, block given" do
       it "partitions the elements into groups with the same block return value" do
         collection.partition{|item| item % 3 }.should =~ [
-          MockGroup.new([1,4]),
-          MockGroup.new([2,5]),
-          MockGroup.new([3])
+          GROUP.new([1,4]),
+          GROUP.new([2,5]),
+          GROUP.new([3])
         ]
       end
 
       it "optionally passes the item index into the block" do
         collection.partition{|item,index| (item*index) % 3 }.should =~ [
           # 1*0, 2*1, 3*2, 4*3, 5*4 => (0, 2, 6, 12, 20) % 3 => 0, 2, 0, 0, 2
-          MockGroup.new([1,3,4]),
-          MockGroup.new([2,5]),
+          GROUP.new([1,3,4]),
+          GROUP.new([2,5]),
         ]
       end
     end
@@ -327,7 +321,7 @@ describe MTK::Groups::Group do
 
   describe "#==" do
     it "is true when the elements in 2 Groups are equal" do
-      collection.should == MockGroup.new(elements)
+      collection.should == GROUP.new(elements)
     end
 
     it "is true when the elements equal the argument" do
@@ -335,7 +329,7 @@ describe MTK::Groups::Group do
     end
 
     it "is false when the elements in 2 Groups are not equal" do
-      collection.should_not == MockGroup.new(elements + [1,2])
+      collection.should_not == GROUP.new(elements + [1,2])
     end
 
     it "is false when the elements do not equal the argument" do
@@ -361,14 +355,4 @@ describe MTK::Groups::Group do
     end
   end
 
-end
-
-
-describe "Array" do
-  describe "#rotate" do
-    # test the Ruby 1.8 backport of Array#rotate
-    it "should rotate the Array, as in Ruby 1.9's API" do
-      [1,2,3].rotate(1).should == [2,3,1]
-    end
-  end
 end

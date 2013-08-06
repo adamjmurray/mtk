@@ -6,6 +6,11 @@ describe MTK::Patterns::Pattern do
 
   let(:elements) { [1,2,3] }
 
+  describe "elements" do
+    it "is immutable" do
+      ->{ PATTERN.new([]).elements << 1 }.should raise_error RuntimeError, /frozen/
+    end
+  end
 
   describe "@min_elements" do
     it "is the :min_elements option the pattern was constructed with" do
