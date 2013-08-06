@@ -51,8 +51,8 @@ module MTK
                 pitches += pitches_for_pitch_classes(element, @previous_pitch)
                 @previous_pitch = pitches.last
 
-              when ::MTK::Groups::Chord, ::MTK::Groups::Melody
-                pitches += element.pitches # this must be after the PitchClassSet case, because that is also a PitchCollection
+              when ::MTK::Groups::PitchGroup
+                pitches += element.pitches
                 @previous_pitch = pitches.last
 
               when ::MTK::Core::Duration

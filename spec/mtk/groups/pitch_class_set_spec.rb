@@ -266,7 +266,7 @@ describe MTK::Groups::PitchClassSet do
     end
 
     it "is true when all the pitch classes are equal, even with different numbers of duplicates" do
-      MTK::Groups::Melody.new([C, E, G]).should =~ MTK::Groups::Melody.new([C, C, E, G])
+      MTK::Groups::PitchGroup.new([C, E, G]).should =~ MTK::Groups::PitchGroup.new([C, C, E, G])
     end
 
     it "is true if two pitch class sets are not in the same order" do

@@ -3,14 +3,9 @@ module MTK
 
     # An ordered collection of {Pitch}es.
     #
-    # The "horizontal" (sequential) pitch collection.
-    #
-    # Unlike the strict definition of melody, this class is fairly abstract and only models a succession of pitches.
-    # To create a true, playable melody one must combine an MTK::Melody and rhythms into a {Events::Timeline}.
-    #
     # @see Chord
     #
-    class Melody < Group
+    class PitchGroup < Group
 
       alias pitches elements
 
@@ -79,12 +74,11 @@ module MTK
     end
   end
 
-  # Construct an ordered {MTK::Groups::Melody} that allows duplicates
-  # @see #MTK::Groups::Melody
-  # @see #MTK::Groups::Chord
-  def Melody(*anything)
-    MTK::Groups::Melody.new MTK::Groups.to_pitches(*anything)
+  # Construct a {MTK::Groups::PitchGroup} from any supported type
+  # @see #MTK::Groups::PitchGroup
+  def PitchGroup(*anything)
+    MTK::Groups::PitchGroup.new MTK::Groups.to_pitches(*anything)
   end
-  module_function :Melody
+  module_function :PitchGroup
 
 end

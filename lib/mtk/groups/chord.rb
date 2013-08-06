@@ -1,14 +1,14 @@
 module MTK
   module Groups
 
-    # A sorted collection of distinct {Pitch}es.
+    # An unordered of distinct {Pitch}es.
     #
-    # The "vertical" (simultaneous) pitch collection.
+    # Represents a "vertical" (simultaneous) pitch collection.
+    # This is unordered in the sense that the order provided is ignored. The pitches are sorted to normalize the chord.
     #
-    # @see Melody
-    # @see Groups::PitchClassSet
+    # @see PitchGroup
     #
-    class Chord < Melody
+    class Chord < PitchGroup
 
       # @param pitches [#to_a] the collection of pitches
       # @note duplicate pitches will be removed. See #{Melody} if you want to maintain duplicates.
