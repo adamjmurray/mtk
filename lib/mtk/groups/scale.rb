@@ -10,6 +10,9 @@ module MTK
     #
     class Scale < PitchClassGroup
 
+      # TODO: this is C chromatic
+      # Let's make class methods to return a chromatic scale given a tonic
+      # Use the same strategy for other common scale class methods
       CHROMATIC = new(MTK::Lang::PitchClasses::PITCH_CLASSES)
 
 

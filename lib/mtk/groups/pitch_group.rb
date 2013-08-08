@@ -52,6 +52,27 @@ module MTK
         map{|elem| elem.invert(inversion_point) }
       end
 
+      # Return one of the {Pitch}es in the pitch group by index.
+      # The index may wrap around, adding an octave for each wrap in the positive direction,
+      # and subtracting an octave for each wrap in the negative direction.
+      def arpeggiate(index)
+        length = @elements.length
+        octave_offset = 0
+        if length == 0
+          nil
+        else
+          while index >= length
+            octave_offset += 12
+            index -= length
+          end
+          while index < 0
+            octave_offset -= 12
+            index += length
+          end
+          @elements[index] + octave_offset
+        end
+      end
+
       # @param other [#pitches, Enumerable]
       def == other
         if other.respond_to? :pitches

@@ -30,7 +30,7 @@ module MTK
           pattern_value = pattern.next
 
           elements = if pattern_value.is_a? Enumerable and not pattern_value.is_a? MTK::Groups::Group then
-            pattern_value
+            pattern_value # pattern Chains already return an Array of elements
           else
             [pattern_value]
           end
@@ -39,36 +39,55 @@ module MTK
             return nil if element.nil? or element == :skip
 
             case element
-              when ::MTK::Core::Pitch
+              when MTK::Core::Pitch
                 pitches << element
                 @previous_pitch = element
 
-              when ::MTK::Core::PitchClass
-                pitches += pitches_for_pitch_classes([element], @previous_pitch)
-                @previous_pitch = pitches.last
-
-              when ::MTK::Groups::PitchClassGroup
-                pitches += pitches_for_pitch_classes(element, @previous_pitch)
-                @previous_pitch = pitches.last
-
-              when ::MTK::Groups::PitchGroup
+              when MTK::Groups::PitchGroup
                 pitches += element.pitches
                 @previous_pitch = pitches.last
 
-              when ::MTK::Core::Duration
+              when MTK::Core::PitchClass
+                pitch = @previous_pitch.nearest(element)
+                pitches << pitch
+                @previous_pitch = pitch
+
+              when MTK::Groups::PitchClassGroup
+                pitches += element.to_a.map{|pitch_class| @previous_pitch.nearest(pitch_class) }
+                @previous_pitch = pitches.last
+
+              when MTK::Core::Duration
                 duration ||= 0
                 duration += element
 
-              when ::MTK::Core::Intensity
+              when MTK::Core::Intensity
                 intensities << element
 
-              when ::MTK::Core::Interval
+              when MTK::Core::Interval
                 if @previous_pitches
                   pitches += @previous_pitches.map{|pitch| pitch + element }
                 else
                   pitches << (@previous_pitch + element)
                 end
                 @previous_pitch = pitches.last
+
+              when MTK::Lang::Variable
+                case
+                  when element.arpeggio?
+                    # TODO: support things besides PitchGroups and interpret them here
+                    # Ideas
+                    #   * a PitchClassGroup can be converted to PitchGroup where the first PitchClass is the nearest to @previous_pitch
+                    #   * Support a Pitch (or PitchClass) followed by a list of Intervals or integers representing intervals
+                    @arpeggio = element.value
+                    return self.next
+                  when element.arpeggio_index?
+                    pitches << @arpeggio.arpeggiate(element.value)
+                    @previous_pitch = pitches.last
+                  else
+                    # ForEach "implicit" variables should already have been evaluated by the Pattern
+                    STDERR.puts "#{self.class}#next: Encountered unsupported variable #{element}"
+                    # TODO: Add general variable support later
+                end
 
               # TODO? String/Symbols for special behaviors like :skip, or :break (something like StopIteration for the current Pattern?)
 
@@ -78,8 +97,8 @@ module MTK
           end
         end
 
-        pitches     << @previous_pitch if pitches.empty?
-        duration   ||= @previous_duration.abs
+        pitches   << @previous_pitch if pitches.empty?
+        duration ||= @previous_duration.abs
 
         if intensities.empty?
           intensity = @previous_intensity
@@ -92,7 +111,7 @@ module MTK
 
         constrain_pitch(pitches)
 
-        @previous_pitch = pitches.last   # Consider doing something different, maybe averaging?
+        # @previous_pitch = pitches.last   # Consider doing something different, maybe averaging?
         @previous_pitches = pitches.length > 1 ? pitches : nil
         @previous_intensity = intensity
         @previous_duration = duration
@@ -110,6 +129,20 @@ module MTK
         @previous_pitches   = [@default_pitch]
         @previous_intensity = @default_intensity
         @previous_duration  = @default_duration
+        @arpeggio = MTK.PitchGroup( # Defult arpeggio is chromatic scale starting from middle C
+          MTK::Lang::Pitches::C4,
+          MTK::Lang::Pitches::Db4,
+          MTK::Lang::Pitches::D4,
+          MTK::Lang::Pitches::Eb4,
+          MTK::Lang::Pitches::E4,
+          MTK::Lang::Pitches::F4,
+          MTK::Lang::Pitches::Gb4,
+          MTK::Lang::Pitches::G4,
+          MTK::Lang::Pitches::A4,
+          MTK::Lang::Pitches::Ab4,
+          MTK::Lang::Pitches::Bb4,
+          MTK::Lang::Pitches::B4,
+        )
         @max_pitch = nil
         @min_pitch = nil
         @patterns.each{|pattern| pattern.rewind if pattern.is_a? MTK::Patterns::Pattern }
@@ -117,10 +150,6 @@ module MTK
 
       ########################
       private
-
-      def pitches_for_pitch_classes(pitch_classes, previous_pitch)
-        pitch_classes.to_a.map{|pitch_class| previous_pitch.nearest(pitch_class) }
-      end
 
       def constrain_pitch(pitches)
         if @max_pitch.nil? or @min_pitch.nil?

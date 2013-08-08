@@ -12,6 +12,11 @@ describe MTK::Sequencers::EventBuilder do
     pitches.map{|pitch| Note(pitch, intensity, duration) }
   end
 
+  def arpeggio_index(index)
+    MTK::Lang::Variable.new("$#{index}", index)
+  end
+
+
   describe "#new" do
     it "allows default pitch to be specified" do
       event_builder = EVENT_BUILDER.new [Patterns.IntervalCycle(0)], :default_pitch => Gb4
@@ -261,6 +266,24 @@ describe MTK::Sequencers::EventBuilder do
       event_builder.next.should == [Note(C4,q)]
       event_builder.next.should == [Rest(q)]
       event_builder.next.should == [Rest(q)]
+    end
+
+    it "interprets scale step variables within the C chromatic scale by default" do
+      event_builder = EVENT_BUILDER.new([Patterns.Sequence(arpeggio_index(0), arpeggio_index(2), arpeggio_index(7), arpeggio_index(11))])
+      event_builder.next.should == [Note(C4,q)]
+      event_builder.next.should == [Note(D4,q)]
+      event_builder.next.should == [Note(G4,q)]
+      event_builder.next.should == [Note(B4,q)]
+    end
+
+    it "interprets scale step variables within whatever scale occurred most recently" do
+      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+        Lang::Variable.define_arpeggio(MTK.PitchGroup(C4,D4,E4,F4,G4,A4,B4)), arpeggio_index(0), arpeggio_index(1), arpeggio_index(4), arpeggio_index(7))]
+      )
+      event_builder.next.should == [Note(C4,q)]
+      event_builder.next.should == [Note(D4,q)]
+      event_builder.next.should == [Note(G4,q)]
+      event_builder.next.should == [Note(C5,q)]
     end
   end
 

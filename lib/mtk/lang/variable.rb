@@ -6,6 +6,13 @@ module MTK
     #
     class Variable
 
+      ARPEGGIO = :'$ARPEGGIO'
+
+      def self.define_arpeggio pitch_group
+        new(ARPEGGIO, pitch_group)
+      end
+
+
       attr_reader :name
 
       attr_accessor :value
@@ -15,15 +22,22 @@ module MTK
         @value = value
       end
 
+
       # @return true when this variable has no specific value and references the implicit variable stack (such as in a {Patterns::ForEach})
       def implicit?
         @implicit ||= !!(name =~ /^\$+$/)
       end
 
-      # @return true if this variable represents a scale step, in which case the {#value} is the scale step number
-      # @see MTK::Groups::Scale
-      def scale_step?
-        @scale_step ||= !!(name =~ /^\$\d+$/)
+      # @return true if this variable represents the pitches of the arpeggio,
+      # in which case the {#value} is a {Groups:PitchGroup}
+      def arpeggio?
+        @name == ARPEGGIO
+      end
+
+      # @return true if this variable represents one note of an arpeggio,
+      # in which case the {#value} is the index of the pitch in the arpeggio {Groups:PitchGroup}
+      def arpeggio_index?
+        !!(name =~ /^\$\d+$/)
       end
 
       def == other

@@ -120,22 +120,16 @@ grammar MTK_Grammar
     }
   end
 
-#  rule chord
-#    ( left_bracket pitch (space pitch)* right_bracket ) {
-#      MTK::Groups::Chord *values_of(:pitch)
-#    }
-#  end
-
-  rule scale
+  rule arpeggio
     (
-      '$' left_bracket pitch_class (space pitch_class)* right_bracket
+      '$' left_bracket pitch (space pitch)* right_bracket
     )
     {
-      MTK::Groups::Scale.new(values_of :pitch_class)
+      MTK::Lang::Variable.define_arpeggio(MTK.PitchGroup(values_of :pitch))
     }
   end
 
-  rule scale_step
+  rule arpeggio_index
     (
       '$' step_number:([1-9][0-9]*)
     )

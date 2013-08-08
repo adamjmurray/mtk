@@ -432,45 +432,39 @@ describe MTK::Lang::Parser do
     end
 
 
-    #context 'chord rule' do
-    #  it "parses chords" do
-    #    parse("[C4 E4 G4]", :chord).should == Chord(C4,E4,G4)
-    #  end
-    #end
-
-
-    context 'scale rule' do
-      it "parse a scale" do
-        scale = parse("$[C D E F G A B]", :scale)
-        scale.should be_a MTK::Groups::Scale
-        scale.steps.should == [C,D,E,F,G,A,B]
+    context 'arpeggio rule' do
+      it "parse an arpeggio" do
+        arpeggio = parse("$[C4 D4 E4 F4 G4 A4 B4]", :arpeggio)
+        arpeggio.should be_a MTK::Lang::Variable
+        arpeggio.arpeggio?.should be_true
+        arpeggio.value.should == MTK.PitchGroup(C4, D4, E4, F4, G4, A4, B4)
       end
     end
 
 
-    context 'scale_step rule' do
+    context 'arpeggio_index rule' do
       it "parses $N (N is a natural number) patterns as a Variable with scale_step? true" do
-        variable = parse("$1", :scale_step)
+        variable = parse("$1", :arpeggio_index)
         variable.should be_a MTK::Lang::Variable
-        variable.scale_step?.should be_true
+        variable.arpeggio_index?.should be_true
       end
 
       it "parses $1 with value 1" do
-        variable = parse("$1", :scale_step)
+        variable = parse("$1", :arpeggio_index)
         variable.value.should == 1
       end
 
       it "parses $1234567890 with value 1234567890" do # unrealistic step number, just checking the parsing
-        variable = parse("$1234567890", :scale_step)
+        variable = parse("$1234567890", :arpeggio_index)
         variable.value.should == 1234567890
       end
 
       it "doesn't parse $0" do
-        -> { variable = parse("$0", :scale_step) }.should raise_error Citrus::ParseError
+        -> { variable = parse("$0", :arpeggio_index) }.should raise_error Citrus::ParseError
       end
 
       it "doesn't parse $-1" do
-        -> { variable = parse("$-1", :scale_step) }.should raise_error Citrus::ParseError
+        -> { variable = parse("$-1", :arpeggio_index) }.should raise_error Citrus::ParseError
       end
     end
 

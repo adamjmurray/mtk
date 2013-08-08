@@ -2,9 +2,23 @@ require 'spec_helper'
 
 describe MTK::Lang::Variable do
 
+  VARIABLE = MTK::Lang::Variable
+
   def var(*args)
-    ::MTK::Lang::Variable.new(*args)
+    VARIABLE.new(*args)
   end
+
+
+  describe '.define_arpeggio' do
+    it 'defines a variable where #arppegio? is true' do
+      VARIABLE.define_arpeggio(nil).arpeggio?.should be_true
+    end
+
+    it 'has a #value of the given argument' do
+      VARIABLE.define_arpeggio(:arp_stuff).value.should == :arp_stuff
+    end
+  end
+
 
   describe '#name' do
     it 'is the name the variable was constructed with' do
@@ -29,6 +43,7 @@ describe MTK::Lang::Variable do
     end
   end
 
+
   describe '#implicit?' do
     it 'is true when the variable name is $' do
       var('$').implicit?.should be_true
@@ -45,17 +60,32 @@ describe MTK::Lang::Variable do
     end
   end
 
-  describe '#scale_step?' do
-    it 'is true when the variable name is $N where N is a natural number' do
-      var('$1').scale_step?.should be_true
-      var('$1023456987').scale_step?.should be_true
+
+  describe '#arpeggio?' do
+    it 'is true when a variable has the name Variable::ARPEGGIO' do
+      VARIABLE.new(VARIABLE::ARPEGGIO, nil).arpeggio?.should be_true
     end
 
     it 'is false otherwise' do
-      var('x').scale_step?.should be_false
-      var('$x').scale_step?.should be_false
-      var('$').scale_step?.should be_false
-      var('$$').scale_step?.should be_false
+      var('x').arpeggio?.should be_false
+      var('$x').arpeggio?.should be_false
+      var('$').arpeggio?.should be_false
+      var('$$').arpeggio?.should be_false
+    end
+  end
+
+
+  describe '#arpeggio_index?' do
+    it 'is true when the variable name is $N where N is a natural number' do
+      var('$1').arpeggio_index?.should be_true
+      var('$1023456987').arpeggio_index?.should be_true
+    end
+
+    it 'is false otherwise' do
+      var('x').arpeggio_index?.should be_false
+      var('$x').arpeggio_index?.should be_false
+      var('$').arpeggio_index?.should be_false
+      var('$$').arpeggio_index?.should be_false
     end
   end
 

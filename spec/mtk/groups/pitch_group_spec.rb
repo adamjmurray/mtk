@@ -114,6 +114,28 @@ describe MTK::Groups::PitchGroup do
     end
   end
 
+
+  describe '#arpeggiate' do
+
+    it 'returns the pitch at the given index' do
+      pitch_group.arpeggiate(2).should == E4
+    end
+
+    it 'adds an octave for each time the index "wraps around" the pitch group' do
+      pitch_group.arpeggiate(8).should == C6
+    end
+
+    it 'subtracts an octave for each time the index "wraps around" the pitch group in the negative direction' do
+      pitch_group.arpeggiate(-6).should == E2
+    end
+
+    it 'returns nil when the PitchGroup is empty' do
+      PITCH_GROUP.new([]).arpeggiate(1).should be_nil
+    end
+
+  end
+
+
   describe '#include?' do
     it 'returns true if the Pitch is in the PITCH_GROUP' do
       (pitch_group.include? C4).should be_true
