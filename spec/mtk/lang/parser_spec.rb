@@ -319,6 +319,21 @@ describe MTK::Lang::Parser do
       it "parses duration sequences" do
         parse("q e q. ht", :bare_sequence).should == seq(q, e, q*Rational(1.5), h*Rational(2,3))
       end
+
+      it "parses an arpeggio and a pitch" do
+        parse("$[C4 D4] C4", :bare_sequence).should == seq(Lang::Variable.define_arpeggio(MTK.PitchGroup(C4,D4)), C4)
+      end
+
+      it "parses arpeggio indexes" do
+        parse("$0 $1", :bare_sequence).should == seq(Lang::Variable.new('$0',0), Lang::Variable.new('$1',1))
+      end
+
+      it "parses an arpeggio and arpeggio indexes" do
+        parse("$[C4 D4] $0 $1 $2", :bare_sequence).should == seq(
+          Lang::Variable.define_arpeggio(MTK.PitchGroup(C4,D4)),
+          Lang::Variable.new('$0',0), Lang::Variable.new('$1',1), Lang::Variable.new('$2',2)
+          )
+      end
     end
 
 
@@ -389,6 +404,10 @@ describe MTK::Lang::Parser do
       it "parses chains of elements with max_cycles" do
         parse('C*3:mp*4:q*5', :chain).should == chain( seq(C,max_cycles:3), seq(mp,max_cycles:4), seq(q,max_cycles:5))
       end
+
+      it "parses chained arpeggio indexes" do
+        parse("$0:$1", :chain).should == chain(Lang::Variable.new('$0',0), Lang::Variable.new('$1',1))
+      end
     end
 
 
@@ -432,8 +451,29 @@ describe MTK::Lang::Parser do
     end
 
 
+    context 'variable rule' do
+      it 'parses an arpeggio' do
+        var = parse("$[C4 D4]", :variable)
+        var.should be_a MTK::Lang::Variable
+        var.arpeggio?.should be_true
+      end
+
+      it 'parses an arpeggio_index' do
+        var = parse("$1", :variable)
+        var.should be_a MTK::Lang::Variable
+        var.arpeggio_index?.should be_true
+      end
+
+      it 'parses an implicit foreach_variable' do
+        var = parse("$$", :variable)
+        var.should be_a MTK::Lang::Variable
+        var.implicit?.should be_true
+      end
+    end
+
+
     context 'arpeggio rule' do
-      it "parse an arpeggio" do
+      it "parses an arpeggio" do
         arpeggio = parse("$[C4 D4 E4 F4 G4 A4 B4]", :arpeggio)
         arpeggio.should be_a MTK::Lang::Variable
         arpeggio.arpeggio?.should be_true
@@ -451,20 +491,26 @@ describe MTK::Lang::Parser do
 
       it "parses $1 with value 1" do
         variable = parse("$1", :arpeggio_index)
+        variable.arpeggio_index?.should be_true
         variable.value.should == 1
       end
 
       it "parses $1234567890 with value 1234567890" do # unrealistic step number, just checking the parsing
         variable = parse("$1234567890", :arpeggio_index)
+        variable.arpeggio_index?.should be_true
         variable.value.should == 1234567890
       end
 
-      it "doesn't parse $0" do
-        -> { variable = parse("$0", :arpeggio_index) }.should raise_error Citrus::ParseError
+      it "parses $0" do
+        variable = parse("$0", :arpeggio_index)
+        variable.arpeggio_index?.should be_true
+        variable.value.should == 0
       end
 
-      it "doesn't parse $-1" do
-        -> { variable = parse("$-1", :arpeggio_index) }.should raise_error Citrus::ParseError
+      it "parses negative indexes" do
+        variable = parse("$-1", :arpeggio_index)
+        variable.arpeggio_index?.should be_true
+        variable.value.should == -1
       end
     end
 

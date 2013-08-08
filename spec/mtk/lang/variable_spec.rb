@@ -76,9 +76,11 @@ describe MTK::Lang::Variable do
 
 
   describe '#arpeggio_index?' do
-    it 'is true when the variable name is $N where N is a natural number' do
+    it 'is true when the variable name is $N where N is a integer' do
       var('$1').arpeggio_index?.should be_true
       var('$1023456987').arpeggio_index?.should be_true
+      var('$0').arpeggio_index?.should be_true
+      var('$-1').arpeggio_index?.should be_true
     end
 
     it 'is false otherwise' do

@@ -37,7 +37,7 @@ module MTK
       # @return true if this variable represents one note of an arpeggio,
       # in which case the {#value} is the index of the pitch in the arpeggio {Groups:PitchGroup}
       def arpeggio_index?
-        !!(name =~ /^\$\d+$/)
+        !!(name =~ /^\$-?\d+$/)
       end
 
       def == other
