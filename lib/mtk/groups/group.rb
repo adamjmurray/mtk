@@ -56,6 +56,11 @@ module MTK
          n ? @elements.last(n) : @elements.last
        end
 
+       # A random element from the group
+       def random
+         @elements[rand*@elements.length]
+       end
+
        # The element with the given index
        def [](index)
          @elements[index]

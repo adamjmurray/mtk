@@ -91,8 +91,8 @@ describe MTK::Groups::Group do
     end
   end
 
-  describe "#last when no argument is given" do
-    it "is #[-1]" do
+  describe "#last" do
+    it "is #[-1] when no argument is given" do
       collection.last.should == collection[-1]
     end
 
@@ -102,6 +102,23 @@ describe MTK::Groups::Group do
 
     it "is the elements when n is bigger than elements.length, for an argument n" do
       collection.last(elements.length * 2).should == elements
+    end
+  end
+
+  describe "#random" do
+    it "returns a random element" do
+      # There's a slight chance this will fail due to the random nature, just run again...
+      elements = []
+      1_000_000.times{|i| elements << i }
+      group = GROUP.new(elements)
+      prev = nil
+      3.times do
+        random = group.random
+        random.should >= 0
+        random.should < 1_000_000
+        random.should_not == prev
+        prev = random
+      end
     end
   end
 
