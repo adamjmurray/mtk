@@ -121,7 +121,7 @@ grammar MTK_Grammar
   end
 
   rule variable
-    ( arpeggio | arpeggio_index | for_each_variable )
+    ( arpeggio | arpeggio_element | for_each_variable )
   end
 
   rule arpeggio
@@ -134,16 +134,7 @@ grammar MTK_Grammar
   end
 
   rule arpeggio_element
-    ( arpeggio_index )
-  end
-
-  rule arpeggio_index
-    (
-      '$' int
-    )
-    {
-      MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, to_s, int.value)
-    }
+    ( arpeggio_index | arpeggio_increment | arpeggio_random | arpeggio_all )
   end
 
   rule pitch
@@ -189,6 +180,32 @@ grammar MTK_Grammar
   rule for_each_variable
     ( '$'+ ) {
       MTK::Lang::Variable.new(MTK::Lang::Variable::FOR_EACH, to_s, to_s.length)
+    }
+  end
+
+  rule arpeggio_index
+    ( '$' int ) {
+      MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, :index, int.value)
+    }
+  end
+
+  rule arpeggio_increment
+    ( '$' ('+'+ | '-'+) ) {
+      size = to_s.length - 1 # subtract one for the '$'
+      value = if to_s =~ /\+/ then size else value = -size end
+      MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, :increment, value)
+    }
+  end
+
+  rule arpeggio_random
+    ( '$?' ) {
+      MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, :random)
+    }
+  end
+
+  rule arpeggio_all
+    ( '$!' ) {
+      MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, :all)
     }
   end
 

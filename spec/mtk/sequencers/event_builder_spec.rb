@@ -12,8 +12,24 @@ describe MTK::Sequencers::EventBuilder do
     pitches.map{|pitch| Note(pitch, intensity, duration) }
   end
 
-  def arp_elem_var(index)
-    MTK::Lang::Variable.new(Variable::ARPEGGIO_ELEMENT, "$#{index}", index)
+  def arpeggio(*elements)
+    MTK::Lang::Variable.new(Variable::ARPEGGIO, '', MTK.PitchGroup(*elements))
+  end
+
+  def arp_elem_index_var(index)
+    MTK::Lang::Variable.new(Variable::ARPEGGIO_ELEMENT, :index, index)
+  end
+
+  def arp_elem_inc_var(increment)
+    MTK::Lang::Variable.new(Variable::ARPEGGIO_ELEMENT, :increment, increment)
+  end
+
+  def arp_elem_all_var
+    MTK::Lang::Variable.new(Variable::ARPEGGIO_ELEMENT, :all)
+  end
+
+  def arp_elem_rand_var
+    MTK::Lang::Variable.new(Variable::ARPEGGIO_ELEMENT, :random)
   end
 
 
@@ -268,23 +284,76 @@ describe MTK::Sequencers::EventBuilder do
       event_builder.next.should == [Rest(q)]
     end
 
-    it "interprets scale step variables within the C chromatic scale by default" do
-      event_builder = EVENT_BUILDER.new([Patterns.Sequence(arp_elem_var(0), arp_elem_var(2), arp_elem_var(7), arp_elem_var(11))])
+    it "interprets arpeggio index variables within the C chromatic arpeggio by default" do
+      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+        arp_elem_index_var(0), arp_elem_index_var(2), arp_elem_index_var(7), arp_elem_index_var(11))]
+      )
       event_builder.next.should == [Note(C4,q)]
       event_builder.next.should == [Note(D4,q)]
       event_builder.next.should == [Note(G4,q)]
       event_builder.next.should == [Note(B4,q)]
     end
 
-    it "interprets scale step variables within whatever scale occurred most recently" do
+    it "interprets arpeggio index variables against the arpeggio that occurred most recently" do
       event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-        Lang::Variable.new(Variable::ARPEGGIO, '', MTK.PitchGroup(C4,D4,E4,F4,G4,A4,B4)),
-        arp_elem_var(0), arp_elem_var(1), arp_elem_var(4), arp_elem_var(7))]
-      )
+        arpeggio(Db5,Eb5),
+        arpeggio(C4,D4,E4,F4,G4,A4,B4),
+        arp_elem_index_var(0), arp_elem_index_var(1), arp_elem_index_var(4), arp_elem_index_var(7)
+      )])
       event_builder.next.should == [Note(C4,q)]
       event_builder.next.should == [Note(D4,q)]
       event_builder.next.should == [Note(G4,q)]
       event_builder.next.should == [Note(C5,q)]
+    end
+
+    it "interprets arpeggio increment variables against the arpeggio and arpeggio index that occurred most recently" do
+      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+        arpeggio(Db5,Eb5),
+        arpeggio(C4,D4,E4,F4,G4,A4,B4),
+        arp_elem_index_var(0), arp_elem_inc_var(2), arp_elem_inc_var(0), arp_elem_inc_var(-3)
+      )])
+      event_builder.next.should == [Note(C4,q)]
+      event_builder.next.should == [Note(E4,q)]
+      event_builder.next.should == [Note(E4,q)]
+      event_builder.next.should == [Note(B3,q)]
+    end
+
+    it "has a default arpeggio index of 0" do
+      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+        arpeggio(Db5,Eb5),
+        arpeggio(C4,D4,E4,F4,G4,A4,B4),
+        arp_elem_inc_var(2), arp_elem_inc_var(0), arp_elem_inc_var(-3)
+      )])
+      event_builder.next.should == [Note(E4,q)]
+      event_builder.next.should == [Note(E4,q)]
+      event_builder.next.should == [Note(B3,q)]
+    end
+
+    it "interprets arpeggio all variables against the arpeggio and arpeggio index that occurred most recently" do
+      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+        arpeggio(C4,D4,E4,F4,G4,A4,B4),
+        arpeggio(Db5,Eb5),
+        arp_elem_all_var, arp_elem_all_var
+      )])
+      event_builder.next.should == [Note(Db5,q),Note(Eb5,q)]
+      event_builder.next.should == [Note(Db5,q),Note(Eb5,q)]
+    end
+
+    it "interprets arpeggio random variables against the arpeggio and arpeggio index that occurred most recently" do
+      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+        arpeggio(Db5,Eb5),
+        arpeggio(Lang::Pitches::PITCHES),
+        arp_elem_rand_var, arp_elem_rand_var, arp_elem_rand_var, arp_elem_rand_var
+      )])
+      first_event = event_builder.next
+      first_event.length.should == 1
+
+      first = first_event[0].pitch
+      second = event_builder.next[0].pitch
+      third = event_builder.next[0].pitch
+      fourth = event_builder.next[0].pitch
+      (first==second && first==second && first==third && first==fourth ).should be_false
+      # slight chance this will fail, just run again
     end
   end
 

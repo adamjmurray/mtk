@@ -80,9 +80,9 @@ module MTK
                     #   * Support a Pitch (or PitchClass) followed by a list of Intervals or integers representing intervals
                     @arpeggio = element.value
                     return self.next
-                  when element.arpeggio_element?
-                    pitches << @arpeggio.arpeggiate(element.value)
-                    @previous_pitch = pitches.last
+
+                  when element.arpeggio_element? then evaluate_arpeggio(element, pitches)
+
                   else
                     # ForEach "implicit" variables should already have been evaluated by the Pattern
                     STDERR.puts "#{self.class}#next: Encountered unsupported variable #{element}"
@@ -143,13 +143,39 @@ module MTK
           MTK::Lang::Pitches::Bb4,
           MTK::Lang::Pitches::B4,
         )
+        @previous_arpeggio_index = 0
         @max_pitch = nil
         @min_pitch = nil
         @patterns.each{|pattern| pattern.rewind if pattern.is_a? MTK::Patterns::Pattern }
       end
 
-      ########################
+
+      ################################################
       private
+
+      def evaluate_arpeggio(element, pitches)
+        case element.name
+          when :index
+            pitches << @arpeggio.arpeggiate(element.value)
+            @previous_arpeggio_index = element.value
+
+          when :increment
+            pitches << @arpeggio.arpeggiate(@previous_arpeggio_index + element.value)
+            @previous_arpeggio_index += element.value
+
+          when :random
+            pitches << @arpeggio.random
+
+          when :all
+            pitches.concat(@arpeggio.pitches)
+
+          else
+            STDERR.puts "#{self.class}#next: Encountered unsupported arpeggio element #{element}"
+        end
+
+        @previous_pitch = pitches.last
+      end
+
 
       def constrain_pitch(pitches)
         if @max_pitch.nil? or @min_pitch.nil?

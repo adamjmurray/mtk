@@ -30,8 +30,8 @@ describe MTK::Lang::Parser do
     var(Lang::Variable::FOR_EACH, name, name.length)
   end
 
-  def arp_elem_var(name,value)
-    var(Lang::Variable::ARPEGGIO_ELEMENT, name, value)
+  def arp_elem_index_var(value)
+    var(Lang::Variable::ARPEGGIO_ELEMENT, :index, value)
   end
 
 
@@ -335,19 +335,14 @@ describe MTK::Lang::Parser do
       end
 
       it "parses arpeggio elements" do
-        parse("$0 $1", :bare_sequence).should == seq(
-          Lang::Variable.new(Lang::Variable::ARPEGGIO_ELEMENT,'$0',0),
-          Lang::Variable.new(Lang::Variable::ARPEGGIO_ELEMENT,'$1',1)
-        )
+        parse("$0 $1", :bare_sequence).should == seq(arp_elem_index_var(0), arp_elem_index_var(1))
       end
 
       it "parses an arpeggio and arpeggio indexes" do
         parse("$[C4 D4] $0 $1 $2", :bare_sequence).should == seq(
           Lang::Variable.new(Lang::Variable::ARPEGGIO,'$[C4 D4]',MTK.PitchGroup(C4,D4)),
-          Lang::Variable.new(Lang::Variable::ARPEGGIO_ELEMENT,'$0',0),
-          Lang::Variable.new(Lang::Variable::ARPEGGIO_ELEMENT,'$1',1),
-          Lang::Variable.new(Lang::Variable::ARPEGGIO_ELEMENT,'$2',2)
-          )
+          arp_elem_index_var(0), arp_elem_index_var(1), arp_elem_index_var(2)
+        )
       end
     end
 
@@ -424,7 +419,7 @@ describe MTK::Lang::Parser do
       end
 
       it "parses chained arpeggio element" do
-        parse("$0:$1", :chain).should == chain(arp_elem_var('$0',0), arp_elem_var('$1',1))
+        parse("$0:$1", :chain).should == chain(arp_elem_index_var(0), arp_elem_index_var(1))
       end
     end
 
@@ -508,31 +503,77 @@ describe MTK::Lang::Parser do
       it "parses $N (N is a natural number) patterns as a Variable with scale_step? true" do
         variable = parse("$1", :arpeggio_element)
         variable.should be_a MTK::Lang::Variable
+        variable.name.should be :index
         variable.arpeggio_element?.should be_true
       end
 
       it "parses $1 with value 1" do
         variable = parse("$1", :arpeggio_element)
         variable.arpeggio_element?.should be_true
+        variable.name.should be :index
         variable.value.should == 1
       end
 
       it "parses $1234567890 with value 1234567890" do # unrealistic step number, just checking the parsing
         variable = parse("$1234567890", :arpeggio_element)
         variable.arpeggio_element?.should be_true
+        variable.name.should be :index
         variable.value.should == 1234567890
       end
 
       it "parses $0" do
         variable = parse("$0", :arpeggio_element)
         variable.arpeggio_element?.should be_true
+        variable.name.should be :index
         variable.value.should == 0
       end
 
       it "parses negative indexes" do
         variable = parse("$-1", :arpeggio_element)
         variable.arpeggio_element?.should be_true
+        variable.name.should be :index
         variable.value.should == -1
+      end
+
+      it "parses positive increments" do
+        variable = parse("$+", :arpeggio_element)
+        variable.arpeggio_element?.should be_true
+        variable.name.should be :increment
+        variable.value.should == 1
+      end
+
+      it "parses multi-positive increments" do
+        variable = parse("$+++", :arpeggio_element)
+        variable.arpeggio_element?.should be_true
+        variable.name.should be :increment
+        variable.value.should == 3
+      end
+
+      it "parses decrement increments" do
+        variable = parse("$-", :arpeggio_element)
+        variable.arpeggio_element?.should be_true
+        variable.name.should be :increment
+        variable.value.should == -1
+      end
+
+      it "parses multi-negative increments" do
+        variable = parse("$---", :arpeggio_element)
+        variable.arpeggio_element?.should be_true
+        variable.name.should be :increment
+        variable.value.should == -3
+      end
+
+
+      it "parses random arpeggio elements" do
+        variable = parse("$?", :arpeggio_element)
+        variable.arpeggio_element?.should be_true
+        variable.name.should be :random
+      end
+
+      it "parses 'all' arpeggio elements" do
+        variable = parse("$!", :arpeggio_element)
+        variable.arpeggio_element?.should be_true
+        variable.name.should be :all
       end
     end
 
