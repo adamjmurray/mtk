@@ -12,8 +12,8 @@ describe MTK::Sequencers::EventBuilder do
     pitches.map{|pitch| Note(pitch, intensity, duration) }
   end
 
-  def arpeggio_index(index)
-    MTK::Lang::Variable.new("$#{index}", index)
+  def arp_elem_var(index)
+    MTK::Lang::Variable.new(Variable::ARPEGGIO_ELEMENT, "$#{index}", index)
   end
 
 
@@ -269,7 +269,7 @@ describe MTK::Sequencers::EventBuilder do
     end
 
     it "interprets scale step variables within the C chromatic scale by default" do
-      event_builder = EVENT_BUILDER.new([Patterns.Sequence(arpeggio_index(0), arpeggio_index(2), arpeggio_index(7), arpeggio_index(11))])
+      event_builder = EVENT_BUILDER.new([Patterns.Sequence(arp_elem_var(0), arp_elem_var(2), arp_elem_var(7), arp_elem_var(11))])
       event_builder.next.should == [Note(C4,q)]
       event_builder.next.should == [Note(D4,q)]
       event_builder.next.should == [Note(G4,q)]
@@ -278,7 +278,8 @@ describe MTK::Sequencers::EventBuilder do
 
     it "interprets scale step variables within whatever scale occurred most recently" do
       event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-        Lang::Variable.define_arpeggio(MTK.PitchGroup(C4,D4,E4,F4,G4,A4,B4)), arpeggio_index(0), arpeggio_index(1), arpeggio_index(4), arpeggio_index(7))]
+        Lang::Variable.new(Variable::ARPEGGIO, '', MTK.PitchGroup(C4,D4,E4,F4,G4,A4,B4)),
+        arp_elem_var(0), arp_elem_var(1), arp_elem_var(4), arp_elem_var(7))]
       )
       event_builder.next.should == [Note(C4,q)]
       event_builder.next.should == [Note(D4,q)]

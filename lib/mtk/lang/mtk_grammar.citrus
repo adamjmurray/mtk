@@ -86,7 +86,7 @@ grammar MTK_Grammar
   end
 
 
-  rule foreach
+  rule for_each
     (
       sequence ('@' sequence)+
     )
@@ -104,7 +104,7 @@ grammar MTK_Grammar
   end
 
   rule chainable
-    ( foreach | choice | sequence | element )
+    ( for_each | choice | sequence | element )
   end
 
   rule element
@@ -121,7 +121,7 @@ grammar MTK_Grammar
   end
 
   rule variable
-    ( arpeggio | arpeggio_index | foreach_variable )
+    ( arpeggio | arpeggio_index | for_each_variable )
   end
 
   rule arpeggio
@@ -129,8 +129,12 @@ grammar MTK_Grammar
       '$' left_bracket pitch (space pitch)* right_bracket
     )
     {
-      MTK::Lang::Variable.define_arpeggio(MTK.PitchGroup(values_of :pitch))
+      MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO, to_s, MTK.PitchGroup(values_of :pitch))
     }
+  end
+
+  rule arpeggio_element
+    ( arpeggio_index )
   end
 
   rule arpeggio_index
@@ -138,7 +142,7 @@ grammar MTK_Grammar
       '$' int
     )
     {
-      MTK::Lang::Variable.new(to_s, int.value)
+      MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, to_s, int.value)
     }
   end
 
@@ -182,9 +186,9 @@ grammar MTK_Grammar
     }
   end
 
-  rule foreach_variable
+  rule for_each_variable
     ( '$'+ ) {
-      MTK::Lang::Variable.new(to_s)
+      MTK::Lang::Variable.new(MTK::Lang::Variable::FOR_EACH, to_s, to_s.length)
     }
   end
 

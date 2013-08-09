@@ -6,46 +6,52 @@ module MTK
     #
     class Variable
 
-      ARPEGGIO = :'$ARPEGGIO'
+      ARPEGGIO = :arpeggio
+      ARPEGGIO_ELEMENT = :arpeggio_element
+      FOR_EACH = :for_each
+      USER_DEFINED =:user_defined
 
-      def self.define_arpeggio pitch_group
-        new(ARPEGGIO, pitch_group)
-      end
-
-
-      attr_reader :name
+      attr_reader :type, :name
 
       attr_accessor :value
 
-      def initialize name, value=nil
+
+      def initialize type, name, value=nil
+        @type = type
         @name = name
         @value = value
       end
 
 
-      # @return true when this variable has no specific value and references the implicit variable stack (such as in a {Patterns::ForEach})
-      def implicit?
-        @implicit ||= !!(name =~ /^\$+$/)
-      end
-
       # @return true if this variable represents the pitches of the arpeggio,
       # in which case the {#value} is a {Groups:PitchGroup}
       def arpeggio?
-        @name == ARPEGGIO
+        @type == ARPEGGIO
       end
 
-      # @return true if this variable represents one note of an arpeggio,
+      # @return true if this variable represents one element of an arpeggio,
       # in which case the {#value} is the index of the pitch in the arpeggio {Groups:PitchGroup}
-      def arpeggio_index?
-        !!(name =~ /^\$-?\d+$/)
+      def arpeggio_element?
+        @type == ARPEGGIO_ELEMENT
       end
+
+      # true when this represent a variable on the {Patterns::ForEach} stack
+      # if true, the {#value} represents the index from the top of the for each variable stack
+      def for_each?
+        @type == FOR_EACH
+      end
+
+      def user_defined?
+        @type == USER_DEFINED
+      end
+
 
       def == other
-        other.is_a? self.class and other.name == self.name
+        other.is_a? self.class and other.type == self.type and other.name == self.name and other.value == self.value
       end
 
       def to_s
-        "#{self.class}<#{name}#{'='+value.to_s if value}>"
+        "#{self.class}<#{@type} #{@name}#{'='+@value.inspect}>"
       end
     end
 

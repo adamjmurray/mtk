@@ -56,8 +56,8 @@ module MTK
       def evaluate_variables(element)
         case element
           when ::MTK::Lang::Variable
-            if element.implicit?
-              return @vars[-element.name.length] # '$' is most recently pushed value, $$' goes back 2 levels, '$$$' goes back 3, etc
+            if element.for_each?
+              return @vars[-element.value] # the variable value indicates how far back the stack to pop off
             end
           when Array
             return element.map{|e| evaluate_variables(e) }

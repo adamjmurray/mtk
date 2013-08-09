@@ -4,8 +4,8 @@ describe MTK::Patterns::ForEach do
 
   FOREACH = ::MTK::Patterns::ForEach
 
-  def var(name)
-    ::MTK::Lang::Variable.new(name)
+  def for_each_var(name)
+    ::MTK::Lang::Variable.new(Variable::FOR_EACH, name, name.length)
   end
 
   def seq(*args)
@@ -25,7 +25,7 @@ describe MTK::Patterns::ForEach do
 
   describe "#next" do
     it "enumerates each element in the second pattern for each element in the first, with variable '$' as the first pattern's current element" do
-      foreach = FOREACH.new [ seq(C,D,E), seq(var('$'),G,A) ]
+      foreach = FOREACH.new [ seq(C,D,E), seq(for_each_var('$'),G,A) ]
       vals = []
       9.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
@@ -33,7 +33,7 @@ describe MTK::Patterns::ForEach do
     end
 
     it "enumerates the foreach construct with a variable in the middle of the second pattern" do
-      foreach = FOREACH.new [ seq(C,D,E), seq(G,var('$'),A) ]
+      foreach = FOREACH.new [ seq(C,D,E), seq(G,for_each_var('$'),A) ]
       vals = []
       9.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
@@ -41,7 +41,7 @@ describe MTK::Patterns::ForEach do
     end
 
     it "enumerates the foreach construct with multiple variables" do
-      foreach = FOREACH.new [ seq(C,D,E), seq(G,var('$'),A,var('$')) ]
+      foreach = FOREACH.new [ seq(C,D,E), seq(G,for_each_var('$'),A,for_each_var('$')) ]
       vals = []
       12.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
@@ -49,7 +49,7 @@ describe MTK::Patterns::ForEach do
     end
 
     it "handles 3-level nesting" do
-      foreach = FOREACH.new [ seq(C,D), seq(var('$'),F), seq(G,var('$')) ]
+      foreach = FOREACH.new [ seq(C,D), seq(for_each_var('$'),F), seq(G,for_each_var('$')) ]
       vals = []
       8.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
@@ -57,15 +57,15 @@ describe MTK::Patterns::ForEach do
     end
 
     it "handles 4-level nesting" do
-      foreach = FOREACH.new [ seq(C,D), seq(var('$'),E), seq(F,var('$')), seq(var('$'),G) ]
+      foreach = FOREACH.new [ seq(C,D), seq(for_each_var('$'),E), seq(F,for_each_var('$')), seq(for_each_var('$'),G) ]
       vals = []
       16.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
       vals.should ==  [F,G,C,G,F,G,E,G,F,G,D,G,F,G,E,G]
     end
 
-    it "evaluates the '$$' var by going back 2 levels in the variables stack" do
-      foreach = FOREACH.new [ seq(C,D), seq(E,F), seq(var('$$'),var('$')) ]
+    it "evaluates the '$$' for_each_var by going back 2 levels in the variables stack" do
+      foreach = FOREACH.new [ seq(C,D), seq(E,F), seq(for_each_var('$$'),for_each_var('$')) ]
       vals = []
       8.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
@@ -73,8 +73,8 @@ describe MTK::Patterns::ForEach do
     end
 
 
-    it "evaluates the '$$$' var by going back 3 levels in the variables stack" do
-      foreach = FOREACH.new [ seq(C,D), seq(E,F), seq(G,A), seq(var('$$$'),var('$$'),var('$')) ]
+    it "evaluates the '$$$' for_each_var by going back 3 levels in the variables stack" do
+      foreach = FOREACH.new [ seq(C,D), seq(E,F), seq(G,A), seq(for_each_var('$$$'),for_each_var('$$'),for_each_var('$')) ]
       vals = []
       24.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
@@ -83,7 +83,7 @@ describe MTK::Patterns::ForEach do
 
     it "evaluates nested variables" do
       # (C4 Bb Ab G)@( (C D C $):(q i i)*4:(mp mf) )
-      foreach = FOREACH.new( [seq(G,A), chain(seq(C,D,var('$')),seq(q,e,s))] )
+      foreach = FOREACH.new( [seq(G,A), chain(seq(C,D,for_each_var('$')),seq(q,e,s))] )
       vals = []
       6.times{ vals << foreach.next }
       lambda{ foreach.next }.should raise_error StopIteration
@@ -96,7 +96,7 @@ describe MTK::Patterns::ForEach do
 
   describe "#rewind" do
     it "restarts at the beginning of the sequence" do
-      foreach = FOREACH.new [ seq(C,D,E), seq(var('$'),G,A) ]
+      foreach = FOREACH.new [ seq(C,D,E), seq(for_each_var('$'),G,A) ]
       6.times{ foreach.next }
       foreach.next.should == E
       foreach.rewind
@@ -107,7 +107,7 @@ describe MTK::Patterns::ForEach do
     end
 
     it "returns self, so it can be chained to #next" do
-      foreach = FOREACH.new [ seq(C,D,E), seq(var('$'),G,A) ]
+      foreach = FOREACH.new [ seq(C,D,E), seq(for_each_var('$'),G,A) ]
       first = foreach.next
       foreach.rewind.next.should == first
       foreach.rewind.next.should == first

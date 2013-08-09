@@ -9,117 +9,112 @@ describe MTK::Lang::Variable do
   end
 
 
-  describe '.define_arpeggio' do
-    it 'defines a variable where #arppegio? is true' do
-      VARIABLE.define_arpeggio(nil).arpeggio?.should be_true
+  describe '#type' do
+    it 'is the type the Variable was constructed with' do
+      var(:type1, :foo).type.should == :type1
+      var(:type2, :foo).type.should == :type2
     end
 
-    it 'has a #value of the given argument' do
-      VARIABLE.define_arpeggio(:arp_stuff).value.should == :arp_stuff
+    it 'cannot be changed after the Variable is created' do
+      lambda{ var(:type1, :foo).type = :type2 }.should raise_error
     end
   end
 
-
   describe '#name' do
-    it 'is the name the variable was constructed with' do
-      var('$').name.should == '$'
-      var('$$').name.should == '$$'
+    it 'is the name the Variable was constructed with' do
+      var(:type, :x).name.should == :x
+      var(:type, :y).name.should == :y
     end
 
-    it 'cannot be changed after the variable is created' do
-      lambda{ var('$').name = '$$$' }.should raise_error
+    it 'cannot be changed after the Variable is created' do
+      lambda{ var(:type, :x).name = :y }.should raise_error
     end
   end
 
   describe '#value' do
-    it 'is the value the variable was constructed with' do
-      var(:name, :value).value.should == :value
+    it 'is the value the Variable was constructed with' do
+      var(:name, :type, :value).value.should == :value
     end
 
-    it 'can be changed after the variable is created' do
-      v = var(:name, :value)
+    it 'can be changed after the Variable is created' do
+      v = var(:name, :type, :value)
       v.value = 'foo'
       v.value.should == 'foo'
-    end
-  end
-
-
-  describe '#implicit?' do
-    it 'is true when the variable name is $' do
-      var('$').implicit?.should be_true
-    end
-
-    it 'is true when the variable name is any number of $ characters' do
-      10.times{|i| var('$'*(i+1)).implicit?.should be_true }
-    end
-
-    it 'is false otherwise' do
-      var('x').implicit?.should be_false
-      var('$x').implicit?.should be_false
-      var('$1').implicit?.should be_false
     end
   end
 
 
   describe '#arpeggio?' do
-    it 'is true when a variable has the name Variable::ARPEGGIO' do
-      VARIABLE.new(VARIABLE::ARPEGGIO, nil).arpeggio?.should be_true
+    it 'is true when a Variable has the type Variable::ARPEGGIO' do
+      var(VARIABLE::ARPEGGIO, :name).arpeggio?.should be_true
     end
 
     it 'is false otherwise' do
-      var('x').arpeggio?.should be_false
-      var('$x').arpeggio?.should be_false
-      var('$').arpeggio?.should be_false
-      var('$$').arpeggio?.should be_false
+      var(:type, :name).arpeggio?.should be_false
     end
   end
 
-
-  describe '#arpeggio_index?' do
-    it 'is true when the variable name is $N where N is a integer' do
-      var('$1').arpeggio_index?.should be_true
-      var('$1023456987').arpeggio_index?.should be_true
-      var('$0').arpeggio_index?.should be_true
-      var('$-1').arpeggio_index?.should be_true
+  describe '#arpeggio_element?' do
+    it 'is true when the Variable has the type Variable::ARPEGGIO_ELEMENT' do
+      var(VARIABLE::ARPEGGIO_ELEMENT, :name).arpeggio_element?.should be_true
     end
 
     it 'is false otherwise' do
-      var('x').arpeggio_index?.should be_false
-      var('$x').arpeggio_index?.should be_false
-      var('$').arpeggio_index?.should be_false
-      var('$$').arpeggio_index?.should be_false
+      var(:type, :name).arpeggio_element?.should be_false
     end
   end
 
-  describe '#value' do
-    it 'is the value the variable was constructed with' do
-      var(:name, :value).value.should == :value
+  describe '#for_each?' do
+    it 'is true when the Variable has the type Variable::FOR_EACH' do
+      var(VARIABLE::FOR_EACH, :name).for_each?.should be_true
     end
 
-    it 'can be changed after the variable is created' do
-      v = var(:name, :value)
-      v.value = 'foo'
-      v.value.should == 'foo'
+    it 'is false otherwise' do
+      var(:type, :name).for_each?.should be_false
     end
   end
+
+  describe '#user_defined?' do
+    it 'is true when the Variable has the type Variable::USER_DEFINED' do
+      var(VARIABLE::USER_DEFINED, :name).user_defined?.should be_true
+    end
+
+    it 'is false otherwise' do
+      var(:type, :name).user_defined?.should be_false
+    end
+  end
+
 
   describe '#==' do
-    it "is true when two variables' names are equal" do
-      var('$').should == var('$')
+    it "is true when two variables' types, names, and values are equal" do
+      var(:type, :name, :value).should == var(:type, :name, :value)
+    end
+
+    it "is false when two variables' types are not equal" do
+      var(:type1, :name).should_not == var(:type2, :name)
     end
 
     it "is false when two variables' names are not equal" do
-      var('$').should_not == var('$$')
+      var(:type, :name1).should_not == var(:type, :name2)
+    end
+
+    it "is false when two variables' values are not equal" do
+      var(:type, :name, :val1).should_not == var(:type, :name, :val2)
     end
   end
 
+
   describe '#to_s' do
-    it "includes just the variable name when there's no value" do
-      var('$').to_s.should == 'MTK::Lang::Variable<$>'
+    it "includes just the variable type, name, and value" do
+      var(VARIABLE::USER_DEFINED, :x, 1).to_s.should == 'MTK::Lang::Variable<user_defined x=1>'
     end
 
-    it "includes just the variable name and value when there's a value" do
-      var('x',1).to_s.should == 'MTK::Lang::Variable<x=1>'
+    it "clearly indicates String values" do
+      var(VARIABLE::USER_DEFINED, :x, "foo").to_s.should == 'MTK::Lang::Variable<user_defined x="foo">'
+    end
+
+    it "clearly indicates nil values" do
+      var(VARIABLE::USER_DEFINED, :x).to_s.should == 'MTK::Lang::Variable<user_defined x=nil>'
     end
   end
 

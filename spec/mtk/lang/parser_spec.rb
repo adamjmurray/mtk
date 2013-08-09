@@ -18,12 +18,20 @@ describe MTK::Lang::Parser do
     Patterns.Choice *args
   end
 
-  def foreach *args
+  def for_each *args
     Patterns.ForEach *args
   end
 
-  def var(name)
-    ::MTK::Lang::Variable.new(name)
+  def var(*args)
+    ::MTK::Lang::Variable.new(*args)
+  end
+
+  def for_each_var(name)
+    var(Lang::Variable::FOR_EACH, name, name.length)
+  end
+
+  def arp_elem_var(name,value)
+    var(Lang::Variable::ARPEGGIO_ELEMENT, name, value)
   end
 
 
@@ -321,17 +329,24 @@ describe MTK::Lang::Parser do
       end
 
       it "parses an arpeggio and a pitch" do
-        parse("$[C4 D4] C4", :bare_sequence).should == seq(Lang::Variable.define_arpeggio(MTK.PitchGroup(C4,D4)), C4)
+        parse("$[C4 D4] C4", :bare_sequence).should == seq(
+          Lang::Variable.new(Lang::Variable::ARPEGGIO, '$[C4 D4]', MTK.PitchGroup(C4,D4)), C4
+        )
       end
 
-      it "parses arpeggio indexes" do
-        parse("$0 $1", :bare_sequence).should == seq(Lang::Variable.new('$0',0), Lang::Variable.new('$1',1))
+      it "parses arpeggio elements" do
+        parse("$0 $1", :bare_sequence).should == seq(
+          Lang::Variable.new(Lang::Variable::ARPEGGIO_ELEMENT,'$0',0),
+          Lang::Variable.new(Lang::Variable::ARPEGGIO_ELEMENT,'$1',1)
+        )
       end
 
       it "parses an arpeggio and arpeggio indexes" do
         parse("$[C4 D4] $0 $1 $2", :bare_sequence).should == seq(
-          Lang::Variable.define_arpeggio(MTK.PitchGroup(C4,D4)),
-          Lang::Variable.new('$0',0), Lang::Variable.new('$1',1), Lang::Variable.new('$2',2)
+          Lang::Variable.new(Lang::Variable::ARPEGGIO,'$[C4 D4]',MTK.PitchGroup(C4,D4)),
+          Lang::Variable.new(Lang::Variable::ARPEGGIO_ELEMENT,'$0',0),
+          Lang::Variable.new(Lang::Variable::ARPEGGIO_ELEMENT,'$1',1),
+          Lang::Variable.new(Lang::Variable::ARPEGGIO_ELEMENT,'$2',2)
           )
       end
     end
@@ -374,20 +389,23 @@ describe MTK::Lang::Parser do
     end
 
 
-    context "foreach rule" do
+    context "for_each rule" do
       it "parses a for each pattern with 2 subpatterns" do
-        foreach = parse('(C D)@(E F)', :foreach)
-        foreach.should == Patterns.ForEach(seq(C,D),seq(E,F))
+        for_each = parse('(C D)@(E F)', :for_each)
+        for_each.should == Patterns.ForEach(seq(C,D),seq(E,F))
       end
 
       it "parses a for each pattern with 3 subpatterns" do
-        foreach = parse('(C D)@(E F)@(G A B)', :foreach)
-        foreach.should == Patterns.ForEach(seq(C,D),seq(E,F),seq(G,A,B))
+        for_each = parse('(C D)@(E F)@(G A B)', :for_each)
+        for_each.should == Patterns.ForEach(seq(C,D),seq(E,F),seq(G,A,B))
       end
 
       it "parses a for each pattern with '$' variables" do
-        foreach = parse('(C D)@(E F)@($ $$)', :foreach)
-        foreach.should == Patterns.ForEach(seq(C,D),seq(E,F),seq(var('$'),var('$$')))
+        for_each = parse('(C D)@(E F)@($ $$)', :for_each)
+        for_each.should == Patterns.ForEach(
+          seq(C,D),
+          seq(E,F),
+          seq(var(Lang::Variable::FOR_EACH,'$',1),var(Lang::Variable::FOR_EACH,'$$',2)))
       end
     end
 
@@ -398,15 +416,15 @@ describe MTK::Lang::Parser do
       end
 
       it "parses a chain of for each patterns" do
-        parse('(C D)@(E F):(G A)@(B C)', :chain).should == chain( foreach(seq(C,D),seq(E,F)), foreach(seq(G,A),seq(B,C)) )
+        parse('(C D)@(E F):(G A)@(B C)', :chain).should == chain( for_each(seq(C,D),seq(E,F)), for_each(seq(G,A),seq(B,C)) )
       end
 
       it "parses chains of elements with max_cycles" do
         parse('C*3:mp*4:q*5', :chain).should == chain( seq(C,max_cycles:3), seq(mp,max_cycles:4), seq(q,max_cycles:5))
       end
 
-      it "parses chained arpeggio indexes" do
-        parse("$0:$1", :chain).should == chain(Lang::Variable.new('$0',0), Lang::Variable.new('$1',1))
+      it "parses chained arpeggio element" do
+        parse("$0:$1", :chain).should == chain(arp_elem_var('$0',0), arp_elem_var('$1',1))
       end
     end
 
@@ -458,16 +476,20 @@ describe MTK::Lang::Parser do
         var.arpeggio?.should be_true
       end
 
-      it 'parses an arpeggio_index' do
+      it 'parses an arpeggio_element' do
         var = parse("$1", :variable)
         var.should be_a MTK::Lang::Variable
-        var.arpeggio_index?.should be_true
+        var.arpeggio_element?.should be_true
       end
 
-      it 'parses an implicit foreach_variable' do
-        var = parse("$$", :variable)
-        var.should be_a MTK::Lang::Variable
-        var.implicit?.should be_true
+      it "parses the '$' for_each variable" do
+        parse('$', :variable).should == for_each_var('$')
+      end
+
+      it "parses the '$$', '$$$', etc for_each variables" do
+        parse('$$', :variable).should == for_each_var('$$')
+        parse('$$$', :variable).should == for_each_var('$$$')
+        parse('$$$$', :variable).should == for_each_var('$$$$')
       end
     end
 
@@ -482,34 +504,34 @@ describe MTK::Lang::Parser do
     end
 
 
-    context 'arpeggio_index rule' do
+    context 'arpeggio_element rule' do
       it "parses $N (N is a natural number) patterns as a Variable with scale_step? true" do
-        variable = parse("$1", :arpeggio_index)
+        variable = parse("$1", :arpeggio_element)
         variable.should be_a MTK::Lang::Variable
-        variable.arpeggio_index?.should be_true
+        variable.arpeggio_element?.should be_true
       end
 
       it "parses $1 with value 1" do
-        variable = parse("$1", :arpeggio_index)
-        variable.arpeggio_index?.should be_true
+        variable = parse("$1", :arpeggio_element)
+        variable.arpeggio_element?.should be_true
         variable.value.should == 1
       end
 
       it "parses $1234567890 with value 1234567890" do # unrealistic step number, just checking the parsing
-        variable = parse("$1234567890", :arpeggio_index)
-        variable.arpeggio_index?.should be_true
+        variable = parse("$1234567890", :arpeggio_element)
+        variable.arpeggio_element?.should be_true
         variable.value.should == 1234567890
       end
 
       it "parses $0" do
-        variable = parse("$0", :arpeggio_index)
-        variable.arpeggio_index?.should be_true
+        variable = parse("$0", :arpeggio_element)
+        variable.arpeggio_element?.should be_true
         variable.value.should == 0
       end
 
       it "parses negative indexes" do
-        variable = parse("$-1", :arpeggio_index)
-        variable.arpeggio_index?.should be_true
+        variable = parse("$-1", :arpeggio_element)
+        variable.arpeggio_element?.should be_true
         variable.value.should == -1
       end
     end
@@ -648,19 +670,6 @@ describe MTK::Lang::Parser do
         end
       end
 
-    end
-
-
-    context 'variable rule' do
-      it "parses the '$' variable" do
-        parse('$', :variable).should == var('$')
-      end
-
-      it "parses the '$$', '$$$', etc variables" do
-        parse('$$', :variable).should == var('$$')
-        parse('$$$', :variable).should == var('$$$')
-        parse('$$$$', :variable).should == var('$$$$')
-      end
     end
 
 

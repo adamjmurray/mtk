@@ -80,7 +80,7 @@ module MTK
                     #   * Support a Pitch (or PitchClass) followed by a list of Intervals or integers representing intervals
                     @arpeggio = element.value
                     return self.next
-                  when element.arpeggio_index?
+                  when element.arpeggio_element?
                     pitches << @arpeggio.arpeggiate(element.value)
                     @previous_pitch = pitches.last
                   else
