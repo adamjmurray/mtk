@@ -155,12 +155,14 @@ module MTK
 
       def evaluate_arpeggio(element, pitches)
         case element.name
-          when :index
-            pitches << @arpeggio.arpeggiate(element.value)
+          when :index, :modulo_index
+            wraparound = (element.name == :modulo_index)
+            pitches << @arpeggio.arpeggiate(element.value, wraparound)
             @previous_arpeggio_index = element.value
 
-          when :increment
-            pitches << @arpeggio.arpeggiate(@previous_arpeggio_index + element.value)
+          when :increment, :modulo_increment
+            wraparound = (element.name == :modulo_increment)
+            pitches << @arpeggio.arpeggiate(@previous_arpeggio_index + element.value, wraparound)
             @previous_arpeggio_index += element.value
 
           when :random

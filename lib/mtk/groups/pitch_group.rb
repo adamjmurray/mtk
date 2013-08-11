@@ -52,15 +52,24 @@ module MTK
         map{|elem| elem.invert(inversion_point) }
       end
 
-      # Return one of the {Pitch}es in the pitch group by index.
-      # The index may wrap around, adding an octave for each wrap in the positive direction,
-      # and subtracting an octave for each wrap in the negative direction.
-      def arpeggiate(index)
+      # Return one of the {Pitch}es in the pitch group by index, potentially offset by some number of octaves.
+      # @param wraparound When false, indexes out of range will add/subtract an offset of an octave for each
+      #           time it would have wrapped around the list of elements in the positive/negative direction.
+      #           When true, indexes simply wraparound using modular arithmetic to return one of the pitches in this group.
+      # @example A pitch_group with {#elements} [C4,E4,G4] will evaluate arpeggiate() as follows:
+      #          pitch_group.arpeggiate(6,false) => C6
+      #          pitch_group.arpeggiate(6,true) => C4
+      def arpeggiate(index, wraparound=false)
         length = @elements.length
-        octave_offset = 0
+
         if length == 0
           nil
+
+        elsif wraparound
+          @elements[index % @elements.length]
+
         else
+          octave_offset = 0
           while index >= length
             octave_offset += 12
             index -= length

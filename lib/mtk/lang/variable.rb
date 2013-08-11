@@ -24,13 +24,13 @@ module MTK
 
 
       # @return true if this variable represents the pitches of the arpeggio,
-      # in which case the {#value} is a {Groups:PitchGroup}
+      # in which case the {#value} is a {Groups::PitchGroup}
       def arpeggio?
         @type == ARPEGGIO
       end
 
       # @return true if this variable represents one element of an arpeggio,
-      # in which case the {#value} is the index of the pitch in the arpeggio {Groups:PitchGroup}
+      # in which case the {#value} is the index of the pitch in the arpeggio {Groups::PitchGroup}
       def arpeggio_element?
         @type == ARPEGGIO_ELEMENT
       end

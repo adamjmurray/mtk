@@ -184,16 +184,18 @@ grammar MTK_Grammar
   end
 
   rule arpeggio_index
-    ( '$' int ) {
-      MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, :index, int.value)
+    ( prefix:('$' '%'?) int ) {
+      name = (if prefix.to_s == '$' then :index else :modulo_index end)
+      MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, name, int.value)
     }
   end
 
   rule arpeggio_increment
-    ( '$' ('+'+ | '-'+) ) {
-      size = to_s.length - 1 # subtract 1 for the '$'
-      value = if to_s =~ /\+/ then size else value = -size end
-      MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, :increment, value)
+    ( prefix:('$' '%'?) increment:('+'+ | '-'+) ) {
+      name = (if prefix.to_s == '$' then :increment else :modulo_increment end)
+      inc = increment.to_s
+      value = (if inc =~ /\+/ then inc.size else -inc.size end)
+      MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, name, value)
     }
   end
 

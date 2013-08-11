@@ -20,8 +20,16 @@ describe MTK::Sequencers::EventBuilder do
     MTK::Lang::Variable.new(Variable::ARPEGGIO_ELEMENT, :index, index)
   end
 
+  def arp_elem_mod_index_var(index)
+    MTK::Lang::Variable.new(Variable::ARPEGGIO_ELEMENT, :modulo_index, index)
+  end
+
   def arp_elem_inc_var(increment)
     MTK::Lang::Variable.new(Variable::ARPEGGIO_ELEMENT, :increment, increment)
+  end
+
+  def arp_elem_mod_inc_var(increment)
+    MTK::Lang::Variable.new(Variable::ARPEGGIO_ELEMENT, :modulo_increment, increment)
   end
 
   def arp_elem_all_var
@@ -306,6 +314,21 @@ describe MTK::Sequencers::EventBuilder do
       event_builder.next.should == [Note(C5,q)]
     end
 
+    it "'wraps around' (doesn't apply octave offsets) for arpeggio element variables named :modulo_index" do
+      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+        arpeggio(C4,E4,G4),
+        arp_elem_mod_index_var(0), arp_elem_mod_index_var(3), arp_elem_mod_index_var(4), arp_elem_mod_index_var(8),
+        arp_elem_mod_index_var(-3), arp_elem_mod_index_var(-2), arp_elem_mod_index_var(-4)
+      )])
+      event_builder.next.should == [Note(C4,q)]
+      event_builder.next.should == [Note(C4,q)]
+      event_builder.next.should == [Note(E4,q)]
+      event_builder.next.should == [Note(G4,q)]
+      event_builder.next.should == [Note(C4,q)]
+      event_builder.next.should == [Note(E4,q)]
+      event_builder.next.should == [Note(G4,q)]
+    end
+
     it "interprets arpeggio increment variables against the arpeggio and arpeggio index that occurred most recently" do
       event_builder = EVENT_BUILDER.new([Patterns.Sequence(
         arpeggio(Db5,Eb5),
@@ -327,6 +350,21 @@ describe MTK::Sequencers::EventBuilder do
       event_builder.next.should == [Note(E4,q)]
       event_builder.next.should == [Note(E4,q)]
       event_builder.next.should == [Note(B3,q)]
+    end
+
+    it "'wraps around' (doesn't apply octave offsets) for arpeggio element variables named :modulo_increment" do
+      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+        arpeggio(C4,E4,G4),
+        arp_elem_mod_inc_var(1), arp_elem_mod_inc_var(1), arp_elem_mod_inc_var(1),
+        arp_elem_mod_inc_var(-3), arp_elem_mod_inc_var(-1), arp_elem_mod_inc_var(-2), arp_elem_mod_inc_var(-2)
+      )])
+      event_builder.next.should == [Note(E4,q)]
+      event_builder.next.should == [Note(G4,q)]
+      event_builder.next.should == [Note(C4,q)]
+      event_builder.next.should == [Note(C4,q)]
+      event_builder.next.should == [Note(G4,q)]
+      event_builder.next.should == [Note(C4,q)]
+      event_builder.next.should == [Note(E4,q)]
     end
 
     it "interprets arpeggio all variables against the arpeggio and arpeggio index that occurred most recently" do

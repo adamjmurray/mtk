@@ -300,10 +300,6 @@ describe MTK::Lang::Parser do
         parse("C4 D4 E4", :bare_sequence).should == seq(C4, D4, E4)
       end
 
-      #it "parses pitch sequences with chords" do
-      #  parse("C4 [D4 E4]", :bare_sequence).should == seq( C4, Chord(D4,E4) )
-      #end
-
       it "parses pitch sequences with pitch classes" do
         parse("C4 D E4", :bare_sequence).should == seq( C4, D, E4 )
       end
@@ -343,10 +339,6 @@ describe MTK::Lang::Parser do
       it "parses pitch sequences" do
         parse("(C4 D4 E4)", :sequence).should == seq(C4, D4, E4)
       end
-
-      #it "parses pitch sequences with chords" do
-      #  parse("( C4 [D4 E4])", :sequence).should == seq( C4, Chord(D4,E4) )
-      #end
 
       it "parses pitch sequences with pitch classes" do
         parse("(C4 D E4 )", :sequence).should == seq( C4, D, E4 )
@@ -421,10 +413,6 @@ describe MTK::Lang::Parser do
         parse("C4", :chainable).should == C4
       end
 
-      #it "parses a chord" do
-      #  parse("[C4 D4]", :chainable).should == Chord(C4,D4)
-      #end
-
       it "parses a pitch class" do
         parse("C", :chainable).should == C
       end
@@ -492,7 +480,7 @@ describe MTK::Lang::Parser do
 
 
     context 'arpeggio_element rule' do
-      it "parses $N (N is a natural number) patterns as a Variable with scale_step? true" do
+      it "parses $N patterns as a Variable with arpeggio_element? true" do
         variable = parse("$1", :arpeggio_element)
         variable.should be_a MTK::Lang::Variable
         variable.name.should be :index
@@ -527,6 +515,15 @@ describe MTK::Lang::Parser do
         variable.value.should == -1
       end
 
+      it "parses indexes with a $% prefix as a variable named :modulo_index" do
+        for syntax in ['$%1', '$%123456789', '$%0', '$%-1']
+          variable = parse(syntax, :arpeggio_element)
+          variable.arpeggio_element?.should be_true
+          variable.name.should be :modulo_index
+          variable.value.should == syntax[2..-1].to_i
+        end
+      end
+
       it "parses positive increments" do
         variable = parse("$+", :arpeggio_element)
         variable.arpeggio_element?.should be_true
@@ -555,6 +552,16 @@ describe MTK::Lang::Parser do
         variable.value.should == -3
       end
 
+      it "parses increments with a $% prefix as a variable named :modulo_increment" do
+        for syntax in ['$%+', '$%+++', '$%-', '$%----']
+          variable = parse(syntax, :arpeggio_element)
+          variable.arpeggio_element?.should be_true
+          variable.name.should be :modulo_increment
+          value = syntax.size-2 # don't count '$%'
+          value = -value if syntax =~ /-/
+          variable.value.should == value
+        end
+      end
 
       it "parses random arpeggio elements" do
         variable = parse("$?", :arpeggio_element)
