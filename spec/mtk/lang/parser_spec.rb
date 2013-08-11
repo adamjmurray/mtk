@@ -27,7 +27,7 @@ describe MTK::Lang::Parser do
   end
 
   def for_each_var(name)
-    var(Lang::Variable::FOR_EACH, name, name.length)
+    var(Lang::Variable::FOR_EACH, name, name.length-1)
   end
 
   def arp_elem_index_var(value)
@@ -179,14 +179,6 @@ describe MTK::Lang::Parser do
           }
         ", :timeline).should ==  MTK::Events::Timeline.from_h({0 => chain(C4,mp,q), 1 => chain(D4,f,h)})
       end
-
-      #it "parses a Timeline containing a chord" do
-      #  parse("
-      #    {
-      #      0 => [C4 E4 G4]:fff:w
-      #    }
-      #  ", :timeline).should == Timeline.from_h({0 => chain(Chord(C4,E4,G4),fff,w)})
-      #end
     end
 
 
@@ -395,12 +387,12 @@ describe MTK::Lang::Parser do
         for_each.should == Patterns.ForEach(seq(C,D),seq(E,F),seq(G,A,B))
       end
 
-      it "parses a for each pattern with '$' variables" do
-        for_each = parse('(C D)@(E F)@($ $$)', :for_each)
+      it "parses a for each pattern with '$@' variables" do
+        for_each = parse('(C D)@(E F)@($@ $@@)', :for_each)
         for_each.should == Patterns.ForEach(
           seq(C,D),
           seq(E,F),
-          seq(var(Lang::Variable::FOR_EACH,'$',1),var(Lang::Variable::FOR_EACH,'$$',2)))
+          seq(var(Lang::Variable::FOR_EACH,'$@',1),var(Lang::Variable::FOR_EACH,'$@@',2)))
       end
     end
 
@@ -477,14 +469,14 @@ describe MTK::Lang::Parser do
         var.arpeggio_element?.should be_true
       end
 
-      it "parses the '$' for_each variable" do
-        parse('$', :variable).should == for_each_var('$')
+      it "parses the '$@' for_each variable" do
+        parse('$@', :variable).should == for_each_var('$@')
       end
 
-      it "parses the '$$', '$$$', etc for_each variables" do
-        parse('$$', :variable).should == for_each_var('$$')
-        parse('$$$', :variable).should == for_each_var('$$$')
-        parse('$$$$', :variable).should == for_each_var('$$$$')
+      it "parses the '$@', '$@@', etc for_each variables" do
+        parse('$@', :variable).should == for_each_var('$@')
+        parse('$@@', :variable).should == for_each_var('$@@')
+        parse('$@@@', :variable).should == for_each_var('$@@@')
       end
     end
 

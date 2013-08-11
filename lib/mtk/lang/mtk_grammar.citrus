@@ -178,8 +178,8 @@ grammar MTK_Grammar
   end
 
   rule for_each_variable
-    ( '$'+ ) {
-      MTK::Lang::Variable.new(MTK::Lang::Variable::FOR_EACH, to_s, to_s.length)
+    ( '$' '@'+ ) {
+      MTK::Lang::Variable.new(MTK::Lang::Variable::FOR_EACH, to_s, to_s.length-1) # subtract 1 for the '$'
     }
   end
 
@@ -191,7 +191,7 @@ grammar MTK_Grammar
 
   rule arpeggio_increment
     ( '$' ('+'+ | '-'+) ) {
-      size = to_s.length - 1 # subtract one for the '$'
+      size = to_s.length - 1 # subtract 1 for the '$'
       value = if to_s =~ /\+/ then size else value = -size end
       MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, :increment, value)
     }
