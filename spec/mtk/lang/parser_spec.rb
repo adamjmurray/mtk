@@ -700,11 +700,11 @@ describe MTK::Lang::Parser do
         end
       end
 
-      #it "parses negative intervals" do
-      #  for interval_name in Interval::ALL_NAMES
-      #    parse("-#{interval_name}", :interval).should == -Interval(interval_name)
-      #  end
-      #end
+      it "parses negative intervals" do
+        for interval_name in Interval::ALL_NAMES
+          parse("-#{interval_name}", :interval).should == -Interval(interval_name)
+        end
+      end
     end
 
 

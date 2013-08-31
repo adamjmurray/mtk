@@ -338,6 +338,12 @@ describe MTK::Core::Duration do
     end
   end
 
+  describe '-@' do
+    it "multiplies the duration by -1" do
+      (-one_beat).should == one_beat * -1
+    end
+  end
+
   describe '#coerce' do
     it 'allows a Duration to be added to a Numeric' do
       (2 + one_beat).should == Duration[3]

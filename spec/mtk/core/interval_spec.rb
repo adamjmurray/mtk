@@ -84,6 +84,12 @@ describe MTK::Core::Interval do
         Interval.from_s(name).value.should == Interval::VALUES_BY_NAME[name]
       end
     end
+
+    it "converts any of the interval NAMES into a Interval with a negative value when it starts with '-'" do
+      for name in Interval::ALL_NAMES
+        Interval.from_s("-#{name}").value.should == -Interval::VALUES_BY_NAME[name]
+      end
+    end
   end
 
   describe '.from_name' do
@@ -211,6 +217,12 @@ describe MTK::Core::Interval do
       modified = minor_second / 2
       original.should_not == modified
       original.should == Interval[1]
+    end
+  end
+
+  describe '-@' do
+    it "multiplies the interval by -1" do
+      (-minor_second).should == minor_second * -1
     end
   end
 

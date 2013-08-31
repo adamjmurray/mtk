@@ -67,8 +67,14 @@ module MTK
 
       # Lookup an interval duration by name.
       def self.from_s(s)
+        s = s.to_s
+        if s[0]=='-'
+          negative = true
+          s = s[1..-1]
+        end
         value = VALUES_BY_NAME[s.to_s]
         raise ArgumentError.new("Invalid Interval string '#{s}'") unless value
+        value = -value if negative
         self[value]
       end
 

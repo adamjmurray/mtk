@@ -167,7 +167,7 @@ grammar MTK_Grammar
   end
 
   rule interval
-    ( 'P' [1458] | [Mm] [2367] | 'a' [1-7] | 'd' [2-8] | 'TT' ) {
+    ('-'? ( 'P' [1458] | [Mm] [2367] | 'a' [1-7] | 'd' [2-8] | 'TT' )) {
       MTK::Core::Interval.from_s(to_s)
     }
   end
