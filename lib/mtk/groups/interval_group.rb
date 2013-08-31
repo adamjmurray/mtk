@@ -51,9 +51,9 @@ module MTK
       def to_pitch_class_group(context={})
         base = context.fetch(:base, @base)
         case base
-          when PitchClass
+          when MTK::Core::PitchClass
             base_pitch_class = base
-          when Pitch
+          when MTK::Core::Pitch
             base_pitch_class = base.pitch_class
           when Numeric
             scale = context[:scale]
@@ -70,7 +70,7 @@ module MTK
       def to_pitch_group(context={})
         base = context.fetch(:base, @base)
         case base
-          when Pitch
+          when MTK::Core::Pitch
             base_pitch = base
           when Numeric
             scale = context[:scale]
