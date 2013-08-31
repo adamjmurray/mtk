@@ -484,6 +484,21 @@ describe MTK::Sequencers::EventBuilder do
       end
     end
 
+
+    context "interval group behaviors" do
+      it "interprets chords against a C scale by default" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          MTK::Groups::IntervalGroup.new(MTK::Groups::IntervalGroup::MINOR_TRIAD, 0),
+          MTK::Groups::IntervalGroup.new(MTK::Groups::IntervalGroup::MINOR_TRIAD, 3),
+          MTK::Groups::IntervalGroup.new(MTK::Groups::IntervalGroup::MAJOR_TRIAD, 4)
+        )])
+
+        event_builder.next.should == [Note(C4,q),Note(Eb4,q),Note(G4,q)]
+        event_builder.next.should == [Note(F4,q),Note(Ab4,q),Note(C5,q)]
+        event_builder.next.should == [Note(G4,q),Note(B4,q),Note(D5,q)]
+      end
+    end
+
   end
 
 

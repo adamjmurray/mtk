@@ -53,6 +53,7 @@ require 'mtk/groups/pitch_class_group'
 require 'mtk/groups/pitch_class_set'
 require 'mtk/groups/pitch_group'
 require 'mtk/groups/chord'
+require 'mtk/groups/interval_group'
 
 require 'mtk/events/event'
 require 'mtk/events/note'

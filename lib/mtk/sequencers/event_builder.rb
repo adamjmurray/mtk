@@ -63,6 +63,13 @@ module MTK
               when MTK::Core::Intensity
                 intensities << element
 
+              when MTK::Groups::IntervalGroup
+                # TODO? Should this actually be converting to a Chord instead of a PitchGroup?
+                # How will this work with chord inversions when that functionality is added later?
+                chord = element.to_pitch_group(scale: @scale, nearest_pitch: @previous_pitch).pitches.uniq
+                pitches += chord
+                @previous_pitch = chord.first # use the chord root to control nearest pitch behavior for the next evaluation
+
               when MTK::Core::Interval
                 if @previous_pitches
                   pitches += @previous_pitches.map{|pitch| pitch + element }

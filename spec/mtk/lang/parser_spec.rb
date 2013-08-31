@@ -632,6 +632,27 @@ describe MTK::Lang::Parser do
     end
 
 
+    context 'interval_group rule' do
+      it "parses minor triads" do
+        %w( i ii iii iv v vi vii viii ix ).each_with_index do |syntax,index|
+          interval_group = parse(syntax, :interval_group)
+          interval_group.should be_a MTK::Groups::IntervalGroup
+          interval_group.intervals.should == MTK::Groups::IntervalGroup::MINOR_TRIAD
+          interval_group.base.should == index
+        end
+      end
+
+      it "parses major triads" do
+        %w( I II III IV V VI VII VIII IX ).each_with_index do |syntax,index|
+          interval_group = parse(syntax, :interval_group)
+          interval_group.should be_a MTK::Groups::IntervalGroup
+          interval_group.intervals.should == MTK::Groups::IntervalGroup::MAJOR_TRIAD
+          interval_group.base.should == index
+        end
+      end
+    end
+
+
     context 'pitch rule' do
       it "parses pitches" do
         for pitch_class_name in PitchClass::VALID_NAMES
