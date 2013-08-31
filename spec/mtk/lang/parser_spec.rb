@@ -448,6 +448,78 @@ describe MTK::Lang::Parser do
     end
 
 
+    context 'scale_element rule' do
+      it "parses $N patterns as a Variable with scale_element? true" do
+        variable = parse("$1", :scale_element)
+        variable.should be_a MTK::Lang::Variable
+        variable.name.should be :index
+        variable.scale_element?.should be_true
+      end
+
+      it "parses $1 with value 1" do
+        variable = parse("$1", :scale_element)
+        variable.scale_element?.should be_true
+        variable.name.should be :index
+        variable.value.should == 1
+      end
+
+      it "parses $1234567890 with value 1234567890" do # unrealistic step number, just checking the parsing
+        variable = parse("$1234567890", :scale_element)
+        variable.scale_element?.should be_true
+        variable.name.should be :index
+        variable.value.should == 1234567890
+      end
+
+      it "parses $0" do
+        variable = parse("$0", :scale_element)
+        variable.scale_element?.should be_true
+        variable.name.should be :index
+        variable.value.should == 0
+      end
+
+      it "parses negative indexes" do
+        variable = parse("$-1", :scale_element)
+        variable.scale_element?.should be_true
+        variable.name.should be :index
+        variable.value.should == -1
+      end
+
+      it "parses positive increments" do
+        variable = parse("$+", :scale_element)
+        variable.scale_element?.should be_true
+        variable.name.should be :increment
+        variable.value.should == 1
+      end
+
+      it "parses multi-positive increments" do
+        variable = parse("$+++", :scale_element)
+        variable.scale_element?.should be_true
+        variable.name.should be :increment
+        variable.value.should == 3
+      end
+
+      it "parses decrement increments" do
+        variable = parse("$-", :scale_element)
+        variable.scale_element?.should be_true
+        variable.name.should be :increment
+        variable.value.should == -1
+      end
+
+      it "parses multi-negative increments" do
+        variable = parse("$---", :scale_element)
+        variable.scale_element?.should be_true
+        variable.name.should be :increment
+        variable.value.should == -3
+      end
+
+      it "parses random scale elements" do
+        variable = parse("$?", :scale_element)
+        variable.scale_element?.should be_true
+        variable.name.should be :random
+      end
+    end
+
+    
     context 'arpeggio rule' do
       it "parses an arpeggio variable" do
         arpeggio = parse("@[C4 D4 E4 F4 G4 A4 B4]", :arpeggio)
@@ -463,7 +535,7 @@ describe MTK::Lang::Parser do
 
 
     context 'arpeggio_element rule' do
-      it "parses $N patterns as a Variable with arpeggio_element? true" do
+      it "parses @N patterns as a Variable with arpeggio_element? true" do
         variable = parse("@1", :arpeggio_element)
         variable.should be_a MTK::Lang::Variable
         variable.name.should be :index
@@ -627,6 +699,12 @@ describe MTK::Lang::Parser do
           parse(interval_name, :interval).should == Interval(interval_name)
         end
       end
+
+      #it "parses negative intervals" do
+      #  for interval_name in Interval::ALL_NAMES
+      #    parse("-#{interval_name}", :interval).should == -Interval(interval_name)
+      #  end
+      #end
     end
 
 

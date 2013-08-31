@@ -115,7 +115,7 @@ grammar MTK_Grammar
   end
 
   rule variable
-    ( scale | arpeggio | arpeggio_element | for_each_variable )
+    ( scale | scale_element | arpeggio | arpeggio_element | for_each_variable )
   end
 
   rule scale
@@ -125,6 +125,10 @@ grammar MTK_Grammar
     {
       MTK::Lang::Variable.new(MTK::Lang::Variable::SCALE, to_s, MTK.PitchClassGroup(values_of :pitch_class))
     }
+  end
+
+  rule scale_element
+    ( scale_index | scale_increment | scale_random )
   end
 
   rule arpeggio
@@ -183,6 +187,26 @@ grammar MTK_Grammar
   rule for_each_variable
     ( '<' '='+ ) {
       MTK::Lang::Variable.new(MTK::Lang::Variable::FOR_EACH, to_s, to_s.length-1) # subtract 1 for the '<'
+    }
+  end
+    
+  rule scale_index
+    ( '$' int ) {
+      MTK::Lang::Variable.new(MTK::Lang::Variable::SCALE_ELEMENT, :index, int.value)
+    }
+  end
+
+  rule scale_increment
+    ( '$' increment:('+'+ | '-'+) ) {
+      inc = increment.to_s
+      value = (if inc =~ /\+/ then inc.size else -inc.size end)
+      MTK::Lang::Variable.new(MTK::Lang::Variable::SCALE_ELEMENT, :increment, value)
+    }
+  end
+
+  rule scale_random
+    ( '$?' ) {
+      MTK::Lang::Variable.new(MTK::Lang::Variable::SCALE_ELEMENT, :random)
     }
   end
 
