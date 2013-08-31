@@ -60,15 +60,6 @@ describe MTK::Lang::Parser do
         sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(e,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
       end
 
-      it "parses a timeline" do
-        parse("
-          {
-            0 => C4:mp:q
-            1 => D4:f:h
-          }
-        ").should ==  MTK::Events::Timeline.from_h({0 => chain(C4,mp,q), 1 => chain(D4,f,h)})
-      end
-
       it "parses a chain of sequences" do
         sequencer = parse("(C D E F G):(mp mf ff):(q h w)")
         sequencer.should be_a Sequencers::Sequencer
@@ -154,37 +145,6 @@ describe MTK::Lang::Parser do
         sequencer = parse('{ C:q:mp D4:ff A e:p Eb:pp Bb7 F2:h. F#4:mf:s q ppp   }', :sequencer)
         sequencer.should be_a Sequencers::Sequencer
         sequencer.patterns.should == [seq( chain(C,q,mp), chain(D4,ff), A, chain(e,p), chain(Eb,pp), Bb7, chain(F2,h+q), chain(Gb4,mf,s), q, ppp )]
-      end
-    end
-
-
-    context "timeline rule" do
-      it "parses a very simple Timeline" do
-        parse("{0 => C}", :timeline).should ==  MTK::Events::Timeline.from_h({0 => seq(C)})
-      end
-
-      it "parses a Timeline with one entry" do
-        parse("
-          {
-            0 => C4:mp:q
-          }
-        ", :timeline).should ==  MTK::Events::Timeline.from_h({0 => chain(C4,mp,q)})
-      end
-
-      it "parses a Timeline with multiple entries" do
-        parse("
-          {
-            0 => C4:mp:q
-            1 => D4:f:h
-          }
-        ", :timeline).should ==  MTK::Events::Timeline.from_h({0 => chain(C4,mp,q), 1 => chain(D4,f,h)})
-      end
-    end
-
-
-    context 'timepoint rule' do
-      it 'should evaluate a number followed by "=>" as the numerical value' do
-        parse('42 => ', :timepoint).should == 42
       end
     end
 
