@@ -115,7 +115,16 @@ grammar MTK_Grammar
   end
 
   rule variable
-    ( arpeggio | arpeggio_element | for_each_variable )
+    ( scale | arpeggio | arpeggio_element | for_each_variable )
+  end
+
+  rule scale
+    (
+      '$' left_bracket pitch_class (space pitch_class)* right_bracket
+    )
+    {
+      MTK::Lang::Variable.new(MTK::Lang::Variable::SCALE, to_s, MTK.PitchClassGroup(values_of :pitch_class))
+    }
   end
 
   rule arpeggio

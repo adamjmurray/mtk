@@ -43,6 +43,25 @@ describe MTK::Lang::Variable do
     end
   end
 
+  describe '#scale?' do
+    it 'is true when a Variable has the type Variable::SCALE' do
+      var(VARIABLE::SCALE, :name).scale?.should be_true
+    end
+
+    it 'is false otherwise' do
+      var(:type, :name).scale?.should be_false
+    end
+  end
+
+  describe '#scale_element?' do
+    it 'is true when the Variable has the type Variable::SCALE_ELEMENT' do
+      var(VARIABLE::SCALE_ELEMENT, :name).scale_element?.should be_true
+    end
+
+    it 'is false otherwise' do
+      var(:type, :name).scale_element?.should be_false
+    end
+  end
 
   describe '#arpeggio?' do
     it 'is true when a Variable has the type Variable::ARPEGGIO' do

@@ -434,12 +434,30 @@ describe MTK::Lang::Parser do
     end
 
 
+    context 'scale rule' do
+      it "parses a scale variable" do
+        scale = parse("$[C D E F G A B]", :scale)
+        scale.should be_a MTK::Lang::Variable
+        scale.scale?.should be_true
+        scale.value.should == MTK.PitchClassGroup(C, D, E, F, G, A, B)
+      end
+
+      it "does not parse a scale of pitches (must be pitch classes" do
+        ->{ parse("$[C4 D4 E4]", :scale) }.should raise_error
+      end
+    end
+
+
     context 'arpeggio rule' do
-      it "parses an arpeggio" do
+      it "parses an arpeggio variable" do
         arpeggio = parse("@[C4 D4 E4 F4 G4 A4 B4]", :arpeggio)
         arpeggio.should be_a MTK::Lang::Variable
         arpeggio.arpeggio?.should be_true
         arpeggio.value.should == MTK.PitchGroup(C4, D4, E4, F4, G4, A4, B4)
+      end
+
+      it "does not parse an arpeggio of pitch classes (must be pitches" do
+        ->{ parse("@[C D E]", :arpeggio) }.should raise_error
       end
     end
 

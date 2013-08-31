@@ -6,6 +6,8 @@ module MTK
     #
     class Variable
 
+      SCALE = :scale
+      SCALE_ELEMENT = :scale_element
       ARPEGGIO = :arpeggio
       ARPEGGIO_ELEMENT = :arpeggio_element
       FOR_EACH = :for_each
@@ -24,13 +26,25 @@ module MTK
 
 
       # @return true if this variable represents the pitches of the arpeggio,
+      # in which case the {#value} is a {Groups::PitchClassGroup}
+      def scale?
+        @type == SCALE
+      end
+
+      # @return true if this variable represents one element of a scale,
+      # in which case the {#value} controls selection of a pitch class (or pitch classes) in the nearest scale's {Groups::PitchClassGroup}
+      def scale_element?
+        @type == SCALE_ELEMENT
+      end
+
+      # @return true if this variable represents the pitches of the arpeggio,
       # in which case the {#value} is a {Groups::PitchGroup}
       def arpeggio?
         @type == ARPEGGIO
       end
 
       # @return true if this variable represents one element of an arpeggio,
-      # in which case the {#value} is the index of the pitch in the arpeggio {Groups::PitchGroup}
+      # in which case the {#value} controls selection of a pitch (or pitches) in the nearest arpeggio's {Groups::PitchGroup}
       def arpeggio_element?
         @type == ARPEGGIO_ELEMENT
       end
