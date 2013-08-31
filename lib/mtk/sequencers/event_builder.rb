@@ -73,13 +73,11 @@ module MTK
 
               when MTK::Lang::Variable
                 case
-                  when element.arpeggio?
-                    # TODO: support things besides PitchGroups and interpret them here
-                    # Ideas
-                    #   * a PitchClassGroup can be converted to PitchGroup where the first PitchClass is the nearest to @previous_pitch
-                    #   * Support a Pitch (or PitchClass) followed by a list of Intervals or integers representing intervals
-                    @arpeggio = element.value
-                    return self.next
+                  when element.scale? then @scale = element.value; return self.next
+
+                  when element.scale_element? then evaluate_scale(element, pitches)
+
+                  when element.arpeggio? then @arpeggio = element.value; return self.next
 
                   when element.arpeggio_element? then evaluate_arpeggio(element, pitches)
 
@@ -129,21 +127,25 @@ module MTK
         @previous_pitches   = [@default_pitch]
         @previous_intensity = @default_intensity
         @previous_duration  = @default_duration
-        @arpeggio = MTK.PitchGroup( # Defult arpeggio is chromatic scale starting from middle C
+
+        @scale = MTK.PitchClassGroup( # default scale is C major
+            MTK::Lang::PitchClasses::C,
+            MTK::Lang::PitchClasses::D,
+            MTK::Lang::PitchClasses::E,
+            MTK::Lang::PitchClasses::F,
+            MTK::Lang::PitchClasses::G,
+            MTK::Lang::PitchClasses::A,
+            MTK::Lang::PitchClasses::B,
+        )
+        @previous_scale_index = 0
+
+        @arpeggio = MTK.PitchGroup( # Default arpeggio is C major triad starting from middle C
           MTK::Lang::Pitches::C4,
-          MTK::Lang::Pitches::Db4,
-          MTK::Lang::Pitches::D4,
-          MTK::Lang::Pitches::Eb4,
           MTK::Lang::Pitches::E4,
-          MTK::Lang::Pitches::F4,
-          MTK::Lang::Pitches::Gb4,
           MTK::Lang::Pitches::G4,
-          MTK::Lang::Pitches::A4,
-          MTK::Lang::Pitches::Ab4,
-          MTK::Lang::Pitches::Bb4,
-          MTK::Lang::Pitches::B4,
         )
         @previous_arpeggio_index = 0
+
         @max_pitch = nil
         @min_pitch = nil
         @patterns.each{|pattern| pattern.rewind if pattern.is_a? MTK::Patterns::Pattern }
@@ -152,6 +154,32 @@ module MTK
 
       ################################################
       private
+
+      def evaluate_scale(element, pitches)
+        return nil if @scale.empty?
+
+        case element.name
+          when :index
+            pitch_class = @scale[element.value % @scale.size]
+            @previous_scale_index = element.value
+
+          when :increment
+            pitch_class = @scale[(@previous_scale_index + element.value) % @scale.size]
+            @previous_scale_index += element.value
+
+          when :random
+            pitch_class = @scale.random
+
+          else
+            STDERR.puts "#{self.class}#next: Encountered unsupported scale element #{element}"
+        end
+
+        if pitch_class
+          pitches << @previous_pitch.nearest(pitch_class)
+          @previous_pitch = pitches.last
+        end
+
+      end
 
       def evaluate_arpeggio(element, pitches)
         case element.name

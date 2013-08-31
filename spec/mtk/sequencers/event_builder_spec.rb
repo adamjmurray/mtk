@@ -12,6 +12,22 @@ describe MTK::Sequencers::EventBuilder do
     pitches.map{|pitch| Note(pitch, intensity, duration) }
   end
 
+  def scale(*elements)
+    MTK::Lang::Variable.new(Variable::SCALE, '', MTK.PitchClassGroup(*elements))
+  end
+
+  def scale_elem_index_var(index)
+    MTK::Lang::Variable.new(Variable::SCALE_ELEMENT, :index, index)
+  end
+
+  def scale_elem_inc_var(increment)
+    MTK::Lang::Variable.new(Variable::SCALE_ELEMENT, :increment, increment)
+  end
+
+  def scale_elem_rand_var
+    MTK::Lang::Variable.new(Variable::SCALE_ELEMENT, :random)
+  end
+
   def arpeggio(*elements)
     MTK::Lang::Variable.new(Variable::ARPEGGIO, '', MTK.PitchGroup(*elements))
   end
@@ -292,108 +308,184 @@ describe MTK::Sequencers::EventBuilder do
       event_builder.next.should == [Rest(q)]
     end
 
-    it "interprets arpeggio index variables within the C chromatic arpeggio by default" do
-      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-        arp_elem_index_var(0), arp_elem_index_var(2), arp_elem_index_var(7), arp_elem_index_var(11))]
-      )
-      event_builder.next.should == [Note(C4,q)]
-      event_builder.next.should == [Note(D4,q)]
-      event_builder.next.should == [Note(G4,q)]
-      event_builder.next.should == [Note(B4,q)]
+
+    context "scale behaviors" do
+      it "interprets scale index variables within the C major scale by default" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          scale_elem_index_var(0), scale_elem_index_var(1), scale_elem_index_var(2), scale_elem_index_var(3),
+          scale_elem_index_var(4), scale_elem_index_var(5), scale_elem_index_var(6), scale_elem_index_var(7)
+        )])
+        event_builder.next.should == [Note(C4,q)]
+        event_builder.next.should == [Note(D4,q)]
+        event_builder.next.should == [Note(E4,q)]
+        event_builder.next.should == [Note(F4,q)]
+        event_builder.next.should == [Note(G4,q)]
+        event_builder.next.should == [Note(A4,q)]
+        event_builder.next.should == [Note(B4,q)]
+        event_builder.next.should == [Note(C5,q)]
+      end
+
+      it "interprets scale index variables against the scale that occurred most recently" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          scale(C,D,E),
+          scale(Db,Eb),
+          scale_elem_index_var(0), scale_elem_index_var(1), scale_elem_index_var(2)
+        )])
+        event_builder.next.should == [Note(Db4,q)]
+        event_builder.next.should == [Note(Eb4,q)]
+        event_builder.next.should == [Note(Db4,q)]
+      end
+
+      it "interprets scale increment variables against the scale and scale index that occurred most recently" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          scale(C,D,E),
+          scale(Db,Eb,Gb,Ab,Bb),
+          scale_elem_index_var(0), scale_elem_inc_var(1), scale_elem_inc_var(0), scale_elem_inc_var(-3)
+        )])
+        event_builder.next.should == [Note(Db4,q)]
+        event_builder.next.should == [Note(Eb4,q)]
+        event_builder.next.should == [Note(Eb4,q)]
+        event_builder.next.should == [Note(Ab4,q)]
+      end
+
+      it "has a default scale index of 0" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          scale(C,D,E),
+          scale(Db,Eb,E,F),
+          scale_elem_inc_var(2), scale_elem_inc_var(0), scale_elem_inc_var(-3)
+        )])
+        event_builder.next.should == [Note(E4,q)]
+        event_builder.next.should == [Note(E4,q)]
+        event_builder.next.should == [Note(F4,q)]
+      end
+
+      it "interprets scale random variables against the scale and scale index that occurred most recently" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+            scale(Db,Eb),
+            scale(Lang::PitchClasses::PITCH_CLASSES),
+            scale_elem_rand_var, scale_elem_rand_var, scale_elem_rand_var, scale_elem_rand_var, scale_elem_rand_var, scale_elem_rand_var
+        )])
+        first_event = event_builder.next
+        first_event.length.should == 1
+
+        first = first_event[0].pitch
+        second = event_builder.next[0].pitch
+        third = event_builder.next[0].pitch
+        fourth = event_builder.next[0].pitch
+        fifth = event_builder.next[0].pitch
+        sixth = event_builder.next[0].pitch
+        (first==second && first==second && first==third && first==fourth && first==fifth && first==sixth ).should be_false
+        # slight chance this will fail, just run again
+      end
+    end
+    
+
+    context "arpeggio behaviors" do
+      it "interprets arpeggio index variables within the middle C major triad arpeggio by default" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          arp_elem_index_var(0), arp_elem_index_var(1), arp_elem_index_var(2), arp_elem_index_var(3))]
+        )
+        event_builder.next.should == [Note(C4,q)]
+        event_builder.next.should == [Note(E4,q)]
+        event_builder.next.should == [Note(G4,q)]
+        event_builder.next.should == [Note(C5,q)]
+      end
+
+      it "interprets arpeggio index variables against the arpeggio that occurred most recently" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          arpeggio(Db5,Eb5),
+          arpeggio(C4,D4,E4,F4,G4,A4,B4),
+          arp_elem_index_var(0), arp_elem_index_var(1), arp_elem_index_var(4), arp_elem_index_var(7)
+        )])
+        event_builder.next.should == [Note(C4,q)]
+        event_builder.next.should == [Note(D4,q)]
+        event_builder.next.should == [Note(G4,q)]
+        event_builder.next.should == [Note(C5,q)]
+      end
+
+      it "'wraps around' (doesn't apply octave offsets) for arpeggio element variables named :modulo_index" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          arpeggio(C4,E4,G4),
+          arp_elem_mod_index_var(0), arp_elem_mod_index_var(3), arp_elem_mod_index_var(4), arp_elem_mod_index_var(8),
+          arp_elem_mod_index_var(-3), arp_elem_mod_index_var(-2), arp_elem_mod_index_var(-4)
+        )])
+        event_builder.next.should == [Note(C4,q)]
+        event_builder.next.should == [Note(C4,q)]
+        event_builder.next.should == [Note(E4,q)]
+        event_builder.next.should == [Note(G4,q)]
+        event_builder.next.should == [Note(C4,q)]
+        event_builder.next.should == [Note(E4,q)]
+        event_builder.next.should == [Note(G4,q)]
+      end
+
+      it "interprets arpeggio increment variables against the arpeggio and arpeggio index that occurred most recently" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          arpeggio(Db5,Eb5),
+          arpeggio(C4,D4,E4,F4,G4,A4,B4),
+          arp_elem_index_var(0), arp_elem_inc_var(2), arp_elem_inc_var(0), arp_elem_inc_var(-3)
+        )])
+        event_builder.next.should == [Note(C4,q)]
+        event_builder.next.should == [Note(E4,q)]
+        event_builder.next.should == [Note(E4,q)]
+        event_builder.next.should == [Note(B3,q)]
+      end
+
+      it "has a default arpeggio index of 0" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          arpeggio(Db5,Eb5),
+          arpeggio(C4,D4,E4,F4,G4,A4,B4),
+          arp_elem_inc_var(2), arp_elem_inc_var(0), arp_elem_inc_var(-3)
+        )])
+        event_builder.next.should == [Note(E4,q)]
+        event_builder.next.should == [Note(E4,q)]
+        event_builder.next.should == [Note(B3,q)]
+      end
+
+      it "'wraps around' (doesn't apply octave offsets) for arpeggio element variables named :modulo_increment" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          arpeggio(C4,E4,G4),
+          arp_elem_mod_inc_var(1), arp_elem_mod_inc_var(1), arp_elem_mod_inc_var(1),
+          arp_elem_mod_inc_var(-3), arp_elem_mod_inc_var(-1), arp_elem_mod_inc_var(-2), arp_elem_mod_inc_var(-2)
+        )])
+        event_builder.next.should == [Note(E4,q)]
+        event_builder.next.should == [Note(G4,q)]
+        event_builder.next.should == [Note(C4,q)]
+        event_builder.next.should == [Note(C4,q)]
+        event_builder.next.should == [Note(G4,q)]
+        event_builder.next.should == [Note(C4,q)]
+        event_builder.next.should == [Note(E4,q)]
+      end
+
+      it "interprets arpeggio all variables against the arpeggio and arpeggio index that occurred most recently" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          arpeggio(C4,D4,E4,F4,G4,A4,B4),
+          arpeggio(Db5,Eb5),
+          arp_elem_all_var, arp_elem_all_var
+        )])
+        event_builder.next.should == [Note(Db5,q),Note(Eb5,q)]
+        event_builder.next.should == [Note(Db5,q),Note(Eb5,q)]
+      end
+
+      it "interprets arpeggio random variables against the arpeggio and arpeggio index that occurred most recently" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          arpeggio(Db5,Eb5),
+          arpeggio(Lang::Pitches::PITCHES),
+          arp_elem_rand_var, arp_elem_rand_var, arp_elem_rand_var, arp_elem_rand_var
+        )])
+        first_event = event_builder.next
+        first_event.length.should == 1
+
+        first = first_event[0].pitch
+        second = event_builder.next[0].pitch
+        third = event_builder.next[0].pitch
+        fourth = event_builder.next[0].pitch
+        (first==second && first==second && first==third && first==fourth ).should be_false
+        # slight chance this will fail, just run again
+      end
     end
 
-    it "interprets arpeggio index variables against the arpeggio that occurred most recently" do
-      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-        arpeggio(Db5,Eb5),
-        arpeggio(C4,D4,E4,F4,G4,A4,B4),
-        arp_elem_index_var(0), arp_elem_index_var(1), arp_elem_index_var(4), arp_elem_index_var(7)
-      )])
-      event_builder.next.should == [Note(C4,q)]
-      event_builder.next.should == [Note(D4,q)]
-      event_builder.next.should == [Note(G4,q)]
-      event_builder.next.should == [Note(C5,q)]
-    end
-
-    it "'wraps around' (doesn't apply octave offsets) for arpeggio element variables named :modulo_index" do
-      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-        arpeggio(C4,E4,G4),
-        arp_elem_mod_index_var(0), arp_elem_mod_index_var(3), arp_elem_mod_index_var(4), arp_elem_mod_index_var(8),
-        arp_elem_mod_index_var(-3), arp_elem_mod_index_var(-2), arp_elem_mod_index_var(-4)
-      )])
-      event_builder.next.should == [Note(C4,q)]
-      event_builder.next.should == [Note(C4,q)]
-      event_builder.next.should == [Note(E4,q)]
-      event_builder.next.should == [Note(G4,q)]
-      event_builder.next.should == [Note(C4,q)]
-      event_builder.next.should == [Note(E4,q)]
-      event_builder.next.should == [Note(G4,q)]
-    end
-
-    it "interprets arpeggio increment variables against the arpeggio and arpeggio index that occurred most recently" do
-      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-        arpeggio(Db5,Eb5),
-        arpeggio(C4,D4,E4,F4,G4,A4,B4),
-        arp_elem_index_var(0), arp_elem_inc_var(2), arp_elem_inc_var(0), arp_elem_inc_var(-3)
-      )])
-      event_builder.next.should == [Note(C4,q)]
-      event_builder.next.should == [Note(E4,q)]
-      event_builder.next.should == [Note(E4,q)]
-      event_builder.next.should == [Note(B3,q)]
-    end
-
-    it "has a default arpeggio index of 0" do
-      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-        arpeggio(Db5,Eb5),
-        arpeggio(C4,D4,E4,F4,G4,A4,B4),
-        arp_elem_inc_var(2), arp_elem_inc_var(0), arp_elem_inc_var(-3)
-      )])
-      event_builder.next.should == [Note(E4,q)]
-      event_builder.next.should == [Note(E4,q)]
-      event_builder.next.should == [Note(B3,q)]
-    end
-
-    it "'wraps around' (doesn't apply octave offsets) for arpeggio element variables named :modulo_increment" do
-      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-        arpeggio(C4,E4,G4),
-        arp_elem_mod_inc_var(1), arp_elem_mod_inc_var(1), arp_elem_mod_inc_var(1),
-        arp_elem_mod_inc_var(-3), arp_elem_mod_inc_var(-1), arp_elem_mod_inc_var(-2), arp_elem_mod_inc_var(-2)
-      )])
-      event_builder.next.should == [Note(E4,q)]
-      event_builder.next.should == [Note(G4,q)]
-      event_builder.next.should == [Note(C4,q)]
-      event_builder.next.should == [Note(C4,q)]
-      event_builder.next.should == [Note(G4,q)]
-      event_builder.next.should == [Note(C4,q)]
-      event_builder.next.should == [Note(E4,q)]
-    end
-
-    it "interprets arpeggio all variables against the arpeggio and arpeggio index that occurred most recently" do
-      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-        arpeggio(C4,D4,E4,F4,G4,A4,B4),
-        arpeggio(Db5,Eb5),
-        arp_elem_all_var, arp_elem_all_var
-      )])
-      event_builder.next.should == [Note(Db5,q),Note(Eb5,q)]
-      event_builder.next.should == [Note(Db5,q),Note(Eb5,q)]
-    end
-
-    it "interprets arpeggio random variables against the arpeggio and arpeggio index that occurred most recently" do
-      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-        arpeggio(Db5,Eb5),
-        arpeggio(Lang::Pitches::PITCHES),
-        arp_elem_rand_var, arp_elem_rand_var, arp_elem_rand_var, arp_elem_rand_var
-      )])
-      first_event = event_builder.next
-      first_event.length.should == 1
-
-      first = first_event[0].pitch
-      second = event_builder.next[0].pitch
-      third = event_builder.next[0].pitch
-      fourth = event_builder.next[0].pitch
-      (first==second && first==second && first==third && first==fourth ).should be_false
-      # slight chance this will fail, just run again
-    end
   end
+
 
   describe "#rewind" do
     it "resets the state of the Chain" do
