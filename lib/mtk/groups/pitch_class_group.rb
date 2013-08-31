@@ -4,8 +4,6 @@ module MTK
 
     # An ordered collection of {Core::PitchClass}es.
     #
-    # Unlike a mathematical Set, a PitchClassSet is ordered and may contain duplicates.
-    #
     # @see MTK::Groups::PitchGroup
     #
     class PitchClassGroup < Group
