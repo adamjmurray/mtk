@@ -51,7 +51,6 @@ require 'mtk/lang/parser'
 require 'mtk/groups/group'
 require 'mtk/groups/pitch_class_group'
 require 'mtk/groups/pitch_class_set'
-require 'mtk/groups/scale'
 require 'mtk/groups/pitch_group'
 require 'mtk/groups/chord'
 
