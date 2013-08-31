@@ -120,7 +120,7 @@ grammar MTK_Grammar
 
   rule arpeggio
     (
-      '$' left_bracket pitch (space pitch)* right_bracket
+      '@' left_bracket pitch (space pitch)* right_bracket
     )
     {
       MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO, to_s, MTK.PitchGroup(values_of :pitch))
@@ -178,15 +178,15 @@ grammar MTK_Grammar
   end
 
   rule arpeggio_index
-    ( prefix:('$' '%'?) int ) {
-      name = (if prefix.to_s == '$' then :index else :modulo_index end)
+    ( prefix:('@' '%'?) int ) {
+      name = (if prefix.to_s == '@' then :index else :modulo_index end)
       MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, name, int.value)
     }
   end
 
   rule arpeggio_increment
-    ( prefix:('$' '%'?) increment:('+'+ | '-'+) ) {
-      name = (if prefix.to_s == '$' then :increment else :modulo_increment end)
+    ( prefix:('@' '%'?) increment:('+'+ | '-'+) ) {
+      name = (if prefix.to_s == '@' then :increment else :modulo_increment end)
       inc = increment.to_s
       value = (if inc =~ /\+/ then inc.size else -inc.size end)
       MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, name, value)
@@ -194,13 +194,13 @@ grammar MTK_Grammar
   end
 
   rule arpeggio_random
-    ( '$?' ) {
+    ( '@?' ) {
       MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, :random)
     }
   end
 
   rule arpeggio_all
-    ( '$!' ) {
+    ( '@!' ) {
       MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, :all)
     }
   end

@@ -282,18 +282,18 @@ describe MTK::Lang::Parser do
       end
 
       it "parses an arpeggio and a pitch" do
-        parse("$[C4 D4] C4", :bare_sequence).should == seq(
-          Lang::Variable.new(Lang::Variable::ARPEGGIO, '$[C4 D4]', MTK.PitchGroup(C4,D4)), C4
+        parse("@[C4 D4] C4", :bare_sequence).should == seq(
+          Lang::Variable.new(Lang::Variable::ARPEGGIO, '@[C4 D4]', MTK.PitchGroup(C4,D4)), C4
         )
       end
 
       it "parses arpeggio elements" do
-        parse("$0 $1", :bare_sequence).should == seq(arp_elem_index_var(0), arp_elem_index_var(1))
+        parse("@0 @1", :bare_sequence).should == seq(arp_elem_index_var(0), arp_elem_index_var(1))
       end
 
       it "parses an arpeggio and arpeggio indexes" do
-        parse("$[C4 D4] $0 $1 $2", :bare_sequence).should == seq(
-          Lang::Variable.new(Lang::Variable::ARPEGGIO,'$[C4 D4]',MTK.PitchGroup(C4,D4)),
+        parse("@[C4 D4] @0 @1 @2", :bare_sequence).should == seq(
+          Lang::Variable.new(Lang::Variable::ARPEGGIO,'@[C4 D4]',MTK.PitchGroup(C4,D4)),
           arp_elem_index_var(0), arp_elem_index_var(1), arp_elem_index_var(2)
         )
       end
@@ -368,7 +368,7 @@ describe MTK::Lang::Parser do
       end
 
       it "parses chained arpeggio element" do
-        parse("$0:$1", :chain).should == chain(arp_elem_index_var(0), arp_elem_index_var(1))
+        parse("@0:@1", :chain).should == chain(arp_elem_index_var(0), arp_elem_index_var(1))
       end
     end
 
@@ -411,13 +411,13 @@ describe MTK::Lang::Parser do
 
     context 'variable rule' do
       it 'parses an arpeggio' do
-        var = parse("$[C4 D4]", :variable)
+        var = parse("@[C4 D4]", :variable)
         var.should be_a MTK::Lang::Variable
         var.arpeggio?.should be_true
       end
 
       it 'parses an arpeggio_element' do
-        var = parse("$1", :variable)
+        var = parse("@1", :variable)
         var.should be_a MTK::Lang::Variable
         var.arpeggio_element?.should be_true
       end
@@ -436,7 +436,7 @@ describe MTK::Lang::Parser do
 
     context 'arpeggio rule' do
       it "parses an arpeggio" do
-        arpeggio = parse("$[C4 D4 E4 F4 G4 A4 B4]", :arpeggio)
+        arpeggio = parse("@[C4 D4 E4 F4 G4 A4 B4]", :arpeggio)
         arpeggio.should be_a MTK::Lang::Variable
         arpeggio.arpeggio?.should be_true
         arpeggio.value.should == MTK.PitchGroup(C4, D4, E4, F4, G4, A4, B4)
@@ -446,42 +446,42 @@ describe MTK::Lang::Parser do
 
     context 'arpeggio_element rule' do
       it "parses $N patterns as a Variable with arpeggio_element? true" do
-        variable = parse("$1", :arpeggio_element)
+        variable = parse("@1", :arpeggio_element)
         variable.should be_a MTK::Lang::Variable
         variable.name.should be :index
         variable.arpeggio_element?.should be_true
       end
 
-      it "parses $1 with value 1" do
-        variable = parse("$1", :arpeggio_element)
+      it "parses @1 with value 1" do
+        variable = parse("@1", :arpeggio_element)
         variable.arpeggio_element?.should be_true
         variable.name.should be :index
         variable.value.should == 1
       end
 
-      it "parses $1234567890 with value 1234567890" do # unrealistic step number, just checking the parsing
-        variable = parse("$1234567890", :arpeggio_element)
+      it "parses @1234567890 with value 1234567890" do # unrealistic step number, just checking the parsing
+        variable = parse("@1234567890", :arpeggio_element)
         variable.arpeggio_element?.should be_true
         variable.name.should be :index
         variable.value.should == 1234567890
       end
 
-      it "parses $0" do
-        variable = parse("$0", :arpeggio_element)
+      it "parses @0" do
+        variable = parse("@0", :arpeggio_element)
         variable.arpeggio_element?.should be_true
         variable.name.should be :index
         variable.value.should == 0
       end
 
       it "parses negative indexes" do
-        variable = parse("$-1", :arpeggio_element)
+        variable = parse("@-1", :arpeggio_element)
         variable.arpeggio_element?.should be_true
         variable.name.should be :index
         variable.value.should == -1
       end
 
-      it "parses indexes with a $% prefix as a variable named :modulo_index" do
-        for syntax in ['$%1', '$%123456789', '$%0', '$%-1']
+      it "parses indexes with a @% prefix as a variable named :modulo_index" do
+        for syntax in ['@%1', '@%123456789', '@%0', '@%-1']
           variable = parse(syntax, :arpeggio_element)
           variable.arpeggio_element?.should be_true
           variable.name.should be :modulo_index
@@ -490,52 +490,52 @@ describe MTK::Lang::Parser do
       end
 
       it "parses positive increments" do
-        variable = parse("$+", :arpeggio_element)
+        variable = parse("@+", :arpeggio_element)
         variable.arpeggio_element?.should be_true
         variable.name.should be :increment
         variable.value.should == 1
       end
 
       it "parses multi-positive increments" do
-        variable = parse("$+++", :arpeggio_element)
+        variable = parse("@+++", :arpeggio_element)
         variable.arpeggio_element?.should be_true
         variable.name.should be :increment
         variable.value.should == 3
       end
 
       it "parses decrement increments" do
-        variable = parse("$-", :arpeggio_element)
+        variable = parse("@-", :arpeggio_element)
         variable.arpeggio_element?.should be_true
         variable.name.should be :increment
         variable.value.should == -1
       end
 
       it "parses multi-negative increments" do
-        variable = parse("$---", :arpeggio_element)
+        variable = parse("@---", :arpeggio_element)
         variable.arpeggio_element?.should be_true
         variable.name.should be :increment
         variable.value.should == -3
       end
 
-      it "parses increments with a $% prefix as a variable named :modulo_increment" do
-        for syntax in ['$%+', '$%+++', '$%-', '$%----']
+      it "parses increments with a @% prefix as a variable named :modulo_increment" do
+        for syntax in ['@%+', '@%+++', '@%-', '@%----']
           variable = parse(syntax, :arpeggio_element)
           variable.arpeggio_element?.should be_true
           variable.name.should be :modulo_increment
-          value = syntax.size-2 # don't count '$%'
+          value = syntax.size-2 # don't count '@%'
           value = -value if syntax =~ /-/
           variable.value.should == value
         end
       end
 
       it "parses random arpeggio elements" do
-        variable = parse("$?", :arpeggio_element)
+        variable = parse("@?", :arpeggio_element)
         variable.arpeggio_element?.should be_true
         variable.name.should be :random
       end
 
       it "parses 'all' arpeggio elements" do
-        variable = parse("$!", :arpeggio_element)
+        variable = parse("@!", :arpeggio_element)
         variable.arpeggio_element?.should be_true
         variable.name.should be :all
       end
