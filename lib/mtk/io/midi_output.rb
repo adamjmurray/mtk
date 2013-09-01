@@ -197,7 +197,15 @@ unless $__RUNNING_RSPEC_TESTS__ # I can't get this working on Travis-CI, problem
   if RUBY_PLATFORM == 'java'
     require 'mtk/io/jsound_output'
   else
-    require 'mtk/io/unimidi_output'
+    begin
+      if Gem::Specification.find_by_name 'rtmidi' and not ENV['MTK_FORCE_UNIMIDI']
+        require 'mtk/io/rtmidi_output'
+        rtmidi_available = true
+      end
+    rescue Gem::LoadError
+      rtmidi_available = false
+    end
+    require 'mtk/io/unimidi_output' unless rtmidi_available
   end
 end
 

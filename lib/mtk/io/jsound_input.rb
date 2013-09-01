@@ -4,7 +4,7 @@ module MTK
   module IO
 
     # Provides realtime MIDI input for JRuby via the jsound gem.
-    # @note This class is optional and only available if you require 'mtk/midi/jsound_input'.
+    # @note This class will be loaded if available when you require 'mtk/io/midi_input'.
     #       It depends on the 'jsound' gem.
     class JSoundInput < MIDIInput
 

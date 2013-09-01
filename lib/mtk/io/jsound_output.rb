@@ -4,7 +4,7 @@ module MTK
   module IO
 
     # Provides realtime MIDI output for JRuby via the jsound and gamelan gems.
-    # @note This class is optional and only available if you require 'mtk/midi/jsound_output'.
+    # @note This class will be loaded if available when you require 'mtk/io/midi_output'.
     #       It depends on the 'jsound' and 'gamelan' gems.
     class JSoundOutput < MIDIOutput
 

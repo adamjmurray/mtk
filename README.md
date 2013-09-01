@@ -52,6 +52,19 @@ JRuby is recommended for Windows users.
 0. Read the [MTK Ruby library documentation](http://rubydoc.info/github/adamjmurray/mtk/master/frames)
 
 
+Notes on MIDI IO
+----------------
+
+I'm also working on a native gem for cross-platform MIDI called 'rtmidi' (which wraps [a C++ library](http://www.music.mcgill.ca/~gary/rtmidi/) of the same name).
+If you install this gem via:
+
+    gem install rtmidi
+
+then MTK will use that gem instead of the unimidi gem for MIDI IO on MRI platforms. This resolves a number of issues.
+See https://github.com/adamjmurray/ruby-rtmidi for more info and installation instructions.
+Future versions of MTK will likely require rtmidi on non-JRuby platforms, so give it a try!
+
+
 About this project
 ------------------
 This project is developed by [Adam Murray (github.com/adamjmurray)](http://github.com/adamjmurray).
