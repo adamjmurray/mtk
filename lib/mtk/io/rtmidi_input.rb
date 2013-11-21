@@ -12,7 +12,7 @@ module MTK
       public_class_method :new
 
       def self.devices
-        @devices ||= devices_by_name.values
+        @devices ||= devices_by_name.map{|key,value| OpenStruct.new(name:key, port_index:value) }
       end
 
       def self.devices_by_name
@@ -27,7 +27,12 @@ module MTK
 
       attr_reader :device
 
-      def initialize(port_index, options={})
+      def initialize(device_id, options={})
+        if device_id.respond_to? :port_index
+          port_index = device_id.port_index
+        else
+          port_index = device_id
+        end
         @device = RtMidi::In.new
         @name = @device.port_name(port_index)
         @options = options
