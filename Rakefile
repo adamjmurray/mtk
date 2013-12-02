@@ -4,7 +4,7 @@ require 'erb'
 
 GEM_VERSION = '0.4'
 
-SUPPORTED_RUBIES = %w[ 1.9.3  2.0  jruby-1.7.4 ]
+SUPPORTED_RUBIES = %w[ 1.9.3  2.0  jruby-1.7.8 ]
 
 CLEAN.include('html', 'doc', 'coverage', '*.gemspec', '*.gem') # clean and clobber do the same thing for now
 
@@ -28,14 +28,8 @@ namespace :test do
   end
 
   desc "Run RSpec tests and generate a coverage report"
-  if RUBY_PLATFORM == "java"
-    task :cov do |t|
-      fail "#{t} task is not compatible with JRuby. Use Ruby 1.9 instead."
-    end
-  else
-    RSpec::Core::RakeTask.new(:cov) do |spec|
-      spec.rspec_opts = ["--color", "--format", "nested", "-r", "#{File.dirname __FILE__}/spec/spec_coverage.rb"]
-    end
+  RSpec::Core::RakeTask.new(:cov) do |spec|
+    spec.rspec_opts = ["--color", "--format", "nested", "-r", "#{File.dirname __FILE__}/spec/spec_coverage.rb"]
   end
 
   desc "Profile RSpec tests and report 10 slowest"
