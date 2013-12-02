@@ -410,6 +410,27 @@ describe MTK::Lang::Parser do
 
 
     context 'variable rule' do
+      it 'parses a predefined scale' do
+        scale = parse("$[D harmonic minor]", :variable)
+        scale.should be_a MTK::Lang::Variable
+        scale.scale?.should be_true
+        scale.value.should == MTK.PitchClassGroup(D, E, F, G, A, Bb, Db)
+      end
+
+      it "parses a scale" do
+        scale = parse("$[C D E F G A B]", :variable)
+        scale.should be_a MTK::Lang::Variable
+        scale.scale?.should be_true
+        scale.value.should == MTK.PitchClassGroup(C, D, E, F, G, A, B)
+      end
+
+      it "parses a scale_element" do
+        variable = parse("$1", :variable)
+        variable.should be_a MTK::Lang::Variable
+        variable.name.should be :index
+        variable.scale_element?.should be_true
+      end
+
       it 'parses an arpeggio' do
         var = parse("@[C4 D4]", :variable)
         var.should be_a MTK::Lang::Variable
@@ -434,6 +455,27 @@ describe MTK::Lang::Parser do
     end
 
 
+    context "predefined_scale rule" do
+      it "parses a predefined scale" do
+        scale = parse("$[C major]", :predefined_scale)
+        scale.should be_a MTK::Lang::Variable
+        scale.scale?.should be_true
+        scale.value.should == MTK.PitchClassGroup(C, D, E, F, G, A, B)
+      end
+
+      it "handles multi-word scales" do
+        scale = parse("$[D harmonic minor]", :predefined_scale)
+        scale.should be_a MTK::Lang::Variable
+        scale.scale?.should be_true
+        scale.value.should == MTK.PitchClassGroup(D, E, F, G, A, Bb, Db)
+      end
+
+      it "does not parse invalid names" do
+        ->{ parse("$[C foo scale]", :predefined_scale) }.should raise_error
+      end
+    end
+
+
     context 'scale rule' do
       it "parses a scale variable" do
         scale = parse("$[C D E F G A B]", :scale)
@@ -442,7 +484,7 @@ describe MTK::Lang::Parser do
         scale.value.should == MTK.PitchClassGroup(C, D, E, F, G, A, B)
       end
 
-      it "does not parse a scale of pitches (must be pitch classes" do
+      it "does not parse a scale of pitches (must be pitch classes)" do
         ->{ parse("$[C4 D4 E4]", :scale) }.should raise_error
       end
     end

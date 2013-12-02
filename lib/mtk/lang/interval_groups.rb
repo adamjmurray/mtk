@@ -146,9 +146,39 @@ module MTK
                 PROMETHEUS_SCALE, SCALE_OF_HARMONICS, SLENDRO_SCALE, SPANISH_SCALE, TRITONE_SCALE,
                 UKRAINIAN_DORIAN_SCALE, WHOLE_TONE_SCALE, YO_SCALE]
 
+      # Names of all scales and mode constants defined in this module
+      SCALE_NAMES = %w[ACOUSTIC_SCALE ADONAI_MALAKH_MODE ALTERED_SCALE ARABIAN_SCALE AUGMENTED_SCALE BALINESE_SCALE
+                BEBOP_DOMINANT_SCALE BLUES_SCALE BYZANTINE_SCALE CHROMATIC_SCALE DORIAN_MODE EGYPTIAN_SCALE
+                ENIGMATIC_SCALE GYPSY_SCALE HALF_DIMINISHED_SCALE HARMONIC_MAJOR_SCALE HARMONIC_MINOR_SCALE
+                HIRAJOSHI_SCALE HUNGARIAN_MAJOR_SCALE HUNGARIAN_MINOR_SCALE IN_SCALE INSEN_SCALE IWATO_SCALE
+                JAVANESE_SCALE LOCRIAN_MODE LYDIAN_AUGMENTED_SCALE LYDIAN_MODE MAJOR_SCALE MAJOR_PENTATONIC_SCALE
+                MELODIC_MINOR_SCALE MINOR_PENTATONIC_SCALE MIXOLYDIAN_MODE MINOR_SCALE NEAPOLITAN_MAJOR_SCALE
+                NEAPOLITAN_MINOR_SCALE OCTATONIC_SCALE OCTATONIC_ALT_SCALE PELOG_SCALE PERSIAN_SCALE PHRYGIAN_MODE
+                PROMETHEUS_SCALE SCALE_OF_HARMONICS SLENDRO_SCALE SPANISH_SCALE TRITONE_SCALE
+                UKRAINIAN_DORIAN_SCALE WHOLE_TONE_SCALE YO_SCALE]
+
       # All constants defined in this module
       INTERVAL_GROUPS = (TRIADS + SCALES).freeze
 
+
+      def find_scale(name)
+        name = name.to_s.upcase.gsub(' ', '_')
+        unless SCALE_NAMES.include? name
+          scale_name = "#{name}_SCALE"
+          if SCALE_NAMES.include? scale_name
+            name = scale_name
+          else
+            mode_name = "#{name}_MODE"
+            if SCALE_NAMES.include? mode_name
+              name = mode_name
+            else
+              return nil
+            end
+          end
+        end
+        const_get name
+      end
+      module_function :find_scale
 
     end
 

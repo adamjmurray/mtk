@@ -115,7 +115,18 @@ grammar MTK_Grammar
   end
 
   rule variable
-    ( scale | scale_element | arpeggio | arpeggio_element | for_each_variable )
+    ( predefined_scale | scale | scale_element | arpeggio | arpeggio_element | for_each_variable )
+  end
+
+  rule predefined_scale
+    (
+      '$' left_bracket pitch_class space scale_name:( [A-Za-z][A-Za-z]+ (space [A-Za-z][A-Za-z]+)? ) right_bracket
+    )
+    {
+      scale_intervals = MTK::Lang::IntervalGroups.find_scale(scale_name)
+      raise "Invalid scale name #{scale_name}" unless scale_intervals
+      MTK::Lang::Variable.new(MTK::Lang::Variable::SCALE, to_s, MTK.PitchClassGroup(scale_intervals.to_pitch_classes(pitch_class.value)))
+    }
   end
 
   rule scale

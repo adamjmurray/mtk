@@ -36,6 +36,28 @@ describe MTK::Lang::IntervalGroups do
     end
   end
 
+  describe ".find_scale" do
+    it "looks up the scale constant by name" do
+      IntervalGroups.find_scale('MAJOR_SCALE').should == IntervalGroups::MAJOR_SCALE
+    end
+
+    it "is case-insensitive" do
+      IntervalGroups.find_scale('major_scale').should == IntervalGroups::MAJOR_SCALE
+    end
+
+    it "does not require the '_scale' suffix" do
+      IntervalGroups.find_scale('minor').should == IntervalGroups::MINOR_SCALE
+    end
+
+    it "does not require the '_mode' suffix" do
+      IntervalGroups.find_scale('dorian').should == IntervalGroups::DORIAN_MODE
+    end
+
+    it "handles spaces in the name" do
+      IntervalGroups.find_scale('harmonic major').should == IntervalGroups::HARMONIC_MAJOR_SCALE
+    end
+  end
+
 end
 
 
