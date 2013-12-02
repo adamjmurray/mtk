@@ -531,6 +531,35 @@ describe MTK::Sequencers::EventBuilder do
       end
     end
 
+
+    context "force_rest modifier behavior" do
+      it "turns non-rest notes into rests" do
+        event_builder = EVENT_BUILDER.new([Patterns.Chain(
+          C4,
+          MTK::Lang::Modifier.new(:force_rest)
+        )])
+        notes = event_builder.next
+        notes.length.should == 1
+        note = notes.first
+        note.rest?.should be_true
+        note.duration.should == -duration
+      end
+
+      it "turns keeps rest notes as rests" do
+        event_builder = EVENT_BUILDER.new([Patterns.Chain(
+          C4,
+          MTK::Core::Duration.new(-1),
+          MTK::Lang::Modifier.new(:force_rest)
+        )])
+        notes = event_builder.next
+        notes.length.should == 1
+        note = notes.first
+        note.rest?.should be_true
+        note.duration.should == -1
+      end
+    end
+
+
     it "removes duplicate pitches" do
       event_builder = EVENT_BUILDER.new([Patterns.Sequence(
         MTK.PitchGroup(C4,C4,C4),

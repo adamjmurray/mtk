@@ -131,12 +131,15 @@ Hopefully this abnormal naming won't cause problems since those duration values 
 
 **Intensity: ppp pp p mp mf f ff fff**
 
+**Intervals: P1 m2 M2 m3 M3 P4 TT P5 m6 M6 m7 M7 P8**
+
+**Relative Chords: I, i, II, ii, III, iii, IV, iv, V, v, VI, vi, VII, vii, VIII, viii, IX, ix**
+
 
 TODO: keep documenting this...
-TODO: explanation of intervals
 
 
-Summary of single-letter assignments:
+Summary of single-letter meanings:
 ```
 A -> pitch class A
 B -> pitch class B
@@ -149,7 +152,8 @@ F -> pitch class f
 f -> forte intensity
 
 h -> half note duration
-i -> minor tonic chord (PLANNED, not implemented yet)
+I -> major tonic chord
+i -> minor tonic chord
 
 p -> piano intensity
 q -> quarter note duration
@@ -157,7 +161,30 @@ r -> thirty-second note duration
 s -> sixteenth note duration
 t -> triplet modifier on durations
 
-v -> minor dominant chord (PLANNED, not implemented yet)
+V -> major dominant chord
+v -> minor dominant chord
 w -> whole note duration
 x -> sixty-fourth note duration
+```
+
+Structures
+```
+(...) -> sequence/cycle
+<...|...|...> -> random choice
+[...] -> parallel?
+{...} -> sequencer
+$[...] -> define a scale (maybe ${...} instead?)
+$0 -> scale degree
+@[...] -> define an arpeggio
+@0 -> arpeggio degree
+(...)#(...) -> for each
+#0 -> for each value
+```
+
+Modifiers
+```
+. -> dotted duration
+t -> triplet duration
+* -> repetition
+_ -> force rest
 ```

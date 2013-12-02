@@ -25,6 +25,7 @@ module MTK
         pitches = []
         intensities = []
         duration = nil
+        force_rest = false
 
         @patterns.each do |pattern|
           pattern_value = pattern.next
@@ -97,7 +98,14 @@ module MTK
                     # TODO: Add general variable support later
                 end
 
-              # TODO? String/Symbols for special behaviors like :skip, or :break (something like StopIteration for the current Pattern?)
+              when MTK::Lang::Modifier
+                case
+                  when element.force_rest? then force_rest = true
+
+                  else
+                    STDERR.puts "#{self.class}#next: Encountered unsupported modifier #{element}"
+                    # TODO other special behaviors like :skip, or :break (something like StopIteration for the current Pattern?)
+                end
 
               else STDERR.puts "#{self.class}#next: Unexpected type '#{element.class}'"
             end
@@ -124,7 +132,7 @@ module MTK
         @previous_intensity = intensity
         @previous_duration = duration
 
-        if duration.rest?
+        if force_rest or duration.rest?
           [MTK::Events::Rest.new(duration,@channel)]
         else
           pitches.uniq.map{|pitch| MTK::Events::Note.new(pitch,duration,intensity,@channel) }

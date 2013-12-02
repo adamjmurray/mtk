@@ -406,6 +406,10 @@ describe MTK::Lang::Parser do
         sequence.elements.should == [ C ]
         sequence.max_cycles.should == 4
       end
+
+      it "parses modifiers" do
+        parse('_', :element).should == parse('_', :modifier)
+      end
     end
 
 
@@ -670,6 +674,15 @@ describe MTK::Lang::Parser do
         variable = parse("@!", :arpeggio_element)
         variable.arpeggio_element?.should be_true
         variable.name.should be :all
+      end
+    end
+
+
+    context 'modifier rule' do
+      it "parses '_' as a force_rest Modifier" do
+        modifier = parse('_', :modifier)
+        modifier.should be_a MTK::Lang::Modifier
+        modifier.force_rest?.should be_true
       end
     end
 
