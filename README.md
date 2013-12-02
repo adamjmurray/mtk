@@ -1,6 +1,8 @@
 MTK: a Music Tool Kit for Ruby
 ===
 
+[![Gem Version](https://badge.fury.io/rb/mtk.png)](http://badge.fury.io/rb/mtk) [![Build Status](https://travis-ci.org/adamjmurray/mtk.png?branch=master)](https://travis-ci.org/adamjmurray/mtk) [![Coverage Status](https://coveralls.io/repos/adamjmurray/mtk/badge.png)](https://coveralls.io/r/adamjmurray/mtk)
+
 MTK is a Ruby library and custom [domain-specific language](https://en.wikipedia.org/wiki/Domain-specific_language) (DSL) for generating musical material.
 
 MTK is flexible: You may use the custom music-generating language without writing any Ruby code, or you may avoid the custom language

@@ -1,6 +1,6 @@
 language: ruby
-bundler_args: --without development
-script: "bundle exec rake test"
+bundler_args: --without doc
+script: "bundle exec rake test:cov"
 env:
   - CI=true
 notifications:

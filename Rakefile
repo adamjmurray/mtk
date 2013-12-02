@@ -6,7 +6,7 @@ GEM_VERSION = '0.4'
 
 SUPPORTED_RUBIES = %w[ 1.9.3  2.0  jruby-1.7.4 ]
 
-CLEAN.include('html','doc','coverage.data','coverage', '*.gemspec', '*.gem') # clean and clobber do the same thing for now
+CLEAN.include('html', 'doc', 'coverage', '*.gemspec', '*.gem') # clean and clobber do the same thing for now
 
 task :default => :test
 
@@ -34,7 +34,7 @@ namespace :test do
     end
   else
     RSpec::Core::RakeTask.new(:cov) do |spec|
-      spec.rspec_opts = ["--color", "-r", "#{File.dirname __FILE__}/spec/spec_coverage.rb"]
+      spec.rspec_opts = ["--color", "--format", "nested", "-r", "#{File.dirname __FILE__}/spec/spec_coverage.rb"]
     end
   end
 

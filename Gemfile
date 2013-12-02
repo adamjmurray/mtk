@@ -19,15 +19,13 @@ end
 # Gems for development
 
 group :development do
-  gem "yard", "~> 0.8"
-  gem "kramdown", "~> 1.1"
-
-  platforms :ruby do
-    gem "cover_me","~> 1.2"
-  end
-end
-
-group :test do
   gem "rake",    "~> 10.1"
   gem "rspec",   "~> 2.14"
+  gem 'simplecov', :require => false
+  gem 'coveralls', :require => false
+end
+
+group :doc do
+  gem "yard", "~> 0.8"
+  gem "kramdown", "~> 1.2" # for Markdown formatting in the yard docs
 end
