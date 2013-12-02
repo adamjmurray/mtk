@@ -9,4 +9,5 @@ include MTK::Lang::Pitches
 include MTK::Lang::Intensities
 include MTK::Lang::Durations
 include MTK::Lang::Intervals
+include MTK::Lang::RelativeChords
 

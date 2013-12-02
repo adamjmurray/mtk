@@ -182,6 +182,7 @@ module MTK
      ######################################################################
      # MTK::Groups
 
+     # Attempt to convert anything to an Array of {MTK::Core::PitchClass}es
      def to_pitch_classes(*anything)
        anything = anything.first if anything.length == 1
        if anything.respond_to? :to_pitch_classes
@@ -195,7 +196,7 @@ module MTK
      end
      module_function :to_pitch_classes
 
-
+     # Attempt to convert anything to an Array of {MTK::Core::Pitch}es
      def to_pitches(*anything)
        anything = anything.first if anything.length == 1
        if anything.respond_to? :to_pitches
@@ -208,6 +209,20 @@ module MTK
        end
      end
      module_function :to_pitches
+
+    # Attempt to convert anything to an Array of {MTK::Core::Interval}s
+    def to_intervals(*anything)
+      anything = anything.first if anything.length == 1
+      if anything.respond_to? :to_intervals
+        anything.to_intervals
+      else
+        case anything
+          when ::Enumerable then anything.map{|item| MTK.Interval(item) }
+          else [MTK.Interval(anything)]
+        end
+      end
+    end
+    module_function :to_intervals
 
   end
 end

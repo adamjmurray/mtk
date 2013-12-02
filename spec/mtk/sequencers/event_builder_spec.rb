@@ -488,17 +488,57 @@ describe MTK::Sequencers::EventBuilder do
     context "interval group behaviors" do
       it "interprets chords against a C scale by default" do
         event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-          MTK::Groups::IntervalGroup.new(MTK::Groups::IntervalGroup::MINOR_TRIAD, 0),
-          MTK::Groups::IntervalGroup.new(MTK::Groups::IntervalGroup::MINOR_TRIAD, 3),
-          MTK::Groups::IntervalGroup.new(MTK::Groups::IntervalGroup::MAJOR_TRIAD, 4)
+          MTK::Lang::IntervalGroups::MINOR_TRIAD,
+          MTK::Lang::IntervalGroups::MAJOR_TRIAD
         )])
 
         event_builder.next.should == [Note(C4,q),Note(Eb4,q),Note(G4,q)]
-        event_builder.next.should == [Note(F4,q),Note(Ab4,q),Note(C5,q)]
-        event_builder.next.should == [Note(G4,q),Note(B4,q),Note(D5,q)]
+        event_builder.next.should == [Note(C4,q),Note(E4,q),Note(G4,q)]
       end
     end
 
+
+    context "relative chord behaviors" do
+      it "interprets chords against a C scale by default" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          MTK::Lang::RelativeChords::i,
+          MTK::Lang::RelativeChords::iv,
+          MTK::Lang::RelativeChords::V
+        )])
+        event_builder.next.should == notes(C4,Eb4,G4)
+        event_builder.next.should == notes(F4,Ab4,C5)
+        event_builder.next.should == notes(G4,B4,D5)
+      end
+
+      it "interprets chords against the given scale" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          scale(D,E,Gb,G,A,B,Db),
+          MTK::Lang::RelativeChords::I,
+          MTK::Lang::RelativeChords::vi
+        )])
+        event_builder.next.should == notes(D4,Gb4,A4)
+        event_builder.next.should == notes(B4,D5,Gb5) # TODO: this should actually be an octave down
+      end
+
+      it "interprets chords against the given scale, using the octave of the previous pitch" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          scale(D,E,Gb,G,A,B,Db),
+          C5,
+          MTK::Lang::RelativeChords::I
+        )])
+        event_builder.next
+        event_builder.next.should == notes(D5,Gb5,A5)
+      end
+    end
+
+    it "removes duplicate pitches" do
+      event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+        MTK.PitchGroup(C4,C4,C4),
+        Patterns.Chain(D4,D4,D4)
+      )])
+      event_builder.next.should == notes(C4)
+      event_builder.next.should == notes(D4)
+    end
   end
 
 

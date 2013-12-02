@@ -64,11 +64,14 @@ module MTK
                 intensities << element
 
               when MTK::Groups::IntervalGroup
-                # TODO? Should this actually be converting to a Chord instead of a PitchGroup?
-                # How will this work with chord inversions when that functionality is added later?
-                chord = element.to_pitch_group(scale: @scale, nearest_pitch: @previous_pitch).pitches.uniq
-                pitches += chord
-                @previous_pitch = chord.first # use the chord root to control nearest pitch behavior for the next evaluation
+                chord_pitches = element.to_pitches(@previous_pitch)
+                pitches += chord_pitches
+                @previous_pitch = chord_pitches.first # use the "chord root" to control nearest pitch behavior for the next evaluation
+
+              when MTK::Groups::RelativeChord
+                chord_pitches = element.to_chord(@scale, @previous_pitch.octave).pitches
+                pitches += chord_pitches
+                @previous_pitch = chord_pitches.first # use the "chord root" to control nearest pitch behavior for the next evaluation
 
               when MTK::Core::Interval
                 if @previous_pitches
@@ -124,7 +127,7 @@ module MTK
         if duration.rest?
           [MTK::Events::Rest.new(duration,@channel)]
         else
-          pitches.map{|pitch| MTK::Events::Note.new(pitch,duration,intensity,@channel) }
+          pitches.uniq.map{|pitch| MTK::Events::Note.new(pitch,duration,intensity,@channel) }
         end
       end
 

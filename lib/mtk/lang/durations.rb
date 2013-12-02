@@ -30,11 +30,7 @@ module MTK
         define_constant name, value
       end
       
-      
-      # whole note
-      # @macro [attach] durations.define_duration
-      #   @attribute [r]
-      #   @return [$2] duration for $1
+
       define_duration 'w', MTK::Core::Duration[4], 'whole note', 4
 
       define_duration 'h', MTK::Core::Duration[2], 'half note', 2

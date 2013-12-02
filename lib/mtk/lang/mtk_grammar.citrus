@@ -103,7 +103,7 @@ grammar MTK_Grammar
 
   rule element
     (
-      elem:( intensity | duration | interval_group | interval | pitch | pitch_class | variable ) ('*' max_cycles:int)?
+      elem:( intensity | duration | relative_chord | interval | pitch | pitch_class | variable ) ('*' max_cycles:int)?
     )
     {
       if max_cycles
@@ -144,10 +144,10 @@ grammar MTK_Grammar
     ( arpeggio_index | arpeggio_increment | arpeggio_random | arpeggio_all )
   end
 
-  rule interval_group
+  rule relative_chord
     ( 'i' [vx] | 'I' [VX] | [iI]1*3 | 'v' 'i'0*3 | 'V' 'I'0*3 )
     {
-      MTK::Groups::IntervalGroup.from_s(to_s)
+      MTK::Groups::RelativeChord.from_s(to_s)
     }
   end
 

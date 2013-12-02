@@ -632,22 +632,22 @@ describe MTK::Lang::Parser do
     end
 
 
-    context 'interval_group rule' do
+    context 'relative_chord rule' do
       it "parses minor triads" do
-        %w( i ii iii iv v vi vii viii ix ).each_with_index do |syntax,index|
-          interval_group = parse(syntax, :interval_group)
-          interval_group.should be_a MTK::Groups::IntervalGroup
-          interval_group.intervals.should == MTK::Groups::IntervalGroup::MINOR_TRIAD
-          interval_group.base.should == index
+        %w( i ii iii iv v vi vii viii ix ).each_with_index do |syntax,scale_index|
+          relative_chord = parse(syntax, :relative_chord)
+          relative_chord.should be_a MTK::Groups::RelativeChord
+          relative_chord.interval_group.should == MTK::Lang::IntervalGroups::MINOR_TRIAD
+          relative_chord.scale_index.should == scale_index
         end
       end
 
       it "parses major triads" do
-        %w( I II III IV V VI VII VIII IX ).each_with_index do |syntax,index|
-          interval_group = parse(syntax, :interval_group)
-          interval_group.should be_a MTK::Groups::IntervalGroup
-          interval_group.intervals.should == MTK::Groups::IntervalGroup::MAJOR_TRIAD
-          interval_group.base.should == index
+        %w( I II III IV V VI VII VIII IX ).each_with_index do |syntax,scale_index|
+          relative_chord = parse(syntax, :relative_chord)
+          relative_chord.should be_a MTK::Groups::RelativeChord
+          relative_chord.interval_group.should == MTK::Lang::IntervalGroups::MAJOR_TRIAD
+          relative_chord.scale_index.should == scale_index
         end
       end
     end
