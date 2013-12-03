@@ -62,6 +62,7 @@ module MTK
               case element.name
                 when :index
                   index = -(element.value + 1) # for each index value 0 means the last element (-1), index 1 means second-to last (-2), etc
+                  index %= @vars.length
                   return @vars[index]
 
                 when :random

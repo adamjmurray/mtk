@@ -98,6 +98,15 @@ describe MTK::Patterns::ForEach do
       vals.should == [[C,q],[D,e],[G,s],[C,q],[D,e],[A,s]]
     end
 
+    it "wraps-around the index when it's out of bounds" do
+      foreach = FOREACH.new [ seq(C), seq(D), seq(E),
+                              seq( for_each_index_var(3), for_each_index_var(4), for_each_index_var(8), for_each_index_var(-1) ) ]
+      foreach.next.should == E
+      foreach.next.should == D
+      foreach.next.should == C
+      foreach.next.should == C
+    end
+
 
     it "evalutes 'random' for each vars by going back to a random level in the for each stack" do
       var = for_each_random_var()
