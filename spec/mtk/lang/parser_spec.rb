@@ -584,8 +584,17 @@ describe MTK::Lang::Parser do
         arpeggio.value.should == MTK.PitchGroup(C4, D4, E4, F4, G4, A4, B4)
       end
 
-      it "does not parse an arpeggio of pitch classes (must be pitches" do
+      it "does not parse an arpeggio of pitch classes (must be pitches)" do
         ->{ parse("@[C D E]", :arpeggio) }.should raise_error
+      end
+
+      it "parses arpeggios of relative chords" do
+        for relative_chord in %w(I i III iv V vii)
+          arpeggio = parse("@#{relative_chord}", :arpeggio)
+          arpeggio.should be_a MTK::Lang::Variable
+          arpeggio.arpeggio?.should be_true
+          arpeggio.value.should == MTK::Groups::RelativeChord.from_s(relative_chord)
+        end
       end
     end
 

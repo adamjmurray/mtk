@@ -143,11 +143,24 @@ grammar MTK_Grammar
   end
 
   rule arpeggio
+    ( pitch_arpeggio | relative_chord_arpeggio )
+  end
+
+  rule pitch_arpeggio
     (
       '@' left_bracket pitch (space pitch)* right_bracket
     )
     {
       MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO, to_s, MTK.PitchGroup(values_of :pitch))
+    }
+  end
+
+  rule relative_chord_arpeggio
+    (
+      '@' relative_chord
+    )
+    {
+      MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO, to_s, relative_chord.value)
     }
   end
 

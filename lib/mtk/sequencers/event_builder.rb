@@ -70,6 +70,7 @@ module MTK
                 @previous_pitch = chord_pitches.first # use the "chord root" to control nearest pitch behavior for the next evaluation
 
               when MTK::Groups::RelativeChord
+                # TODO: this is buggy, shouldn't just blindly use the octave like this
                 chord_pitches = element.to_chord(@scale, @previous_pitch.octave).pitches
                 pitches += chord_pitches
                 @previous_pitch = chord_pitches.first # use the "chord root" to control nearest pitch behavior for the next evaluation
@@ -88,7 +89,13 @@ module MTK
 
                   when element.scale_element? then evaluate_scale(element, pitches)
 
-                  when element.arpeggio? then @arpeggio = element.value; return self.next
+                  when element.arpeggio?
+                    @arpeggio = element.value
+                    if @arpeggio.is_a? MTK::Groups::RelativeChord
+                      # TODO: this is buggy, shouldn't just blindly use the octave like this
+                      @arpeggio = @arpeggio.to_chord(@scale, @previous_pitch.octave)
+                    end
+                    return self.next
 
                   when element.arpeggio_element? then evaluate_arpeggio(element, pitches)
 
