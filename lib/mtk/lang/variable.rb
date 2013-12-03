@@ -10,8 +10,8 @@ module MTK
       SCALE_ELEMENT = :scale_element
       ARPEGGIO = :arpeggio
       ARPEGGIO_ELEMENT = :arpeggio_element
-      FOR_EACH = :for_each
-      USER_DEFINED =:user_defined
+      FOR_EACH_ELEMENT = :for_each_element
+      USER_DEFINED = :user_defined
 
       attr_reader :type, :name
 
@@ -51,8 +51,8 @@ module MTK
 
       # true when this represent a variable on the {Patterns::ForEach} stack
       # if true, the {#value} represents the index from the top of the for each variable stack
-      def for_each?
-        @type == FOR_EACH
+      def for_each_element?
+        @type == FOR_EACH_ELEMENT
       end
 
       def user_defined?

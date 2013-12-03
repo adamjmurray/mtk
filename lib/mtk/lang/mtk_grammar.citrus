@@ -82,7 +82,7 @@ grammar MTK_Grammar
 
   rule for_each
     (
-      sequence (right_arrow sequence)+
+      sequence ('#' sequence)+
     )
     {
       MTK::Patterns::ForEach.new(values_of :sequence)
@@ -115,7 +115,7 @@ grammar MTK_Grammar
   end
 
   rule variable
-    ( predefined_scale | scale | scale_element | arpeggio | arpeggio_element | for_each_variable )
+    ( predefined_scale | scale | scale_element | arpeggio | arpeggio_element | for_each_element )
   end
 
   rule predefined_scale
@@ -201,12 +201,6 @@ grammar MTK_Grammar
       MTK::Core::Duration.from_s(to_s)
     }
   end
-
-  rule for_each_variable
-    ( '<' '='+ ) {
-      MTK::Lang::Variable.new(MTK::Lang::Variable::FOR_EACH, to_s, to_s.length-1) # subtract 1 for the '<'
-    }
-  end
     
   rule scale_index
     ( '$' int ) {
@@ -253,6 +247,28 @@ grammar MTK_Grammar
   rule arpeggio_all
     ( '@!' ) {
       MTK::Lang::Variable.new(MTK::Lang::Variable::ARPEGGIO_ELEMENT, :all)
+    }
+  end
+
+  rule for_each_element
+    ( for_each_index | for_each_random | for_each_all )
+  end
+
+  rule for_each_index
+    ( '#' int ) {
+      MTK::Lang::Variable.new(MTK::Lang::Variable::FOR_EACH_ELEMENT, :index, int.value)
+    }
+  end
+
+  rule for_each_random
+    ( '#?' ) {
+      MTK::Lang::Variable.new(MTK::Lang::Variable::FOR_EACH_ELEMENT, :random)
+    }
+  end
+
+  rule for_each_all
+    ( '#!' ) {
+      MTK::Lang::Variable.new(MTK::Lang::Variable::FOR_EACH_ELEMENT, :all)
     }
   end
 

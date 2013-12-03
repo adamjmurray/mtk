@@ -26,8 +26,8 @@ describe MTK::Lang::Parser do
     ::MTK::Lang::Variable.new(*args)
   end
 
-  def for_each_var(name)
-    var(Lang::Variable::FOR_EACH, name, name.length-1)
+  def for_each_index_var(index)
+    var(Lang::Variable::FOR_EACH_ELEMENT, :index, index)
   end
 
   def arp_elem_index_var(value)
@@ -77,8 +77,8 @@ describe MTK::Lang::Parser do
       end
 
       it "parses for each variables and choices" do
-        sequencer = parse("(C D)=>(<=:< <= | E >)")
-        sequencer.patterns.should == [ for_each( seq(C,D), chain(var(Lang::Variable::FOR_EACH,'<=',1), choice(var(Lang::Variable::FOR_EACH,'<=',1),E)) ) ]
+        sequencer = parse("(C D)#(#0:< #0 | E >)")
+        sequencer.patterns.should == [ for_each( seq(C,D), chain(var(Lang::Variable::FOR_EACH_ELEMENT,:index,0), choice(var(Lang::Variable::FOR_EACH_ELEMENT,:index,0),E)) ) ]
       end
 
       it "parses the repetition of a basic note property" do
@@ -335,21 +335,21 @@ describe MTK::Lang::Parser do
 
     context "for_each rule" do
       it "parses a for each pattern with 2 subpatterns" do
-        for_each = parse('(C D)=>(E F)', :for_each)
+        for_each = parse('(C D)#(E F)', :for_each)
         for_each.should == Patterns.ForEach(seq(C,D),seq(E,F))
       end
 
       it "parses a for each pattern with 3 subpatterns" do
-        for_each = parse('(C D)=>(E F)=>(G A B)', :for_each)
+        for_each = parse('(C D)#(E F)#(G A B)', :for_each)
         for_each.should == Patterns.ForEach(seq(C,D),seq(E,F),seq(G,A,B))
       end
 
-      it "parses a for each pattern with '$<=' variables" do
-        for_each = parse('(C D)=>(E F)=>(<= <==)', :for_each)
+      it "parses a for each pattern with '#' variables" do
+        for_each = parse('(C D)#(E F)#(#0 #1)', :for_each)
         for_each.should == Patterns.ForEach(
           seq(C,D),
           seq(E,F),
-          seq(var(Lang::Variable::FOR_EACH,'<=',1),var(Lang::Variable::FOR_EACH,'<==',2)))
+          seq(var(Lang::Variable::FOR_EACH_ELEMENT,:index,0),var(Lang::Variable::FOR_EACH_ELEMENT,:index,1)))
       end
     end
 
@@ -360,7 +360,8 @@ describe MTK::Lang::Parser do
       end
 
       it "parses a chain of for each patterns" do
-        parse('(C D)=>(E F):(G A)=>(B C)', :chain).should == chain( for_each(seq(C,D),seq(E,F)), for_each(seq(G,A),seq(B,C)) )
+        # TODO: is this really the desired operator precedence? seems backwards?
+        parse('(C D)#(E F):(G A)#(B C)', :chain).should == chain( for_each(seq(C,D),seq(E,F)), for_each(seq(G,A),seq(B,C)) )
       end
 
       it "parses chains of elements with max_cycles" do
@@ -447,15 +448,24 @@ describe MTK::Lang::Parser do
         var.arpeggio_element?.should be_true
       end
 
-      it "parses the '<=' for_each variable" do
-        parse('<=', :variable).should == for_each_var('<=')
+      it "parses the '#0' for_each index variable" do
+        parse('#0', :variable).should == for_each_index_var(0)
       end
 
-      it "parses the '<=', '<==', etc for_each variables" do
-        parse('<=', :variable).should == for_each_var('<=')
-        parse('<==', :variable).should == for_each_var('<==')
-        parse('<===', :variable).should == for_each_var('<===')
+      it "parses the '#1', '#2', etc for_each variables" do
+        parse('#1', :variable).should == for_each_index_var(1)
+        parse('#2', :variable).should == for_each_index_var(2)
+        parse('#3', :variable).should == for_each_index_var(3)
       end
+
+      it "parses the '#?' for_each 'random' variable" do
+        parse('#?', :variable).should == var(Lang::Variable::FOR_EACH_ELEMENT, :random)
+      end
+
+      it "parses the '#!' for_each 'all' variable" do
+        parse('#!', :variable).should == var(Lang::Variable::FOR_EACH_ELEMENT, :all)
+      end
+
     end
 
 

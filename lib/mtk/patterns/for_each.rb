@@ -56,13 +56,30 @@ module MTK
       def evaluate_variables(element)
         case element
           when ::MTK::Lang::Variable
-            if element.for_each?
-              return @vars[-element.value] # the variable value indicates how far back the stack to pop off
+            if element.for_each_element?
+              raise "Invalid attempt to access for each variable before any were defined" if @vars.empty?
+
+              case element.name
+                when :index
+                  index = -(element.value + 1) # for each index value 0 means the last element (-1), index 1 means second-to last (-2), etc
+                  return @vars[index]
+
+                when :random
+                  return @vars[rand*@vars.length]
+
+                when :all
+                  return @vars
+
+                else raise "Invalid for each variable name #{element.name}"
+              end
             end
+
           when Array
             return element.map{|e| evaluate_variables(e) }
+
         end
-        return element
+
+        element
       end
 
     end

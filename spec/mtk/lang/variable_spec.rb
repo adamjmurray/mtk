@@ -83,13 +83,13 @@ describe MTK::Lang::Variable do
     end
   end
 
-  describe '#for_each?' do
-    it 'is true when the Variable has the type Variable::FOR_EACH' do
-      var(VARIABLE::FOR_EACH, :name).for_each?.should be_true
+  describe '#for_each_element?' do
+    it 'is true when the Variable has the type Variable::FOR_EACH_ELEMENT' do
+      var(VARIABLE::FOR_EACH_ELEMENT, :name).for_each_element?.should be_true
     end
 
     it 'is false otherwise' do
-      var(:type, :name).for_each?.should be_false
+      var(:type, :name).for_each_element?.should be_false
     end
   end
 

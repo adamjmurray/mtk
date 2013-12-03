@@ -560,6 +560,16 @@ describe MTK::Sequencers::EventBuilder do
     end
 
 
+    context "for_each behaviors" do
+      it "uses the pitches from a for each 'all' variable to form multiple notes" do
+        event_builder = EVENT_BUILDER.new([ MTK::Patterns::ForEach.new([
+          Patterns.Sequence(C4), Patterns.Sequence(D4), Patterns.Sequence(E4),
+          Patterns.Sequence( MTK::Lang::Variable.new(Variable::FOR_EACH_ELEMENT, :all) )
+        ]) ])
+        event_builder.next.should == notes(C4,D4,E4)
+      end
+    end
+
     it "removes duplicate pitches" do
       event_builder = EVENT_BUILDER.new([Patterns.Sequence(
         MTK.PitchGroup(C4,C4,C4),
