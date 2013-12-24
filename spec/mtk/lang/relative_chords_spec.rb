@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe MTK::Lang::RelativeChords do
 
-  RELATIVE_CHORD = MTK::Groups::RelativeChord
-  MAJOR_TRIAD = MTK::Lang::IntervalGroups::MAJOR_TRIAD
-  MINOR_TRIAD = MTK::Lang::IntervalGroups::MINOR_TRIAD
-
   describe "I" do
     it "is a major triad at scale index 0" do
       RelativeChords::I.should == RELATIVE_CHORD.new(0, MAJOR_TRIAD)

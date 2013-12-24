@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe MTK::Groups::RelativeChord do
 
-  RELATIVE_CHORD = MTK::Groups::RelativeChord
-  MAJOR_TRIAD = MTK::Lang::IntervalGroups::MAJOR_TRIAD
-  MINOR_TRIAD = MTK::Lang::IntervalGroups::MINOR_TRIAD
-
   let(:scale_index) { 3 }
   let(:interval_group) { MTK::Groups::IntervalGroup.new([P1,M3,P5])}
   let(:relative_chord) { RELATIVE_CHORD.new(scale_index, interval_group) }

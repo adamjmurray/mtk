@@ -11,3 +11,4 @@ include MTK::Lang::Durations
 include MTK::Lang::Intervals
 include MTK::Lang::RelativeChords
 
+RELATIVE_CHORD = MTK::Groups::RelativeChord
