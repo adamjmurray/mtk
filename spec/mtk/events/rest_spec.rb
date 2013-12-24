@@ -127,7 +127,7 @@ describe MTK::Events::Rest do
 
   describe "#to_s" do
     it "includes #duration to 2 decimal places" do
-      REST.new(Duration(-1/3.0)).to_s.should == "Rest(-0.33 beat)"
+      REST.new(Duration(-1/3.0)).to_s.should == "Rest(-1/3 beat)"
     end
   end
 

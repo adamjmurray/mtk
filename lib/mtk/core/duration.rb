@@ -40,12 +40,7 @@ module MTK
 
       # Return a duration, only constructing a new instance when not already in the flyweight cache
       def self.[](length_in_beats)
-        if length_in_beats.is_a? Fixnum
-          value = length_in_beats
-        else
-          value = Rational(length_in_beats)
-        end
-        @flyweight[value] ||= new(value)
+        @flyweight[length_in_beats] ||= new(length_in_beats)
       end
 
       class << self
@@ -139,8 +134,26 @@ module MTK
       end
 
       def to_s
-        value = @value.to_s
-        value = sprintf '%.2f', @value if value.length > 6 # threshold is 6 for no particular reason...
+        remainder = @value.remainder(1)
+        if remainder.to_s.size > 5
+          # Try to represent as a simple fraction within 0.00001 of the actual value
+          value = @value.rationalize(0.00001)
+          # Let's say a "simple" fraction is shorter than 7 characters (3-digit numerator "/" 3-digit denominator)
+          # If it's not "simple" (typical of irrational values), then just round to 2 decimals
+          value = sprintf '%.2f', @value if value.to_s.length > 6
+        elsif remainder == 0
+          # avoid printing unnecessary 0s at the decimal place
+          value = @value.truncate
+        else
+          # the string representation should be simple enough, don't do any conversion
+          value = @value
+        end
+
+        if value.is_a? Rational and value.denominator == 1
+          # avoid printing things like "2/1 beats"
+          value = value.numerator
+        end
+
         "#{value} #{@value.abs > 1 || @value==0 ? 'beats' : 'beat'}"
       end
 

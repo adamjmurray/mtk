@@ -65,12 +65,6 @@ describe MTK::Core::Duration do
       value = Duration[4].value
       value.should be_equal 4
     end
-
-    it "converts other Numerics to Rational values" do
-      value = Duration[0.5].value
-      value.should be_a Rational
-      value.should == Rational(1,2)
-    end
   end
 
 
@@ -82,10 +76,10 @@ describe MTK::Core::Duration do
   end
 
   describe '.from_f' do
-    it "converts Floats to Rational" do
+    it "uses the argument as the value" do
       value = Duration.from_f(0.5).value
-      value.should be_a Rational
-      value.should == Rational(1,2)
+      value.should be_a Float
+      value.should == 0.5
     end
   end
 
@@ -221,37 +215,51 @@ describe MTK::Core::Duration do
 
   describe '#to_s' do
     it "is value.to_s suffixed with 'beats' for beat values > 1" do
-      for value in [2, Rational(3,2), 3.25]
+      for value in [2, Rational(3,2), Rational(3.25)]
         Duration.new(value).to_s.should == value.to_s + ' beats'
       end
     end
 
     it "is value.to_s suffixed with 'beats' for positive, non-zero beat values < 1" do
-      for value in [Rational(1,2), 0.25]
+      for value in [Rational(1,2), Rational(0.25)]
         Duration.new(value).to_s.should == value.to_s + ' beat'
       end
     end
 
     it "is value.to_s suffixed with 'beats' for a value of 0" do
-      for value in [0, 0.0, Rational(0,2)]
-        Duration.new(value).to_s.should == value.to_s + ' beats'
-      end
+      Duration.new(0).to_s.should == '0 beats'
     end
 
     it "is value.to_s suffixed with 'beats' for beat values < -1" do
-      for value in [-2, -Rational(3,2), -3.25]
+      for value in [-2, -Rational(3,2), Rational(-3.25)]
         Duration.new(value).to_s.should == value.to_s + ' beats'
       end
     end
 
     it "is value.to_s suffixed with 'beat' for negative, non-zero beat values > -1" do
-      for value in [-Rational(1,2), -0.25]
+      for value in [-Rational(1,2), Rational(-0.25)]
         Duration.new(value).to_s.should == value.to_s + ' beat'
       end
     end
     
     it "rounds to 2 decimal places when value.to_s is overly long" do
       Duration.new(Math.sqrt 2).to_s.should == '1.41 beats'
+    end
+
+    it "drops unnecessary decimal places" do
+      Duration.new(1.0).to_s.should == '1 beat'
+    end
+
+    it "drops unnecessary denominators" do
+      Duration.new(Rational(2,1)).to_s.should == '2 beats'
+    end
+
+    it "converts floats when long string reprentations to simple fractions when possible" do
+      Duration.new(1/3.0).to_s.should == '1/3 beat'
+    end
+
+    it "keeps floats with short string representations as floats" do
+      Duration.new(3.25).to_s.should == '3.25 beats'
     end
   end
 
@@ -389,7 +397,7 @@ describe MTK do
     end
 
     it "acts like .[] if the argument is a Numeric" do
-      Duration(3.5).should be_equal Duration[Rational(7,2)]
+      Duration(3.5).should be_equal Duration[3.5]
     end
 
     it "returns the argument if it's already a Duration" do
