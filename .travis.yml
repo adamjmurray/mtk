@@ -1,5 +1,5 @@
 language: ruby
-bundler_args: --without doc
+bundler_args: --without doc native
 script: "bundle exec rake test:cov"
 env:
   - CI=true

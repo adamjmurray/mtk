@@ -10,8 +10,12 @@ gem "citrus",  "~> 2.4"
 platforms :jruby do
   gem "jsound", "~> 0.1"
 end
+
 platforms :ruby, :mswin, :mingw do
-  gem "rtmidi", "~> 0.3"
+  # using a group so we can avoid installing it on Travis CI (which doesn't work and I'm not sure how else to workaround)
+  group :native do
+    gem "rtmidi", "~> 0.3"
+  end
 end
 
 
