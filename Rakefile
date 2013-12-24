@@ -4,7 +4,7 @@ require 'erb'
 
 GEM_VERSION = '0.4'
 
-SUPPORTED_RUBIES = %w[ 1.9.3  2.0  jruby-1.7.8 ]
+SUPPORTED_RUBIES = %w[ 1.9.3  2.0.0  jruby-1.7.9 ]
 
 CLEAN.include('html', 'doc', 'coverage', '*.gemspec', '*.gem') # clean and clobber do the same thing for now
 
@@ -56,6 +56,7 @@ end
 namespace :gem do
   desc "Install gems for supported versions of Ruby: #{SUPPORTED_RUBIES.join ', '}"
   task :install_dependencies do
+    puts "NOTE: Do not use 'bundle exec...' to run this task."
     fail unless system("rvm #{SUPPORTED_RUBIES.join ','} do bundle install")
   end
 
