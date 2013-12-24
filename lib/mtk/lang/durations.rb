@@ -1,5 +1,3 @@
-require 'rational'
-
 module MTK
   module Lang
 

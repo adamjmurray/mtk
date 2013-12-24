@@ -35,11 +35,21 @@ describe MTK::Sequencers do
 
   describe "#LegatoSequencer" do
     it "creates a LegatoSequencer" do
-      MTK::Sequencers.LegatoSequencer(1,2,3, rhythm:1).should be_a MTK::Sequencers::LegatoSequencer
+      MTK::Sequencers.LegatoSequencer(1,2,3).should be_a MTK::Sequencers::LegatoSequencer
     end
 
     it "sets #patterns from the varargs" do
-      MTK::Sequencers.LegatoSequencer(1,2,3, rhythm:1).patterns.should == [1,2,3]
+      MTK::Sequencers.LegatoSequencer(1,2,3).patterns.should == [1,2,3]
+    end
+
+    it "is includeable" do
+      class SequencersIncluder
+        include MTK::Sequencers
+      end
+      seq = nil
+      SequencersIncluder.new.instance_eval{ seq = LegatoSequencer(1, 2, 3) }
+      seq.should be_a MTK::Sequencers::LegatoSequencer
+      seq.patterns.should == [1, 2, 3]
     end
   end
 end

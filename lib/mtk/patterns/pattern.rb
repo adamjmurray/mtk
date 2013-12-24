@@ -144,19 +144,24 @@ module MTK
         # Define a convenience method like MTK::Patterns.Sequence()
         # that can handle varargs or a single array argument, plus any Hash options
         classname = subclass.name.sub /.*::/, '' # Strip off module prefixes
-        MTK::Patterns.define_singleton_method classname do |*args|
-          options  = (args[-1].is_a? Hash) ? args.pop : {}
-          args = args[0] if args.length == 1 and args[0].is_a? Array
-          subclass.new(args,options)
-        end
-
-        %w(Pitch PitchClass Intensity Duration Interval Rhythm).each do |type|
-          MTK::Patterns.define_singleton_method "#{type}#{classname}" do |*args|
+        MTK::Patterns.module_eval do
+          define_method classname do |*args|
             options  = (args[-1].is_a? Hash) ? args.pop : {}
             args = args[0] if args.length == 1 and args[0].is_a? Array
-            constructor_for_type = (type == 'Rhythm') ? 'Duration' : type
-            args = args.map{|arg| (arg.nil? or arg.is_a? Proc) ? arg : MTK.send(constructor_for_type, arg) } # coerce to the given type (or Duration for rhythm type)
             subclass.new(args,options)
+          end
+          module_function classname
+
+          %w(Pitch PitchClass Intensity Duration Interval Rhythm).each do |type|
+            typed_constructor = "#{type}#{classname}"
+            define_method typed_constructor do |*args|
+              options  = (args[-1].is_a? Hash) ? args.pop : {}
+              args = args[0] if args.length == 1 and args[0].is_a? Array
+              constructor_for_type = (type == 'Rhythm') ? 'Duration' : type
+              args = args.map{|arg| (arg.nil? or arg.is_a? Proc) ? arg : MTK.send(constructor_for_type, arg) } # coerce to the given type (or Duration for rhythm type)
+              subclass.new(args,options)
+            end
+            module_function typed_constructor
           end
         end
       end

@@ -81,3 +81,5 @@ require 'mtk/sequencers/sequencer'
 require 'mtk/sequencers/step_sequencer'
 require 'mtk/sequencers/rhythmic_sequencer'
 require 'mtk/sequencers/legato_sequencer'
+
+require 'mtk/syntax'

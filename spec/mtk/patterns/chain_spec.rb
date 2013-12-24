@@ -104,7 +104,30 @@ describe MTK::Patterns::Chain do
       lambda{ chain.next }.should raise_error StopIteration
     end
   end
+end
 
-  # TODO: test the chain builder method in Patterns module
 
+describe MTK::Patterns do
+
+  describe "#Chain" do
+    it "creates a Chain" do
+      MTK::Patterns.Chain(1,2,3).should be_a MTK::Patterns::Chain
+    end
+
+    it "sets #elements from the varargs" do
+      MTK::Patterns.Chain(1,2,3).elements.should == [1,2,3]
+    end
+
+    it "is includeable" do
+      class PatternsIncluder
+        include MTK::Patterns
+      end
+      pat = nil
+      PatternsIncluder.new.instance_eval{ pat = Chain(1,2,3) }
+      pat.should be_a MTK::Patterns::Chain
+      pat.elements.should == [1, 2, 3]
+    end
+  end
+
+  # TODO: test the other chain builder methods (e.g. PitchChain) in Patterns module
 end

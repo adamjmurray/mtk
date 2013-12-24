@@ -52,7 +52,7 @@ describe MTK::Core::PitchClass do
   
   describe 'VALID_NAMES' do
     it 'is all enharmonic spellings of NAMES including sharps, flats, double-sharps, and double-flats' do
-      PitchClass::VALID_NAMES.should =~ enharmonic_spellings.flatten
+      PitchClass::VALID_NAMES.should =~ enharmonic_spellings
     end
 
     it 'is immutable' do
@@ -196,6 +196,17 @@ describe MTK::Core::PitchClass do
       C.to_s.should == C.name
       for name in enharmonic_spellings
         PitchClass.from_s(name).to_s.should == name
+      end
+    end
+  end
+
+
+  describe '#inspect' do
+    it "includes the class name, pitch class name, and underlying value" do
+      enharmonic_spellings_grouped_by_value.each_with_index do |names,value|
+        for name in names
+          PitchClass.from_s(name).inspect.should == "#<PitchClass: @name=#{name}, @value=#{value}>"
+        end
       end
     end
   end

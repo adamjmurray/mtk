@@ -84,6 +84,16 @@ describe MTK::Patterns do
       function = MTK::Patterns.Function( lambda{ 1 + 1 } )
       function.next.should == 2
     end
+
+    it "is includeable" do
+      class PatternsIncluder
+        include MTK::Patterns
+      end
+      pat = nil
+      PatternsIncluder.new.instance_eval{ pat = Function(:mock_lambda) }
+      pat.should be_a MTK::Patterns::Function
+      pat.function.should == :mock_lambda
+    end
   end
 
   describe "#PitchFunction" do

@@ -134,6 +134,10 @@ module MTK
         @name.to_s
       end
 
+      def inspect
+        "#<PitchClass: @name=#{@name}, @value=#{@value}>"
+      end
+
       # This pitch class's integer {#value}
       def to_i
         @value.to_i

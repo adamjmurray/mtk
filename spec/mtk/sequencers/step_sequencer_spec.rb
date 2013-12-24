@@ -89,5 +89,15 @@ describe MTK::Sequencers do
     it "sets #patterns from the varargs" do
       MTK::Sequencers.StepSequencer(1,2,3).patterns.should == [1,2,3]
     end
+
+    it "is includeable" do
+      class SequencersIncluder
+        include MTK::Sequencers
+      end
+      seq = nil
+      SequencersIncluder.new.instance_eval{ seq = StepSequencer(1, 2, 3) }
+      seq.should be_a MTK::Sequencers::StepSequencer
+      seq.patterns.should == [1, 2, 3]
+    end
   end
 end

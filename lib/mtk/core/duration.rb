@@ -22,6 +22,13 @@ module MTK
         'x' => Rational(1,16)
       }
 
+      # Multiplier for creating dotted durations from a named base duration
+      DOTTED = Rational(3,2)
+
+      # Multiplier for creating triplet durations from a named base duration
+      TRIPLET = Rational(2,3)
+
+
       @flyweight = {}
 
       # The number of beats, typically represented as a Rational
@@ -70,8 +77,8 @@ module MTK
         modifier.each_char do |mod|
           case mod
             when '-' then value *= -1
-            when '.' then value *= Rational(3,2)
-            when 't' then value *= Rational(2,3)
+            when '.' then value *= DOTTED
+            when 't' then value *= TRIPLET
           end
         end
 

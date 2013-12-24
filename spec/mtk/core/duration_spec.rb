@@ -30,6 +30,19 @@ describe MTK::Core::Duration do
   end
 
 
+  describe 'DOTTED' do
+    it 'is the multiplier 3/2' do
+      MTK::Core::Duration::DOTTED.should == Rational(3,2)
+    end
+  end
+
+  describe 'TRIPLET' do
+    it 'is the multiplier 2/3' do
+      MTK::Core::Duration::TRIPLET.should == Rational(2,3)
+    end
+  end
+
+
   describe '.new' do
     it "constructs a Duration with whatever value is given" do
       float = 0.5

@@ -179,6 +179,17 @@ describe MTK::Patterns do
     it "sets #elements from the varargs" do
       MTK::Patterns.ForEach(seq(1,2),seq(3,4)).elements.should == [seq(1,2),seq(3,4)]
     end
+
+
+    it "is includeable" do
+      class PatternsIncluder
+        include MTK::Patterns
+      end
+      pat = nil
+      PatternsIncluder.new.instance_eval{ pat = ForEach(Sequence(1,2),Sequence(3,4)) }
+      pat.should be_a MTK::Patterns::ForEach
+      pat.elements.should == [seq(1,2),seq(3,4)]
+    end
   end
 
 end

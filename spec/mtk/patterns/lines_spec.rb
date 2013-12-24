@@ -42,6 +42,16 @@ describe MTK::Patterns do
     it "sets #elements from the varargs" do
       MTK::Patterns.Lines(1,2,3).elements.should == [1,2,3]
     end
+
+    it "is includeable" do
+      class PatternsIncluder
+        include MTK::Patterns
+      end
+      pat = nil
+      PatternsIncluder.new.instance_eval{ pat = Lines(1,2,3) }
+      pat.should be_a MTK::Patterns::Lines
+      pat.elements.should == [1, 2, 3]
+    end
   end
 
   describe "#PitchLines" do

@@ -80,5 +80,15 @@ describe MTK::Sequencers do
     it "sets #patterns from the varargs" do
       MTK::Sequencers.RhythmicSequencer(1,2,3, rhythm:1).patterns.should == [1,2,3]
     end
+
+    it "is includeable" do
+      class SequencersIncluder
+        include MTK::Sequencers
+      end
+      seq = nil
+      SequencersIncluder.new.instance_eval{ seq = RhythmicSequencer(1, 2, 3, rhythm:1) }
+      seq.should be_a MTK::Sequencers::RhythmicSequencer
+      seq.patterns.should == [1, 2, 3]
+    end
   end
 end

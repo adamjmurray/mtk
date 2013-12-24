@@ -144,8 +144,9 @@ Summary of single-letter meanings:
 A -> pitch class A
 B -> pitch class B
 b -> flat modifier on pitch class
-D -> pitch class c
+C -> pitch class c
 D -> pitch class d
+d -> dotted modifier for Durations (Ruby syntax only, use '.' in the custom grammar)
 E -> pitch class e
 e -> eighth note duration
 F -> pitch class f
@@ -183,7 +184,7 @@ $0 -> scale degree
 
 Modifiers
 ```
-. -> dotted duration
+. -> dotted duration (Ruby syntax uses 'd' since '.' is not a valid name)
 t -> triplet duration
 * -> repetition
 _ -> force rest
