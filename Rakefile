@@ -65,7 +65,7 @@ namespace :gem do
     gem_version = GEM_VERSION
 
     gem_name = 'mtk'
-    platform_specific_depedencies = {unimidi:'~> 0.3'}
+    platform_specific_depedencies = {rtmidi:'~> 0.3'}
     additional_gem_specifications = {}
     generate_gemspec(binding)
 

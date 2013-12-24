@@ -56,7 +56,7 @@ MTK's optional features typically require gems. Currently the following gems are
 
 * MIDI file I/O requires the __midilib__ gem
 
-* realtime MIDI I/O with (MRI/YARV) Ruby requires the __unimidi__ and __gamelan__ gems
+* realtime MIDI I/O with (MRI/YARV) Ruby requires the __rtmidi__ and __gamelan__ gems
 
 * realtime MIDI I/O with JRuby require the __jsound__ and __gamelan__ gems
 

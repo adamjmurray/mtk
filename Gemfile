@@ -11,7 +11,7 @@ platforms :jruby do
   gem "jsound", "~> 0.1"
 end
 platforms :ruby, :mswin, :mingw do
-  gem "unimidi", ">= 0.3"
+  gem "rtmidi", "~> 0.3"
 end
 
 
