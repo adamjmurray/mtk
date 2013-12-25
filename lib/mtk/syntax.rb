@@ -14,6 +14,7 @@ module MTK::Syntax
   include MTK::Lang::IntervalGroups
   include MTK::Lang::RelativeChords
 
+  include MTK # includes helper constructors for Core and Groups like Pitch(arg) and PitchGroup(*args)
   include MTK::Core
   include MTK::Groups
   include MTK::Events
