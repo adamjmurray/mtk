@@ -570,9 +570,9 @@ describe MTK::Sequencers::EventBuilder do
           arp_elem_index_var(1),
           arp_elem_index_var(2)
         )])
-        event_builder.next.should == notes(G4)
-        event_builder.next.should == notes(B4)
-        event_builder.next.should == notes(D5)
+        event_builder.next.should == notes(G3)
+        event_builder.next.should == notes(B3)
+        event_builder.next.should == notes(D4)
       end
 
       it "interprets relative chord arpeggios with a specified scale" do
@@ -583,9 +583,9 @@ describe MTK::Sequencers::EventBuilder do
           arp_elem_index_var(1),
           arp_elem_index_var(2)
         )])
-        event_builder.next.should == notes(A4)
-        event_builder.next.should == notes(Db5)
-        event_builder.next.should == notes(E5)
+        event_builder.next.should == notes(A3)
+        event_builder.next.should == notes(Db4)
+        event_builder.next.should == notes(E4)
       end
 
       it "interprets relative chord arpeggios in a for each pattern" do
@@ -605,9 +605,7 @@ describe MTK::Sequencers::EventBuilder do
         ])])
         notes = []
         12.times{ notes += event_builder.next }
-        # This should be the expected output but due to the bug with using the previous pitch octave, it's wrong
-        # notes.should == notes(C4,E4,G4,F4,A4,C5,G4,B4,D4,C5,E5,G5)
-        notes.should == notes(C4,E4,G4,F4,A4,C5,G5,B5,D6,C6,E6,G6) # TODO: fix this
+        notes.should == notes(C4,E4,G4,F4,A4,C5,G4,B4,D5,C5,E5,G5)
       end
     end
 

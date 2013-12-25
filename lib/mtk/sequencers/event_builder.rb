@@ -87,24 +87,28 @@ module MTK
 
               when MTK::Lang::Variable
                 case
-                  when element.scale? then @scale = element.value; return self.next
+                  when element.scale?
+                    @scale = element.value
+                    return self.next
 
                   when element.scale_element? then evaluate_scale(element, pitches)
 
                   when element.arpeggio?
                     @arpeggio = element.value
                     if @arpeggio.is_a? MTK::Groups::RelativeChord
-                      # TODO: this is buggy, shouldn't just blindly use the octave like this
-                      @arpeggio = @arpeggio.to_chord(@scale, @previous_pitch.octave)
+                      pitch_classes = @arpeggio.to_pitch_classes(@scale)
+                      previous_pitch = @previous_pitch
+                      # after @previous_pitch, use each pitch of the chord as the previous_pitch to select the next one
+                      pitches = pitch_classes.map{|pitch_class| previous_pitch = previous_pitch.nearest(pitch_class) }
+                      @arpeggio = MTK::Groups::Chord.new(pitches)
                     end
                     return self.next
 
                   when element.arpeggio_element? then evaluate_arpeggio(element, pitches)
 
                   else
-                    # ForEach "implicit" variables should already have been evaluated by the Pattern
-                    STDERR.puts "#{self.class}#next: Encountered unsupported variable #{element}"
-                    # TODO: Add general variable support later
+                    # Note: valid ForEach variables will already have been evaluated by the Pattern
+                    STDERR.puts "#{self.class}#next: Encountered unsupported / out-of-context variable #{element}"
                 end
 
               when MTK::Lang::Modifier
@@ -113,7 +117,6 @@ module MTK
 
                   else
                     STDERR.puts "#{self.class}#next: Encountered unsupported modifier #{element}"
-                    # TODO other special behaviors like :skip, or :break (something like StopIteration for the current Pattern?)
                 end
 
               else STDERR.puts "#{self.class}#next: Unexpected type '#{element.class}'"
