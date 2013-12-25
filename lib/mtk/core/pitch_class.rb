@@ -189,10 +189,10 @@ module MTK
   # Construct a {PitchClass} from any supported type
   # @param anything [PitchClass,String,Symbol,Numeric]
   def PitchClass(anything)
-    # TODO: support Pitch or anything that responds to #to_pitch_class
     case anything
       when Numeric then MTK::Core::PitchClass.from_f(anything)
       when String, Symbol then MTK::Core::PitchClass.from_s(anything)
+      when MTK::Core::Pitch then anything.pitch_class
       when MTK::Core::PitchClass then anything
       else raise ArgumentError.new("PitchClass doesn't understand #{anything.class}")
     end

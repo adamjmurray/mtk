@@ -334,6 +334,10 @@ describe MTK do
       PitchClass(3).should == PitchClass.from_i(3)
     end
 
+    it "extracts the PitchClass from a Pitch" do
+      PitchClass(C4).should == C
+    end
+
     it "returns the argument if it's already a PitchClass" do
       PitchClass(C).should be_equal C
     end
