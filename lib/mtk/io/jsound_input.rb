@@ -15,7 +15,17 @@ module MTK
       end
 
       def self.devices_by_name
-        @devices_by_name ||= devices.each_with_object( Hash.new ){|device,hash| hash[device.description] = device }
+        @devices_by_name ||= (
+          devices.each_with_object( Hash.new ) do |device,hash|
+            dedup = 1
+            name = device.description
+            while hash.include?(name) # handle ports with duplicate names
+              dedup += 1
+              name = "#{device.description}(#{dedup})"
+            end
+            hash[name] = device
+          end
+        )
       end
 
 

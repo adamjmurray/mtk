@@ -20,7 +20,15 @@ module MTK
         @devices_by_name ||= (
           @midiout = RtMidi::Out.new
           hash = {}
-          @midiout.port_names.each_with_index{|name,index| hash[name] = index }
+          @midiout.port_names.each_with_index do |name,index|
+            dedup = 1
+            orig_name = name
+            while hash.include?(name) # handle ports with duplicate names
+              dedup += 1
+              name = "#{orig_name}(#{dedup})"
+            end
+            hash[name] = index
+          end
           hash
         )
       end
