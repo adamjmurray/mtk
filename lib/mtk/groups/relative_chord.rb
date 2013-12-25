@@ -43,19 +43,36 @@ module MTK
       end
 
 
-      def to_chord(scale, octave=4)
+      def to_pitch_classes(scale)
+        root = scale[@scale_index % scale.length]
+        @interval_group.to_pitch_classes(root)
+      end
+
+      def to_pitch_class_group(scale)
+        MTK::Groups::PitchClassGroup.new to_pitch_classes(scale)
+      end
+
+
+      def to_pitches(scale, octave_or_nearest_pitch=nil)
         root = scale[@scale_index % scale.length]
         if root.is_a? MTK::Core::PitchClass
-          root = MTK::Core::Pitch[root, octave]
+          octave_or_nearest_pitch ||= MTK::Lang::Pitches::C4
+          root = case octave_or_nearest_pitch
+            when Fixnum then MTK::Core::Pitch[root, octave_or_nearest_pitch] # octave case
+            when MTK::Core::Pitch then octave_or_nearest_pitch.nearest(root) # nearest pitch case
+            else raise InvalidArgument("Invalid octave_or_nearest_pitch argument: #{octave_or_nearest_pitch}")
+          end
         end
         pitches = @interval_group.to_pitches(root)
         MTK::Groups::Chord.new(pitches)
       end
 
+      def to_pitch_group(scale, octave_or_nearest_pitch=nil)
+        MTK::Groups::PitchGroup.new to_pitches(scale, octave_or_nearest_pitch)
+      end
 
-      def to_pitch_classes(scale)
-        root = scale[@scale_index % scale.length]
-        @interval_group.to_pitch_classes(root)
+      def to_chord(scale, octave_or_nearest_pitch=nil)
+        MTK::Groups::Chord.new to_pitches(scale, octave_or_nearest_pitch)
       end
 
 

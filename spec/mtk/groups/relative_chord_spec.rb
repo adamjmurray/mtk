@@ -50,45 +50,6 @@ describe MTK::Groups::RelativeChord do
   end
 
 
-  describe "#to_chord" do
-    it "converts to a chord in the given scale as an Array of Pitches" do
-      chord = relative_chord.to_chord( [C3,D3,E3,F3,G3,A3,B3] )
-      chord.should be_a Groups::Chord
-      chord.should == [F3,A3,C4]
-    end
-
-    it "converts to a chord in the given scale as a PitchGroup" do
-      chord = relative_chord.to_chord( MTK.PitchGroup(C3,D3,E3,F3,G3,A3,B3) )
-      chord.should be_a Groups::Chord
-      chord.should == [F3,A3,C4]
-    end
-
-    it "converts to a chord with root pitch in the default octave 4 in the given scale as an Array of PitchClasses" do
-      chord = relative_chord.to_chord( [C,D,E,F,G,A,B] )
-      chord.should be_a Groups::Chord
-      chord.should == [F4,A4,C5]
-    end
-
-    it "converts to a chord in the default octave 4 in the given scale as a PitchGroup" do
-      chord = relative_chord.to_chord( MTK.PitchClassGroup(C,D,E,F,G,A,B) )
-      chord.should be_a Groups::Chord
-      chord.should == [F4,A4,C5]
-    end
-
-    it "converts to a chord with root pitch in the given scale as an Array of PitchClasses and the given octave" do
-      chord = relative_chord.to_chord( [C,D,E,F,G,A,B], 5 )
-      chord.should be_a Groups::Chord
-      chord.should == [F5,A5,C6]
-    end
-
-    it "converts to a chord in the given scale as a PitchGroup and the given octave" do
-      chord = relative_chord.to_chord( MTK.PitchClassGroup(C,D,E,F,G,A,B), 5 )
-      chord.should be_a Groups::Chord
-      chord.should == [F5,A5,C6]
-    end
-  end
-
-
   describe "#to_pitch_classes" do
     it "converts to a list of PitchClasses in the given scale" do
       pitch_classes = relative_chord.to_pitch_classes( [C3,D3,E3,F3,G3,A3,B3] )
@@ -96,6 +57,72 @@ describe MTK::Groups::RelativeChord do
     end
   end
 
+  describe "#to_pitch_class_group" do
+    it "acts like #to_pitch_classes but returns a PitchClassGroup" do
+      pitch_class_group = relative_chord.to_pitch_class_group( [C3,D3,E3,F3,G3,A3,B3] )
+      pitch_class_group.should be_a MTK::Groups::PitchClassGroup
+      pitch_class_group.should == [F,A,C]
+    end
+  end
+
+
+  describe "#to_pitches" do
+    it "converts to pitches when given a scale as an Array of Pitches" do
+      relative_chord.to_pitches( [C3,D3,E3,F3,G3,A3,B3] ).should == [F3,A3,C4]
+    end
+
+    it "converts to pitches when given a scale as a PitchGroup" do
+      relative_chord.to_pitches( MTK.PitchGroup(C3,D3,E3,F3,G3,A3,B3) ).should == [F3,A3,C4]
+    end
+
+    it "converts to pitches with root pitch nearest C4 when given a scale as an Array of PitchClasses" do
+      relative_chord.to_pitches( [C,D,E,F,G,A,B] ).should == [F4,A4,C5]
+    end
+
+    it "converts to pitches with root pitch nearest C4 when given a scale as a PitchGroup" do
+      relative_chord.to_pitches( MTK.PitchClassGroup(C,D,E,F,G,A,B) ).should == [F4,A4,C5]
+    end
+
+    it "converts to a chord with root pitch nearest the given Pitch when given a scale as an Array of PitchClasses" do
+      relative_chord.to_pitches( [C,D,E,F,G,A,B], C6 ).should == [F6,A6,C7]
+    end
+
+    it "converts to a chord with root pitch nearest the given Pitch when given a scale as a PitchGroup" do
+      relative_chord.to_pitches( MTK.PitchClassGroup(C,D,E,F,G,A,B), D6 ).should == [F6,A6,C7]
+    end
+
+    it "converts to a chord with root pitch in the given octave when given a scale as an Array of PitchClasses" do
+      relative_chord.to_pitches( [C,D,E,F,G,A,B], 5 ).should == [F5,A5,C6]
+    end
+
+    it "converts to a chord with root pitch in the given octave when given a scale as a PitchGroup" do
+      relative_chord.to_pitches( MTK.PitchClassGroup(C,D,E,F,G,A,B), 5 ).should == [F5,A5,C6]
+    end
+  end
+
+  describe "#to_pitch_group" do
+    it "acts like #to_pitches but returns a PitchGroup" do
+      pitch_group = relative_chord.to_pitch_group( [C,D,E,F,G,A,B], C6 )
+      pitch_group.should be_a MTK::Groups::PitchGroup
+      pitch_group.should == [F6,A6,C7]
+
+      pitch_group = relative_chord.to_pitch_group( [C,D,E,F,G,A,B], 5 )
+      pitch_group.should be_a MTK::Groups::PitchGroup
+      pitch_group.should == [F5,A5,C6]
+    end
+  end
+
+  describe "#to_chord" do
+    it "acts like #to_pitches but returns a Chord" do
+      chord = relative_chord.to_chord( [C,D,E,F,G,A,B], C6 )
+      chord.should be_a MTK::Groups::Chord
+      chord.should == [F6,A6,C7]
+      chord
+      chord = relative_chord.to_chord( [C,D,E,F,G,A,B], 5 )
+      chord.should be_a MTK::Groups::Chord
+      chord.should == [F5,A5,C6]
+    end
+  end
 
   describe "#==" do
     it "is true if the scale_index and interval_group are equal" do

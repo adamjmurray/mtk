@@ -30,7 +30,7 @@ module MTK
         @patterns.each do |pattern|
           pattern_value = pattern.next
 
-          elements = if pattern_value.is_a? Enumerable and not pattern_value.is_a? MTK::Groups::Group then
+          elements = if pattern_value.is_a? Enumerable and not pattern_value.is_a? MTK::Groups::Group
             pattern_value # pattern Chains already return an Array of elements
           else
             [pattern_value]
@@ -70,10 +70,7 @@ module MTK
                 @previous_pitch = chord_pitches.first # use the "chord root" to control nearest pitch behavior for the next evaluation
 
               when MTK::Groups::RelativeChord
-                pitch_classes = element.to_pitch_classes(@scale)
-                previous_pitch = @previous_pitch
-                # after @previous_pitch, use each pitch of the chord as the previous_pitch to select the next one
-                chord_pitches = pitch_classes.map{|pitch_class| previous_pitch = previous_pitch.nearest(pitch_class) }
+                chord_pitches = element.to_pitches(@scale, @previous_pitch)
                 pitches.concat(chord_pitches)
                 @previous_pitch = chord_pitches.first # use the "chord root" to control nearest pitch behavior for the next evaluation
 
@@ -96,11 +93,7 @@ module MTK
                   when element.arpeggio?
                     @arpeggio = element.value
                     if @arpeggio.is_a? MTK::Groups::RelativeChord
-                      pitch_classes = @arpeggio.to_pitch_classes(@scale)
-                      previous_pitch = @previous_pitch
-                      # after @previous_pitch, use each pitch of the chord as the previous_pitch to select the next one
-                      pitches = pitch_classes.map{|pitch_class| previous_pitch = previous_pitch.nearest(pitch_class) }
-                      @arpeggio = MTK::Groups::Chord.new(pitches)
+                      @arpeggio = @arpeggio.to_chord(@scale, @previous_pitch)
                     end
                     return self.next
 
@@ -158,13 +151,13 @@ module MTK
         @previous_duration  = @default_duration
 
         @scale = MTK.PitchClassGroup( # default scale is C major
-            MTK::Lang::PitchClasses::C,
-            MTK::Lang::PitchClasses::D,
-            MTK::Lang::PitchClasses::E,
-            MTK::Lang::PitchClasses::F,
-            MTK::Lang::PitchClasses::G,
-            MTK::Lang::PitchClasses::A,
-            MTK::Lang::PitchClasses::B,
+          MTK::Lang::PitchClasses::C,
+          MTK::Lang::PitchClasses::D,
+          MTK::Lang::PitchClasses::E,
+          MTK::Lang::PitchClasses::F,
+          MTK::Lang::PitchClasses::G,
+          MTK::Lang::PitchClasses::A,
+          MTK::Lang::PitchClasses::B,
         )
         @previous_scale_index = 0
 
