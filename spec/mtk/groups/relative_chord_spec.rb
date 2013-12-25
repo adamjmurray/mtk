@@ -89,6 +89,14 @@ describe MTK::Groups::RelativeChord do
   end
 
 
+  describe "#to_pitch_classes" do
+    it "converts to a list of PitchClasses in the given scale" do
+      pitch_classes = relative_chord.to_pitch_classes( [C3,D3,E3,F3,G3,A3,B3] )
+      pitch_classes.should == [F,A,C]
+    end
+  end
+
+
   describe "#==" do
     it "is true if the scale_index and interval_group are equal" do
       RELATIVE_CHORD.new(scale_index, interval_group).should == RELATIVE_CHORD.new(scale_index, interval_group)

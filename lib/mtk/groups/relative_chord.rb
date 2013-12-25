@@ -53,6 +53,12 @@ module MTK
       end
 
 
+      def to_pitch_classes(scale)
+        root = scale[@scale_index % scale.length]
+        @interval_group.to_pitch_classes(root)
+      end
+
+
       def ==(other)
         other.is_a? self.class and @scale_index == other.scale_index and @interval_group == other.interval_group
       end

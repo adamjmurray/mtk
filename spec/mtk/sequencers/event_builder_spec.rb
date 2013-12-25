@@ -644,7 +644,7 @@ describe MTK::Sequencers::EventBuilder do
           MTK::Lang::RelativeChords::vi
         )])
         event_builder.next.should == notes(D4,Gb4,A4)
-        event_builder.next.should == notes(B4,D5,Gb5) # TODO: this should actually be an octave down
+        event_builder.next.should == notes(B3,D4,Gb4)
       end
 
       it "interprets chords against the given scale, using the octave of the previous pitch" do

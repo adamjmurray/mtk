@@ -70,9 +70,11 @@ module MTK
                 @previous_pitch = chord_pitches.first # use the "chord root" to control nearest pitch behavior for the next evaluation
 
               when MTK::Groups::RelativeChord
-                # TODO: this is buggy, shouldn't just blindly use the octave like this
-                chord_pitches = element.to_chord(@scale, @previous_pitch.octave).pitches
-                pitches += chord_pitches
+                pitch_classes = element.to_pitch_classes(@scale)
+                previous_pitch = @previous_pitch
+                # after @previous_pitch, use each pitch of the chord as the previous_pitch to select the next one
+                chord_pitches = pitch_classes.map{|pitch_class| previous_pitch = previous_pitch.nearest(pitch_class) }
+                pitches.concat(chord_pitches)
                 @previous_pitch = chord_pitches.first # use the "chord root" to control nearest pitch behavior for the next evaluation
 
               when MTK::Core::Interval
@@ -203,7 +205,7 @@ module MTK
 
           when :all
             previous_pitch = @previous_pitch
-            # after @previous_pitch, use the scales previous_pitch to select the next one
+            # after @previous_pitch, use each pitch of the scale as the previous_pitch to select the next one
             scale_pitches = @scale.pitch_classes.map{|pitch_class| previous_pitch = previous_pitch.nearest(pitch_class) }
             pitches.concat(scale_pitches)
             @previous_pitch = scale_pitches.first # treat the scale root as the most important pitch
