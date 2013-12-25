@@ -14,6 +14,10 @@ module MTK
         @type == :force_rest
       end
 
+      def skip?
+        @type == :skip
+      end
+
       def == other
         other.is_a? self.class and other.type == @type
       end

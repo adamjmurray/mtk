@@ -292,8 +292,18 @@ grammar MTK_Grammar
   end
 
   rule modifier
+    ( force_rest | skip )
+  end
+
+  rule force_rest
     ( '_' ) {
       MTK::Lang::Modifier.new(:force_rest)
+    }
+  end
+
+  rule skip
+    ( ';' ) {
+      MTK::Lang::Modifier.new(:skip)
     }
   end
 

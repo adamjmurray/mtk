@@ -37,7 +37,7 @@ module MTK
           end
 
           elements.each do |element|
-            return nil if element.nil? or element == :skip
+            return nil if element.nil?
 
             case element
               when MTK::Core::Pitch
@@ -107,6 +107,8 @@ module MTK
               when MTK::Lang::Modifier
                 case
                   when element.force_rest? then force_rest = true
+
+                  when element.skip? then return self.next
 
                   else
                     STDERR.puts "#{self.class}#next: Encountered unsupported modifier #{element}"

@@ -101,8 +101,14 @@ describe MTK::Sequencers::EventBuilder do
       notes.flatten.should == notes(C3,G2,B2,Eb3,D3,C3)
     end
 
+    it "returns raises StopIteration when there are no more events" do
+      event_builder = EVENT_BUILDER.new [Patterns.Sequence(C)]
+      event_builder.next
+      ->{ event_builder.next }.should raise_error StopIteration
+    end
+
     it "defaults to a starting point of C4 (middle C)" do
-      event_builder = EVENT_BUILDER.new [Patterns.Sequence(C4)]
+      event_builder = EVENT_BUILDER.new [Patterns.Sequence(C)]
       event_builder.next.should == notes(C4)
     end
 
@@ -681,6 +687,41 @@ describe MTK::Sequencers::EventBuilder do
         note = notes.first
         note.rest?.should be_true
         note.duration.should == -1
+      end
+    end
+
+
+    context "skip behavior" do
+      it "skips over the skip modifier and returns the next event" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          C4, MTK::Lang::Modifier.new(:skip), D4
+        )])
+        event_builder.next.should == [Note(C4)]
+        event_builder.next.should == [Note(D4)]
+        ->{ event_builder.next }.should raise_error StopIteration
+      end
+
+      it "allows for optionally emitting an event when a skip modifier is used within a Choice pattern" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          C4, Patterns.Choice(MTK::Lang::Modifier.new(:skip), D4), E4
+        )])
+        saw_skip = false
+        saw_non_skip = true
+        25.times do
+          event_builder.rewind
+          events = []
+          loop{ events += event_builder.next }
+          if events == [Note(C4),Note(E4)]
+            saw_skip = true
+          elsif events == [Note(C4),Note(D4),Note(E4)]
+            saw_non_skip = true
+          else
+            fail "Unexpected event stream: #{events}"
+          end
+        end
+        saw_skip.should be_true
+        saw_non_skip.should be_true
+        # slight chance of failure, just run again
       end
     end
 

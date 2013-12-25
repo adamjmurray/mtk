@@ -708,6 +708,12 @@ describe MTK::Lang::Parser do
         modifier.should be_a MTK::Lang::Modifier
         modifier.force_rest?.should be_true
       end
+
+      it "parses ';' as a skip Modifier" do
+        modifier = parse(';', :modifier)
+        modifier.should be_a MTK::Lang::Modifier
+        modifier.skip?.should be_true
+      end
     end
 
 
