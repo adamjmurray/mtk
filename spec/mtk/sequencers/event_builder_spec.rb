@@ -536,7 +536,8 @@ describe MTK::Sequencers::EventBuilder do
 
       it "sets the arpeggio index to the arpeggio 'random' variable's index for any successive arpeggio increment variables" do
         event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-          arpeggio(Lang::Pitches::PITCHES[1...-1]), # don't include first or last so prev_pitch+1 and prev_pitch-1 work as expected below
+          # use a full chromatic scale so 'wrap-around' will just go up/down to next/prev octave
+          arpeggio(C4,Db4,D4,Eb4,E4,F4,Gb4,G4,Ab4,A4,Bb4,B4),
           arp_elem_rand_var, arp_elem_inc_var(0),
           arp_elem_rand_var, arp_elem_inc_var(1),
           arp_elem_rand_var, arp_elem_inc_var(-1)
