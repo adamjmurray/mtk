@@ -360,7 +360,6 @@ describe MTK::Lang::Parser do
       end
 
       it "parses a chain of for each patterns" do
-        # TODO: is this really the desired operator precedence? seems backwards?
         parse('(C D)#(E F):(G A)#(B C)', :chain).should == chain( for_each(seq(C,D),seq(E,F)), for_each(seq(G,A),seq(B,C)) )
       end
 
