@@ -567,10 +567,16 @@ describe MTK::Lang::Parser do
         variable.value.should == -3
       end
 
-      it "parses random scale elements" do
+      it "parses 'random' scale elements" do
         variable = parse("$?", :scale_element)
         variable.scale_element?.should be_true
         variable.name.should be :random
+      end
+
+      it "parses 'all' scale elements" do
+        variable = parse("$!", :scale_element)
+        variable.scale_element?.should be_true
+        variable.name.should be :all
       end
     end
 
@@ -682,7 +688,7 @@ describe MTK::Lang::Parser do
         end
       end
 
-      it "parses random arpeggio elements" do
+      it "parses 'random' arpeggio elements" do
         variable = parse("@?", :arpeggio_element)
         variable.arpeggio_element?.should be_true
         variable.name.should be :random

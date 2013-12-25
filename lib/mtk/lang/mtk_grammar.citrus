@@ -139,7 +139,7 @@ grammar MTK_Grammar
   end
 
   rule scale_element
-    ( scale_index | scale_increment | scale_random )
+    ( scale_index | scale_increment | scale_random | scale_all )
   end
 
   rule arpeggio
