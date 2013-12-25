@@ -372,4 +372,16 @@ describe MTK::Groups::Group do
     end
   end
 
+  describe "#to_s" do
+    it 'is "[#{elem0.to_s}, #{elem1.to_s}, ..., #{elemN.to_s}]"' do
+      collection.to_s.should == "[1, 2, 3, 4, 5]"
+    end
+  end
+
+  describe "#inspect" do
+    it 'is "#<#{GroupClassName}: [#{elem0.to_s}, #{elem1.to_s}, ..., #{elemN.to_s}]>"' do
+      collection.inspect.should == "#<Group: [1, 2, 3, 4, 5]>"
+    end
+  end
+
 end

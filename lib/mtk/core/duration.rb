@@ -158,7 +158,7 @@ module MTK
       end
 
       def inspect
-        "#<#{self.class}:#{object_id} @value=#{@value}>"
+        "#<Duration: @value=#{@value}>"
       end
 
       def ==( other )

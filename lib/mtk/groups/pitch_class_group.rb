@@ -54,14 +54,6 @@ module MTK
         end
       end
 
-      def to_s
-        @elements.join(' ')
-      end
-
-      def inspect
-        @elements.inspect
-      end
-
     end
   end
 

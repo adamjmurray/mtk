@@ -97,7 +97,7 @@ module MTK
       end
 
       def inspect
-        "#{self.class}<#{to_s} semitones>"
+        "#<Interval: @value=#{@value}>"
       end
 
       def ==( other )

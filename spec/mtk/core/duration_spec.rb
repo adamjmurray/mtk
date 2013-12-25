@@ -264,10 +264,10 @@ describe MTK::Core::Duration do
   end
 
   describe '#inspect' do
-    it 'is "#<MTK::Core::Duration:{object_id} @value={value}>"' do
+    it 'includes the value' do
       for value in [0, 60, 60.5, 127]
         duration = Duration.new(value)
-        duration.inspect.should == "#<MTK::Core::Duration:#{duration.object_id} @value=#{value}>"
+        duration.inspect.should == "#<Duration: @value=#{value}>"
       end
     end
   end

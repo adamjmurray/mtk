@@ -147,10 +147,10 @@ describe MTK::Core::Intensity do
   end
 
   describe '#inspect' do
-    it 'is "#<MTK::Core::Intensity:{object_id} @value={value}>"' do
+    it 'includes the value' do
       for value in [0, 60, 60.5, 127]
         intensity = Intensity.new(value)
-        intensity.inspect.should == "#<MTK::Core::Intensity:#{intensity.object_id} @value=#{value}>"
+        intensity.inspect.should == "#<Intensity: @value=#{value}>"
       end
     end
   end

@@ -162,6 +162,15 @@ module MTK
          clone_with to_a
        end
 
+       def to_s
+         "[#{@elements.join ', '}]"
+       end
+
+       def inspect
+         @@classname ||= self.class.name.sub /.*::/, '' # Strip off module prefixes
+         "#<#{@@classname}: #{to_s}>"
+       end
+
        #################################
        private
 

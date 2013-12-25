@@ -124,11 +124,18 @@ describe MTK::Events::Note do
   end
 
   describe "#inspect" do
-    it 'is "#<MTK::Events::Note:{object_id} @pitch={pitch.inspect}, @duration={duration.inspect}, @intensity={intensity.inspect}>"' do
-      duration = MTK.Duration(1/8.0)
-      intensity = MTK.Intensity(1/8.0)
+    it 'includes pitch, duration, and intensity' do
+      duration = MTK.Duration(0.25)
+      intensity = MTK.Intensity(0.5)
       note = NOTE.new(C4, duration, intensity)
-      note.inspect.should == "#<MTK::Events::Note:#{note.object_id} @pitch=#{C4.inspect}, @duration=#{duration.inspect}, @intensity=#{intensity.inspect}>"
+      note.inspect.should == "#<Note: @pitch=C4, @duration=0.25, @intensity=0.5>"
+    end
+
+    it 'includes channel when set' do
+      duration = MTK.Duration(0.25)
+      intensity = MTK.Intensity(0.5)
+      note = NOTE.new(C4, duration, intensity, 5)
+      note.inspect.should == "#<Note: @pitch=C4, @duration=0.25, @intensity=0.5, @channel=5>"
     end
   end
 

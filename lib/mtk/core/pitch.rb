@@ -95,7 +95,7 @@ module MTK
       end
 
       def inspect
-        "#<#{self.class}:#{object_id} @value=#{@value}>"
+        "#<Pitch: @name=#{to_s}, @value=#{@value}>"
       end
 
       def ==( other )

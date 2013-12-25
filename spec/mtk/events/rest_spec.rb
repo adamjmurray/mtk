@@ -132,8 +132,14 @@ describe MTK::Events::Rest do
   end
 
   describe "#inspect" do
-    it 'is "#<MTK::Events::Rest:{object_id} @duration={duration.inspect}, @channel={channel}>"' do
-      rest.inspect.should == "#<MTK::Events::Rest:#{rest.object_id} @duration=#{rest.duration.inspect}, @channel=#{channel}>"
+    it 'includes duration' do
+      rest = REST.new(MTK.Duration(0.25))
+      rest.inspect.should == "#<Rest: @duration=-0.25>"
+    end
+
+    it 'includes channel when set' do
+      rest = REST.new(MTK.Duration(0.25), 5)
+      rest.inspect.should == "#<Rest: @duration=-0.25, @channel=5>"
     end
   end
 

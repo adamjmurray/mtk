@@ -105,10 +105,6 @@ module MTK
         end
       end
 
-      def to_s
-        '[' + @elements.map{|pitch| pitch.to_s}.join(', ') + ']'
-      end
-
     end
   end
 

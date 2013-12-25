@@ -133,6 +133,14 @@ describe MTK::Core::Interval do
     end
   end
 
+  describe '#inspect' do
+    it 'includes the value' do
+      for value in [0, 1, -4, 5.5]
+        Interval.new(value).inspect.should == "#<Interval: @value=#{value}>"
+      end
+    end
+  end
+
   describe '#==' do
     it "compares two interval values for equality" do
       Interval.new(Rational(1,2)).should == Interval.new(0.5)

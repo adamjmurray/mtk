@@ -90,7 +90,7 @@ module MTK
       end
 
       def inspect
-        "#<#{self.class}:#{object_id} @value=#{@value}>"
+        "#<Intensity: @value=#{@value}>"
       end
 
       def ==( other )

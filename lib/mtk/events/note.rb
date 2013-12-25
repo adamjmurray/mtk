@@ -62,7 +62,8 @@ module MTK
       end
 
       def inspect
-        "#<#{self.class}:#{object_id} @pitch=#{@number.inspect}, @duration=#{@duration.inspect}, @intensity=#{@value.inspect}>"
+        "#<Note: @pitch=#{@number}, @duration=#{@duration.value}, @intensity=#{@value.value}" +
+          if @channel then ", @channel=#{@channel}>" else '>' end
       end
 
     end

@@ -142,10 +142,10 @@ describe MTK::Core::Pitch do
   end
 
   describe '#inspect' do
-    it 'is "#<MTK::Core::Pitch:{object_id} @value={value}>"' do
+    it 'includes the pitch name and value' do
       for value in [0, 60, 60.5, 127]
         pitch = Pitch.from_f(value)
-        pitch.inspect.should == "#<MTK::Core::Pitch:#{pitch.object_id} @value=#{value}>"
+        pitch.inspect.should == "#<Pitch: @name=#{pitch.to_s}, @value=#{value}>"
       end
     end
   end

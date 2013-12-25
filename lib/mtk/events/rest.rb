@@ -42,7 +42,7 @@ module MTK
       end
 
       def inspect
-        "#<#{self.class}:#{object_id} @duration=#{@duration.inspect}" +
+        "#<Rest: @duration=#{@duration.value}" +
             if @channel then ", @channel=#{@channel}>" else '>' end
       end
 
