@@ -4,7 +4,7 @@ require 'erb'
 
 GEM_VERSION = '0.4'
 
-SUPPORTED_RUBIES = %w[ 1.9.3  2.0.0  jruby ]
+SUPPORTED_RUBIES = %w[ 1.9.3  2.0, 2.1  jruby ]
 
 CLEAN.include('html', 'doc', 'coverage', '*.gemspec', '*.gem') # clean and clobber do the same thing for now
 

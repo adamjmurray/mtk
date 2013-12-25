@@ -23,7 +23,7 @@ Features
 Getting Started
 ---------------
 
-MTK works with Ruby 1.9, Ruby 2.0, and JRuby 1.7+.
+MTK works with Ruby 1.9, Ruby 2.0, Ruby 2.1, and JRuby 1.7+.
 
 JRuby is recommended for Windows users.
 
