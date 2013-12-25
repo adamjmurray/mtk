@@ -199,6 +199,7 @@ module MTK
             pitch_class = @scale.random
             pitches << @previous_pitch.nearest(pitch_class)
             @previous_pitch = pitches.last
+            @previous_scale_index = @scale.find_index(pitch_class)
 
           when :all
             previous_pitch = @previous_pitch
@@ -226,7 +227,9 @@ module MTK
             @previous_arpeggio_index += element.value
 
           when :random
-            pitches << @arpeggio.random
+            pitch = @arpeggio.random
+            pitches << pitch
+            @previous_arpeggio_index = @arpeggio.find_index(pitch)
 
           when :all
             pitches.concat(@arpeggio.pitches)

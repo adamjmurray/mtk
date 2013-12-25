@@ -363,7 +363,7 @@ describe MTK::Sequencers::EventBuilder do
         event_builder.next.should == [Note(F4,q)]
       end
 
-      it "interprets scale random variables against the scale that occurred most recently" do
+      it "interprets scale 'random' variables against the scale that occurred most recently" do
         event_builder = EVENT_BUILDER.new([Patterns.Sequence(
             scale(Db,Eb),
             scale(Lang::PitchClasses::PITCH_CLASSES),
@@ -380,6 +380,24 @@ describe MTK::Sequencers::EventBuilder do
         sixth = event_builder.next[0].pitch
         (first==second && first==second && first==third && first==fourth && first==fifth && first==sixth ).should be_false
         # slight chance this will fail, just run again
+      end
+
+      it "sets the scale index to the scale 'random' variable's index for any successive scale increment variables" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          scale(Lang::PitchClasses::PITCH_CLASSES),
+          scale_elem_rand_var, scale_elem_inc_var(0),
+          scale_elem_rand_var, scale_elem_inc_var(1),
+          scale_elem_rand_var, scale_elem_inc_var(-1)
+        )])
+        prev_pitch = event_builder.next[0].pitch
+        # now an increment of 0 should give the same pitch
+        event_builder.next[0].pitch.should == prev_pitch
+        prev_pitch = event_builder.next[0].pitch
+        # and an increment of 1:
+        event_builder.next[0].pitch.should == prev_pitch+1
+        prev_pitch = event_builder.next[0].pitch
+        # and  an increment of -1:
+        event_builder.next[0].pitch.should == prev_pitch-1
       end
 
       it "interprets scale 'all' variables against the current scale, with each pitch closest to the previosu pitch in the scale" do
@@ -399,6 +417,16 @@ describe MTK::Sequencers::EventBuilder do
         # In other words, it emits the same event repeatedly
         event_builder.next.should == [Note(C4),Note(D4),Note(F4),Note(G4),Note(A4)]
         event_builder.next.should == [Note(C4),Note(D4),Note(F4),Note(G4),Note(A4)]
+      end
+
+      it "does not change the scale index when a scale 'all' variable is evaluated" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          scale(C,D,F,G,A),
+          scale_elem_inc_var(1), scale_elem_all_var, scale_elem_inc_var(1)
+        )])
+        event_builder.next[0].pitch.should == D4
+        event_builder.next # the whole scale, previous pitch will be C4
+        event_builder.next[0].pitch.should == F4
       end
     end
     
@@ -479,7 +507,7 @@ describe MTK::Sequencers::EventBuilder do
         event_builder.next.should == [Note(E4,q)]
       end
 
-      it "interprets arpeggio all variables against the arpeggio and arpeggio index that occurred most recently" do
+      it "interprets arpeggio 'all' variables against the arpeggio and arpeggio index that occurred most recently" do
         event_builder = EVENT_BUILDER.new([Patterns.Sequence(
           arpeggio(C4,D4,E4,F4,G4,A4,B4),
           arpeggio(Db5,Eb5),
@@ -489,7 +517,7 @@ describe MTK::Sequencers::EventBuilder do
         event_builder.next.should == [Note(Db5,q),Note(Eb5,q)]
       end
 
-      it "interprets arpeggio random variables against the arpeggio and arpeggio index that occurred most recently" do
+      it "interprets arpeggio 'random' variables against the arpeggio and arpeggio index that occurred most recently" do
         event_builder = EVENT_BUILDER.new([Patterns.Sequence(
           arpeggio(Db5,Eb5),
           arpeggio(Lang::Pitches::PITCHES),
@@ -504,6 +532,34 @@ describe MTK::Sequencers::EventBuilder do
         fourth = event_builder.next[0].pitch
         (first==second && first==second && first==third && first==fourth ).should be_false
         # slight chance this will fail, just run again
+      end
+
+      it "sets the arpeggio index to the arpeggio 'random' variable's index for any successive arpeggio increment variables" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          arpeggio(Lang::Pitches::PITCHES),
+          arp_elem_rand_var, arp_elem_inc_var(0),
+          arp_elem_rand_var, arp_elem_inc_var(1),
+          arp_elem_rand_var, arp_elem_inc_var(-1)
+        )])
+        prev_pitch = event_builder.next[0].pitch
+        # now an increment of 0 should give the same pitch
+        event_builder.next[0].pitch.should == prev_pitch
+        prev_pitch = event_builder.next[0].pitch
+        # and an increment of 1:
+        event_builder.next[0].pitch.should == prev_pitch+1
+        prev_pitch = event_builder.next[0].pitch
+        # and  an increment of -1:
+        event_builder.next[0].pitch.should == prev_pitch-1
+      end
+
+      it "does not change the arpeggio index when a arpeggio 'all' variable is evaluated" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          arpeggio(C4,D4,F4,G4,A4),
+          arp_elem_inc_var(1), arp_elem_all_var, arp_elem_inc_var(1)
+        )])
+        event_builder.next[0].pitch.should == D4
+        event_builder.next # the whole scale, previous pitch will be C4
+        event_builder.next[0].pitch.should == F4
       end
 
       it "interprets relative chord arpeggios with the default C major scale" do
