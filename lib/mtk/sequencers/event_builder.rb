@@ -54,7 +54,7 @@ module MTK
                 @previous_pitch = pitch
 
               when MTK::Groups::PitchClassGroup
-                pitches += element.to_a.map{|pitch_class| @previous_pitch.nearest(pitch_class) }
+                pitches += element.map{|pitch_class| @previous_pitch.nearest(pitch_class) }
                 @previous_pitch = pitches.last
 
               when MTK::Core::Duration

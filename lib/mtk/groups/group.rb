@@ -23,6 +23,12 @@ module MTK
          Array.new(@elements) # we construct a new array since some including classes make elements be immutable
        end
 
+       # Used for implicit conversion to an Array (such as when calling Array#+ Group)
+       # @note Because this is intended for implicit conversion to an Array by the Ruby interpreter, it does not guarantee the result is immutable (for performance reasons)
+       def to_ary
+         @elements
+       end
+
        # The number of @elements in this collection
        def size
          @elements.size
