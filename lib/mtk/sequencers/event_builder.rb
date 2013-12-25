@@ -134,7 +134,6 @@ module MTK
 
         constrain_pitch(pitches)
 
-        # @previous_pitch = pitches.last   # Consider doing something different, maybe averaging?
         @previous_pitches = pitches.length > 1 ? pitches : nil
         @previous_intensity = intensity
         @previous_duration = duration
@@ -186,24 +185,32 @@ module MTK
         case element.name
           when :index
             pitch_class = @scale[element.value % @scale.size]
+            pitches << @previous_pitch.nearest(pitch_class)
+            @previous_pitch = pitches.last
             @previous_scale_index = element.value
 
           when :increment
             pitch_class = @scale[(@previous_scale_index + element.value) % @scale.size]
+            pitches << @previous_pitch.nearest(pitch_class)
+            @previous_pitch = pitches.last
             @previous_scale_index += element.value
 
           when :random
             pitch_class = @scale.random
+            pitches << @previous_pitch.nearest(pitch_class)
+            @previous_pitch = pitches.last
+
+          when :all
+            previous_pitch = @previous_pitch
+            # after @previous_pitch, use the scales previous_pitch to select the next one
+            scale_pitches = @scale.pitch_classes.map{|pitch_class| previous_pitch = previous_pitch.nearest(pitch_class) }
+            pitches.concat(scale_pitches)
+            @previous_pitch = scale_pitches.first # treat the scale root as the most important pitch
 
           else
             STDERR.puts "#{self.class}#next: Encountered unsupported scale element #{element}"
+            return
         end
-
-        if pitch_class
-          pitches << @previous_pitch.nearest(pitch_class)
-          @previous_pitch = pitches.last
-        end
-
       end
 
       def evaluate_arpeggio(element, pitches)

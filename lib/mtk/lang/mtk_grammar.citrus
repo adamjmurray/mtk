@@ -235,6 +235,12 @@ grammar MTK_Grammar
     }
   end
 
+  rule scale_all
+    ( '$!' ) {
+      MTK::Lang::Variable.new(MTK::Lang::Variable::SCALE_ELEMENT, :all)
+    }
+  end
+
   rule arpeggio_index
     ( prefix:('@' '%'?) int ) {
       name = (if prefix.to_s == '@' then :index else :modulo_index end)

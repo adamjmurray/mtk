@@ -28,6 +28,10 @@ describe MTK::Sequencers::EventBuilder do
     MTK::Lang::Variable.new(Variable::SCALE_ELEMENT, :random)
   end
 
+  def scale_elem_all_var
+    MTK::Lang::Variable.new(Variable::SCALE_ELEMENT, :all)
+  end
+
   def arpeggio(*elements)
     MTK::Lang::Variable.new(Variable::ARPEGGIO, '', MTK.PitchGroup(*elements))
   end
@@ -359,7 +363,7 @@ describe MTK::Sequencers::EventBuilder do
         event_builder.next.should == [Note(F4,q)]
       end
 
-      it "interprets scale random variables against the scale and scale index that occurred most recently" do
+      it "interprets scale random variables against the scale that occurred most recently" do
         event_builder = EVENT_BUILDER.new([Patterns.Sequence(
             scale(Db,Eb),
             scale(Lang::PitchClasses::PITCH_CLASSES),
@@ -376,6 +380,25 @@ describe MTK::Sequencers::EventBuilder do
         sixth = event_builder.next[0].pitch
         (first==second && first==second && first==third && first==fourth && first==fifth && first==sixth ).should be_false
         # slight chance this will fail, just run again
+      end
+
+      it "interprets scale 'all' variables against the current scale, with each pitch closest to the previosu pitch in the scale" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          scale(Db,Eb),
+          scale(C,D,F,G,A),
+          scale_elem_all_var, scale_elem_all_var
+        )])
+        event_builder.next.should == [Note(C4),Note(D4),Note(F4),Note(G4),Note(A4)]
+      end
+
+      it "treats the scale 'all' variable's scale root as the next event's previous pitch" do
+        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
+          scale(C,D,F,G,A),
+          scale_elem_all_var, scale_elem_all_var
+        )])
+        # In other words, it emits the same event repeatedly
+        event_builder.next.should == [Note(C4),Note(D4),Note(F4),Note(G4),Note(A4)]
+        event_builder.next.should == [Note(C4),Note(D4),Note(F4),Note(G4),Note(A4)]
       end
     end
     
