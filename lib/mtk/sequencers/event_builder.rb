@@ -88,7 +88,8 @@ module MTK
                     @scale = element.value
                     return self.next
 
-                  when element.scale_element? then evaluate_scale(element, pitches)
+                  when element.scale_element?
+                    evaluate_scale(element, pitches)
 
                   when element.arpeggio?
                     @arpeggio = element.value
@@ -97,7 +98,8 @@ module MTK
                     end
                     return self.next
 
-                  when element.arpeggio_element? then evaluate_arpeggio(element, pitches)
+                  when element.arpeggio_element?
+                    evaluate_arpeggio(element, pitches)
 
                   else
                     # Note: valid ForEach variables will already have been evaluated by the Pattern
@@ -107,19 +109,23 @@ module MTK
               when MTK::Lang::Modifier
                 case
                   when element.octave?
+                    # TODO: need to rework this, it doesn't really work right, need more explicit octave/range constraint
                     octave_number = element.value
                     @previous_pitch = MTK::Core::Pitch[MTK::Core::PitchClass[6], octave_number] # Gb for given octave
                     return self.next
 
-                  when element.force_rest? then force_rest = true
+                  when element.force_rest?
+                    force_rest = true
 
-                  when element.skip? then return self.next
+                  when element.skip?
+                    return self.next
 
                   else
                     STDERR.puts "#{self.class}#next: Encountered unsupported modifier #{element}"
                 end
 
-              else STDERR.puts "#{self.class}#next: Unexpected type '#{element.class}'"
+              else
+                STDERR.puts "#{self.class}#next: Unexpected type '#{element.class}'"
             end
 
           end

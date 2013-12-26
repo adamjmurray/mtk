@@ -676,12 +676,6 @@ describe MTK::Sequencers::EventBuilder do
         eb.next.should == notes(D6) # because this is closest to B5, and not affect by the octave modifier
       end
 
-      xit "controls the octave of all following pitch classes when locked" do
-        eb = event_builder_for_sequence MTK::Lang::Modifier.new(:octave_lock,5), B, D
-        eb.next.should == notes(B5)
-        eb.next.should == notes(D5)
-      end
-
       it "does not emit any events" do
         eb = event_builder_for_sequence MTK::Lang::Modifier.new(:octave,5)
         ->{ eb.next }.should raise_error StopIteration
