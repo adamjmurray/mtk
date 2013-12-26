@@ -106,6 +106,11 @@ module MTK
 
               when MTK::Lang::Modifier
                 case
+                  when element.octave?
+                    octave_number = element.value
+                    @previous_pitch = MTK::Core::Pitch[MTK::Core::PitchClass[6], octave_number] # Gb for given octave
+                    return self.next
+
                   when element.force_rest? then force_rest = true
 
                   when element.skip? then return self.next

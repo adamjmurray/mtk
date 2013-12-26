@@ -185,6 +185,7 @@ $0 -> scale degree
 Modifiers
 ```
 . -> dotted duration (Ruby syntax uses 'd' since '.' is not a valid name)
+o -> set octave/range
 t -> triplet duration
 * -> repetition
 _ -> force rest

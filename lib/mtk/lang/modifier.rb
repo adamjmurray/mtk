@@ -4,10 +4,19 @@ module MTK
     # An object that modifies the interpretation of a {Patterns::Pattern}.
     class Modifier
 
-      attr_reader :type
+      attr_reader :type, :value
 
-      def initialize(type)
+      def initialize(type, value=nil)
         @type = type
+        @value = value
+      end
+
+      def locked?
+        @type == :octave_lock
+      end
+
+      def octave?
+        @type == :octave or @type == :octave_lock
       end
 
       def force_rest?
@@ -19,7 +28,7 @@ module MTK
       end
 
       def == other
-        other.is_a? self.class and other.type == @type
+        other.is_a? self.class and other.type == @type and other.value == @value
       end
 
     end

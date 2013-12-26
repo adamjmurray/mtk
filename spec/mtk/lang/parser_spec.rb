@@ -703,6 +703,26 @@ describe MTK::Lang::Parser do
 
 
     context 'modifier rule' do
+      it "parses 'o{N}' as an (unlocked) octave Modifier with N as the value" do
+        for octave_number in [-1, 0, 4] do
+          modifier = parse("o#{octave_number}", :modifier)
+          modifier.should be_a MTK::Lang::Modifier
+          modifier.octave?.should be_true
+          modifier.locked?.should be_false
+          modifier.value.should == octave_number
+        end
+      end
+
+      it "parses 'o{N}' as a locked octave Modifier with N as the value" do
+        for octave_number in [-1, 0, 4] do
+          modifier = parse("o#{octave_number}!", :modifier)
+          modifier.should be_a MTK::Lang::Modifier
+          modifier.octave?.should be_true
+          modifier.locked?.should be_true
+          modifier.value.should == octave_number
+        end
+      end
+
       it "parses '_' as a force_rest Modifier" do
         modifier = parse('_', :modifier)
         modifier.should be_a MTK::Lang::Modifier

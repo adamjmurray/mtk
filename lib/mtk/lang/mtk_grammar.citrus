@@ -292,7 +292,14 @@ grammar MTK_Grammar
   end
 
   rule modifier
-    ( force_rest | skip )
+    ( octave_modifier | force_rest | skip )
+  end
+
+  rule octave_modifier
+    ( 'o' int '!'? ) {
+      type = if to_s[-1] == '!' then :octave_lock else :octave end
+      MTK::Lang::Modifier.new(type, int.value)
+    }
   end
 
   rule force_rest

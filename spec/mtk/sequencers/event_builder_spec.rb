@@ -8,6 +8,10 @@ describe MTK::Sequencers::EventBuilder do
   let(:intensity) { EVENT_BUILDER::DEFAULT_INTENSITY }
   let(:duration)  { EVENT_BUILDER::DEFAULT_DURATION }
 
+  def event_builder_for_sequence(*args)
+    EVENT_BUILDER.new([Patterns.Sequence(*args)])
+  end
+
   def notes(*pitches)
     pitches.map{|pitch| Note(pitch, intensity, duration) }
   end
@@ -652,13 +656,35 @@ describe MTK::Sequencers::EventBuilder do
       end
 
       it "interprets chords against the given scale, using the octave of the previous pitch" do
-        event_builder = EVENT_BUILDER.new([Patterns.Sequence(
-          scale(D,E,Gb,G,A,B,Db),
-          C5,
-          MTK::Lang::RelativeChords::I
-        )])
-        event_builder.next
-        event_builder.next.should == notes(D5,Gb5,A5)
+        eb = event_builder_for_sequence scale(D,E,Gb,G,A,B,Db), C5, MTK::Lang::RelativeChords::I
+        eb.next
+        eb.next.should == notes(D5,Gb5,A5)
+      end
+    end
+
+
+    context "octave modifier behavior" do
+      it "controls the octave of the following pitch class" do
+        eb = event_builder_for_sequence MTK::Lang::Modifier.new(:octave,5), G, MTK::Lang::Modifier.new(:octave,2), D
+        eb.next.should == notes(G5)
+        eb.next.should == notes(D2)
+      end
+
+      it "does not affect the octave of pitch classes after the immediately following pitch class when not locked" do
+        eb = event_builder_for_sequence MTK::Lang::Modifier.new(:octave,5), B, D
+        eb.next.should == notes(B5)
+        eb.next.should == notes(D6) # because this is closest to B5, and not affect by the octave modifier
+      end
+
+      xit "controls the octave of all following pitch classes when locked" do
+        eb = event_builder_for_sequence MTK::Lang::Modifier.new(:octave_lock,5), B, D
+        eb.next.should == notes(B5)
+        eb.next.should == notes(D5)
+      end
+
+      it "does not emit any events" do
+        eb = event_builder_for_sequence MTK::Lang::Modifier.new(:octave,5)
+        ->{ eb.next }.should raise_error StopIteration
       end
     end
 
@@ -691,7 +717,7 @@ describe MTK::Sequencers::EventBuilder do
     end
 
 
-    context "skip behavior" do
+    context "skip modifier behavior" do
       it "skips over the skip modifier and returns the next event" do
         event_builder = EVENT_BUILDER.new([Patterns.Sequence(
           C4, MTK::Lang::Modifier.new(:skip), D4

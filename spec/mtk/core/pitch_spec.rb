@@ -213,6 +213,14 @@ describe MTK::Core::Pitch do
       middle_c.nearest(F).should == F4
       middle_c.nearest(G).should == G3
     end
+
+    it "is in the same octave of the receiver when the receiver has PitchClass Gb" do
+      # WARNING: do not modify this test without reworking the octave modifier behavior in event builder.
+      # It relies on this being true!
+      for pitch_class in PitchClasses::PITCH_CLASSES
+        Gb4.nearest(pitch_class).octave.should == 4
+      end
+    end
   end
 
   describe '#coerce' do
