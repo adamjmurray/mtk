@@ -703,24 +703,40 @@ describe MTK::Lang::Parser do
 
 
     context 'modifier rule' do
-      it "parses 'o{N}' as an (unlocked) octave Modifier with N as the value" do
-        for octave_number in [-1, 0, 4] do
-          modifier = parse("o#{octave_number}", :modifier)
+      it "parses ' as an octave Modifier with 1 as the (delta) value" do
+        modifier = parse("'", :modifier)
+        modifier.should be_a MTK::Lang::Modifier
+        modifier.octave?.should be_true
+        modifier.value.should == 1
+      end
+
+      it "parses ',' as an octave Modifier with -1 as the (delta) value" do
+        modifier = parse(",", :modifier)
+        modifier.should be_a MTK::Lang::Modifier
+        modifier.octave?.should be_true
+        modifier.value.should == -1
+      end
+
+      it "parses multiple ' as an octave Modifier with the number of single quotes as the (delta) value" do
+        for input,value in {"''" => 2, "'''" => 3, "'''''''" => 7}
+          modifier = parse(input, :modifier)
           modifier.should be_a MTK::Lang::Modifier
           modifier.octave?.should be_true
-          modifier.locked?.should be_false
-          modifier.value.should == octave_number
+          modifier.value.should == value
         end
       end
 
-      it "parses 'o{N}' as a locked octave Modifier with N as the value" do
-        for octave_number in [-1, 0, 4] do
-          modifier = parse("o#{octave_number}!", :modifier)
+      it "parses multiple ',' as an octave Modifier with the negative number of commas as the (delta) value" do
+        for input,value in {",," => -2, ",,," => -3, ",,,,,,," => -7}
+          modifier = parse(input, :modifier)
           modifier.should be_a MTK::Lang::Modifier
           modifier.octave?.should be_true
-          modifier.locked?.should be_true
-          modifier.value.should == octave_number
+          modifier.value.should == value
         end
+      end
+
+      it "does not parse ', or ,'" do
+        ->{ parse "',", :modifier }.should raise_error
       end
 
       it "parses '_' as a force_rest Modifier" do

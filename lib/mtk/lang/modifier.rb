@@ -11,12 +11,12 @@ module MTK
         @value = value
       end
 
-      def locked?
-        @type == :octave_lock
-      end
+      #def locked?
+      #  false
+      #end
 
       def octave?
-        @type == :octave or @type == :octave_lock
+        @type == :octave
       end
 
       def force_rest?

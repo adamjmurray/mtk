@@ -12,6 +12,13 @@ describe MTK::Sequencers::EventBuilder do
     EVENT_BUILDER.new([Patterns.Sequence(*args)])
   end
 
+  def events_for_sequence(*args)
+    eb = event_builder_for_sequence(*args)
+    events = []
+    loop{ events.concat eb.next }
+    events
+  end
+
   def notes(*pitches)
     pitches.map{|pitch| Note(pitch, intensity, duration) }
   end
@@ -664,20 +671,15 @@ describe MTK::Sequencers::EventBuilder do
 
 
     context "octave modifier behavior" do
-      it "controls the octave of the following pitch class" do
-        eb = event_builder_for_sequence MTK::Lang::Modifier.new(:octave,5), G, MTK::Lang::Modifier.new(:octave,2), D
-        eb.next.should == notes(G5)
-        eb.next.should == notes(D2)
-      end
-
-      it "does not affect the octave of pitch classes after the immediately following pitch class when not locked" do
-        eb = event_builder_for_sequence MTK::Lang::Modifier.new(:octave,5), B, D
-        eb.next.should == notes(B5)
-        eb.next.should == notes(D6) # because this is closest to B5, and not affect by the octave modifier
+      it "changes the octave of 'previous_pitch' by the Modifer's value to change the octave of the following pitch class" do
+        events = events_for_sequence(
+          C4, MTK::Lang::Modifier.new(:octave,1), D, E, MTK::Lang::Modifier.new(:octave,-2), F
+        )
+        events.should == notes(C4, D5, E5, F3)
       end
 
       it "does not emit any events" do
-        eb = event_builder_for_sequence MTK::Lang::Modifier.new(:octave,5)
+        eb = event_builder_for_sequence MTK::Lang::Modifier.new(:octave,1)
         ->{ eb.next }.should raise_error StopIteration
       end
     end

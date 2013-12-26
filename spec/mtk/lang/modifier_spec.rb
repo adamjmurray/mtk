@@ -8,25 +8,22 @@ describe MTK::Lang::Modifier do
     end
   end
 
-  describe "#locked?" do
-    it "is true if the type is :octave_lock" do
-      Modifier.new(:octave_lock).locked?.should be_true
-    end
-
-    it "is false for other types" do
-      for type in [:octave, :skip, :force_rest]
-        Modifier.new(type).locked?.should be_false
-      end
-    end
-  end
+  #describe "#locked?" do
+  #  # TODO: revisit this when we lock previous_pitch via a to-be-implemented Modifier behavior
+  #  it "is true if the type is :octave_lock" do
+  #    Modifier.new(:octave_lock).locked?.should be_true
+  #  end
+  #
+  #  it "is false for other types" do
+  #    for type in [:octave, :skip, :force_rest]
+  #      Modifier.new(type).locked?.should be_false
+  #    end
+  #  end
+  #end
 
   describe "#octave?" do
     it "is true if the type is :octave" do
       Modifier.new(:octave).octave?.should be_true
-    end
-
-    it "is true if the type is :octave_lock" do
-      Modifier.new(:octave_lock).octave?.should be_true
     end
 
     it "is false for other types" do

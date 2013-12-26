@@ -109,9 +109,7 @@ module MTK
               when MTK::Lang::Modifier
                 case
                   when element.octave?
-                    # TODO: need to rework this, it doesn't really work right, need more explicit octave/range constraint
-                    octave_number = element.value
-                    @previous_pitch = MTK::Core::Pitch[MTK::Core::PitchClass[6], octave_number] # Gb for given octave
+                    @previous_pitch += 12 * element.value # element.value is the octave delta
                     return self.next
 
                   when element.force_rest?

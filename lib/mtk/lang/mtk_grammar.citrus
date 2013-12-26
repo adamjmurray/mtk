@@ -296,9 +296,11 @@ grammar MTK_Grammar
   end
 
   rule octave_modifier
-    ( 'o' int '!'? ) {
-      type = if to_s[-1] == '!' then :octave_lock else :octave end
-      MTK::Lang::Modifier.new(type, int.value)
+    ( '\''+ | ','+ ) {
+      s = to_s
+      octave_delta = s.size
+      octave_delta *= -1 if s[0] == ','
+      MTK::Lang::Modifier.new(:octave, octave_delta)
     }
   end
 
