@@ -15,7 +15,11 @@ describe MTK::Sequencers::EventBuilder do
   def events_for_sequence(*args)
     eb = event_builder_for_sequence(*args)
     events = []
-    loop{ events.concat eb.next }
+    loop do
+      event = eb.next
+      event = event.first if event.size == 1
+      events << event
+    end
     events
   end
 
@@ -748,7 +752,7 @@ describe MTK::Sequencers::EventBuilder do
     end
 
 
-    context "octave-modified elements" do
+    context "octave-modified pitch classes" do
       it "causes pitch classes modified with ' to be the closest above the previous pitch" do
         events = events_for_sequence(
           C4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,1), G)
@@ -777,18 +781,63 @@ describe MTK::Sequencers::EventBuilder do
         events.should == notes(C4,F2)
       end
 
-      it "doesn't change the nearest pitch behavior unnecessarily (ascending case)" do
+      it "doesn't change the pitch class's nearest pitch behavior unnecessarily (ascending case)" do
         events = events_for_sequence(
           C4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,1), E)
         )
         events.should == notes(C4,E4)
       end
 
-      it "doesn't change the nearest pitch behavior unnecessarily (ascending case)" do
+      it "doesn't change the pitch class's nearest pitch behavior unnecessarily (ascending case)" do
         events = events_for_sequence(
           E4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,-1), C)
         )
         events.should == notes(E4,C4)
+      end
+    end
+
+
+    context "octave-modified relative chords" do
+      it "causes relative chords modified with ' to be the closest above the previous pitch" do
+        events = events_for_sequence(
+          C4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,1), V)
+        )
+        events.should == [Note(C4), notes(G4,B4,D5)] # would normally be C4,[G3,B3,D4] without modifier
+      end
+
+      it "causes relative chords modified with , to be the closest below the previous pitch" do
+        events = events_for_sequence(
+          C4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,-1), IV)
+        )
+        events.should == [Note(C4), notes(F3,A3,C4)] # would normally be C4,[F4,A4,C5] without modifier
+      end
+
+      it "causes relative chords modified with '' to be 1 octave above the closest above the previous pitch" do
+        events = events_for_sequence(
+          C4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,2), V)
+        )
+        events.should == [Note(C4), notes(G5,B5,D6)]
+      end
+
+      it "causes relative chords modified with ,, to be 1 octave below the closest below the previous pitch" do
+        events = events_for_sequence(
+          C4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,-2), IV)
+        )
+        events.should == [Note(C4), notes(F2,A2,C3)]
+      end
+
+      it "doesn't change the relative chords's nearest pitch behavior unnecessarily (ascending case)" do
+        events = events_for_sequence(
+          C4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,1), iii)
+        )
+        events.should == [Note(C4), notes(E4,G4,B4)]
+      end
+
+      it "doesn't change the relative chords's nearest pitch behavior unnecessarily (ascending case)" do
+        events = events_for_sequence(
+          E4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,-1), I)
+        )
+        events.should == [Note(E4), notes(C4,E4,G4)]
       end
     end
 

@@ -55,7 +55,7 @@ module MTK
 
               when MTK::Core::PitchClass
                 pitch = @previous_pitch.nearest(element)
-                pitch = apply_pitch_class_modifier(modifier, pitch) if modifier
+                pitch += pitch_offset_for_modifier(pitch, modifier) if modifier
                 pitches << pitch
                 @previous_pitch = pitch
 
@@ -77,6 +77,10 @@ module MTK
 
               when MTK::Groups::RelativeChord
                 chord_pitches = element.to_pitches(@scale, @previous_pitch)
+                if modifier
+                  offset = pitch_offset_for_modifier(chord_pitches.first, modifier)
+                  chord_pitches.map!{|pitch| pitch += offset}
+                end
                 pitches.concat(chord_pitches)
                 @previous_pitch = chord_pitches.first # use the "chord root" to control nearest pitch behavior for the next evaluation
 
@@ -258,25 +262,24 @@ module MTK
       end
 
 
-      def apply_pitch_class_modifier(modifier, pitch)
+      def pitch_offset_for_modifier(pitch, modifier)
         # we've already evaluated the pitch for the pitch class, now let's apply the modifier to the pitch
+        offset = 0
         if modifier.octave?
           delta = modifier.value
-
           if delta > 0
             if pitch < @previous_pitch
-              pitch += 12 # enforce the "nearest above" behavior
+              offset += 12 # enforce the "nearest above" behavior
             end
-            pitch += 12*(delta-1) # apply additional octave offsets
-
+            offset += 12*(delta-1) # apply additional octave offsets
           elsif delta < 0
             if pitch > @previous_pitch
-              pitch -= 12 # enforce the "nearest below" behavior
+              offset -= 12 # enforce the "nearest below" behavior
             end
-            pitch += 12*(delta+1) # apply additional octave offsets (remember delta is negative)
+            offset += 12*(delta+1) # apply additional octave offsets (remember delta is negative)
           end
         end
-        pitch
+        offset
       end
 
 

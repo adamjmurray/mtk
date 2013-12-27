@@ -63,8 +63,7 @@ module MTK
             else raise InvalidArgument("Invalid octave_or_nearest_pitch argument: #{octave_or_nearest_pitch}")
           end
         end
-        pitches = @interval_group.to_pitches(root)
-        MTK::Groups::Chord.new(pitches)
+        @interval_group.to_pitches(root)
       end
 
       def to_pitch_group(scale, octave_or_nearest_pitch=nil)

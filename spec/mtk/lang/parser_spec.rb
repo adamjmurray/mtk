@@ -414,6 +414,10 @@ describe MTK::Lang::Parser do
       it "parses modified pitch classes" do
         parse(',C', :element).should == parse(',C', :modified_pitch_class)
       end
+
+      it "parses modified relative chords" do
+        parse(',I', :element).should == parse(',I', :modified_relative_chord)
+      end
     end
 
 
@@ -812,6 +816,44 @@ describe MTK::Lang::Parser do
           relative_chord.interval_group.should == MTK::Lang::IntervalGroups::MAJOR_TRIAD
           relative_chord.scale_index.should == scale_index
         end
+      end
+    end
+
+
+    context 'modified_relative_chord rule' do
+      it "parses relative chords prefixed by ' " do
+        modified_pc = parse("'IV", :modified_relative_chord)
+        modified_pc.should be_a MTK::Lang::ModifiedElement
+        modified_pc.modifier.octave?.should be_true
+        modified_pc.modifier.value.should == 1
+        modified_pc.element.should == IV
+      end
+
+      it "parses relative chords prefixed by , " do
+        modified_pc = parse(",vi", :modified_relative_chord)
+        modified_pc.should be_a MTK::Lang::ModifiedElement
+        modified_pc.modifier.octave?.should be_true
+        modified_pc.modifier.value.should == -1
+        modified_pc.element.should == vi
+      end
+
+      it "parses relative chords prefixed by multiple ' or multiple , " do
+        [["''VIII",2,VIII], ["''''ix",4,ix], [",,,ii",-3,ii], [",,,,,V",-5,V]].each do |test_case|
+          input, modifier_value, pitch_class = *test_case
+          modified_pc = parse(input, :modified_relative_chord)
+          modified_pc.should be_a MTK::Lang::ModifiedElement
+          modified_pc.modifier.octave?.should be_true
+          modified_pc.modifier.value.should == modifier_value
+          modified_pc.element.should == pitch_class
+        end
+      end
+
+      it "does not parse relative chords prefixed by _" do
+        ->{ parse("_I", :modified_relative_chord) }.should raise_error
+      end
+
+      it "does not parse relative chords prefixed by ;" do
+        ->{ parse(";I", :modified_relative_chord) }.should raise_error
       end
     end
 

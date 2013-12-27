@@ -51,8 +51,9 @@ describe MTK::Groups::RelativeChord do
 
 
   describe "#to_pitch_classes" do
-    it "converts to a list of PitchClasses in the given scale" do
+    it "converts to an Array of PitchClasses in the given scale" do
       pitch_classes = relative_chord.to_pitch_classes( [C3,D3,E3,F3,G3,A3,B3] )
+      pitch_classes.should be_a Array
       pitch_classes.should == [F,A,C]
     end
   end
@@ -68,7 +69,9 @@ describe MTK::Groups::RelativeChord do
 
   describe "#to_pitches" do
     it "converts to pitches when given a scale as an Array of Pitches" do
-      relative_chord.to_pitches( [C3,D3,E3,F3,G3,A3,B3] ).should == [F3,A3,C4]
+      pitches = relative_chord.to_pitches( [C3,D3,E3,F3,G3,A3,B3] )
+      pitches.should be_a Array
+      pitches.should == [F3,A3,C4]
     end
 
     it "converts to pitches when given a scale as a PitchGroup" do
