@@ -410,6 +410,10 @@ describe MTK::Lang::Parser do
       it "parses modifiers" do
         parse('_', :element).should == parse('_', :modifier)
       end
+
+      it "parses modified pitch classes" do
+        parse(',C', :element).should == parse(',C', :modified_pitch_class)
+      end
     end
 
 
@@ -749,6 +753,44 @@ describe MTK::Lang::Parser do
         modifier = parse(';', :modifier)
         modifier.should be_a MTK::Lang::Modifier
         modifier.skip?.should be_true
+      end
+    end
+
+
+    context "modified_pitch_class rule" do
+      it "parses pitch classes prefixed by ' " do
+        modified_pc = parse("'C", :modified_pitch_class)
+        modified_pc.should be_a MTK::Lang::ModifiedElement
+        modified_pc.modifier.octave?.should be_true
+        modified_pc.modifier.value.should == 1
+        modified_pc.element.should == C
+      end
+
+      it "parses pitch classes prefixed by , " do
+        modified_pc = parse(",Db", :modified_pitch_class)
+        modified_pc.should be_a MTK::Lang::ModifiedElement
+        modified_pc.modifier.octave?.should be_true
+        modified_pc.modifier.value.should == -1
+        modified_pc.element.should == Db
+      end
+
+      it "parses pitch classes prefixed by multiple ' or multiple , " do
+        [["''E",2,E], ["''''F",4,F], [",,,Gb",-3,Gb], [",,,,,Bbb",-5,A]].each do |test_case|
+          input, modifier_value, pitch_class = *test_case
+          modified_pc = parse(input, :modified_pitch_class)
+          modified_pc.should be_a MTK::Lang::ModifiedElement
+          modified_pc.modifier.octave?.should be_true
+          modified_pc.modifier.value.should == modifier_value
+          modified_pc.element.should == pitch_class
+        end
+      end
+
+      it "does not parse pitch classes prefixed by _" do
+        ->{ parse("_C", :modified_pitch_class) }.should raise_error
+      end
+
+      it "does not parse pitch classes prefixed by ;" do
+        ->{ parse(";C", :modified_pitch_class) }.should raise_error
       end
     end
 

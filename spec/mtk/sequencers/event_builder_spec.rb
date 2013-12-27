@@ -748,6 +748,51 @@ describe MTK::Sequencers::EventBuilder do
     end
 
 
+    context "octave-modified elements" do
+      it "causes pitch classes modified with ' to be the closest above the previous pitch" do
+        events = events_for_sequence(
+          C4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,1), G)
+        )
+        events.should == notes(C4,G4) # would normally be C4,G3 without modifier
+      end
+
+      it "causes pitch classes modified with , to be the closest below the previous pitch" do
+        events = events_for_sequence(
+          C4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,-1), F)
+        )
+        events.should == notes(C4,F3) # would normally be C4, F4 without modifier
+      end
+
+      it "causes pitch classes modified with '' to be 1 octave above the closest above the previous pitch" do
+        events = events_for_sequence(
+          C4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,2), G)
+        )
+        events.should == notes(C4,G5)
+      end
+
+      it "causes pitch classes modified with ,, to be 1 octave below the closest below the previous pitch" do
+        events = events_for_sequence(
+          C4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,-2), F)
+        )
+        events.should == notes(C4,F2)
+      end
+
+      it "doesn't change the nearest pitch behavior unnecessarily (ascending case)" do
+        events = events_for_sequence(
+          C4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,1), E)
+        )
+        events.should == notes(C4,E4)
+      end
+
+      it "doesn't change the nearest pitch behavior unnecessarily (ascending case)" do
+        events = events_for_sequence(
+          E4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,-1), C)
+        )
+        events.should == notes(E4,C4)
+      end
+    end
+
+
     context "for_each behaviors" do
       it "uses the pitches from a for each 'all' variable to form multiple notes" do
         event_builder = EVENT_BUILDER.new([ MTK::Patterns::ForEach.new([

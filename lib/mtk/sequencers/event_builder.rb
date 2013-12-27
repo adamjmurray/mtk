@@ -39,6 +39,11 @@ module MTK
           elements.each do |element|
             return nil if element.nil?
 
+            if element.is_a? MTK::Lang::ModifiedElement
+              modifier = element.modifier
+              element = element.element
+            end
+
             case element
               when MTK::Core::Pitch
                 pitches << element
@@ -50,6 +55,7 @@ module MTK
 
               when MTK::Core::PitchClass
                 pitch = @previous_pitch.nearest(element)
+                pitch = apply_pitch_class_modifier(modifier, pitch) if modifier
                 pitches << pitch
                 @previous_pitch = pitch
 
@@ -223,6 +229,7 @@ module MTK
         end
       end
 
+
       def evaluate_arpeggio(element, pitches)
         case element.name
           when :index, :modulo_index
@@ -248,6 +255,28 @@ module MTK
         end
 
         @previous_pitch = pitches.last
+      end
+
+
+      def apply_pitch_class_modifier(modifier, pitch)
+        # we've already evaluated the pitch for the pitch class, now let's apply the modifier to the pitch
+        if modifier.octave?
+          delta = modifier.value
+
+          if delta > 0
+            if pitch < @previous_pitch
+              pitch += 12 # enforce the "nearest above" behavior
+            end
+            pitch += 12*(delta-1) # apply additional octave offsets
+
+          elsif delta < 0
+            if pitch > @previous_pitch
+              pitch -= 12 # enforce the "nearest below" behavior
+            end
+            pitch += 12*(delta+1) # apply additional octave offsets (remember delta is negative)
+          end
+        end
+        pitch
       end
 
 

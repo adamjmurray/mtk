@@ -103,7 +103,8 @@ grammar MTK_Grammar
 
   rule element
     (
-      elem:( intensity | duration | relative_chord | interval | pitch | pitch_class | variable | modifier ) ('*' max_cycles:int)?
+      elem:( intensity | duration | relative_chord | interval | pitch | pitch_class | modified_pitch_class | variable | modifier )
+      ('*' max_cycles:int)?
     )
     {
       if max_cycles
@@ -195,6 +196,12 @@ grammar MTK_Grammar
 
   rule accidental
     ('#'1*2 | 'b'1*2)
+  end
+
+  rule modified_pitch_class
+    ( octave_modifier pitch_class ) {
+      MTK::Lang::ModifiedElement.new(octave_modifier.value, pitch_class.value)
+    }
   end
 
   rule interval

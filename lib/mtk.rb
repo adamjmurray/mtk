@@ -47,6 +47,7 @@ require 'mtk/lang/intensities'
 require 'mtk/lang/durations'
 require 'mtk/lang/variable'
 require 'mtk/lang/modifier'
+require 'mtk/lang/modified_element'
 require 'mtk/lang/parser'
 
 require 'mtk/groups/group'
