@@ -44,7 +44,7 @@ Requirements
 
 ### Ruby Version
 
-Ruby 1.9+ or JRuby 1.6+
+Ruby 1.9+ or JRuby 1.7+
 
 
 ### Dependencies
