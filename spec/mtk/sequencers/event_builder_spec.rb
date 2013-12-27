@@ -842,6 +842,26 @@ describe MTK::Sequencers::EventBuilder do
     end
 
 
+    context "octave-modified arpeggios" do
+      it "handles octave-modified relative chord arpeggios" do
+        events = events_for_sequence(
+          Variable.new(Variable::ARPEGGIO, '', MTK::Groups::RelativeChord.from_s('V')),
+          arp_elem_index_var(0),
+          arp_elem_index_var(1),
+          arp_elem_index_var(2),
+          Variable.new(Variable::ARPEGGIO, '', MTK::Lang::ModifiedElement.new(
+            MTK::Lang::Modifier.new(:octave, -2), # TODO: buggy, I want this to be -1
+            MTK::Groups::RelativeChord.from_s('I')
+          )),
+          arp_elem_index_var(0),
+          arp_elem_index_var(1),
+          arp_elem_index_var(2),
+        )
+        events.should == notes(G3,B3,D4,C3,E3,G3)
+      end
+    end
+
+
     context "for_each behaviors" do
       it "uses the pitches from a for each 'all' variable to form multiple notes" do
         event_builder = EVENT_BUILDER.new([ MTK::Patterns::ForEach.new([

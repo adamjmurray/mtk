@@ -609,6 +609,19 @@ describe MTK::Lang::Parser do
           arpeggio.value.should == MTK::Groups::RelativeChord.from_s(relative_chord)
         end
       end
+
+      it "parses arpeggios of modified relative chords" do
+        for relative_chord in %w(I i III iv V vii)
+          for mod,value in {"'" => 1, "'''" => 3, "," => -1, ",,,," => -4}
+            arpeggio = parse("@#{mod}#{relative_chord}", :arpeggio)
+            arpeggio.should be_a MTK::Lang::Variable
+            arpeggio.arpeggio?.should be_true
+            arpeggio.value.should == MTK::Lang::ModifiedElement.new(
+              MTK::Lang::Modifier.new(:octave, value), MTK::Groups::RelativeChord.from_s(relative_chord)
+            )
+          end
+        end
+      end
     end
 
 

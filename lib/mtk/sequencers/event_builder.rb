@@ -103,8 +103,15 @@ module MTK
 
                   when element.arpeggio?
                     @arpeggio = element.value
+                    if @arpeggio.is_a? MTK::Lang::ModifiedElement
+                      modifier = @arpeggio.modifier
+                      @arpeggio = @arpeggio.element
+                    end
                     if @arpeggio.is_a? MTK::Groups::RelativeChord
                       @arpeggio = @arpeggio.to_chord(@scale, @previous_pitch)
+                      if modifier
+                        @arpeggio = @arpeggio.transpose pitch_offset_for_modifier(@arpeggio.first, modifier)
+                      end
                     end
                     return self.next
 

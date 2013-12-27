@@ -89,8 +89,8 @@ This project is in heavy development and the API and DSL syntax are subject to c
 Active development occurs [in the dev branch](http://github.com/adamjmurray/mtk/tree/dev) and is merged into master
 when new gem versions are released.
 
-I manage my task list over in [the pivotal tracker](https://www.pivotaltracker.com/s/projects/295419)
-if you want to see what I'm working on and what's planned for the future.
+I manage my task list over in [pivotal tracker](https://www.pivotaltracker.com/s/projects/295419). Take a look
+over there if you want to see what I'm working on and what's planned for the future.
 
 I try to invest in documentation and tutorials, but it is lagging pretty far behind the large amount of
 features built thus far. I hope to catch up on that later as things stabilize more.
