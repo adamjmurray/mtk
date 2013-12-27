@@ -14,10 +14,24 @@ Features
 
 * A minimalist syntax (DSL) for generating musical patterns
 * Read and write MIDI files
-* Record and output realtime MIDI signals
-* Sequence MIDI-compatible event streams
+* Record realtime MIDI input
+* Output MIDI in realtime
 * Manipulate musical objects like pitch, duration, and intensity
 * Generate deterministic and non-deterministic music via flexible patterns such as looping sequences and random choices
+
+Caveat: Want to react to MIDI input and _simultaneously_ generate MIDI output in realtime?
+Although it's theoretically possible to make MTK do that, Ruby is not yet well-suited for this kind of CPU bound
+concurrent computing, so this library is not currently focused on such efforts.
+MTK can record in realtime and separately playback in realtime with "good enough" (not sample-accurate) timing,
+but is otherwise intended to manipulate music patterns in non-realtime.
+
+In other words, the realtime IO features are for getting MIDI into and out of the MTK system, and are not intended for
+providing an end-to-end realtime music performance environment.
+
+So then, what's the point? This library is intended for two main purposes:
+
+* Generate musical material for use in other music production environments (e.g. [DAWs](https://en.wikipedia.org/wiki/Digital_audio_workstation))
+* Enable programmers to explore music theory
 
 
 Getting Started
@@ -64,9 +78,7 @@ About this project
 This project is developed by [Adam Murray (github.com/adamjmurray)](http://github.com/adamjmurray).
 
 It is a free and open source project licensed under [a permissive BSD-style license](https://raw.github.com/adamjmurray/mtk/master/LICENSE.txt).
-I simply ask for credit by including my copyright in derivative works.
-
-You can learn more about the development of this project at the [development notes page](https://github.com/adamjmurray/mtk/blob/master/DEVELOPMENT_NOTES.md).
+I simply ask for credit by including [my copyright](https://github.com/adamjmurray/mtk/blob/master/LICENSE.txt) in derivative works.
 
 
 Development Status
@@ -82,6 +94,8 @@ if you want to see what I'm working on and what's planned for the future.
 
 I try to invest in documentation and tutorials, but it is lagging pretty far behind the large amount of
 features built thus far. I hope to catch up on that later as things stabilize more.
+
+More info on the [development notes page](https://github.com/adamjmurray/mtk/blob/master/DEVELOPMENT_NOTES.md).
 
 
 Changelog
