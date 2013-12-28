@@ -208,18 +208,28 @@ module MTK
       def evaluate_scale(element, pitches)
         return nil if @scale.empty?
 
+        value = element.value
+        modifier = nil
+
+        if value.is_a? MTK::Lang::ModifiedElement
+          modifier = value.modifier
+          value = value.element
+        end
+        
         case element.name
           when :index
-            pitch_class = @scale[element.value % @scale.size]
-            pitches << @previous_pitch.nearest(pitch_class)
+            pitch_class = @scale[value % @scale.size]
+            pitch = @previous_pitch.nearest(pitch_class)
+            pitch += pitch_offset_for_modifier(pitch, modifier) if modifier
+            pitches << pitch
             @previous_pitch = pitches.last
-            @previous_scale_index = element.value
+            @previous_scale_index = value
 
           when :increment
-            pitch_class = @scale[(@previous_scale_index + element.value) % @scale.size]
+            pitch_class = @scale[(@previous_scale_index + value) % @scale.size]
             pitches << @previous_pitch.nearest(pitch_class)
             @previous_pitch = pitches.last
-            @previous_scale_index += element.value
+            @previous_scale_index += value
 
           when :random
             pitch_class = @scale.random

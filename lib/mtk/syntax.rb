@@ -24,6 +24,7 @@ module MTK::Syntax
   define_constant :d, MTK::Core::Duration::DOTTED
   define_constant :t, MTK::Core::Duration::TRIPLET
 
+  # TODO: see all the helper methods in event_builder_spec, might be good inspiration
 
   # TODO? should the following methods move into the Variable module? Maybe this module should be as minimal as possible?
 

@@ -586,6 +586,20 @@ describe MTK::Lang::Parser do
         variable.scale_element?.should be_true
         variable.name.should be :all
       end
+
+      it "parses octave-modified scale index elements" do
+        for index in [-2, 0, 1, 10]
+          for mod,value in {"'" => 1, "'''" => 3, "," => -1, ",,,," => -4}
+            variable = parse("$#{mod}#{index}", :scale_element)
+            variable.should be_a MTK::Lang::Variable
+            variable.scale_element?.should be_true
+            variable.name.should be :index
+            variable.value.should == MTK::Lang::ModifiedElement.new(
+              MTK::Lang::Modifier.new(:octave, value), index
+            )
+          end
+        end
+      end
     end
 
     

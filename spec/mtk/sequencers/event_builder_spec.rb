@@ -75,6 +75,14 @@ describe MTK::Sequencers::EventBuilder do
     MTK::Lang::Variable.new(Variable::ARPEGGIO_ELEMENT, :random)
   end
 
+  def mod_elem(modifier, element)
+    MTK::Lang::ModifiedElement.new(modifier, element)
+  end
+
+  def octave_mod(offset)
+    MTK::Lang::Modifier.new(:octave, offset)
+  end
+
 
   describe "#new" do
     it "allows default pitch to be specified" do
@@ -421,7 +429,7 @@ describe MTK::Sequencers::EventBuilder do
         event_builder.next[0].pitch.should == prev_pitch-1
       end
 
-      it "interprets scale 'all' variables against the current scale, with each pitch closest to the previosu pitch in the scale" do
+      it "interprets scale 'all' variables against the current scale, with each pitch closest to the previous pitch in the scale" do
         event_builder = EVENT_BUILDER.new([Patterns.Sequence(
           scale(Db,Eb),
           scale(C,D,F,G,A),
@@ -448,6 +456,17 @@ describe MTK::Sequencers::EventBuilder do
         event_builder.next[0].pitch.should == D4
         event_builder.next # the whole scale, previous pitch will be C4
         event_builder.next[0].pitch.should == F4
+      end
+
+      it "interprets octave-modified scale indexes" do
+        events = events_for_sequence(
+          scale(C,D,E),
+          E4, scale_elem_index_var( mod_elem(octave_mod(1), 0) ),
+          C5, scale_elem_index_var( mod_elem(octave_mod(-1),2) ),
+          E4, scale_elem_index_var( mod_elem(octave_mod(2), 0) ),
+          C5, scale_elem_index_var( mod_elem(octave_mod(-3),1) )
+        )
+        events.should == notes(E4,C5,C5,E4,E4,C6,C5,D2)
       end
     end
     

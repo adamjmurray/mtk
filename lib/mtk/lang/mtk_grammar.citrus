@@ -220,8 +220,13 @@ grammar MTK_Grammar
   end
     
   rule scale_index
-    ( '$' int ) {
-      MTK::Lang::Variable.new(MTK::Lang::Variable::SCALE_ELEMENT, :index, int.value)
+    ( '$' octave_modifier? int ) {
+      value = if octave_modifier
+        MTK::Lang::ModifiedElement.new(octave_modifier.value, int.value)
+      else
+        int.value
+      end
+      MTK::Lang::Variable.new(MTK::Lang::Variable::SCALE_ELEMENT, :index, value)
     }
   end
 
