@@ -468,6 +468,14 @@ describe MTK::Sequencers::EventBuilder do
         )
         events.should == notes(E4,C5,C5,E4,E4,C6,C5,D2)
       end
+
+      it "does not re-evaluate octave modifiers for chained scale indexes" do
+        events = events_for_sequence(
+          scale(C,D,E),
+          C4, MTK::Patterns.Chain( scale_elem_index_var( mod_elem(octave_mod(-1), 1) ), scale_elem_index_var(2) )
+        )
+        events.should == [Note(C4),notes(D3,E3)]
+      end
     end
     
 
@@ -813,6 +821,13 @@ describe MTK::Sequencers::EventBuilder do
         )
         events.should == notes(E4,C4)
       end
+
+      it "does not re-evaluate for each pitch in a chain" do
+        events = events_for_sequence(
+          C4, MTK::Patterns.Chain(mod_elem(octave_mod(-1), D), E)
+        )
+        events.should == [Note(C4),notes(D3,E3)] # checking we don't reapply the octave down and get E2
+      end
     end
 
 
@@ -857,6 +872,13 @@ describe MTK::Sequencers::EventBuilder do
           E4, MTK::Lang::ModifiedElement.new(MTK::Lang::Modifier.new(:octave,-1), I)
         )
         events.should == [Note(E4), notes(C4,E4,G4)]
+      end
+
+      it "does not re-evaluate for each relative chord in a chain" do
+        events = events_for_sequence(
+          C4, MTK::Patterns.Chain(mod_elem(octave_mod(-1), ii), iii)
+        )
+        events.should == [Note(C4),notes(D3,F3,A3,E3,G3,B3)]
       end
     end
 

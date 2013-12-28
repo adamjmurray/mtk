@@ -42,6 +42,8 @@ module MTK
             if element.is_a? MTK::Lang::ModifiedElement
               modifier = element.modifier
               element = element.element
+            else
+              modifier = nil
             end
 
             case element
