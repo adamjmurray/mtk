@@ -13,7 +13,7 @@ module MTK
 
 
       def self.devices
-        @devices ||= devices_by_name.map{|key,value| OpenStruct.new(name:key, port_index:value) }
+        @devices ||= devices_by_name.values
       end
 
       def self.devices_by_name
@@ -27,7 +27,7 @@ module MTK
               dedup += 1
               name = "#{orig_name}(#{dedup})"
             end
-            hash[name] = index
+            hash[name] = OpenStruct.new(name:name, port_index:index)
           end
           hash
         )
