@@ -190,9 +190,20 @@ grammar MTK_Grammar
   end
 
   rule pitch_class
-    ( [A-G] ('#'1*2 | 'b'1*2)? ) {
+    ( diatonic_pitch_class accidental? ) {
       MTK::Core::PitchClass[to_s]
     }
+  end
+
+  # this rule is used by the tutorial
+  rule diatonic_pitch_class
+    ( [A-G] ) {
+      MTK::Core::PitchClass[to_s]
+    }
+  end
+
+  rule accidental
+    ('#'1*2 | 'b'1*2)
   end
 
   rule modified_pitch_class
