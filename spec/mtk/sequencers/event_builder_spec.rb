@@ -891,7 +891,7 @@ describe MTK::Sequencers::EventBuilder do
           arp_elem_index_var(1),
           arp_elem_index_var(2),
           Variable.new(Variable::ARPEGGIO, '', MTK::Lang::ModifiedElement.new(
-            MTK::Lang::Modifier.new(:octave, -2), # TODO: buggy, I want this to be -1
+            MTK::Lang::Modifier.new(:octave, -1),
             MTK::Groups::RelativeChord.from_s('I')
           )),
           arp_elem_index_var(0),

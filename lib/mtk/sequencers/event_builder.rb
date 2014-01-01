@@ -257,27 +257,34 @@ module MTK
         case element.name
           when :index, :modulo_index
             wraparound = (element.name == :modulo_index)
-            pitches << @arpeggio.arpeggiate(element.value, wraparound)
-            @previous_arpeggio_index = element.value
+            index = element.value
+            pitch = @arpeggio.arpeggiate(index, wraparound)
+            pitches << pitch
+            @previous_arpeggio_index = index
+            @previous_pitch = pitch if index == 0 # so that arpeggiated chord root movement is more natural
 
           when :increment, :modulo_increment
             wraparound = (element.name == :modulo_increment)
-            pitches << @arpeggio.arpeggiate(@previous_arpeggio_index + element.value, wraparound)
-            @previous_arpeggio_index += element.value
+            index = @previous_arpeggio_index + element.value
+            pitch = @arpeggio.arpeggiate(index, wraparound)
+            pitches << pitch
+            @previous_arpeggio_index = index
+            @previous_pitch = pitch if index == 0 # so that arpeggiated chord root movement is more natural
 
           when :random
             pitch = @arpeggio.random
             pitches << pitch
             @previous_arpeggio_index = @arpeggio.find_index(pitch)
+            @previous_pitch = pitch
 
           when :all
             pitches.concat(@arpeggio.pitches)
+            @previous_pitch = pitches.first
 
           else
             STDERR.puts "#{self.class}#next: Encountered unsupported arpeggio element #{element}"
         end
 
-        @previous_pitch = pitches.last
       end
 
 
